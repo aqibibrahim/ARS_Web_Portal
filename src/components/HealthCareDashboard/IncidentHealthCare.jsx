@@ -3,7 +3,11 @@ import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 import { Listbox } from "@headlessui/react";
-import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/20/solid";
+import {
+  ChevronUpDownIcon,
+  CheckIcon,
+  MapPinIcon,
+} from "@heroicons/react/20/solid";
 import {
   ExclamationTriangleIcon,
   XMarkIcon,
@@ -88,7 +92,6 @@ export default function IncidentHealthCare({}) {
   const handleAssignAmbulanceAndhealthCare = (data) => {
     if (data === "Assign Ambulance") {
       setAssignAmbulance(true);
-      console.log(data);
       sethealthCare(false);
       setUpdateInformarInformation(false);
     } else if (data === "Assign HealthCare") {
@@ -123,7 +126,6 @@ export default function IncidentHealthCare({}) {
           .then((response) => {
             setIncidentData(response.data?.data);
             setIsLoading(false);
-            console.log(response?.data?.data);
           });
       } catch (e) {
         console.log(e);
@@ -141,7 +143,6 @@ export default function IncidentHealthCare({}) {
           })
           .then((response) => {
             setMenuIsOpen(response?.data?.data);
-            console.log(response?.data?.data);
           });
       } catch (e) {
         console.log(e);
@@ -166,7 +167,6 @@ export default function IncidentHealthCare({}) {
               }))
             );
             // setIsLoading(false);
-            console.log(response?.data?.data);
           });
       } catch (e) {
         console.log(e);
@@ -507,6 +507,7 @@ export default function IncidentHealthCare({}) {
           + Create Ambulance
         </button> */}
         </div>
+
         <div className="rtl">
           {isLoading ? (
             <p className="text-center text-xl text-primary-100">Loading...</p>
@@ -515,125 +516,99 @@ export default function IncidentHealthCare({}) {
               No data available
             </p>
           ) : (
-            <table className="min-w-full divide-y divide-gray-300 text-right">
-              <thead>
-                <tr>
-                  <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
-                    <span className="sr-only">Edit</span>
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0"
-                  >
-                    Model
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Facility
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Contact Number
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Type
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Status
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    ID No
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Informer
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {incidentData?.map((incident) => (
-                  <tr key={incident?.id} className="hover:bg-gray-100">
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <span className="flex items-center justify-center gap-5">
-                        {/* <span
-                        className="text-red-500 flex justify-center  hover:text-red-600"
-                        onClick={() => {
-                          setDelete(true);
-                          setDeleteID(incident?.id);
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          class="w-6 h-6"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                          />
-                        </svg>
-                      </span> */}
-                        <button
-                          onClick={() => {
-                            handleEditClick(incident);
-                            sethealthCare(false);
-                            setSelectedHealthCareOpetion({});
-                          }}
-                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                        >
-                          Edit
-                          <span className="sr-only">, {incident.name}</span>
+            incidentData.map((incident) => (
+              <div className="w-full  justify-end items-center gap-2.5 inline-flex mt-5">
+                <div className="w-full bg-white bg-opacity-50 rounded-2xl shadow backdrop-blur-[20px] justify-end items-center flex">
+                  <div className="grow shrink basis-0 self-stretch p-[15px] bg-white bg-opacity-50 justify-end items-center gap-[15px] flex">
+                    <div className="grow shrink basis-0 h-[35px] justify-start items-end gap-3.5 flex">
+                      <div className="px-[15px] py-2.5 bg-blue-500 rounded-lg justify-center items-center gap-2.5 flex">
+                        <button className="text-white text-xs font-semibold font-['Inter']">
+                          الانتقال إلى الأحداث المغلقة
                         </button>
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {incident?.ambulance?.model}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {incident?.facility?.name}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {incident?.informer?.phone_numbers?.map((phone) => (
-                        <div key={phone.id}>{phone.number}</div>
-                      ))}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {incident.type}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                        {incident.status}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {incident?.ambulance?.id_no}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {incident?.informer?.name}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      </div>
+                    </div>
+                    <div className="grow shrink basis-0 flex-col justify-center items-end gap-[3px] inline-flex">
+                      <div className="self-stretch h-[88px] flex-col justify-start items-end gap-[5px] flex">
+                        <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
+                          اسم السائق - يوسف علي
+                        </div>
+                        <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                          0913467362
+                        </div>
+                        <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
+                          <div className="grow shrink basis-0 text-right text-green-500 text-xs font-normal font-['Inter']">
+                            24 minutes ETA
+                          </div>
+                        </div>
+                        <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
+                          <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                            {incident?.ambulances?.map((ambulance, index) => (
+                              <span key={index}>
+                                {ambulance?.plate_no} - {ambulance?.make}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="w-6 h-6 px-0.5 pt-[5px] pb-1 justify-center items-center flex">
+                            <div className="w-5 h-[15px] relative flex-col justify-start items-start flex" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grow shrink basis-0 self-stretch p-[15px] justify-end items-center gap-2.5 flex">
+                    <div className="grow shrink basis-0 flex-col justify-start items-end gap-[5px] inline-flex">
+                      <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
+                        <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                          {incident?.latitude}- {incident?.longitude}
+                        </div>
+                        <div className="w-6 h-6 px-1 py-[2.50px] justify-center items-center flex">
+                          <div className="w-4 h-[19px] relative">
+                            <MapPinIcon />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
+                        Description{" "}
+                      </div>
+                      <div className="w-[316px] h-[42px] text-right text-black text-opacity-50 text-xs font-normal font-['Inter']">
+                        {incident?.description}{" "}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-[292px] self-stretch p-[15px] justify-end items-center gap-2.5 flex">
+                    <div className="grow shrink basis-0 flex-col justify-start items-end gap-[5px] inline-flex">
+                      <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
+                        اسم المريض - {incident?.informer?.name}
+                      </div>
+                      <div className="justify-end items-start gap-[5px] inline-flex">
+                        <div className="px-1.5 py-[3px] bg-blue-500 bg-opacity-50 rounded-[20px] justify-center items-center gap-[5px] flex">
+                          <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
+                            {incident?.incident_type?.name}
+                          </div>
+                        </div>
+                        <div className="px-1.5 py-[3px] bg-fuchsia-500 bg-opacity-75 rounded-[20px] justify-center items-center gap-[5px] flex">
+                          <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
+                            أنثى
+                          </div>
+                        </div>
+                      </div>
+                      <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                        {incident?.informer?.phone_numbers?.map(
+                          (phoneNumber, index) => (
+                            <p key={index}>{phoneNumber?.number}</p>
+                          )
+                        )}
+                      </div>
+                      <div className="h-5 px-[15px] py-2.5 bg-red-600 rounded-lg justify-center items-center gap-2.5 inline-flex">
+                        <div className="text-white text-xs font-semibold font-['Inter']">
+                          {incident?.type}{" "}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
           )}
         </div>
       </div>
