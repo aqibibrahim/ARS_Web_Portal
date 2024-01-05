@@ -13,6 +13,11 @@ export default function IncidentType() {
   const [allIncidentTypes, setAllDriverIncidentTypes] = useState([""]);
   const [viewOpen, setViewOpen] = useState(false);
   const [editData, setEditData] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editIncidentType, setEditIncidentType] = useState("");
+  const [editIncidentID, setEditIncidentID] = useState("");
+  const [deleteIncidentID, setDeleteIncidentID] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
@@ -20,18 +25,19 @@ export default function IncidentType() {
   });
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.value });
+    setEditIncidentType(event.target.value);
   };
   const NewIncidentTypeCreation = () => {
     setIsModalOpen(true);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+    setDeleteModal(false);
   };
   useEffect(() => {
     const getIncidentTypes = async () => {
       try {
         var token = localStorage.getItem("token");
-        console.log(token);
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -41,23 +47,31 @@ export default function IncidentType() {
           headers,
         });
 
-        console.log(response.data.data, "response");
         if (response.status === 200 || response.status === 201) {
           setAllDriverIncidentTypes(response?.data?.data);
-          console.log(response);
         }
       } catch (error) {
-        console.error("Error creating role:", error);
+        console.error("Error getting role:", error);
       }
     };
     getIncidentTypes();
-  }, [isModalOpen]);
-  const handleEdit = (data) => {
+  }, [isModalOpen, editOpen, deleteModal]);
+  const handleView = (data) => {
     setViewOpen(true);
     setEditData(data);
   };
+  const handleEdit = (data) => {
+    debugger;
+    setEditOpen(true);
+    setEditIncidentType(data?.name);
+    setEditIncidentID(data?.id);
+  };
   const createNewIncidentType = async () => {
     debugger;
+    if (!state.IncidentTypeName.trim()) {
+      toast.error("Incident Type Name cannot be empty");
+      return;
+    }
     setIsLoading(true);
 
     try {
@@ -73,7 +87,6 @@ export default function IncidentType() {
       const response = await axios.post(`${Vars.domain}/incident-type`, data, {
         headers,
       });
-      console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
         toast.success("Incident Type Created Successfuly");
         setIsLoading(false);
@@ -83,7 +96,78 @@ export default function IncidentType() {
     } catch (error) {
       debugger;
       console.error("Error creating role:", error);
-      toast.error(error?.response?.data?.data?.pin);
+      toast.error(error?.response?.data?.message);
+    }
+    setIsLoading(false);
+  };
+  const editNewIncidentType = async () => {
+    if (!editIncidentType.trim()) {
+      toast.error("Incident Type Name cannot be empty");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      const data = {
+        name: state?.IncidentTypeName,
+      };
+
+      const response = await axios.patch(
+        `${Vars.domain}/incident-type/${editIncidentID}`,
+        data,
+        {
+          headers,
+        }
+      );
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Incident Type Updated Successfuly");
+        setIsLoading(false);
+        setEditIncidentType("");
+        setEditIncidentID("");
+        setEditOpen(false);
+      }
+    } catch (error) {
+      debugger;
+      console.error("Error updating Incident Type:", error);
+      toast.error(error?.response?.data?.message);
+    }
+    setIsLoading(false);
+  };
+  const deleteIncidentType = async () => {
+    setIsLoading(true);
+
+    try {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      const data = {
+        name: state?.IncidentTypeName,
+      };
+
+      const response = await axios.delete(
+        `${Vars.domain}/incident-type/${deleteIncidentID}`,
+        data,
+        {
+          headers,
+        }
+      );
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Incident Type Deleted Successfuly");
+        setIsLoading(false);
+        setDeleteIncidentID("");
+        setDeleteModal(false);
+      }
+    } catch (error) {
+      debugger;
+      console.error("Error deleting Incident Type:", error);
+      toast.error(error?.response?.data?.message);
     }
     setIsLoading(false);
   };
@@ -92,7 +176,7 @@ export default function IncidentType() {
       <Toaster position="bottom-right" richColors />
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -156,7 +240,7 @@ export default function IncidentType() {
       )}{" "}
       {viewOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -183,32 +267,110 @@ export default function IncidentType() {
                   {selectedAmbulance?.plate_no}
                 </p> */}
               </div>
-              <div className="px-5">
+              <div className="px-5 mb-5">
                 <p className="text-lg text-right font-semibold">
                   Equipment Details
                 </p>
                 {editData?.equipments?.length > 0 ? (
-                  data?.equipments?.map((equipments) => (
+                  editData?.equipments?.map((equipments) => (
                     <>
-                      <div key={equipments.id}>
+                      <div
+                        key={equipments?.id}
+                        className="flex justify-end p-1 bg-gray-100"
+                      >
                         <span
-                          className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700"
-                          key={equipments.id}
+                          className="inline-flex items-center  rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700"
+                          key={equipments?.id}
                         >
-                          {equipments.status}
+                          {equipments?.status}
                         </span>
-                        {equipments.name}
+                        {equipments?.name}
                       </div>
                     </>
                   ))
                 ) : (
-                  <span className="text-gray-400">No Equipments</span>
+                  <span className="text-gray-400  justify-end">
+                    <p className="text-right">No Equipments</p>
+                  </span>
                 )}
               </div>
             </div>
           </div>
         </div>
       )}
+      {editOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+          <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+            <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
+              <BsArrowRightCircle
+                width={9}
+                className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
+                onClick={() => setEditOpen(false)}
+              />
+              <h3 className="text-xl font-semibold">Edit Incident Type</h3>
+            </div>
+            <div className="p-5">
+              <div className="flex flex-row justify-between gap-4 mb-4">
+                <div className="flex flex-col space-y-2 w-full">
+                  <div>
+                    <label
+                      htmlFor="persons_supported"
+                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Name:
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        type="text"
+                        name="IncidentTypeName"
+                        onChange={handleChange}
+                        value={editIncidentType}
+                        placeholder="Name of Incident Type"
+                        className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                      />
+                      <div
+                        className="absolute inset-x-0  bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* <FiDivideCircle /> */}
+
+              <div className="text-left mt-10">
+                {isLoading ? (
+                  <button
+                    type="button"
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
+                  >
+                    Loading...
+                  </button>
+                ) : (
+                  <button
+                    onClick={editNewIncidentType}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
+                  >
+                    Update
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      <Modal
+        title="Are you sure to delete this Role?"
+        open={deleteModal}
+        onOk={deleteIncidentType}
+        onCancel={handleCancel}
+        closable={false}
+        okButtonProps={{
+          style: { backgroundColor: "red" },
+        }}
+        okText="Delete"
+      ></Modal>
       <div
         className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
       >
@@ -271,8 +433,8 @@ export default function IncidentType() {
                       <span
                         className="text-red-500 flex justify-center hover:cursor-pointer"
                         onClick={() => {
-                          // setDeleteID(data?.id);
-                          // setDeleteModal(true);
+                          setDeleteIncidentID(data?.id);
+                          setDeleteModal(true);
                         }}
                       >
                         <svg
@@ -299,7 +461,9 @@ export default function IncidentType() {
                         <BiEdit />
                       </button>
                       <button
-                        // onClick={() => handleEditClick(data?.name, data?.id)}
+                        onClick={() => {
+                          handleView(data);
+                        }}
                         className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                       >
                         <BsEye />
