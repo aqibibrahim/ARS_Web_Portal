@@ -19,9 +19,14 @@ import { FaRegCompass } from "react-icons/fa";
 import { MdTune } from "react-icons/md";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
 import { UsersIcon } from "@heroicons/react/20/solid";
-import { UserCircleIcon } from "@heroicons/react/24/outline";
+import {
+  UserCircleIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/24/outline";
 const SideBar = ({ parentData }) => {
   const [isCreateIncidentOpen, setCreateIncidentOpen] = useState(false);
+  const [lookUpOpen, setLookUpOpen] = useState(true);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -68,13 +73,18 @@ const SideBar = ({ parentData }) => {
   const handleAdmiProfileClick = () => {
     navigate("/Admin-profile");
   };
-
+  const handleIncidentTypeClick = () => {
+    navigate("/Incident-type");
+  };
   const handleRegionClick = () => {
     navigate("/regions_files");
   };
+  const handleLookUp = () => {
+    setLookUpOpen(true);
+  };
 
   return (
-    <div className="hidden right-0 lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:flex-col">
+    <div className="hidden right-0 lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:flex-col ">
       {/* Sidebar component, swap this element with another sidebar if you like */}
       <div className="flex grow flex-row gap-y-3 overflow-y-auto h-screen border-r border-gray-200 bg-transparent ">
         {isCreateIncidentOpen && (
@@ -170,6 +180,58 @@ const SideBar = ({ parentData }) => {
                 >
                   <UserCircleIcon className="w-5 h-5" />
                 </MenuItem>
+                <MenuItem
+                  // icon={rolesPermissionIcon}
+                  title={`Incidents`}
+                  onClick={handleIncidentTypeClick}
+                  isActive={isActive("/Incidents")}
+                >
+                  <ExclamationCircleIcon className="w-5 h-5" />
+                </MenuItem>
+                <MenuItem
+                  title={`Lookup`}
+                  onClick={handleLookUp}
+                  isActive={isActive("/Lookup")}
+                  lookUpOpen={lookUpOpen}
+                  subMenu={[
+                    // title: "Sub Item 1",
+                    // onClick: () => console.log("Sub Item 1 clicked"),
+                    <MenuItem
+                      // icon={rolesPermissionIcon}
+                      title={`Driver`}
+                      isActive={isActive("/Driver")}
+                      type="subMenu"
+                    >
+                      <UserCircleIcon className="w-5 h-5" />
+                    </MenuItem>,
+                    <MenuItem
+                      // icon={rolesPermissionIcon}
+                      title={`Driver`}
+                      onClick={handleDriverClick}
+                      isActive={isActive("/Driver")}
+                      type="subMenu"
+                    >
+                      <UserCircleIcon className="w-5 h-5" />
+                    </MenuItem>,
+                  ]}
+                  // {
+                  //   title: "Sub Item 2",
+                  //   onClick: () => console.log("Sub Item 2 clicked"),
+                  // },
+                  // Add more sub-menu items as needed
+                >
+                  <UserCircleIcon className="w-5 h-5" />
+                </MenuItem>
+                {/* <MenuItem
+        title="Sample Item"
+        bgColor="primary"
+        fontColor="white"
+        onClick={handleItemClick}
+      >
+        <span role="img" aria-label="Emoji">
+          😀
+        </span>
+      </MenuItem> */}
               </div>
             )}
             {/* {localStorage?.role == "Admin" && (
