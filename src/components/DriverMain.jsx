@@ -6,19 +6,124 @@ import { Toaster, toast } from "sonner";
 import ModalComponent from "./Common/ModalComponent";
 import { BsEye } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
+import { BsArrowRightCircle, BsSearch } from "react-icons/bs";
 
 export default function DriverMain() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewModal, setisViewModal] = useState(false);
+  const [viewData, setViewData] = useState("");
+  const [deleteID, setDeleteID] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
+
   const [allDrivers, setAllDrivers] = useState([""]);
-  const [viewOpen, setViewOpen] = useState(false);
+  const [editBit, setEditBit] = useState(false);
+  const [state, setState] = useState({
+    name: "",
+    email: "",
+    pin: "",
+  });
+  const [phoneNumbers, setPhoneNumbers] = useState([]);
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
+  const [editData, setEditData] = useState({
+    id: "",
+    name: "",
+    email: "",
+    pin: "",
+    phoneNumbers: [],
+  });
+  const handleCancel = () => {
+    setDeleteModal(false);
+    setDeleteID("");
+  };
+  const validateForm = () => {
+    const errors = {};
+    let isValid = true;
+
+    // Validate name
+    if (!state.name.trim()) {
+      errors.name = "Name is required";
+      isValid = false;
+    }
+
+    // Validate email
+    if (!state.email.trim()) {
+      errors.email = "Email is required";
+      isValid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
+      errors.email = "Invalid email format";
+      isValid = false;
+    }
+
+    // Validate PIN
+    if (!state.pin.trim()) {
+      errors.pin = "PIN is required";
+      isValid = false;
+    } else if (state.pin.length !== 6 || !/^\d+$/.test(state.pin)) {
+      errors.pin = "PIN must be a 6-digit number";
+      isValid = false;
+    }
+
+    // Validate phone numbers
+    if (phoneNumbers.length === 0) {
+      errors.phoneNumbers = "At least one phone number is required";
+      isValid = false;
+    }
+
+    setValidationErrors(errors);
+
+    return isValid;
+  };
+
+  const updateDriver = async () => {
+    try {
+      if (validateForm()) {
+        var token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+
+        const data = {
+          first_name: state.name,
+          email: state.email,
+          pin: state.pin,
+          phone_numbers: phoneNumbers,
+        };
+
+        const response = await axios.post(`${Vars.domain}/drivers`, data, {
+          headers,
+        });
+
+        console.log(response, "res");
+        if (response.status === 200 || response.status === 201) {
+          toast.success("Driver Created Successfully");
+          setState({
+            name: "",
+            email: "",
+            pin: "",
+          });
+          setPhoneNumbers([]);
+          setNewPhoneNumber("");
+          handle(false);
+        }
+        console.log("Role created successfully:", response.data);
+      }
+    } catch (error) {
+      debugger;
+      console.error("Error creating role:", error);
+      toast.error(error?.response?.data?.data?.pin);
+    }
+  };
 
   const NewDriverCreation = () => {
     debugger;
     setIsModalOpen(true);
+    setEditBit(false);
   };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  // const handleCancel = () => {
+  //   setIsModalOpen(false);
+  //   setViewOpen(false);
+  // };
   useEffect(() => {
     const GetRecords = async () => {
       try {
@@ -42,81 +147,67 @@ export default function DriverMain() {
       }
     };
     GetRecords();
-  }, []);
-  const handleEdit = () => {
-    editRole(editName, editID);
+  }, [deleteModal]);
+  const handleDelete = () => {
+    DeleteDriver();
+  };
+  const handleEditClick = (data) => {
+    debugger;
+    setIsModalOpen(true);
+    setEditBit(true);
+    setEditData({
+      id: data.id,
+      name: data.first_name,
+      email: data.email,
+      pin: data.pin,
+      phoneNumbers: data.phone_numbers.map((phone) => phone.number),
+    });
+  };
+  const handleCancelView = () => {
+    setisViewModal(false);
+  };
+  const handleViewClick = (data) => {
+    debugger;
+    setisViewModal(true);
+    setViewData(data);
+  };
+  const DeleteDriver = async () => {
+    try {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axios.delete(
+        `${Vars.domain}/drivers/${deleteID}`,
+        {
+          headers,
+        }
+      );
+      console.log(response, "res");
+      if (
+        response.status === 200 ||
+        response.status === 201 ||
+        response.status === 204
+      ) {
+        toast.success("Driver Deleted Successfuly");
+        setDeleteModal(false);
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+      setDeleteModal(false);
+    }
   };
   return (
     <>
       {/* <Toaster position="bottom-right" richColors /> */}
-
-      <ModalComponent visible={isModalOpen} handle={setIsModalOpen} />
-      {viewOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
-            <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
-              <BsArrowRightCircle
-                width={9}
-                className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                // onClick={() => setViewOpen(false)}
-              />
-              <h3 className="text-xl font-semibold">
-                Ambulance Details{" "}
-                <span className="text-lime-600">
-                  {/* {selectedAmbulance?.status} */}
-                </span>
-              </h3>
-            </div>
-            <div>
-              <div className="flex flex-row justify-between p-5">
-                <p>
-                  {" "}
-                  <span className="font-semibold">Make:</span>{" "}
-                  {/* {selectedAmbulance?.make} */}
-                </p>
-                <p>
-                  <span className="font-semibold">Model:</span>{" "}
-                  {/* {selectedAmbulance?.model} */}
-                </p>
-                <p>
-                  <span className="font-semibold">Plate#:</span>{" "}
-                  {/* {selectedAmbulance?.plate_no} */}
-                </p>
-              </div>
-              <div className="px-5">
-                <p className="text-lg text-right font-semibold">
-                  Driver Details
-                </p>
-                {/* {selectedAmbulance?.driver ? (
-                  <div>
-                    <p className="text-base text-right">
-                      {selectedAmbulance?.driver?.first_name}
-                    </p>
-                  </div>
-                ) : (
-                  <div>
-                    <p className="text-base text-right">
-                      No Driver Assigned Yet
-                    </p>
-                  </div>
-                )} */}
-                {/* Add other details as needed */}
-              </div>
-              <div className="px-5 mt-4">
-                <p className="text-lg text-right font-semibold">
-                  Equipment Details
-                </p>
-                {/* {selectedAmbulance?.equipments?.map((equipment) => (
-                  <p key={equipment.id} className="text-base text-right">
-                    {equipment.name}
-                  </p>
-                ))} */}
-              </div>
-              <div className="h-80"></div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ModalComponent
+        visible={isModalOpen}
+        handle={setIsModalOpen}
+        editData={editData}
+        updateDriver={updateDriver}
+        editBit={editBit}
+      />
       <div
         className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
       >
@@ -179,8 +270,8 @@ export default function DriverMain() {
                       <span
                         className="text-red-500 flex justify-center hover:cursor-pointer"
                         onClick={() => {
-                          // setDeleteID(data?.id);
-                          // setDeleteModal(true);
+                          setDeleteID(data?.id);
+                          setDeleteModal(true);
                         }}
                       >
                         <svg
@@ -199,13 +290,13 @@ export default function DriverMain() {
                         </svg>
                       </span>
                       <button
-                        onClick={() => handleEdit(data)}
+                        onClick={() => handleEditClick(data)}
                         className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                       >
                         <BiEdit />
                       </button>
                       <button
-                        // onClick={() => handleEditClick(data?.name, data?.id)}
+                        onClick={() => handleViewClick(data)}
                         className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                       >
                         <BsEye />
@@ -229,6 +320,54 @@ export default function DriverMain() {
           </table>
         </div>
       </div>
+      {isViewModal ? (
+        <Modal
+          // title="Are you sure to delete this Role?"
+          open={isViewModal}
+          // onOk={deleteIncidentType}
+          onCancel={handleCancelView}
+          closable={true}
+          footer={null}
+        >
+          {" "}
+          <div>
+            Driver Details
+            <div className="flex flex-row justify-between p-5">
+              <p>
+                {" "}
+                <span className="font-semibold">Name:</span>{" "}
+                {viewData?.first_name}
+              </p>
+              <p>
+                <span className="font-semibold">Email:</span> {viewData?.email}
+              </p>
+              <p>
+                <span className="font-semibold">Phone No#:</span>
+                {viewData?.phone_numbers?.map((phoneNumber, index) => (
+                  <div key={index}>
+                    <p className="text-base text-right">
+                      {phoneNumber?.number}
+                    </p>
+                  </div>
+                ))}
+              </p>
+            </div>
+          </div>
+        </Modal>
+      ) : (
+        ""
+      )}
+      <Modal
+        title="Are you sure to delete this Driver?"
+        open={deleteModal}
+        onOk={handleDelete}
+        onCancel={handleCancel}
+        closable={false}
+        okButtonProps={{
+          style: { backgroundColor: "red" },
+        }}
+        okText="Delete"
+      ></Modal>
     </>
   );
 }
