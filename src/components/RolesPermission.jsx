@@ -15,6 +15,7 @@ export default function RolesPermission() {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [editUserModal, setEditUserModal] = useState(false);
+  const [deleteUserModal, setDeleteUserModal] = useState(false);
 
   const [permissionModal, setPermissionModal] = useState(false);
   const [phoneNumbers, setPhoneNumbers] = useState([]);
@@ -70,7 +71,6 @@ export default function RolesPermission() {
     // Assuming you have a function to update the permissionModalData state
     setPermissionModalData((prevData) =>
       prevData.map((module) => {
-        console.log("Module", module);
         return module.privilege_id === privilege_id
           ? { ...module, [`${type}`]: !module[`${type}`] }
           : module;
@@ -129,7 +129,6 @@ export default function RolesPermission() {
           headers,
         }
       );
-      console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
         setPermissionModal(false);
         toast.success("Role Updated Successfuly");
@@ -148,7 +147,6 @@ export default function RolesPermission() {
     }));
   };
   const createNewUser = async () => {
-    debugger;
     try {
       var token = localStorage.getItem("token");
       const headers = {
@@ -185,7 +183,6 @@ export default function RolesPermission() {
         });
       }
 
-      console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
         {
           editFlag
@@ -194,7 +191,7 @@ export default function RolesPermission() {
         }
         setPhoneNumbers([]);
         setIsModalOpen(false);
-        handle(false);
+        setEditUserModal(false);
         setState({
           first_name: "",
           last_name: "",
@@ -205,7 +202,6 @@ export default function RolesPermission() {
         });
       }
     } catch (error) {
-      debugger;
       console.error("Error creating/editing user:", error);
       const errorMessage =
         error.response?.data?.data?.email || "An error occurred";
@@ -217,7 +213,6 @@ export default function RolesPermission() {
     const GetRecords = async () => {
       try {
         var token = localStorage.getItem("token");
-        console.log(token);
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -227,7 +222,6 @@ export default function RolesPermission() {
           headers,
         });
 
-        console.log(response.data.data, "response");
         if (response.status === 200 || response.status === 201) {
           setAllRoles(response?.data?.data);
         }
@@ -236,12 +230,12 @@ export default function RolesPermission() {
       }
     };
     GetRecords();
-  }, [isModalOpen]);
+  }, [isModalOpen, deleteModal]);
+
   useEffect(() => {
     const GetUsers = async () => {
       try {
         var token = localStorage.getItem("token");
-        console.log(token);
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -251,7 +245,6 @@ export default function RolesPermission() {
           headers,
         });
 
-        console.log(response.data.data, "response");
         if (response.status === 200 || response.status === 201) {
           setAllUsers(response?.data?.data);
         }
@@ -260,7 +253,7 @@ export default function RolesPermission() {
       }
     };
     GetUsers();
-  }, [isModalOpen]);
+  }, [isModalOpen, deleteUserModal]);
 
   const NewRole = () => {
     setState({});
@@ -281,7 +274,6 @@ export default function RolesPermission() {
     setEditModal(true);
   };
   const handleUserEdit = (data) => {
-    debugger;
     setEditUserID(data?.id);
     setIsUserModalOpen(true);
     setEditUserModal(true);
@@ -295,8 +287,7 @@ export default function RolesPermission() {
       designation: data?.designation || "",
       role_id: data?.role_id || 0,
     });
-    setPhoneNumbers(data?.phone_numbers || []);
-    console.log(editUserModal);
+    setPhoneNumbers(data.phone_numbers.map((phone) => phone.number) || []);
   };
 
   const handlePermissionClick = (id) => {
@@ -310,6 +301,9 @@ export default function RolesPermission() {
   const handleDelete = () => {
     DeleteRole();
   };
+  const handleDeleteUser = () => {
+    DeleteUser();
+  };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -320,6 +314,7 @@ export default function RolesPermission() {
     setIsUserModalOpen(false);
     setPhoneNumbers([]);
     setEditFlag(false);
+    setDeleteUserModal(false);
     setState({
       first_name: "",
       last_name: "",
@@ -340,8 +335,7 @@ export default function RolesPermission() {
       const response = await axios.delete(`${Vars.domain}/roles/${deleteID}`, {
         headers,
       });
-      console.log(response, "res");
-      if (response.status === 200 || response.status === 201) {
+      if (response.status === 200 || response.status === 204) {
         setDeleteModal(false);
         toast.success("Role Deleted Successfuly");
       }
@@ -351,7 +345,26 @@ export default function RolesPermission() {
       setDeleteModal(false);
     }
   };
-
+  const DeleteUser = async () => {
+    try {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axios.delete(`${Vars.domain}/users/${deleteID}`, {
+        headers,
+      });
+      if (response.status === 200 || response.status === 204) {
+        setDeleteUserModal(false);
+        toast.success("User Deleted Successfuly");
+      }
+    } catch (error) {
+      console.error("Error creating role:", error);
+      toast.error("Something went wrong");
+      setDeleteUserModal(false);
+    }
+  };
   const createNewRole = async (role) => {
     try {
       var token = localStorage.getItem("token");
@@ -366,12 +379,10 @@ export default function RolesPermission() {
       const response = await axios.post(`${Vars.domain}/roles`, data, {
         headers,
       });
-      console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
         setIsModalOpen(false);
         toast.success("Role Created Successfuly");
       }
-      console.log("Role created successfully:", response.data);
     } catch (error) {
       console.error("Error creating role:", error);
     }
@@ -390,7 +401,6 @@ export default function RolesPermission() {
       const response = await axios.patch(`${Vars.domain}/roles/${id}`, data, {
         headers,
       });
-      console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
         setEditModal(false);
         toast.success("Role Updated Successfuly");
@@ -413,22 +423,17 @@ export default function RolesPermission() {
       const response = await axios.get(`${Vars.domain}/role-permission/${id}`, {
         headers,
       });
-      console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
-        // setEditModal(false)
         setPermissionModals(response.data.data);
         toast.success("Fetech Permissions");
       }
     } catch (error) {
       console.error("Error creating role:", error);
       toast.error("Something Went Wrong");
-      // setEditModal(false)
     }
   };
 
   const setPermissionModals = (data) => {
-    console.log("Data", data);
-    // Extract module names and privileges from the fetched data
     const moduleData = data.privileges.map((privilege) => {
       return {
         privilege_id: privilege.id,
@@ -549,6 +554,18 @@ export default function RolesPermission() {
               title="Are you sure to delete this Role?"
               open={deleteModal}
               onOk={handleDelete}
+              onCancel={handleCancel}
+              closable={false}
+              maskClosable={false}
+              okButtonProps={{
+                style: { backgroundColor: "red" },
+              }}
+              okText="Delete"
+            ></Modal>
+            <Modal
+              title="Are you sure to delete this User?"
+              open={deleteUserModal}
+              onOk={handleDeleteUser}
               onCancel={handleCancel}
               closable={false}
               maskClosable={false}
@@ -719,7 +736,7 @@ export default function RolesPermission() {
                               className="text-red-500 flex justify-center hover:cursor-pointer"
                               onClick={() => {
                                 setDeleteID(data?.id);
-                                setDeleteModal(true);
+                                setDeleteUserModal(true);
                               }}
                             >
                               <svg
