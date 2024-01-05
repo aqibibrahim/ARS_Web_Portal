@@ -11,10 +11,11 @@ export default function RolesPermission() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNewUserModal, setIsNewUserModal] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-
+  const [editFlag, setEditFlag] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [editUserModal, setEditUserModal] = useState(false);
+  const [deleteUserModal, setDeleteUserModal] = useState(false);
 
   const [permissionModal, setPermissionModal] = useState(false);
   const [phoneNumbers, setPhoneNumbers] = useState([]);
@@ -70,7 +71,6 @@ export default function RolesPermission() {
     // Assuming you have a function to update the permissionModalData state
     setPermissionModalData((prevData) =>
       prevData.map((module) => {
-        console.log("Module", module);
         return module.privilege_id === privilege_id
           ? { ...module, [`${type}`]: !module[`${type}`] }
           : module;
@@ -129,7 +129,6 @@ export default function RolesPermission() {
           headers,
         }
       );
-      console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
         setPermissionModal(false);
         toast.success("Role Updated Successfuly");
@@ -147,13 +146,14 @@ export default function RolesPermission() {
       role: selectedRoleId,
     }));
   };
-  const createNewDriver = async () => {
+  const createNewUser = async () => {
     try {
       var token = localStorage.getItem("token");
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       };
+
       const data = {
         first_name: state?.first_name,
         last_name: state?.last_name,
@@ -164,28 +164,55 @@ export default function RolesPermission() {
         role_id: state?.role,
       };
 
-      const response = await axios.post(`${Vars.domain}/users`, data, {
-        headers,
-      });
-      console.log(response, "res");
-      if (response.status === 200 || response.status === 201) {
-        toast.success("Driver Created Successfuly");
-        setState("");
-        setPhoneNumbers[""];
-        handle(false);
+      let response;
+
+      if (editFlag) {
+        // If editFlag is true, make a PATCH request
+        const userId = editUserData.id; // Assuming you have the user ID in editUserData
+        response = await axios.patch(
+          `${Vars.domain}/users/${editUserID}`,
+          data,
+          {
+            headers,
+          }
+        );
+      } else {
+        // If editFlag is false, make a POST request
+        response = await axios.post(`${Vars.domain}/users`, data, {
+          headers,
+        });
       }
-      console.log("Role created successfully:", response.data);
+
+      if (response.status === 200 || response.status === 201) {
+        {
+          editFlag
+            ? toast.success("User Updated Successfully")
+            : toast.success("User Created Successfully");
+        }
+        setPhoneNumbers([]);
+        setIsModalOpen(false);
+        setEditUserModal(false);
+        setState({
+          first_name: "",
+          last_name: "",
+          email: "",
+          password: "",
+          designation: "",
+          role: 0,
+        });
+      }
     } catch (error) {
-      debugger;
-      console.error("Error creating role:", error);
-      toast.error(error?.response?.data?.data?.pin);
+      console.error("Error creating/editing user:", error);
+      const errorMessage =
+        error.response?.data?.data?.email || "An error occurred";
+      toast.error(errorMessage);
     }
   };
+
   useEffect(() => {
     const GetRecords = async () => {
       try {
         var token = localStorage.getItem("token");
-        console.log(token);
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -195,7 +222,6 @@ export default function RolesPermission() {
           headers,
         });
 
-        console.log(response.data.data, "response");
         if (response.status === 200 || response.status === 201) {
           setAllRoles(response?.data?.data);
         }
@@ -204,12 +230,12 @@ export default function RolesPermission() {
       }
     };
     GetRecords();
-  }, []);
+  }, [isModalOpen, deleteModal]);
+
   useEffect(() => {
     const GetUsers = async () => {
       try {
         var token = localStorage.getItem("token");
-        console.log(token);
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -219,7 +245,6 @@ export default function RolesPermission() {
           headers,
         });
 
-        console.log(response.data.data, "response");
         if (response.status === 200 || response.status === 201) {
           setAllUsers(response?.data?.data);
         }
@@ -228,9 +253,10 @@ export default function RolesPermission() {
       }
     };
     GetUsers();
-  }, []);
+  }, [isModalOpen, deleteUserModal]);
 
   const NewRole = () => {
+    setState({});
     setIsModalOpen(true);
     setRoleName("");
   };
@@ -238,10 +264,7 @@ export default function RolesPermission() {
     setIsUserModalOpen(true);
     setRoleName("");
   };
-  const newUser = () => {
-    setIsNewUserModal(true);
-    setRoleName("");
-  };
+
   const handleNewRole = () => {
     createNewRole(roleName);
   };
@@ -250,11 +273,21 @@ export default function RolesPermission() {
     setEditID(id);
     setEditModal(true);
   };
-  const handleUserEdit = (id) => {
-    setEditUserID(id);
+  const handleUserEdit = (data) => {
+    setEditUserID(data?.id);
     setIsUserModalOpen(true);
     setEditUserModal(true);
-    console.log(editUserModal);
+    setEditFlag(true);
+    setState({
+      id: data?.id,
+      first_name: data?.first_name || "",
+      last_name: data?.last_name || "",
+      email: data?.email || "",
+      password: "", // You may want to initialize this as empty or handle it differently
+      designation: data?.designation || "",
+      role_id: data?.role_id || 0,
+    });
+    setPhoneNumbers(data.phone_numbers.map((phone) => phone.number) || []);
   };
 
   const handlePermissionClick = (id) => {
@@ -268,6 +301,9 @@ export default function RolesPermission() {
   const handleDelete = () => {
     DeleteRole();
   };
+  const handleDeleteUser = () => {
+    DeleteUser();
+  };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -277,6 +313,16 @@ export default function RolesPermission() {
     setEditName("");
     setIsUserModalOpen(false);
     setPhoneNumbers([]);
+    setEditFlag(false);
+    setDeleteUserModal(false);
+    setState({
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+      designation: "",
+      role: 0,
+    });
   };
 
   const DeleteRole = async () => {
@@ -289,8 +335,7 @@ export default function RolesPermission() {
       const response = await axios.delete(`${Vars.domain}/roles/${deleteID}`, {
         headers,
       });
-      console.log(response, "res");
-      if (response.status === 200 || response.status === 201) {
+      if (response.status === 200 || response.status === 204) {
         setDeleteModal(false);
         toast.success("Role Deleted Successfuly");
       }
@@ -300,7 +345,26 @@ export default function RolesPermission() {
       setDeleteModal(false);
     }
   };
-
+  const DeleteUser = async () => {
+    try {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axios.delete(`${Vars.domain}/users/${deleteID}`, {
+        headers,
+      });
+      if (response.status === 200 || response.status === 204) {
+        setDeleteUserModal(false);
+        toast.success("User Deleted Successfuly");
+      }
+    } catch (error) {
+      console.error("Error creating role:", error);
+      toast.error("Something went wrong");
+      setDeleteUserModal(false);
+    }
+  };
   const createNewRole = async (role) => {
     try {
       var token = localStorage.getItem("token");
@@ -315,12 +379,10 @@ export default function RolesPermission() {
       const response = await axios.post(`${Vars.domain}/roles`, data, {
         headers,
       });
-      console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
         setIsModalOpen(false);
         toast.success("Role Created Successfuly");
       }
-      console.log("Role created successfully:", response.data);
     } catch (error) {
       console.error("Error creating role:", error);
     }
@@ -339,7 +401,6 @@ export default function RolesPermission() {
       const response = await axios.patch(`${Vars.domain}/roles/${id}`, data, {
         headers,
       });
-      console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
         setEditModal(false);
         toast.success("Role Updated Successfuly");
@@ -362,22 +423,17 @@ export default function RolesPermission() {
       const response = await axios.get(`${Vars.domain}/role-permission/${id}`, {
         headers,
       });
-      console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
-        // setEditModal(false)
         setPermissionModals(response.data.data);
         toast.success("Fetech Permissions");
       }
     } catch (error) {
       console.error("Error creating role:", error);
       toast.error("Something Went Wrong");
-      // setEditModal(false)
     }
   };
 
   const setPermissionModals = (data) => {
-    console.log("Data", data);
-    // Extract module names and privileges from the fetched data
     const moduleData = data.privileges.map((privilege) => {
       return {
         privilege_id: privilege.id,
@@ -395,6 +451,7 @@ export default function RolesPermission() {
   return (
     <>
       {/* Create Role Modal */}
+      <Toaster position="bottom-right" richColors />
 
       <div className="w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20">
         <Tabs defaultActiveKey="1" centered>
@@ -499,6 +556,19 @@ export default function RolesPermission() {
               onOk={handleDelete}
               onCancel={handleCancel}
               closable={false}
+              maskClosable={false}
+              okButtonProps={{
+                style: { backgroundColor: "red" },
+              }}
+              okText="Delete"
+            ></Modal>
+            <Modal
+              title="Are you sure to delete this User?"
+              open={deleteUserModal}
+              onOk={handleDeleteUser}
+              onCancel={handleCancel}
+              closable={false}
+              maskClosable={false}
               okButtonProps={{
                 style: { backgroundColor: "red" },
               }}
@@ -510,6 +580,7 @@ export default function RolesPermission() {
               open={editModal}
               onOk={handleEdit}
               onCancel={handleCancel}
+              maskClosable={false}
               closable={false}
               okButtonProps={{
                 style: { backgroundColor: "green", borderColor: "green" },
@@ -665,7 +736,7 @@ export default function RolesPermission() {
                               className="text-red-500 flex justify-center hover:cursor-pointer"
                               onClick={() => {
                                 setDeleteID(data?.id);
-                                setDeleteModal(true);
+                                setDeleteUserModal(true);
                               }}
                             >
                               <svg
@@ -684,7 +755,7 @@ export default function RolesPermission() {
                               </svg>
                             </span>
                             <button
-                              onClick={() => handleUserEdit(data?.id)}
+                              onClick={() => handleUserEdit(data)}
                               className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                             >
                               <BiEdit />
@@ -724,6 +795,7 @@ export default function RolesPermission() {
               onOk={editModal ? handleEditUser : handleNewRole}
               onCancel={handleCancel}
               closable={false}
+              maskClosable={false}
               okButtonProps={{
                 style: { backgroundColor: "green", borderColor: "green" },
               }}
@@ -755,15 +827,16 @@ export default function RolesPermission() {
               </div>
             </Modal>{" "}
             <Modal
-              title="Create New User"
+              title={editFlag ? "Edit User" : "Create New User"}
               open={isUserModalOpen}
-              onOk={createNewDriver}
+              onOk={createNewUser}
               onCancel={handleCancel}
               closable={false}
+              maskClosable={false}
               okButtonProps={{
                 style: { backgroundColor: "green", borderColor: "green" },
               }}
-              okText="Create"
+              okText={editFlag ? "Save " : "Create"}
             >
               <div className="p-5">
                 <div className="flex flex-row justify-between gap-4 mb-4">
@@ -965,6 +1038,7 @@ export default function RolesPermission() {
                           placeholder="Enter Email"
                           className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
+                          value={state?.email}
                         />
                         <div
                           className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -974,10 +1048,10 @@ export default function RolesPermission() {
                     </div>
                   </div>
                 </div>
-                {phoneNumbers.length > 0 ? (
+                {phoneNumbers?.length > 0 ? (
                   <div
                     className={`grid grid-cols-2 gap-2 ${
-                      phoneNumbers.length > 0 ? "bg-gray-100" : ""
+                      phoneNumbers?.length > 0 ? "bg-gray-100" : ""
                     } p-4`}
                   >
                     {phoneNumbers.map((phoneNumber, index) => (
@@ -985,7 +1059,9 @@ export default function RolesPermission() {
                         key={index}
                         className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
                       >
-                        <div className="flex text-sm">{phoneNumber}</div>
+                        <div className="flex text-sm">
+                          {phoneNumber?.number || phoneNumber}
+                        </div>
                         <button
                           type="button"
                           onClick={() => handleRemovePhoneNumber(index)}
@@ -1007,6 +1083,7 @@ export default function RolesPermission() {
               open={deleteModal}
               onOk={handleDelete}
               onCancel={handleCancel}
+              maskClosable={false}
               closable={false}
               okButtonProps={{
                 style: { backgroundColor: "red" },
