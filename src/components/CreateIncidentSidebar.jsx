@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Tabs from "./Tabs";
 import closeIcon from "../assets/close.svg";
 import IncidentForm from "./IncidentForm";
@@ -23,6 +23,7 @@ const tabConfig = {
   Ambulance: "Select Ambulance",
   HealthCare: "Select HealthCare",
 };
+
 const myData = [{ label: "Critical", value: 1 }];
 const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
   const [activeTab, setActiveTab] = useState("Incident");
@@ -31,6 +32,30 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
   const [incidentData, setIncidentData] = useState({});
   const [ambulanceData, setAmbulanceData] = useState({});
   const [selectedOption, setSelectedOption] = useState("");
+  const [incidentType, setIncidentType] = useState([]);
+  useEffect(() => {
+    const getIncidentTypes = async () => {
+      try {
+        var token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+
+        const response = await axios.get(`${Vars.domain}/incident-type`, {
+          headers,
+        });
+
+        if (response.status === 200 || response.status === 201) {
+          setIncidentType(response?.data?.data);
+        }
+      } catch (error) {
+        console.error("Error getting role:", error);
+      }
+    };
+    getIncidentTypes();
+  }, []);
+
   const handleShowIncidentSummary = () => {
     setIsAssignedAmbulancesVisible(true);
   };
@@ -50,7 +75,6 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
   const handelselectmap = () => {
     selectmap();
   };
-
   const renderFormForTab = () => {
     switch (activeTab) {
       case "Incident":
@@ -174,8 +198,8 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
   const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
+    lat: 33.7519137,
+    lng: 72.7970134,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -400,7 +424,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             {({ open }) => (
               <>
                 <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                  Incedent type
+                  Incident type
                 </Listbox.Label>
                 <div className="relative mt-2">
                   <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
@@ -547,8 +571,9 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                           type="text"
                           placeholder="Enter a location"
                           onChange={handlePlaceChange}
+                          value={CreateAmbulance.values.informer_address}
                         />
-                        <button onClick={() => setOpen(false)}>Close </button>
+                        <button onClick={() => setOpen(false)}>Close</button>
                       </div>
                       <div
                         id="map"

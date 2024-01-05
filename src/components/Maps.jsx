@@ -29,8 +29,8 @@ const Maps = (props) => {
   const [healthCareData, setHealthCareData] = useState([]);
   const [regionData, setRegionData] = useState([]);
   const [position, setPosition] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
+    lat: 33.7519137,
+    lng: 72.7970134,
   });
   const [childData, setChildData] = useState("Data from child");
   const sendDataToParent = (e) => {
