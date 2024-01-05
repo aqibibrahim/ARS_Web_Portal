@@ -18,14 +18,38 @@ export default function IncidentType() {
   const [editIncidentID, setEditIncidentID] = useState("");
   const [deleteIncidentID, setDeleteIncidentID] = useState("");
   const [deleteModal, setDeleteModal] = useState(false);
-
+  const [validationErrors, setValidationErrors] = useState({
+    IncidentTypeName: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
     IncidentTypeName: "",
+    editIncidentType: "",
   });
+
+  const validateForm = () => {
+    const errors = {};
+    let isValid = true;
+
+    if (!state.IncidentTypeName.trim()) {
+      errors.IncidentTypeName = "Incident Type Name is required";
+      isValid = false;
+    }
+
+    setValidationErrors(errors);
+
+    return isValid;
+  };
+  const resetValidationErrors = () => {
+    setValidationErrors({
+      IncidentTypeName: "",
+      editIncidentType: "",
+    });
+  };
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.value });
     setEditIncidentType(event.target.value);
+    setValidationErrors({ ...validationErrors, [event.target.name]: "" });
   };
   const NewIncidentTypeCreation = () => {
     setIsModalOpen(true);
@@ -67,11 +91,10 @@ export default function IncidentType() {
     setEditIncidentID(data?.id);
   };
   const createNewIncidentType = async () => {
-    debugger;
-    if (!state.IncidentTypeName.trim()) {
-      toast.error("Incident Type Name cannot be empty");
+    if (!validateForm()) {
       return;
     }
+
     setIsLoading(true);
 
     try {
@@ -88,25 +111,26 @@ export default function IncidentType() {
         headers,
       });
       if (response.status === 200 || response.status === 201) {
-        toast.success("Incident Type Created Successfuly");
+        toast.success("Incident Type Created Successfully");
         setIsLoading(false);
-        setState("");
+        setState({ IncidentTypeName: "" });
         setIsModalOpen(false);
       }
     } catch (error) {
-      debugger;
       console.error("Error creating role:", error);
       toast.error(error?.response?.data?.message);
     }
+
     setIsLoading(false);
   };
+
   const editNewIncidentType = async () => {
-    if (!editIncidentType.trim()) {
-      toast.error("Incident Type Name cannot be empty");
+    if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
+
     try {
       var token = localStorage.getItem("token");
       const headers = {
@@ -114,7 +138,7 @@ export default function IncidentType() {
         Authorization: `Bearer ${token}`,
       };
       const data = {
-        name: state?.IncidentTypeName,
+        name: editIncidentType,
       };
 
       const response = await axios.patch(
@@ -125,19 +149,20 @@ export default function IncidentType() {
         }
       );
       if (response.status === 200 || response.status === 201) {
-        toast.success("Incident Type Updated Successfuly");
+        toast.success("Incident Type Updated Successfully");
         setIsLoading(false);
         setEditIncidentType("");
         setEditIncidentID("");
         setEditOpen(false);
       }
     } catch (error) {
-      debugger;
       console.error("Error updating Incident Type:", error);
       toast.error(error?.response?.data?.message);
     }
+
     setIsLoading(false);
   };
+
   const deleteIncidentType = async () => {
     setIsLoading(true);
 
@@ -181,7 +206,10 @@ export default function IncidentType() {
               <BsArrowRightCircle
                 width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => {
+                  setIsModalOpen(false);
+                  resetValidationErrors();
+                }}
               />
               <h3 className="text-xl font-semibold">
                 Create New Incident Type
@@ -212,7 +240,12 @@ export default function IncidentType() {
                         aria-hidden="true"
                       />
                     </div>
-                  </div>
+                  </div>{" "}
+                  {validationErrors.IncidentTypeName && (
+                    <p className="text-red-500 text-sm text-right">
+                      {validationErrors.IncidentTypeName}
+                    </p>
+                  )}
                 </div>
               </div>
               {/* <FiDivideCircle /> */}
@@ -305,7 +338,10 @@ export default function IncidentType() {
               <BsArrowRightCircle
                 width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                onClick={() => setEditOpen(false)}
+                onClick={() => {
+                  setEditOpen(false);
+                  resetValidationErrors();
+                }}
               />
               <h3 className="text-xl font-semibold">Edit Incident Type</h3>
             </div>
@@ -334,7 +370,12 @@ export default function IncidentType() {
                         aria-hidden="true"
                       />
                     </div>
-                  </div>
+                  </div>{" "}
+                  {validationErrors.IncidentTypeName && (
+                    <p className="text-red-500 text-sm text-right">
+                      {validationErrors.IncidentTypeName}
+                    </p>
+                  )}
                 </div>
               </div>
               {/* <FiDivideCircle /> */}

@@ -78,6 +78,8 @@ export default function IncidentList({}) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [menuIsOpen, setMenuIsOpen] = useState([]);
   const [viewOpen, setViewOpen] = useState(false);
+  const [showData, setShowData] = useState([]);
+
   const [selectedHealthCareOpetion, setSelectedHealthCareOpetion] = useState(
     {}
   );
@@ -159,30 +161,30 @@ export default function IncidentList({}) {
     };
     fetchAmbulanceData();
   }, []);
-  const handleViewClick = (incident) => {
-    // setLongitude(null)
-    // setLatitude(null)
-    // setOptions(null)
-    // setSelectedAmbulance(ambulance)
-    // setLocationAddress({
-    // 	latitude: ambulance?.parking_latitude,
-    // 	longitude: ambulance?.parking_longitude,
-    // 	address: '',
-    // })
-    // if (ambulance?.equipments.length === 0) {
-    // 	setEditOptions(null)
-    // } else {
-    // 	setEditOptions(
-    // 		ambulance?.equipments?.map((variant) => ({
-    // 			label: variant.name,
-    // 			value: variant.id,
-    // 		}))
-    // 	)
-    // }
-    setViewOpen(true);
-    setSelectedIncident(incident);
-    console.log(incident, "incident");
-  };
+  // const handleViewClick = (incident) => {
+  //   // setLongitude(null)
+  //   // setLatitude(null)
+  //   // setOptions(null)
+  //   // setSelectedAmbulance(ambulance)
+  //   // setLocationAddress({
+  //   // 	latitude: ambulance?.parking_latitude,
+  //   // 	longitude: ambulance?.parking_longitude,
+  //   // 	address: '',
+  //   // })
+  //   // if (ambulance?.equipments.length === 0) {
+  //   // 	setEditOptions(null)
+  //   // } else {
+  //   // 	setEditOptions(
+  //   // 		ambulance?.equipments?.map((variant) => ({
+  //   // 			label: variant.name,
+  //   // 			value: variant.id,
+  //   // 		}))
+  //   // 	)
+  //   // }
+  //   setViewOpen(true);
+  //   setSelectedIncident(incident);
+  //   console.log(incident, "incident");
+  // };
   const assignAmbulance = useFormik({
     initialValues: {
       ambulance_id: "",
@@ -217,7 +219,33 @@ export default function IncidentList({}) {
 
     enableReinitialize: true,
   });
+  const getIncidentDetail = async (id) => {
+    console.log(JSON);
+    try {
+      var token = localStorage.getItem("token");
+      console.log(token);
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
 
+      await axios
+        .get(`${Vars.domain}/incidents/${id}`, { headers })
+        .then((res) => {
+          console.log(res);
+          toast.success("Fetched Successfuly");
+          // setSubmitDone(!submitDone);
+          // setSelectedOption(null);
+          // handleAssignAmbulanceAndhealthCare(false);
+          setShowData(res?.data?.data);
+          setViewOpen(true);
+          console.log(res?.data?.data, "rerar");
+        });
+    } catch (e) {
+      toast.error("failed");
+      console.log(e);
+    }
+  };
   const assignHealthCare = useFormik({
     initialValues: {
       facility_id: "",
@@ -427,7 +455,7 @@ export default function IncidentList({}) {
                         </button>
                         <button
                           onClick={() => {
-                            handleViewClick(incident);
+                            getIncidentDetail(incident?.id);
                             sethealthCare(false);
                             setSelectedHealthCareOpetion({});
                           }}
@@ -491,12 +519,12 @@ export default function IncidentList({}) {
               <p>
                 {" "}
                 <span className="font-semibold">Name: </span>{" "}
-                {selectedIncident?.informer?.name}
+                {showData?.informer?.name}
               </p>
               <p>
                 {" "}
                 <span className="font-semibold">Phone Number: </span>{" "}
-                {selectedIncident?.informer?.phone_numbers[0]?.number}
+                {showData?.informer?.phone_numbers[0]?.number}
               </p>
             </div>
             <div>
@@ -521,42 +549,97 @@ export default function IncidentList({}) {
                 <p className="text-lg text-right font-semibold">
                   Ambulance Details
                 </p>
-                {selectedIncident?.ambulances?.map((ambulance, index) => (
-                  <div
-                    className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2"
-                    key={ambulance.id}
-                  >
-                    <div className="flex justify-between gap-12  ">
-                      <p className="bg-blue-200 p-2 rounded-full">
-                        {index + 1}
-                      </p>
-                      <p>
-                        {" "}
-                        <span className="font-semibold">Make: </span>{" "}
-                        {ambulance.make}
-                      </p>
-                      <p>
-                        <span className="font-semibold">Model:</span>{" "}
-                        {ambulance?.model}
-                      </p>
-                      <p>
-                        <span className="font-semibold">Plate#:</span>{" "}
-                        {ambulance?.plate_no}
-                      </p>
+                {showData?.ambulances?.length > 0 ? (
+                  showData?.ambulances?.map((ambulance, index) => (
+                    <div
+                      className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2"
+                      key={ambulance.id}
+                    >
+                      <div className="flex flex-col">
+                        <div className="flex justify-between gap-12  ">
+                          <p className="bg-blue-200 p-2 rounded-full">
+                            {index + 1}
+                          </p>
+                          <p>
+                            {" "}
+                            <span className="font-semibold">Make: </span>{" "}
+                            {ambulance.make}
+                          </p>
+                          <p>
+                            <span className="font-semibold">Model:</span>{" "}
+                            {ambulance?.model}
+                          </p>
+                          <p>
+                            <span className="font-semibold">Plate#:</span>{" "}
+                            {ambulance?.plate_no}
+                          </p>
+                        </div>
+                        <p className="text-md m-5 text-right font-semibold">
+                          Equipments Details
+                        </p>
+                        {ambulance.equipments.map((equipmentDetails, index) => (
+                          <div
+                            className="flex flex-row justify-between p-5 px-10  w-full  bg-gray-200 mb-5 mt-2"
+                            key={equipmentDetails?.id}
+                          >
+                            <div className="flex justify-between gap-16 w-full   ">
+                              <p className="bg-blue-200 p-2 rounded-full">
+                                {index + 1}
+                              </p>
+                              <p>
+                                {" "}
+                                <span className="font-semibold">Name: </span>
+                                {equipmentDetails?.name}
+                              </p>
+                              <p>
+                                <span className="font-semibold">Status:</span>{" "}
+                                {equipmentDetails?.status}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-right">No Data Found</p>
+                )}
               </div>
-              {/* <div className="px-5 mt-4">
+
+              <div className="px-5">
                 <p className="text-lg text-right font-semibold">
-                  Equipment Details
+                  Facility Details
                 </p>
-                {selectedAmbulance?.equipments?.map((equipment) => (
-                  <p key={equipment.id} className="text-base text-right">
-                    {equipment.name}
-                  </p>
-                ))}
-              </div> */}
+                {showData?.ambulances?.length > 0 ? (
+                  showData?.ambulances?.map((facility, index) => (
+                    <div
+                      className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2"
+                      key={facility.id}
+                    >
+                      <div className="flex justify-between gap-10  ">
+                        <p className="bg-blue-200 p-2 rounded-full">
+                          {index + 1}
+                        </p>
+                        <p>
+                          {" "}
+                          <span className="font-semibold">Name: </span>{" "}
+                          {facility.facility.name}
+                        </p>
+                        <p>
+                          <span className="font-semibold">Status:</span>{" "}
+                          {facility?.facility?.status}
+                        </p>
+                        <p>
+                          <span className="font-semibold">Address: </span>{" "}
+                          {facility.facility?.address}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-right">No Data Found</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
