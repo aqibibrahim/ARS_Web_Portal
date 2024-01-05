@@ -18,7 +18,6 @@ const MultiSelectDropdown = ({
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const dropdownRef = useRef(null);
-
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -70,7 +69,7 @@ const MultiSelectDropdown = ({
         {label}
       </label>
       <div className="mt-2 flex flex-wrap gap-2 bg-grayBg-300 p-2 rounded-lg">
-        {selectedOptions.map((option, index) => (
+        {selectedOptions?.map((option, index) => (
           <span
             key={index}
             style={{ backgroundColor: bgColor || "#1681FF" }}
@@ -103,9 +102,9 @@ const MultiSelectDropdown = ({
           leaveTo="opacity-0"
         >
           <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {options.map((option) => (
+            {options?.map((option) => (
               <div
-                key={option.name}
+                key={option?.name}
                 className={classNames(
                   "relative cursor-pointer select-none py-2 pl-8 p-4 text-right bg-white hover:bg-gray-200 m-2 rounded-lg"
                 )}

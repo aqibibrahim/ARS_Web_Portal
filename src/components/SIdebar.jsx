@@ -17,7 +17,7 @@ import {
 import { RxHome } from "react-icons/rx";
 import { FaRegCompass } from "react-icons/fa";
 import { MdTune } from "react-icons/md";
-import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
+import { BuildingLibraryIcon, BookOpenIcon } from "@heroicons/react/20/solid";
 import { UsersIcon } from "@heroicons/react/20/solid";
 import {
   UserCircleIcon,
@@ -79,8 +79,8 @@ const SideBar = ({ parentData }) => {
   const handleRegionClick = () => {
     navigate("/regions_files");
   };
-  const handleLookUp = () => {
-    setLookUpOpen(true);
+  const handleMapping = () => {
+    navigate("/Mapping");
   };
 
   return (
@@ -189,38 +189,18 @@ const SideBar = ({ parentData }) => {
                   <ExclamationCircleIcon className="w-5 h-5" />
                 </MenuItem>
                 <MenuItem
-                  title={`Lookup`}
-                  onClick={handleLookUp}
+                  title={`Mapping`}
+                  onClick={handleMapping}
                   isActive={isActive("/Lookup")}
                   lookUpOpen={lookUpOpen}
-                  subMenu={[
-                    // title: "Sub Item 1",
-                    // onClick: () => console.log("Sub Item 1 clicked"),
-                    <MenuItem
-                      // icon={rolesPermissionIcon}
-                      title={`Driver`}
-                      isActive={isActive("/Driver")}
-                      type="subMenu"
-                    >
-                      <UserCircleIcon className="w-5 h-5" />
-                    </MenuItem>,
-                    <MenuItem
-                      // icon={rolesPermissionIcon}
-                      title={`Driver`}
-                      onClick={handleDriverClick}
-                      isActive={isActive("/Driver")}
-                      type="subMenu"
-                    >
-                      <UserCircleIcon className="w-5 h-5" />
-                    </MenuItem>,
-                  ]}
+
                   // {
                   //   title: "Sub Item 2",
                   //   onClick: () => console.log("Sub Item 2 clicked"),
                   // },
                   // Add more sub-menu items as needed
                 >
-                  <UserCircleIcon className="w-5 h-5" />
+                  <BookOpenIcon className="w-5 h-5" />
                 </MenuItem>
                 {/* <MenuItem
         title="Sample Item"

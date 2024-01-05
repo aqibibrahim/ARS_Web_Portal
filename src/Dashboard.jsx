@@ -17,7 +17,7 @@ import AmbulanceFiles from "./components/Super Admin Dashboard/Ambulance/Ambulan
 import HealthCareFiles from "./components/Super Admin Dashboard/HealthCare/HealthCareFiles";
 import RegionFiles from "./components/Super Admin Dashboard/Region/RegionFiles";
 import DriverMain from "./components/DriverMain";
-
+import Mapping from "./components/Mapping";
 import HealthCareDepartments from "./components/HealthCareDashboard/Departments";
 import Home from "./components/HealthCareDashboard/Home";
 import IncidentHealthCare from "./components/HealthCareDashboard/IncidentHealthCare";
@@ -49,6 +49,7 @@ const Dashboard = () => {
           <Route path="/RolesPermission" element={<RolesPermission />} />
           <Route path="/Driver" element={<DriverMain />} />{" "}
           <Route path="/Incident-type" element={<IncidentType />} />
+          <Route path="/Mapping" element={<Mapping />} />
           <Route path="/change-admin-password" element={<ChangePassword />} />
           <Route
             path="/DepartmetsHealthCare"
