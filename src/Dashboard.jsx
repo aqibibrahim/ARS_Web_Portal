@@ -21,6 +21,7 @@ import DriverMain from "./components/DriverMain";
 import HealthCareDepartments from "./components/HealthCareDashboard/Departments";
 import Home from "./components/HealthCareDashboard/Home";
 import IncidentHealthCare from "./components/HealthCareDashboard/IncidentHealthCare";
+import IncidentType from "./components/IncidentType";
 const Dashboard = () => {
   const [childData, setChildData] = useState(null);
   const handleChildData = (data) => {
@@ -46,7 +47,8 @@ const Dashboard = () => {
           <Route path="/HomeHealthCare" element={<Maps />} />
           <Route path="/admin-profile" element={<AdminProfile />} />
           <Route path="/RolesPermission" element={<RolesPermission />} />
-          <Route path="/Driver" element={<DriverMain />} />
+          <Route path="/Driver" element={<DriverMain />} />{" "}
+          <Route path="/Incident-type" element={<IncidentType />} />
           <Route path="/change-admin-password" element={<ChangePassword />} />
           <Route
             path="/DepartmetsHealthCare"
