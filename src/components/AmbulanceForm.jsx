@@ -89,9 +89,12 @@ const AmbulanceForm = ({
     const fetchIncidentsData = async () => {
       try {
         await axios
-          .get(`https://ars.disruptwave.com/api/ambulances`, {
-            headers: headers,
-          })
+          .get(
+            `https://ars.disruptwave.com/api/get-available-ambulances?incident_id=${getid}`,
+            {
+              headers: headers,
+            }
+          )
           .then((response) => {
             setMyData(
               response.data?.data?.map((variant) => ({
