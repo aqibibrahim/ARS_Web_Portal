@@ -93,6 +93,7 @@ const AmbulanceFiles = () => {
     setUpdateFormOpen(true);
   };
   const handleViewClick = (ambulance) => {
+    debugger;
     setViewOpen(true);
     setSelectedAmbulance(ambulance);
   };
@@ -328,14 +329,20 @@ const AmbulanceFiles = () => {
   };
   const handlePlaceChange = () => {
     const map = new window.google.maps.Map(document.getElementById("map"), {
-      center: { lat: 50.064192, lng: -130.605469 },
+      center: {
+        lat: locationAddress?.latitude,
+        lng: locationAddress?.longitude,
+      },
       zoom: 3,
     });
 
     const card = document.getElementById("pac-card");
     map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
 
-    const center = { lat: 50.064192, lng: -130.605469 };
+    const center = {
+      lat: locationAddress?.latitude,
+      lng: locationAddress?.longitude,
+    };
     const defaultBounds = {
       north: center.lat + 0.1,
       south: center.lat - 0.1,
@@ -633,8 +640,8 @@ const AmbulanceFiles = () => {
                   zoom={10}
                   style={{ width: "100%", height: "100%" }}
                   initialCenter={{
-                    lat: parseFloat(selectedAmbulance.parking_longitude),
-                    lng: parseFloat(selectedAmbulance.parking_longitude),
+                    lat: parseFloat(selectedAmbulance?.parking_latitude),
+                    lng: parseFloat(selectedAmbulance?.parking_longitude),
                   }}
                 >
                   <Marker
