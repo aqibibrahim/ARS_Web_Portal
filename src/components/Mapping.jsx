@@ -192,7 +192,7 @@ export default function Mapping() {
 							selectedOptions={selectedEquipment}
 							setSelectedOptions={setSelectedEquipment}
 							//   label={"Equipment"}
-							placeholder="Select Equipment"
+							placeholder="Select Incident Types"
 							bgColor={'#91EAAA'}
 						/>
 					</div>
