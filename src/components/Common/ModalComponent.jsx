@@ -228,7 +228,9 @@ const ModalComponent = (props) => {
                           placeholder="Enter PIN"
                           className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
+                          disabled={!editBit ? false : true}
                         />
+
                         <div
                           className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                           aria-hidden="true"
