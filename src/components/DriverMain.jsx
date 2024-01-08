@@ -145,7 +145,7 @@ export default function DriverMain() {
       }
     };
     GetRecords();
-  }, [deleteModal]);
+  }, [deleteModal, isModalOpen]);
   const handleDelete = () => {
     DeleteDriver();
   };
