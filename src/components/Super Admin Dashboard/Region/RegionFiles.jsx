@@ -30,7 +30,8 @@ const RegionFiles = () => {
   const [ambulanceData, setAmbulanceData] = useState([]);
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState(false);
-
+  const [phoneNumbers, setPhoneNumbers] = useState([]);
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [locationAddress, setLocationAddress] = useState({});
   const [formattedAddress, setFormattedAddress] = useState();
   const [submitDone, setSubmitDone] = useState(false);
@@ -143,6 +144,7 @@ const RegionFiles = () => {
         address: locationAddress?.address,
         latitude: locationAddress.latitude,
         longitude: locationAddress.longitude,
+        phone_numbers: phoneNumbers,
       };
       const UploadRegion = async () => {
         console.log(JSON);
@@ -154,6 +156,7 @@ const RegionFiles = () => {
               setSubmitDone(!submitDone);
               setLoadingMessage(false);
               toast.success("Created Successfuly");
+              setIsModalOpen(false);
             });
         } catch (e) {
           setLoadingMessage(false);
@@ -161,8 +164,10 @@ const RegionFiles = () => {
             toast.error(e.response.data.data.name[0]);
           } else {
             toast.error("failed");
+            setIsModalOpen(false);
           }
           console.log(e);
+          setIsModalOpen(false);
         }
       };
 
@@ -171,6 +176,19 @@ const RegionFiles = () => {
 
     enableReinitialize: true,
   });
+
+  const handleAddPhoneNumber = () => {
+    if (newPhoneNumber.trim() !== "") {
+      setPhoneNumbers([...phoneNumbers, newPhoneNumber]);
+      setNewPhoneNumber("");
+    }
+  };
+
+  const handleRemovePhoneNumber = (index) => {
+    const updatedPhoneNumbers = phoneNumbers.filter((_, i) => i !== index);
+    setPhoneNumbers(updatedPhoneNumbers);
+  };
+
   const EditRegion = useFormik({
     initialValues: {
       name: selectedAmbulance?.name,
@@ -186,7 +204,10 @@ const RegionFiles = () => {
         address: locationAddress?.address,
         latitude: locationAddress.latitude,
         longitude: locationAddress.longitude,
+        phone_numbers: phone_numbers,
       };
+      debugger;
+
       const UpdateRegion = async () => {
         console.log(JSON);
         try {
@@ -218,8 +239,8 @@ const RegionFiles = () => {
   const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
+    lat: 33.7519137,
+    lng: 72.7970134,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -624,8 +645,85 @@ const RegionFiles = () => {
                       />
                     </div>
                   </div>
+                  <div>
+                    <label
+                      htmlFor="phone_numbers"
+                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Phone Number
+                    </label>
+
+                    <div className="w-full  mb-6 ">
+                      <div className="flex w-full ">
+                        <div
+                          className={`relative mt-2 ${
+                            newPhoneNumber ? "w-11/12" : "w-full"
+                          }`}
+                        >
+                          <input
+                            type="number"
+                            onChange={(e) => setNewPhoneNumber(e.target.value)}
+                            value={newPhoneNumber}
+                            placeholder="Enter Phone Number"
+                            className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                            {...(phoneNumbers
+                              ? { required: false }
+                              : { required: true })}
+                          />
+                          <div
+                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div>
+                          {newPhoneNumber ? (
+                            <button
+                              type="button"
+                              onClick={handleAddPhoneNumber}
+                              className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
+                            >
+                              +
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                      {/* {validationErrors.phoneNumbers && (
+                        <p className="text-red-500 text-sm">
+                          {validationErrors.phoneNumbers}
+                        </p>
+                      )} */}
+                    </div>
+                  </div>
+                  <div className="flex w-full"> </div>
                 </div>
               </div>
+              {phoneNumbers.length > 0 ? (
+                <div
+                  className={`grid grid-cols-2 gap-2 w-full ${
+                    phoneNumbers.length > 0 ? "bg-gray-100" : ""
+                  } p-4`}
+                >
+                  {phoneNumbers.map((phoneNumber, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
+                    >
+                      <div className="flex text-sm">{phoneNumber}</div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhoneNumber(index)}
+                        className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
+                      >
+                        -
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button

@@ -62,8 +62,8 @@ export default function Regions() {
     setLatitude(null);
     setOptions([]);
     setLocationAddress({
-      latitude:"",
-      longitude:"",
+      latitude: "",
+      longitude: "",
       address: "",
     });
     setIsModalOpen(true);
@@ -189,8 +189,8 @@ export default function Regions() {
   const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
+    lat: 33.7519137,
+    lng: 72.7970134,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -630,7 +630,7 @@ export default function Regions() {
                       htmlFor="addresss"
                       className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
                     >
-                     Address
+                      Address
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -643,7 +643,6 @@ export default function Regions() {
                         className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         placeholder=" Choose On Map"
                         required
-                        readOnly
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
