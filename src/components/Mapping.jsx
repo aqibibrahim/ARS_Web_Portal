@@ -4,6 +4,7 @@ import axios from 'axios'
 import { Vars } from '../helpers/helpers'
 import MultiSelectDropdown from './MultiSelectDropdown'
 import { Toaster, toast } from 'sonner'
+import Select from 'react-tailwindcss-select'
 
 export default function Mapping() {
 	const [departmentMapping, setDepartmentMapping] = useState(false)
@@ -11,27 +12,35 @@ export default function Mapping() {
 	const [departments, setDepartments] = useState([])
 	const [equipments, setEquipments] = useState([])
 	const [incident, setIncident] = useState([])
+	const [selectedDepart, setSelectedDepart] = useState('')
+	const [selectedincident, setSelectedIncidentt] = useState('')
+
 	const [selectedEquipment, setSelectedEquipment] = useState([])
 	const [selectedDepartment, setSelectedDepartment] = useState('')
 	const [selectedIncidentId, setSelectedIncidentId] = useState('')
 	const [activeTab, setActiveTab] = useState('departmentMapping')
+	const [myData, setMyData] = useState([])
+	const [myinciData, setMyInciData] = useState([])
+
 	const [loading, setLoading] = useState(true)
 	const handleCancelView = () => {
 		setDepartmentMapping(false)
 		setIncidentTypeMapping(false)
-		setSelectedDepartment('')
+		// setSelectedDepartment('')
+		setSelectedDepart('')
 		setSelectedEquipment([])
 	}
 	const handleTabChange = (tab) => {
 		setActiveTab(tab)
 	}
 
-	const handleIncidentChange = (event) => {
-		const selectedId = event.target.value
-		setSelectedIncidentId(selectedId)
+	const handleIncidentChange = (Incident) => {
+		setSelectedIncidentId(Incident.value)
+		setSelectedIncidentt(Incident)
 	}
-	const handleDepartmentChange = (value) => {
-		setSelectedDepartment(value)
+	const handleDepartmentChange = (department) => {
+		setSelectedDepartment(department.value)
+		setSelectedDepart(department)
 	}
 
 	const handleMappingSubmit = async () => {
@@ -56,6 +65,7 @@ export default function Mapping() {
 				toast.success('Mapping added Successfuly')
 				setDepartmentMapping(false)
 				setSelectedDepartment('')
+				setSelectedDepart('')
 				setSelectedEquipment('')
 			}
 			handleCancelView()
@@ -76,7 +86,6 @@ export default function Mapping() {
 				equipments: selectedEquipment?.map((item) => item.id),
 				// incident_types: [1],
 			}
-			debugger
 			// Send your API request with the body
 			const response = await axios.post(`${Vars.domain}/incident-type/mapping`, body, {
 				headers,
@@ -85,6 +94,7 @@ export default function Mapping() {
 				toast.success('Mapping added Successfuly')
 				setIncidentTypeMapping(false)
 				setSelectedDepartment('')
+				setSelectedDepart('')
 				setSelectedEquipment('')
 				setSelectedIncidentId('')
 			}
@@ -108,6 +118,12 @@ export default function Mapping() {
 
 				if (response.status === 200 || response.status === 201) {
 					setDepartments(response?.data?.data)
+					setMyData(
+						response.data?.data?.map((variant) => ({
+							label: variant.name,
+							value: variant.id,
+						}))
+					)
 				}
 			} catch (error) {
 				console.error('Error fetching departments:', error)
@@ -155,6 +171,12 @@ export default function Mapping() {
 
 				if (response.status === 200 || response.status === 201) {
 					setIncident(response.data.data)
+					setMyInciData(
+						response.data?.data?.map((variant) => ({
+							label: variant.name,
+							value: variant.id,
+						}))
+					)
 				}
 			} catch (error) {
 				console.error('Error fetching incidents:', error)
@@ -171,20 +193,17 @@ export default function Mapping() {
 			<Modal open={departmentMapping} onCancel={handleCancelView} footer={null} closable={true} maskClosable={false}>
 				<div className="flex flex-col">
 					<div className="flex p-5 ">
-						<select
-							value={selectedDepartment}
-							onChange={(e) => handleDepartmentChange(e.target.value)}
-							className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl"
-						>
-							<option value="" disabled>
-								Select Department
-							</option>
-							{departments.map((details, index) => (
-								<option key={index} value={details?.id}>
-									{details?.name}
-								</option>
-							))}
-						</select>
+						<Select
+							value={selectedDepart}
+							placeholder="Select"
+							onChange={(selectedValue) => handleDepartmentChange(selectedValue)}
+							options={myData}
+							isClearable={true}
+							primaryColor={'blue'}
+							isSearchable={true}
+							menuPlacement="auto"
+							className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+						/>
 					</div>
 					<div>
 						<MultiSelectDropdown
@@ -214,7 +233,18 @@ export default function Mapping() {
 				{' '}
 				<div className="flex flex-col">
 					<div className="flex p-5 ">
-						<select
+						<Select
+							value={selectedincident}
+							placeholder="Select"
+							onChange={(selectedValue) => handleIncidentChange(selectedValue)}
+							options={myinciData}
+							isClearable={true}
+							primaryColor={'blue'}
+							isSearchable={true}
+							menuPlacement="auto"
+							className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+						/>
+						{/* <select
 							className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl"
 							onChange={handleIncidentChange}
 							value={selectedIncidentId}
@@ -227,7 +257,7 @@ export default function Mapping() {
 									{details?.name}
 								</option>
 							))}
-						</select>
+						</select> */}
 					</div>
 					<div>
 						<MultiSelectDropdown
