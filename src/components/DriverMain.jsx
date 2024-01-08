@@ -109,14 +109,12 @@ export default function DriverMain() {
         console.log("Role created successfully:", response.data);
       }
     } catch (error) {
-      debugger;
       console.error("Error creating role:", error);
       toast.error(error?.response?.data?.data?.pin);
     }
   };
 
   const NewDriverCreation = () => {
-    debugger;
     setIsModalOpen(true);
     setEditBit(false);
   };
@@ -152,7 +150,6 @@ export default function DriverMain() {
     DeleteDriver();
   };
   const handleEditClick = (data) => {
-    debugger;
     setIsModalOpen(true);
     setEditBit(true);
     setEditData({
