@@ -109,14 +109,12 @@ export default function DriverMain() {
         console.log("Role created successfully:", response.data);
       }
     } catch (error) {
-      debugger;
       console.error("Error creating role:", error);
       toast.error(error?.response?.data?.data?.pin);
     }
   };
 
   const NewDriverCreation = () => {
-    debugger;
     setIsModalOpen(true);
     setEditBit(false);
   };
@@ -152,7 +150,6 @@ export default function DriverMain() {
     DeleteDriver();
   };
   const handleEditClick = (data) => {
-    debugger;
     setIsModalOpen(true);
     setEditBit(true);
     setEditData({
@@ -166,11 +163,7 @@ export default function DriverMain() {
   const handleCancelView = () => {
     setisViewModal(false);
   };
-  const handleViewClick = (data) => {
-    debugger;
-    setisViewModal(true);
-    setViewData(data);
-  };
+
   const DeleteDriver = async () => {
     try {
       var token = localStorage.getItem("token");
@@ -295,12 +288,6 @@ export default function DriverMain() {
                       >
                         <BiEdit />
                       </button>
-                      <button
-                        onClick={() => handleViewClick(data)}
-                        className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                      >
-                        <BsEye />
-                      </button>
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-md">
@@ -320,43 +307,7 @@ export default function DriverMain() {
           </table>
         </div>
       </div>
-      {isViewModal ? (
-        <Modal
-          // title="Are you sure to delete this Role?"
-          open={isViewModal}
-          // onOk={deleteIncidentType}
-          onCancel={handleCancelView}
-          closable={true}
-          footer={null}
-        >
-          {" "}
-          <div>
-            Driver Details
-            <div className="flex flex-row justify-between p-5">
-              <p>
-                {" "}
-                <span className="font-semibold">Name:</span>{" "}
-                {viewData?.first_name}
-              </p>
-              <p>
-                <span className="font-semibold">Email:</span> {viewData?.email}
-              </p>
-              <p>
-                <span className="font-semibold">Phone No#:</span>
-                {viewData?.phone_numbers?.map((phoneNumber, index) => (
-                  <div key={index}>
-                    <p className="text-base text-right">
-                      {phoneNumber?.number}
-                    </p>
-                  </div>
-                ))}
-              </p>
-            </div>
-          </div>
-        </Modal>
-      ) : (
-        ""
-      )}
+
       <Modal
         title="Are you sure to delete this Driver?"
         open={deleteModal}
