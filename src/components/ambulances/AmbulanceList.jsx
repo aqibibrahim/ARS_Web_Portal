@@ -24,15 +24,6 @@ export default function AmbulanceList() {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  // const myData = [
-  //   { label: "Books", value: "Books" },
-  //   { label: "Movies, Music & Games", value: "Movies, Music & Games" },
-  //   { label: "Electronics & Computers", value: "Electronics & Computers" },
-  //   { label: "Home, Garden & Tools", value: "Home, Garden & Tools" },
-  //   { label: "Health & Beauty", value: "Health & Beauty" },
-  //   { label: "Toys, Kids & Baby", value: "Toys, Kids & Baby" },
-  //   { label: "Clothing & Jewelry", value: "Clothing & Jewelry" },
-  // ];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [myData, setMyData] = useState([]);
 
@@ -255,8 +246,8 @@ export default function AmbulanceList() {
   const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
+    lat: 33.7519137,
+    lng: 72.7970134,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -433,7 +424,7 @@ export default function AmbulanceList() {
             type="button"
             onClick={handleCreateAmbulanceClick}
           >
-            + Create Ambulance
+            Create Ambulance +
           </button>
         </div>
         <div className="rtl">

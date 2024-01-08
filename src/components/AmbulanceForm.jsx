@@ -160,10 +160,10 @@ const AmbulanceForm = ({
     <>
       <Toaster position="bottom-right" richColors />
       <form onSubmit={assignAmbulance.handleSubmit}>
-        <div className="mb-5 mt-2">
+        <div className="mb-5 mt-2 flex">
           <Select
             value={selectedOption}
-            placeholder="Select"
+            placeholder="Select Ambulance"
             onChange={handleChange}
             options={myData}
             formatOptionLabel={formatOptionLabel}
@@ -173,9 +173,9 @@ const AmbulanceForm = ({
             className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
           />
         </div>
-        <div>
+        <div className="flex  bottom-10 absolute">
           <button
-            className="text-primary-100 bg-white rounded-md border-2 border-primary-100 mr-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
+            className="text-primary-100 flex  bg-white rounded-md border-2 border-primary-100 mr-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
             type="submit"
           >
             Next
