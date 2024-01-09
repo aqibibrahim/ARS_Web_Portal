@@ -76,6 +76,9 @@ export default function IncidentList({}) {
 	const [menuIsOpen, setMenuIsOpen] = useState([])
 	const [viewOpen, setViewOpen] = useState(false)
 	const [showData, setShowData] = useState([])
+	const [showAssignAmbulance, setShowAssignAmbulance] = useState([])
+	const [disabledAmbulanceIDs, setDisabledAmbulanceIDs] = useState([])
+	const [visibleDivIndex, setVisibleDivIndex] = useState(null)
 
 	const [selectedHealthCareOpetion, setSelectedHealthCareOpetion] = useState({})
 	const handleAssignAmbulanceAndhealthCare = (data) => {
@@ -94,7 +97,10 @@ export default function IncidentList({}) {
 		setSelectedIncident(incident)
 		setUpdateFormOpen(true)
 		setAssignAmbulance(true)
+		fetchAmbulanceData()
+		fetchSingleIncident()
 	}
+	// Get All Incidents
 	useEffect(() => {
 		const fetchincidentData = async () => {
 			try {
@@ -113,7 +119,7 @@ export default function IncidentList({}) {
 		}
 		fetchincidentData()
 	}, [submitDone])
-
+	// Healtcare Facility Get
 	useEffect(() => {
 		const fetchHealthCareData = async () => {
 			try {
@@ -131,31 +137,95 @@ export default function IncidentList({}) {
 		}
 		fetchHealthCareData()
 	}, [])
-	useEffect(() => {
-		const fetchAmbulanceData = async () => {
-			try {
-				await axios
-					.get(`https://ars.disruptwave.com/api/ambulances`, {
-						headers: headers,
-					})
-					.then((response) => {
-						setMyData(
-							response.data?.data?.map((variant) => ({
-								label: variant.model,
-								value: variant.id,
-								persons_supported: variant.persons_supported,
-								id_no: variant.id_no,
-							}))
-						)
-						// setIsLoading(false);
-						console.log(response?.data?.data)
-					})
-			} catch (e) {
-				console.log(e)
-			}
+	// Get All Available Ambulances
+	// useEffect(() => {
+	const fetchAmbulanceData = async () => {
+		console.log('Hello', selectedIncident)
+		try {
+			await axios
+				.get(`https://ars.disruptwave.com/api/get-available-ambulances?incident_id=${selectedIncident.id}`, {
+					headers: headers,
+				})
+				.then((response) => {
+					setMyData(
+						response.data?.data?.map((variant) => ({
+							label: variant.model,
+							value: variant.id,
+							persons_supported: variant.persons_supported,
+							make: variant.make,
+							plate_no: variant.plate_no,
+							id_no: variant.id_no,
+						}))
+					)
+					// setIsLoading(false);
+					console.log(response?.data?.data)
+				})
+		} catch (e) {
+			console.log(e)
 		}
-		fetchAmbulanceData()
-	}, [])
+	}
+	const fetchSingleIncident = async () => {
+		console.log('Hello', selectedIncident)
+		try {
+			await axios
+				.get(`https://ars.disruptwave.com/api/incidents/${selectedIncident.id}`, {
+					headers: headers,
+				})
+				.then((response) => {
+					setShowAssignAmbulance(response?.data?.data?.ambulances)
+
+					// setMyData(
+					// 	response.data?.data?.map((variant) => ({
+					// 		label: variant.model,
+					// 		value: variant.id,
+					// 		persons_supported: variant.persons_supported,
+					// 		make: variant.make,
+					// 		plate_no: variant.plate_no,
+					// 		id_no: variant.id_no,
+					// 	}))
+					// )
+					// setIsLoading(false);
+					console.log(response?.data?.data)
+				})
+		} catch (e) {
+			console.log(e)
+		}
+	}
+	// 	fetchAmbulanceData()
+	// }, [])
+
+	const assignAmbulance = useFormik({
+		initialValues: {
+			ambulances: '',
+		},
+		onSubmit: (values) => {
+			const JSON = {
+				ambulances: selectedOption?.map((item) => item.value),
+			}
+			console.log(JSON)
+			const createAssignAmbulance = async () => {
+				try {
+					await axios.patch(`${Vars.domain}/incidents/${selectedIncident.id}`, JSON, config).then((res) => {
+						console.log(res)
+						// setSubmitDone(!submitDone);
+						// setLoadingMessage(false);
+						toast.success('Ambulance Assign Successfuly')
+						setTimeout(() => {
+							fetchSingleIncident()
+						}, 500)
+					})
+				} catch (e) {
+					// setLoadingMessage(false);
+					toast.error('failed')
+					console.log(e)
+				}
+			}
+
+			createAssignAmbulance()
+		},
+
+		enableReinitialize: true,
+	})
 	// const handleViewClick = (incident) => {
 	//   // setLongitude(null)
 	//   // setLatitude(null)
@@ -180,34 +250,34 @@ export default function IncidentList({}) {
 	//   setSelectedIncident(incident);
 	//   console.log(incident, "incident");
 	// };
-	const assignAmbulance = useFormik({
-		initialValues: {
-			ambulance_id: '',
-		},
-		onSubmit: (values) => {
-			const JSON = {
-				ambulance_id: selectedOption[0].value,
-			}
-			const AssignAmbulance = async () => {
-				console.log(JSON)
-				try {
-					await axios.patch(`${Vars.domain}/incidents/${selectedIncident?.id}`, JSON, config).then((res) => {
-						console.log(res)
-						toast.success('Updated Successfuly')
-						setSubmitDone(!submitDone)
-						setSelectedOption(null)
-						handleAssignAmbulanceAndhealthCare(false)
-					})
-				} catch (e) {
-					toast.error('failed')
-					console.log(e)
-				}
-			}
-			AssignAmbulance()
-		},
+	// const assignAmbulance = useFormik({
+	// 	initialValues: {
+	// 		ambulance_id: '',
+	// 	},
+	// 	onSubmit: (values) => {
+	// 		const JSON = {
+	// 			ambulance_id: selectedOption[0].value,
+	// 		}
+	// 		const AssignAmbulance = async () => {
+	// 			console.log(JSON)
+	// 			try {
+	// 				await axios.patch(`${Vars.domain}/incidents/${selectedIncident?.id}`, JSON, config).then((res) => {
+	// 					console.log(res)
+	// 					toast.success('Updated Successfuly')
+	// 					setSubmitDone(!submitDone)
+	// 					setSelectedOption(null)
+	// 					handleAssignAmbulanceAndhealthCare(false)
+	// 				})
+	// 			} catch (e) {
+	// 				toast.error('failed')
+	// 				console.log(e)
+	// 			}
+	// 		}
+	// 		AssignAmbulance()
+	// 	},
 
-		enableReinitialize: true,
-	})
+	// 	enableReinitialize: true,
+	// })
 	const getIncidentDetail = async (id) => {
 		console.log(JSON)
 		try {
@@ -322,32 +392,29 @@ export default function IncidentList({}) {
 						<table className="min-w-full divide-y divide-gray-300 text-right">
 							<thead>
 								<tr>
-									<th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+									{/* <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
 										<span className="sr-only">Edit</span>
-									</th>
-									<th
-										scope="col"
-										className="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0"
-									>
-										Model
-									</th>
+									</th> */}
 									<th scope="col" className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500">
-										Facility
-									</th>
-									<th scope="col" className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500">
-										Contact Number
-									</th>
-									<th scope="col" className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500">
-										Type
+										Actions
 									</th>
 									<th scope="col" className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500">
 										Status
 									</th>
 									<th scope="col" className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500">
-										ID No
+										Contact Number
 									</th>
 									<th scope="col" className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500">
-										Informer
+										Created By
+									</th>
+									<th scope="col" className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500">
+										Emergency Type
+									</th>
+									<th scope="col" className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500">
+										Incident Type
+									</th>
+									<th scope="col" className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500">
+										Informer Name
 									</th>
 								</tr>
 							</thead>
@@ -356,28 +423,6 @@ export default function IncidentList({}) {
 									<tr key={incident?.id} className="hover:bg-gray-100">
 										<td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
 											<span className="flex items-center justify-center gap-5">
-												{/* <span
-                        className="text-red-500 flex justify-center  hover:text-red-600"
-                        onClick={() => {
-                          setDelete(true);
-                          setDeleteID(incident?.id);
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          class="w-6 h-6"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                          />
-                        </svg>
-                      </span> */}
 												<button
 													onClick={() => {
 														handleEditClick(incident)
@@ -387,7 +432,6 @@ export default function IncidentList({}) {
 													className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
 												>
 													<BiEdit />
-													<span className="sr-only">, {incident.name}</span>
 												</button>
 												<button
 													onClick={() => {
@@ -398,24 +442,32 @@ export default function IncidentList({}) {
 													className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
 												>
 													<BsEye />
-													<span className="sr-only">, {incident.name}</span>
 												</button>
 											</span>
 										</td>
-										<td className="whitespace-nowrap px-3 py-4 text-md">{incident?.ambulance?.model}</td>
-										<td className="whitespace-nowrap px-3 py-4 text-md">{incident?.facility?.name}</td>
-										<td className="whitespace-nowrap px-3 py-4 text-md">
-											{incident?.informer?.phone_numbers?.map((phone) => (
-												<div key={phone.id}>{phone.number}</div>
-											))}
-										</td>
-										<td className="whitespace-nowrap px-3 py-4 text-md">{incident.type}</td>
 										<td className="whitespace-nowrap px-3 py-4 text-md">
 											<span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
 												{incident.status}
 											</span>
 										</td>
-										<td className="whitespace-nowrap px-3 py-4 text-md">{incident?.ambulance?.id_no}</td>
+										<td className="whitespace-nowrap px-3 py-4 text-md">
+											{incident?.informer?.phone_numbers?.map((phone) => (
+												<div key={phone.id}>{phone.number}</div>
+											))}
+										</td>
+										<td className="whitespace-nowrap px-3 py-4 text-md">
+											{' '}
+											{incident?.created_by?.first_name + ' ' + incident?.created_by?.last_name}
+										</td>
+
+										<td
+											className={`whitespace-nowrap px-3 py-4 text-md ${
+												incident.type === 'Critical' ? 'text-red-500' : 'text-green-500'
+											}`}
+										>
+											{incident.type}
+										</td>
+										<td className="whitespace-nowrap px-3 py-4 text-md">{incident.incident_type.name}</td>
 										<td className="whitespace-nowrap px-3 py-4 text-md">{incident?.informer?.name}</td>
 									</tr>
 								))}
@@ -477,7 +529,7 @@ export default function IncidentList({}) {
 													<p className="bg-blue-200 p-2 rounded-full">{index + 1}</p>
 													<p>
 														{' '}
-														<span className="font-semibold">Make: </span> {ambulance.make}
+														<span className="font-semibold">Make: </span> {ambulance?.make}
 													</p>
 													<p>
 														<span className="font-semibold">Model:</span> {ambulance?.model}
@@ -517,18 +569,18 @@ export default function IncidentList({}) {
 								<p className="text-lg text-right font-semibold">Facility Details</p>
 								{showData?.ambulances?.length > 0 ? (
 									showData?.ambulances?.map((facility, index) => (
-										<div className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2" key={facility.id}>
+										<div className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2" key={facility?.id}>
 											<div className="flex justify-between gap-10  ">
 												<p className="bg-blue-200 p-2 rounded-full">{index + 1}</p>
 												<p>
 													{' '}
-													<span className="font-semibold">Name: </span> {facility.facility.name}
+													<span className="font-semibold">Name: </span> {facility?.facility?.name}
 												</p>
 												<p>
 													<span className="font-semibold">Status:</span> {facility?.facility?.status}
 												</p>
 												<p>
-													<span className="font-semibold">Address: </span> {facility.facility?.address}
+													<span className="font-semibold">Address: </span> {facility?.facility?.address}
 												</p>
 											</div>
 										</div>
@@ -599,6 +651,33 @@ export default function IncidentList({}) {
 										</div>
 									</div>
 								))}
+								<form className="p-5 h-[30rem] flex justify-between flex-col" onSubmit={assignAmbulance.handleSubmit}>
+									<div className="flex flex-row justify-between gap-4 mb-4">
+										<div className="flex flex-col space-y-2 w-full">
+											<div className="mb-5 mt-2">
+												<Select
+													value={selectedOption}
+													placeholder="Select Ambulance"
+													onChange={handleChange}
+													options={myData}
+													formatOptionLabel={formatOptionLabel}
+													isMultiple={true}
+													isClearable={true}
+													primaryColor={'blue'}
+													className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+												/>
+											</div>
+										</div>
+									</div>
+									<div className="text-left mt-10">
+										<button
+											type="submit"
+											className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100`}
+										>
+											Assign Ambulance
+										</button>
+									</div>
+								</form>
 							</div>
 						)}
 						{ishealthCare && (
@@ -606,11 +685,93 @@ export default function IncidentList({}) {
 								<div className="flex flex-row justify-between gap-4 mb-4">
 									<div className="flex flex-col space-y-2 w-full">
 										<div className="mb-5 mt-2">
+											{showAssignAmbulance.length === 0 ? (
+												<div className="flex mt-4 flex-col hover:bg-gray-100 cursor-pointer justify-end gap-1 border  border-gray-400 p-1 rounded-md mb-2 text-gray-800">
+													<p className="text-right">loading...</p>
+												</div>
+											) : (
+												showAssignAmbulance?.map((ambulance, index) => (
+													<div
+														key={ambulance?.id}
+														className="flex mt-4 flex-col hover:bg-gray-100 cursor-pointer justify-end gap-1 border border-gray-400 p-1 rounded-md mb-2 text-gray-800"
+													>
+														<p className="text-right">Model:{ambulance?.model}</p>
+														<p className="text-right">Persons Supported:{ambulance?.persons_supported}</p>
+														<p className="text-right">Id No:{ambulance?.id_no}</p>
+
+														{disabledAmbulanceIDs.includes(ambulance?.id) && (
+															<div key={ambulance?.id}>
+																<div className="border-t-4 flex justify-around ">
+																	<p className="flex text-xl font-bold ">Assigned Health Care</p>
+																	<button
+																		className="flex text-right text-blue-500 mt-2"
+																		onClick={() => {
+																			setOpen(true)
+																		}}
+																	>
+																		<BiEdit />
+																	</button>
+																</div>
+																<p>
+																	<span>Name: </span> {selectedFacilityOption?.name}
+																</p>
+																<p>
+																	<span>Address: </span> {selectedFacilityOption?.address}
+																</p>
+																<p>
+																	<span>Email: </span> {selectedFacilityOption?.email}
+																</p>
+																<p>
+																	<span>Phone Number: </span>
+																	{selectedFacilityOption?.phone_numbers?.map((phone) => (
+																		<span key={phone?.id}>{phone?.number}</span>
+																	))}
+																</p>
+																<p>
+																	<span>Focal Person: </span>
+																	{selectedFacilityOption?.focal_persons?.map((person) => (
+																		<span key={person?.id}>
+																			{person?.first_name}
+																			{person?.last_name}
+																		</span>
+																	))}
+																</p>
+															</div>
+														)}
+														{!disabledAmbulanceIDs.includes(ambulance?.id) && (
+															<button
+																onClick={() => {
+																	setOpen(true)
+																	setAmbulanceID(ambulance?.id)
+
+																	// Toggle the visibility of the div
+																	setVisibleDivIndex((prevIndex) => (prevIndex === index ? null : index))
+
+																	// Set the flag to true once the hidden div is shown
+																	setHasHiddenDivShown(true)
+
+																	// Disable the button and set the ambulance ID to the disabledAmbulanceIDs state
+																	setDisabledAmbulanceIDs((prevIDs) => [...prevIDs, ambulance?.id])
+																}}
+																className={`flex items-center m-1 px-1.5 py-1.5 w-36 rounded-md text-sm justify-center 
+													  ${
+															visibleDivIndex === index
+																? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+																: 'bg-white border-2 border-primary-100 hover:border-primary-100 transition-all duration-300 hover:bg-primary-100 hover:text-white'
+														}
+													`}
+															>
+																{/* Assign HealthCare */}
+															</button>
+														)}
+													</div>
+												))
+											)}
 											<Listbox value={selectedHealthCareOpetion} onChange={setSelectedHealthCareOpetion}>
 												{({ open }) => (
 													<>
 														<Listbox.Label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-															Incedent type
+															Select Health Care
 														</Listbox.Label>
 														<div className="relative mt-2">
 															<Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
