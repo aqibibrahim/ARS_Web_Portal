@@ -32,29 +32,6 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
   const [incidentData, setIncidentData] = useState({});
   const [ambulanceData, setAmbulanceData] = useState({});
   const [selectedOption, setSelectedOption] = useState("");
-  const [incidentType, setIncidentType] = useState([]);
-  useEffect(() => {
-    const getIncidentTypes = async () => {
-      try {
-        var token = localStorage.getItem("token");
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        };
-
-        const response = await axios.get(`${Vars.domain}/incident-type`, {
-          headers,
-        });
-
-        if (response.status === 200 || response.status === 201) {
-          setIncidentType(response?.data?.data);
-        }
-      } catch (error) {
-        console.error("Error getting role:", error);
-      }
-    };
-    getIncidentTypes();
-  }, []);
 
   const handleShowIncidentSummary = () => {
     setIsAssignedAmbulancesVisible(true);
@@ -141,7 +118,6 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
   };
 
   const [open, setOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState({});
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [locationAddress, setLocationAddress] = useState({});
   const [submitDone, setSubmitDone] = useState(false);
@@ -162,12 +138,12 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
       const JSON = {
         latitude: locationAddress.latitude,
         longitude: locationAddress.longitude,
-        incident_type_id: selectedOption.value,
+        incident_type_id: selectedOption.id,
         description: values.description,
         informer_name: values.informer_name,
         informer_phone_numbers: [values.informer_phone_numbers],
         informer_address: locationAddress.address,
-        type: selectedOption.label,
+        type: selectedType,
       };
       console.log(JSON);
       const createAmbulance = async () => {
@@ -184,7 +160,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             });
         } catch (e) {
           setLoadingMessage(false);
-          toast.error("failed");
+          toast.error("Something went wrong");
           console.log(e);
         }
       };
@@ -201,7 +177,56 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
     lat: 33.7519137,
     lng: 72.7970134,
   });
+  const [selectedOption, setSelectedOption] = useState({
+    id: "",
+    label: "Select Incident Type",
+  });
 
+  const handleSelectChange = (e) => {
+    const selectedId = e.target.value;
+    const selectedIncidentType = incidentType.find(
+      (type) => type.id === parseInt(selectedId)
+    );
+
+    setSelectedOption({
+      id: selectedId,
+      label: selectedIncidentType
+        ? selectedIncidentType.name
+        : "Select Incident Type",
+    });
+  };
+
+  const [incidentType, setIncidentType] = useState([]);
+  const [selectedType, setSelectedType] = useState(null);
+  const options = [
+    { value: "Critical", label: "Critical" },
+    { value: "Non-Critical", label: "Non-Critical" },
+  ];
+  const handleTypeChange = (event) => {
+    setSelectedType(event.target.value);
+  };
+  useEffect(() => {
+    const getIncidentTypes = async () => {
+      try {
+        var token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+
+        const response = await axios.get(`${Vars.domain}/incident-type`, {
+          headers,
+        });
+
+        if (response.status === 200 || response.status === 201) {
+          setIncidentType(response?.data?.data);
+        }
+      } catch (error) {
+        console.error("Error getting role:", error);
+      }
+    };
+    getIncidentTypes();
+  }, []);
   const [address, setAddress] = useState("No address available");
   const geocoder = new Geocoder();
   const handleMarkerDragEnd = (t, map, coord) => {
@@ -419,14 +444,53 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             </div>
           </div>
         </div>
-        <div className="mb-5">
-          <Listbox value={selectedOption} onChange={setSelectedOption}>
-            {({ open }) => (
-              <>
-                <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                  Incident type
-                </Listbox.Label>
-                <div className="relative mt-2">
+        <div className="mb-5 m-1">
+          <div className="block text-sm font-medium leading-6 text-gray-900 text-right">
+            Emergency Type
+            {/* </Listbox.Label> */}
+          </div>
+          <select
+            id="severity"
+            value={selectedType}
+            onChange={handleTypeChange}
+            className="w-full border-none focus:border-primary-100 rounded-md mt-2 placeholder:text-gray-400 bg-[#f6f7f7]"
+          >
+            <option value="" disabled>
+              Select Emergency Type
+            </option>
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-5 m-1">
+          {/* <Listbox value={selectedOption} onChange={setSelectedOption}>
+            {({ open }) => ( */}
+          <>
+            {/* <Listbox.Label */}
+            <div className="block text-sm font-medium leading-6 text-gray-900 text-right">
+              Incident type
+              {/* </Listbox.Label> */}
+            </div>
+            <select
+              id="incidentTypeSelect"
+              value={selectedOption.id}
+              onChange={handleSelectChange}
+              className="w-full border-none focus:border-primary-100 rounded-md mt-2 placeholder:text-gray-400 bg-[#f6f7f7]"
+            >
+              <option value="" disabled>
+                Select Incident Type
+              </option>
+              {incidentType.map((incidentType) => (
+                <option key={incidentType.id} value={incidentType.id}>
+                  {incidentType.name}
+                </option>
+              ))}
+            </select>
+
+            {/* <div className="relative mt-2">
                   <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
                     <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
                       <ChevronUpDownIcon
@@ -490,10 +554,10 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                       ))}
                     </Listbox.Options>
                   </Transition>
-                </div>
-              </>
-            )}
-          </Listbox>
+                </div> */}
+          </>
+          {/* )}
+          </Listbox> */}
         </div>
         <div className="mb-5">
           <div>
