@@ -3,9 +3,9 @@ import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { BsArrowRightCircle } from 'react-icons/bs'
 import axios from 'axios'
-import Select from 'react-tailwindcss-select'
 import { Toaster, toast } from 'sonner'
 import { useFormik } from 'formik'
+import { Select as AntSelect } from 'antd'
 const DepartmentsFiles = () => {
 	var token = localStorage.getItem('token')
 	const headers = {
@@ -15,6 +15,7 @@ const DepartmentsFiles = () => {
 	const config = {
 		headers: { Authorization: `Bearer ${token}` },
 	}
+	const { Option } = AntSelect
 	const [departments, setDepartments] = useState([])
 	const [loading, setLoading] = useState(true)
 	const [submitDone, setSubmitDone] = useState(false)
@@ -233,18 +234,24 @@ const DepartmentsFiles = () => {
 														Incident Type
 													</label>
 
-													<Select
+													<AntSelect
 														value={options}
 														placeholder="Select"
-														onChange={(e) => handleChange(e)}
-														options={myData}
-														isMultiple={true}
-														isClearable={true}
-														primaryColor={'blue'}
-														isSearchable={true} // Add this line to enable search
-														menuPlacement="auto"
-														className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-													/>
+														onChange={(value) => handleChange(value)}
+														mode="multiple" // Add this line for multiple selection
+														allowClear={true}
+														showSearch={true}
+														className="w-full"
+														filterOption={(input, option) =>
+															option?.label?.toLowerCase().indexOf(input?.toLowerCase()) >= 0
+														}
+													>
+														{myData.map((item) => (
+															<Option key={item.value} value={item.value}>
+																{item.label}
+															</Option>
+														))}
+													</AntSelect>
 												</div>
 											</div>
 										</div>
