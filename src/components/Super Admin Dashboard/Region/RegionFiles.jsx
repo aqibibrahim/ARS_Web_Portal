@@ -26,6 +26,8 @@ const RegionFiles = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updateFormOpen, setUpdateFormOpen] = useState(false);
+  const [viewFormOpen, setViewFormOpen] = useState(false);
+
   const [isLoading, setIsLoading] = useState(true);
   const [ambulanceData, setAmbulanceData] = useState([]);
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
@@ -84,6 +86,30 @@ const RegionFiles = () => {
       address: "",
     });
     setIsModalOpen(true);
+  };
+
+  const handleViewClick = (region) => {
+    setLongitude(null);
+    setLatitude(null);
+    if (region?.ambulances.length == 0) {
+      setOptions([]);
+    } else {
+      setOptions(
+        region?.ambulances?.map((variant) => ({
+          label: variant.model,
+          value: variant.id,
+        }))
+      );
+    }
+
+    // console.log(ambulance);
+    setSelectedAmbulance(region);
+    setLocationAddress({
+      latitude: region?.latitude,
+      longitude: region?.longitude,
+      address: region?.address,
+    });
+    setViewFormOpen(true);
   };
 
   const handleEditClick = (region) => {
@@ -502,6 +528,13 @@ const RegionFiles = () => {
                           <BiEdit />
                           <span className="sr-only">, {region.name}</span>
                         </button>{" "}
+                        <button
+                          onClick={() => handleViewClick(region)}
+                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                        >
+                          <BsEye />
+                          <span className="sr-only">, {region.name}</span>
+                        </button>
                       </span>
                     </td>
                     {/* <td className="whitespace-nowrap px-3 py-4 text-md">
@@ -848,6 +881,87 @@ const RegionFiles = () => {
                 )}
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {viewFormOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full ">
+          <div className="relative top-1 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden  mb-5">
+            <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
+              <BsArrowRightCircle
+                width={9}
+                className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
+                onClick={() => setViewFormOpen(false)}
+              />
+              <h3 className="text-xl font-semibold">
+                HealthCare Details
+                <span className="text-lime-600 ml-2">
+                  {/* {selectedHealthCare?.status} */}
+                </span>
+              </h3>
+            </div>
+            <div>
+              <div className="flex flex-row mr-2 p-5 -mt-6 justify-end">
+                <p>
+                  <span className="font-semibold flex justify-end">Name</span>
+                  {/* <p> {selectedHealthCare?.name}</p> */}
+                </p>
+                {/* <p>
+                  <span className="font-semibold">Email:</span>{" "}
+                  {selectedHealthCare?.email}
+                </p> */}
+              </div>
+              <div className="px-5 ">
+                <p className="text-lg text-right font-semibold">
+                  Department Details
+                </p>
+                {/* {selectedHealthCare?.departments.length > 0 ? (
+                  selectedHealthCare?.departments?.map((departments) => (
+                    <p key={departments.id} className="text-base text-right">
+                      {departments.name}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-right">No Data</p>
+                )} */}
+              </div>
+              <div className="px-5 mt-4 mb-5">
+                <p className="text-lg text-right font-semibold">
+                  Phone Number(s)
+                </p>
+                {/* {selectedHealthCare?.phone_numbers?.map((phone_numbers) => (
+                  <p key={phone_numbers.id} className="text-base text-right">
+                    {phone_numbers.number}
+                  </p>
+                ))} */}
+              </div>{" "}
+              <div className="px-5 mt-4 mb-5">
+                <p className="text-lg text-right font-semibold">Focal Person</p>
+                {/* {selectedHealthCare?.focal_persons?.map((person) => (
+                  <p key={person.id} className="text-base text-right">
+                    {`${person?.first_name} ${person?.last_name}`}
+                  </p>
+                ))} */}
+              </div>
+              <div className="h-80 w-10">
+                {/* <Map
+                  google={window.google}
+                  zoom={10}
+                  style={{ width: "100%", height: "100%" }}
+                  initialCenter={{
+                    lat: parseFloat(selectedHealthCare?.latitude),
+                    lng: parseFloat(selectedHealthCare?.longitude),
+                  }}
+                >
+                  <Marker
+                    position={{
+                      lat: parseFloat(selectedHealthCare?.latitude),
+                      lng: parseFloat(selectedHealthCare?.longitude),
+                    }}
+                  />
+                </Map> */}
+              </div>
+            </div>
           </div>
         </div>
       )}
