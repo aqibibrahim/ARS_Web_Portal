@@ -244,20 +244,6 @@ export default function Mapping() {
 							menuPlacement="auto"
 							className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
 						/>
-						{/* <select
-							className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl"
-							onChange={handleIncidentChange}
-							value={selectedIncidentId}
-						>
-							<option value="" disabled selected>
-								Select Incident Type
-							</option>
-							{incident?.map((details, index) => (
-								<option key={details?.id} value={details?.id}>
-									{details?.name}
-								</option>
-							))}
-						</select> */}
 					</div>
 					<div>
 						<MultiSelectDropdown
@@ -317,21 +303,31 @@ export default function Mapping() {
 									{loading ? (
 										<p className="text-gray-700 text-center">Loading departments...</p>
 									) : (
-										<ul className="list-none">
-											{departments.map((item) => (
-												<li key={item.id} className="border-b border-gray-300 last:border-0 p-2">
-													<div className="text-gray-800 w-full text-right font-semibold">{item.name}</div>
-													<div className="text-gray-800 w-full text-right">
-														{item.incident_types.map((incidentType, index) => (
-															<span key={incidentType.id}>
-																{incidentType.name}
-																{index < item.incident_types.length - 1 && ', '}
-															</span>
-														))}
-													</div>
-												</li>
-											))}
-										</ul>
+										<table className="w-full">
+											<thead>
+												<tr className="border-b border-gray-300 m-6">
+													<th className="text-gray-800 text-right mb-4">Incident Types</th>
+													<th className="text-gray-800 text-right mb-4">Department</th>
+												</tr>
+											</thead>
+											<tbody>
+												{departments.map((item) => (
+													<tr key={item.id} className="p-3">
+														<td className="last:border-0 p-2 text-gray-800 text-right mb-4">
+															{item.incident_types.map((incidentType, index) => (
+																<span key={incidentType.id}>
+																	{incidentType.name}
+																	{index < item.incident_types.length - 1 && ', '}
+																</span>
+															))}
+														</td>
+														<td className="last:border-0 p-2 text-gray-800 text-right font-semibold mb-4">
+															<span>{item.name}</span>
+														</td>
+													</tr>
+												))}
+											</tbody>
+										</table>
 									)}
 								</div>
 							</>
@@ -352,21 +348,31 @@ export default function Mapping() {
 									{loading ? (
 										<p className="text-gray-700 text-center">Loading departments...</p>
 									) : (
-										<ul className="list-none">
-											{incident.map((item) => (
-												<li key={item.id} className="border-b border-gray-300 last:border-0 p-2">
-													<div className="text-gray-800 w-full text-right font-semibold">{item.name}</div>
-													<div className="text-gray-800 w-full text-right">
-														{item?.equipments?.map((equipment, index) => (
-															<span key={equipment.id}>
-																{equipment.name}
-																{index < item?.equipments?.length - 1 && ', '}
-															</span>
-														))}
-													</div>
-												</li>
-											))}
-										</ul>
+										<table className="w-full">
+											<thead>
+												<tr className="border-b border-gray-300">
+													<th className="text-gray-800 text-right">Equipments</th>
+													<th className="text-gray-800 text-right">Incident Type</th>
+												</tr>
+											</thead>
+											<tbody>
+												{incident.map((item) => (
+													<tr key={item.id}>
+														<td className="last:border-0 p-2 text-gray-800 text-right">
+															{item?.equipments?.map((equipment, index) => (
+																<span key={equipment.id}>
+																	{equipment.name}
+																	{index < item?.equipments?.length - 1 && ', '}
+																</span>
+															))}
+														</td>
+														<td className="last:border-0 p-2 text-gray-800 text-right font-semibold">
+															<span>{item.name}</span>
+														</td>
+													</tr>
+												))}
+											</tbody>
+										</table>
 									)}
 								</div>
 							</>
