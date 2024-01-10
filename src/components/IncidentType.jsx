@@ -168,14 +168,11 @@ export default function IncidentType() {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${token}`,
 			}
-			const data = {
-				name: state?.IncidentTypeName,
-			}
 
-			const response = await axios.delete(`${Vars.domain}/incident-type/${deleteIncidentID}`, data, {
+			const response = await axios.delete(`${Vars.domain}/incident-type/${deleteIncidentID}`, {
 				headers,
 			})
-			if (response.status === 200 || response.status === 201) {
+			if (response.status === 204 || response.status === 201) {
 				toast.success('Incident Type Deleted Successfuly')
 				setIsLoading(false)
 				setDeleteIncidentID('')
