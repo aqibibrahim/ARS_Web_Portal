@@ -7,7 +7,7 @@ import HealthCareForm from './HealthCareForm'
 import AssignedAmbulances from './AssignedAmbulances'
 import { Listbox, Transition } from '@headlessui/react'
 import { Select as AntSelect } from 'antd'
-
+import InputMask from 'react-input-mask'
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid'
 import { useFormik } from 'formik'
 import axios from 'axios'
@@ -419,16 +419,19 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
 							Contact
 						</label>
 						<div className="relative mt-2">
-							<input
+							<InputMask
+								mask="00218 99 9999999"
+								maskChar=""
+								placeholder="00218 XX XXXXXXX"
 								onChange={createIncident.handleChange}
 								value={createIncident.values.informer_phone_numbers}
-								type="text"
+								type="tel"
 								name="informer_phone_numbers"
 								id="informer_phone_numbers"
 								className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-								placeholder="Enter Contact"
 								required
 							/>
+
 							<div
 								className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
 								aria-hidden="true"
