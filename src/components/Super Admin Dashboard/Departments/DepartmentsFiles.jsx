@@ -234,11 +234,30 @@ const DepartmentsFiles = () => {
 														Incident Type
 													</label>
 
-													<AntSelect
+													{/* <AntSelect
 														value={options}
 														placeholder="Select"
 														onChange={(value) => handleChange(value)}
 														mode="multiple" // Add this line for multiple selection
+														allowClear={true}
+														showSearch={true}
+														className="w-full"
+														filterOption={(input, option) => {
+															console.log('Input', input, option)
+															option?.label?.toLowerCase().indexOf(input?.toLowerCase()) >= 0
+														}}
+													>
+														{myData.map((item) => (
+															<Option key={item.value} value={item.value}>
+																{item.label}
+															</Option>
+														))}
+													</AntSelect> */}
+													<AntSelect
+														value={options}
+														placeholder="Select"
+														onChange={(value) => handleChange(value)}
+														mode="multiple"
 														allowClear={true}
 														showSearch={true}
 														className="w-full"

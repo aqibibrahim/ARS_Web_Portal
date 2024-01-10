@@ -11,6 +11,8 @@ import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/20/solid'
 import { BiEdit } from 'react-icons/bi'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
 import Select from 'react-tailwindcss-select'
+import InputMask from 'react-input-mask'
+
 const HealthCareFiles = () => {
 	var token = localStorage.getItem('token')
 	const headers = {
@@ -47,6 +49,7 @@ const HealthCareFiles = () => {
 
 	const navigate = useNavigate()
 	const handleChange = (value) => {
+		console.log('values')
 		setOptions(value)
 		console.log('value:', value)
 	}
@@ -651,17 +654,19 @@ const HealthCareFiles = () => {
 											Phone Number
 										</label>
 										<div className="relative mt-2">
-											<input
-												id="phone_numbers"
-												name="phone_numbers"
-												type="tel"
-												pattern="\d{3}-\d{3}-\d{4}"
-												placeholder=" xxx-xxx-xxxx"
+											<InputMask
+												mask="00218 99 9999999"
+												maskChar=""
+												placeholder="00218 XX XXXXXXX"
 												onChange={CreateHealtCare.handleChange}
 												value={CreateHealtCare.values.phone_numbers}
-												className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+												type="tel"
+												name="phone_numbers"
+												id="phone_numbers"
+												className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
 												required
 											/>
+
 											<div
 												className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
 												aria-hidden="true"
@@ -847,17 +852,19 @@ const HealthCareFiles = () => {
 											Phone Number
 										</label>
 										<div className="relative mt-2">
-											<input
-												id="phone_numbers"
-												name="phone_numbers"
-												type="tel"
-												// pattern="\d{3}-\d{3}-\d{4}"
-												placeholder=" xxx-xxx-xxxx"
+											<InputMask
+												mask="00218 99 9999999"
+												maskChar=""
+												placeholder="00218 XX XXXXXXX"
 												onChange={UpdateHealtCare.handleChange}
 												value={UpdateHealtCare.values.phone_numbers}
-												className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+												type="tel"
+												name="phone_numbers"
+												id="phone_numbers"
+												className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
 												required
 											/>
+
 											<div
 												className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
 												aria-hidden="true"
@@ -975,30 +982,6 @@ const HealthCareFiles = () => {
 											/>
 										</div>
 									</div>
-									{/* <div>
-                    <label
-                      htmlFor="address"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Address
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        type="text"
-                        name="address"
-                        id="address"
-                        onChange={UpdateHealtCare.handleChange}
-                        value={UpdateHealtCare.values.address}
-                        placeholder="Enter Address"
-                        className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div> */}
 								</div>
 							</div>
 
