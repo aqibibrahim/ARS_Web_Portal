@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Modal } from 'antd'
+import { Modal, Select as AntSelect } from 'antd'
+// import 'antd/dist/antd.css' // Import the Ant Design styles
+
 import axios from 'axios'
 import { Vars } from '../helpers/helpers'
 import MultiSelectDropdown from './MultiSelectDropdown'
@@ -193,16 +195,15 @@ export default function Mapping() {
 			<Modal open={departmentMapping} onCancel={handleCancelView} footer={null} closable={true} maskClosable={false}>
 				<div className="flex flex-col">
 					<div className="flex p-5 ">
-						<Select
+						<AntSelect
 							value={selectedDepart}
 							placeholder="Select"
 							onChange={(selectedValue) => handleDepartmentChange(selectedValue)}
 							options={myData}
-							isClearable={true}
-							primaryColor={'blue'}
-							isSearchable={true}
-							menuPlacement="auto"
-							className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+							allowClear={true}
+							showSearch
+							filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+							className="w-full"
 						/>
 					</div>
 					<div>
@@ -233,16 +234,15 @@ export default function Mapping() {
 				{' '}
 				<div className="flex flex-col">
 					<div className="flex p-5 ">
-						<Select
+						<AntSelect
 							value={selectedincident}
 							placeholder="Select"
 							onChange={(selectedValue) => handleIncidentChange(selectedValue)}
 							options={myinciData}
-							isClearable={true}
-							primaryColor={'blue'}
-							isSearchable={true}
-							menuPlacement="auto"
-							className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+							allowClear={true}
+							showSearch
+							filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+							className="w-full"
 						/>
 					</div>
 					<div>

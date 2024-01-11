@@ -462,12 +462,12 @@ export default function IncidentList({}) {
 
 										<td
 											className={`whitespace-nowrap px-3 py-4 text-md ${
-												incident.type === 'Critical' ? 'text-red-500' : 'text-green-500'
+												incident?.type === 'Critical' ? 'text-red-500' : 'text-green-500'
 											}`}
 										>
-											{incident.type}
+											{incident?.type}
 										</td>
-										<td className="whitespace-nowrap px-3 py-4 text-md">{incident.incident_type.name}</td>
+										<td className="whitespace-nowrap px-3 py-4 text-md">{incident?.incident_type?.name}</td>
 										<td className="whitespace-nowrap px-3 py-4 text-md">{incident?.informer?.name}</td>
 									</tr>
 								))}
