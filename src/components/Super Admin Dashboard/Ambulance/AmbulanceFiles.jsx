@@ -13,6 +13,8 @@ import { Toaster, toast } from "sonner";
 import Select from "react-tailwindcss-select";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { BiEdit } from "react-icons/bi";
+import { Select as AntSelect } from "antd";
+const { Option } = AntSelect;
 const AmbulanceFiles = () => {
   var token = localStorage.getItem("token");
   const headers = {
@@ -696,46 +698,41 @@ const AmbulanceFiles = () => {
             <form className="p-5" onSubmit={CreateAmbulance.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
                 <div className="flex flex-col space-y-2 w-full">
-                  {/* <div>
-                    <label
-                      htmlFor="contact_nos"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Contact No
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="contact_nos"
-                        name="contact_nos"
-                        type="tel"
-                        placeholder=" xxx-xxx-xxxx"
-                        onChange={CreateAmbulance.handleChange}
-                        value={CreateAmbulance.values.contact_nos}
-                        className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div> */}
                   {/* Equipment field */}
                   <div>
                     <label className="block  text-sm font-medium leading-6 text-gray-900 text-right">
                       Equipment
                     </label>
                     <div className="mt-[7px]">
-                      <Select
+                      <AntSelect
                         value={options}
                         placeholder="Select"
-                        onChange={(e) => handleChange(e)}
+                        onChange={(value) => handleChange(value)}
                         options={myData}
-                        isMultiple={true}
-                        isClearable={true}
-                        primaryColor={"blue"}
-                        className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                      />
+                        mode="multiple"
+                        allowClear
+                        // showArrow
+                        showSearch
+                        optionFilterProp="children"
+                        className="w-full"
+                      >
+                        {/* Render options */}
+                        {myData.map((option) => (
+                          <Option key={option.value} value={option.value}>
+                            {option.label}
+                          </Option>
+                        ))}
+                      </AntSelect>
+                      {/* <Select
+												value={options}
+												placeholder="Select"
+												onChange={(e) => handleChange(e)}
+												options={myData}
+												isMultiple={true}
+												isClearable={true}
+												primaryColor={'blue'}
+												className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+											/> */}
                     </div>
                   </div>
                   <div>

@@ -16,6 +16,8 @@ import { Vars } from '../helpers/helpers'
 import { Fragment } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
+import { Select } from 'antd'
+const { Option } = Select
 function classNames(...classes) {
 	return classes.filter(Boolean).join(' ')
 }
@@ -316,7 +318,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
 		const input = document.getElementById('address')
 		const options = {
 			bounds: defaultBounds,
-			componentRestrictions: { country: 'sa' }, // Set the country to Pakistan
+			componentRestrictions: null, // Set the country to Pakistan
 			fields: ['address_components', 'geometry', 'icon', 'name', 'formatted_address'],
 			strictBounds: false,
 		}
@@ -341,9 +343,6 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
 
 				postalCode = postalCodeComponent ? postalCodeComponent.short_name : ''
 			}
-
-			console.log('Formatted Address:', address)
-			console.log('Postal Code:', postalCode)
 
 			// The rest of your code...
 			const latitude = place.geometry.location.lat()
@@ -440,7 +439,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
 					</div>
 				</div>
 				<div className="mb-5">
-					<Listbox value={selectedOption} onChange={setSelectedOption}>
+					{/* <Listbox value={selectedOption} onChange={setSelectedOption}>
 						{({ open }) => (
 							<>
 								<Listbox.Label className="block text-sm font-medium leading-6 text-gray-900 text-right">
@@ -500,7 +499,25 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
 								</div>
 							</>
 						)}
-					</Listbox>
+					</Listbox> */}
+					<label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900 text-right mb-2">
+						Incident Type
+					</label>
+					<Select
+						placeholder="Select Incident Type"
+						style={{ width: '100%' }}
+						onChange={(value, option) => setSelectedOption(option)}
+						value={selectedOption}
+						showSearch
+						optionFilterProp="children"
+						filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+					>
+						{myData.map((option) => (
+							<Option key={option.value} value={option.value}>
+								{option.label}
+							</Option>
+						))}
+					</Select>
 				</div>
 				<div className="mb-5">
 					<Listbox value={selectedEmergencyOption} onChange={setSelectedEmergencyOption}>
