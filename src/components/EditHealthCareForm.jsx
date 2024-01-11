@@ -30,7 +30,6 @@ const HealthCares = [
 ];
 
 const EditHealthCare = ({ openModal, datatt }) => {
-  debugger;
   var token = localStorage.getItem("token");
   const headers = {
     "Content-Type": "application/json",
@@ -114,13 +113,13 @@ const EditHealthCare = ({ openModal, datatt }) => {
     console.log(selectedFacilityOption, "dsdsds");
     try {
       await axios
-        .patch(`${Vars.domain}/ambulances/${datatt?.id}`, JSON, config)
+        .patch(`${Vars.domain}/ambulances/${ambulanceID}`, JSON, config)
         .then((res) => {
           console.log(res);
           toast.success("Updated Successfuly");
           setBtnDisbale(true);
           setOpen(false);
-          openModal(false);
+          // openModal(false);
         });
     } catch (e) {
       // setLoadingMessage(false);
@@ -130,7 +129,6 @@ const EditHealthCare = ({ openModal, datatt }) => {
     console.log(ambulanceID, "aaambID");
   };
   const activeIndex = (index) => {
-    debugger;
     setDynamicIndex(index);
   };
   return (
@@ -152,8 +150,7 @@ const EditHealthCare = ({ openModal, datatt }) => {
               Persons Supported:{ambulance?.persons_supported}
             </p>
             <p className="text-right">Id No:{ambulance?.id_no}</p>
-
-            {disabledAmbulanceIDs.includes(ambulance?.id) && (
+            {ambulance?.facility ? (
               <div key={ambulance?.id}>
                 <div className="border-t-4 flex justify-around ">
                   <p className="flex text-xl font-bold ">
@@ -169,30 +166,103 @@ const EditHealthCare = ({ openModal, datatt }) => {
                   </button>
                 </div>
                 <p>
-                  <span>Name: </span> {selectedFacilityOption?.name}
+                  <span>Name: </span>{" "}
+                  {selectedFacilityOption?.name || ambulance?.facility?.name}
                 </p>
                 <p>
-                  <span>Address: </span> {selectedFacilityOption?.address}
+                  <span>Address: </span>{" "}
+                  {selectedFacilityOption?.address ||
+                    ambulance?.facility?.address}
                 </p>
                 <p>
-                  <span>Email: </span> {selectedFacilityOption?.email}
+                  <span>Email: </span>{" "}
+                  {selectedFacilityOption?.email || ambulance?.facility?.email}
                 </p>
                 <p>
                   <span>Phone Number: </span>
-                  {selectedFacilityOption?.phone_numbers?.map((phone) => (
-                    <span key={phone?.id}>{phone?.number}</span>
-                  ))}
+                  {ambulance
+                    ? ambulance?.facility?.phone_numbers?.map((phone) => (
+                        <span key={phone?.id}>{phone?.number}</span>
+                      ))
+                    : selectedFacilityOption?.phone_numbers?.map((phone) => (
+                        <span key={phone?.id}>{phone?.number}</span>
+                      ))}
                 </p>
                 <p>
                   <span>Focal Person: </span>
-                  {selectedFacilityOption?.focal_persons?.map((person) => (
-                    <span key={person?.id}>
-                      {person?.first_name}
-                      {person?.last_name}
-                    </span>
-                  ))}
+                  {ambulance
+                    ? ambulance?.facility?.focal_persons?.map((person) => (
+                        <span key={person?.id}>
+                          {person?.first_name}
+                          {person?.last_name}
+                        </span>
+                      ))
+                    : selectedFacilityOption?.focal_persons?.map((person) => (
+                        <span key={person?.id}>
+                          {person?.first_name}
+                          {person?.last_name}
+                        </span>
+                      ))}
                 </p>
               </div>
+            ) : (
+              disabledAmbulanceIDs.includes(ambulance?.id) && (
+                <div key={ambulance?.id}>
+                  <div className="border-t-4 flex justify-around ">
+                    <p className="flex text-xl font-bold ">
+                      Assigned Health Care
+                    </p>
+                    <button
+                      className="flex text-right text-blue-500 mt-2"
+                      onClick={() => {
+                        setOpen(true);
+                      }}
+                    >
+                      <BiEdit />
+                    </button>
+                  </div>
+                  <p>
+                    <span>Name: </span>{" "}
+                    {selectedFacilityOption?.name || ambulance?.facility?.name}
+                  </p>
+                  <p>
+                    <span>Address: </span>{" "}
+                    {selectedFacilityOption?.address ||
+                      ambulance?.facility?.address}
+                  </p>
+                  <p>
+                    <span>Email: </span>{" "}
+                    {selectedFacilityOption?.email ||
+                      ambulance?.facility?.email}
+                  </p>
+                  <p>
+                    <span>Phone Number: </span>
+                    {ambulance
+                      ? ambulance?.facility?.phone_numbers?.map((phone) => (
+                          <span key={phone?.id}>{phone?.number}</span>
+                        ))
+                      : selectedFacilityOption?.phone_numbers?.map((phone) => (
+                          <span key={phone?.id}>{phone?.number}</span>
+                        ))}
+                  </p>
+                  <p>
+                    <span>Focal Person: </span>
+                    {ambulance
+                      ? ambulance?.facility?.focal_persons?.map((person) => (
+                          <span key={person?.id}>
+                            {person?.first_name}
+                            {person?.last_name}
+                          </span>
+                        ))
+                      : selectedFacilityOption?.focal_persons?.map((person) => (
+                          <span key={person?.id}>
+                            {person?.first_name}
+                            {person?.last_name}
+                          </span>
+                        ))}
+                  </p>
+                </div>
+              )
             )}
 
             {!disabledAmbulanceIDs.includes(ambulance?.id) && (
