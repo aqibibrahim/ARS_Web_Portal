@@ -261,7 +261,7 @@ const Maps = (props) => {
   };
   const renderAmbulanceEquipment = (ambulanceId) => {
     console.log("AMbulance id", ambulanceId);
-    const ambulance = ambulanceData.find(
+    const ambulance = ambulanceData?.data?.find(
       (ambulance) => ambulance.id === ambulanceId
     );
     if (ambulance && ambulance.equipments && ambulance.equipments.length > 0) {
@@ -299,7 +299,7 @@ const Maps = (props) => {
       }}
     >
       <Map Map google={google} zoom={10} initialCenter={position}>
-        {ambulanceData?.data?.data.map((c, index) => (
+        {ambulanceData?.data?.map((c, index) => (
           <Marker
             key={c?.id}
             className={"map"}
@@ -316,7 +316,7 @@ const Maps = (props) => {
             onClick={() => onAmbulanceMarkerClick(c)}
           />
         ))}
-        {healthCareData?.map((healthCare, index) => (
+        {healthCareData?.data?.map((healthCare, index) => (
           <Marker
             key={healthCare?.id}
             className={"map"}
