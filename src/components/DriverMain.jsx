@@ -12,6 +12,7 @@ import {
   BiMessageAltX,
 } from "react-icons/bi";
 import { BsArrowRightCircle, BsSearch } from "react-icons/bs";
+import { Pagination } from "antd";
 
 export default function DriverMain() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,6 +28,8 @@ export default function DriverMain() {
     email: "",
     pin: "",
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const [phoneNumbers, setPhoneNumbers] = useState([]);
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [editData, setEditData] = useState({
@@ -127,30 +130,34 @@ export default function DriverMain() {
   //   setIsModalOpen(false);
   //   setViewOpen(false);
   // };
-  useEffect(() => {
-    const GetRecords = async () => {
-      try {
-        var token = localStorage.getItem("token");
-        console.log(token);
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        };
+  const GetRecords = async (page = 1) => {
+    try {
+      var token = localStorage.getItem("token");
+      console.log(token);
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
 
-        const response = await axios.get(`${Vars.domain}/drivers`, {
-          headers,
-        });
+      const response = await axios.get(`${Vars.domain}/drivers`, {
+        headers,
+        params: {
+          page,
+          per_page: itemsPerPage,
+        },
+      });
 
-        console.log(response.data.data, "response");
-        if (response.status === 200 || response.status === 201) {
-          setAllDrivers(response?.data?.data);
-        }
-      } catch (error) {
-        console.error("Error creating role:", error);
+      console.log(response.data.data, "response");
+      if (response.status === 200 || response.status === 201) {
+        setAllDrivers(response?.data?.data);
       }
-    };
-    GetRecords();
-  }, [deleteModal, isModalOpen]);
+    } catch (error) {
+      console.error("Error creating role:", error);
+    }
+  };
+  useEffect(() => {
+    GetRecords(currentPage);
+  }, [deleteModal, isModalOpen, currentPage]);
   const handleDelete = () => {
     DeleteDriver();
   };
@@ -297,6 +304,20 @@ export default function DriverMain() {
               ))}
             </tbody>
           </table>
+          <div className="flex justify-end mt-5 mb-2">
+            {" "}
+            <Pagination
+              className="flex text-lg text-semi-bold"
+              current={currentPage}
+              total={allDrivers?.total || 0}
+              pageSize={itemsPerPage}
+              onChange={(page) => setCurrentPage(page)}
+              showSizeChanger={false}
+              showTotal={(total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`
+              }
+            />
+          </div>
         </div>
       </div>
 

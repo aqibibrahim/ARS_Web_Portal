@@ -49,7 +49,9 @@ const HealthCareFiles = () => {
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [selectedHealthCare, setSelectedHealthCare] = useState(null);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // You can adjust this based on your preference
+  const [totalDepartments, setTotalDepartments] = useState(0);
   const navigate = useNavigate();
   const handleChange = (value) => {
     console.log("values");

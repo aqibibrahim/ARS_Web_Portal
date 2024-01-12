@@ -34,7 +34,7 @@ const Lookups = () => {
             activeTab === "Departments"
               ? "bg-primary-100 text-white"
               : "text-primary-100"
-          } border-2 border-primary-100 `}
+          } border-2 border-primary-100   `}
         >
           Departments
         </div>
