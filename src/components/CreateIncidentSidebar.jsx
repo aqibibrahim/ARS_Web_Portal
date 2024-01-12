@@ -284,7 +284,6 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
 
     geocoder.geocode({ location: newPosition }, (results, status) => {
       if (status === "OK") {
-        debugger;
         if (results[0]) {
           setAddress(results[0].formatted_address);
           setLocationAddress({

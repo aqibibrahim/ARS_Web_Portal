@@ -22,6 +22,7 @@ import HealthCareDepartments from "./components/HealthCareDashboard/Departments"
 import Home from "./components/HealthCareDashboard/Home";
 import IncidentHealthCare from "./components/HealthCareDashboard/IncidentHealthCare";
 import IncidentType from "./components/IncidentType";
+import Lookups from "./components/Lookups";
 const Dashboard = () => {
   const [childData, setChildData] = useState(null);
   const handleChildData = (data) => {
@@ -50,6 +51,7 @@ const Dashboard = () => {
           <Route path="/Driver" element={<DriverMain />} />{" "}
           <Route path="/Incident-type" element={<IncidentType />} />
           <Route path="/Mapping" element={<Mapping />} />
+          <Route path="/Lookup" element={<Lookups />} />
           <Route path="/change-admin-password" element={<ChangePassword />} />
           <Route
             path="/DepartmetsHealthCare"

@@ -590,7 +590,7 @@ export default function IncidentList({}) {
                   </tr>
                 </thead>
                 <tbody>
-                  {incidentData?.map((incident) => (
+                  {incidentData?.data?.map((incident) => (
                     <tr key={incident?.id} className="hover:bg-gray-100">
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                         <span className="flex items-center justify-center gap-5">

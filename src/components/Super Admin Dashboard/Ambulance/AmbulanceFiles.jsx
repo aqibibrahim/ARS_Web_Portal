@@ -95,7 +95,6 @@ const AmbulanceFiles = () => {
     setUpdateFormOpen(true);
   };
   const handleViewClick = (ambulance) => {
-    debugger;
     setViewOpen(true);
     setSelectedAmbulance(ambulance);
   };
@@ -460,13 +459,13 @@ const AmbulanceFiles = () => {
               placeholder="Search Ambulances..."
             />
           </div>
-          <button
+          {/* <button
             className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
             type="button"
             onClick={() => navigate("/equipment")}
           >
             Equipment
-          </button>
+          </button> */}
           <button
             className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
             type="button"
@@ -478,7 +477,7 @@ const AmbulanceFiles = () => {
         <div className="rtl">
           {isLoading ? (
             <p className="text-center text-xl text-primary-100">Loading...</p>
-          ) : ambulanceData.length == 0 ? (
+          ) : ambulanceData?.length == 0 ? (
             <p className="text-center text-xl text-primary-100">
               No data available
             </p>
@@ -529,7 +528,7 @@ const AmbulanceFiles = () => {
                 </tr>
               </thead>
               <tbody>
-                {ambulanceData?.map((ambulance) => (
+                {ambulanceData.data?.map((ambulance) => (
                   <tr key={ambulance.id} className="hover:bg-gray-100">
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <span className="flex items-center justify-center gap-5">

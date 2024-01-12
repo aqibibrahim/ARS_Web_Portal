@@ -299,7 +299,7 @@ const Maps = (props) => {
       }}
     >
       <Map Map google={google} zoom={10} initialCenter={position}>
-        {ambulanceData?.map((c, index) => (
+        {ambulanceData?.data?.data.map((c, index) => (
           <Marker
             key={c?.id}
             className={"map"}
