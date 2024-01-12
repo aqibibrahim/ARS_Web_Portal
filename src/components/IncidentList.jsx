@@ -128,7 +128,6 @@ export default function IncidentList({}) {
           },
         })
         .then((response) => {
-          debugger;
           setIncidentData(response.data?.data);
           setTotalIncidents(response.data?.data?.total || 0);
           setIsLoading(false);
@@ -487,7 +486,6 @@ export default function IncidentList({}) {
   //   }
   // };
   // const handleChange = (selectedOptions) => {
-  //   debugger;
   //   setSelectedOption(selectedOptions);
   //   console.log(selectedOptions);
   // };
