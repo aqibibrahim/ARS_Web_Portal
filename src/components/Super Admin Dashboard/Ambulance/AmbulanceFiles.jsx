@@ -74,7 +74,29 @@ const AmbulanceFiles = () => {
     });
     setIsModalOpen(true);
   };
-
+  useEffect(() => {
+    const fetchequipmentsData = async () => {
+      try {
+        await axios
+          .get(`${window.$BackEndUrl}/equipments`, {
+            headers: headers,
+          })
+          .then((response) => {
+            setMyData(
+              response.data?.data?.map((variant) => ({
+                label: variant.name,
+                value: variant.id,
+              }))
+            );
+            // setIsLoading(false);
+            console.log(response?.data?.data);
+          });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchequipmentsData();
+  }, []);
   const handleEditClick = (ambulance) => {
     setLongitude(null);
     setLatitude(null);
