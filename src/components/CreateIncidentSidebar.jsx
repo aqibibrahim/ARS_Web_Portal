@@ -247,8 +247,8 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
     lat: 33.7519137,
     lng: 72.7970134,
   });
-
-  const [address, setAddress] = useState("No address available");
+  const [uncontrolledAddress, setUncontrolledAddress] = useState("");
+  const [address, setAddress] = useState("No address Selected");
   const geocoder = new Geocoder();
   const handleMarkerDragEnd = (t, map, coord) => {
     const newPosition = {
@@ -292,6 +292,12 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             longitude: newPosition.lng,
             address: results[0].formatted_address,
           });
+          createIncident.setFieldValue("latitude", newPosition.lat);
+          createIncident.setFieldValue("longitude", newPosition.lng);
+          createIncident.setFieldValue(
+            "informer_address",
+            results[0].formatted_address
+          );
         } else {
           setAddress("No address available");
         }
@@ -314,7 +320,11 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
       lat: latitude,
       lng: longitude,
     });
+    createIncident.setFieldValue("latitude", latitude);
+    createIncident.setFieldValue("longitude", longitude);
+    createIncident.setFieldValue("informer_address", formatted_address);
   };
+
   const handlePlaceChange = () => {
     const input = document.getElementById("address");
     const options = {
@@ -357,64 +367,14 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
       console.log("Formatted Address:", address);
       console.log("Postal Code:", postalCode);
 
-      // Set the input value with the formatted address
-      input.value = address;
+      // Set the input value with a timeout to ensure reactivity
 
       const latitude = place.geometry.location.lat();
       const longitude = place.geometry.location.lng();
       sendDataToParent(latitude, longitude, address, postalCode);
+      setUncontrolledAddress(address);
     });
   };
-
-  //   const handlePlaceChange = () => {
-  //     const input = document.getElementById("address");
-  //     const options = {
-  //       // bounds: defaultBounds, // Uncomment this line if you have specific bounds
-  //       componentRestrictions: { country: "pk" },
-  //       fields: [
-  //         "address_components",
-  //         "geometry",
-  //         "icon",
-  //         "name",
-  //         "formatted_address",
-  //       ],
-  //       strictBounds: false,
-  //     };
-
-  //     const autocomplete = new window.google.maps.places.Autocomplete(
-  //       input,
-  //       options
-  //     );
-  //     const southwest = { lat: 23.6345, lng: 60.8724 };
-  //     const northeast = { lat: 37.0841, lng: 77.8375 };
-  //     const newBounds = new window.google.maps.LatLngBounds(southwest, northeast);
-  //     autocomplete.setBounds(newBounds);
-
-  //     autocomplete.addListener("place_changed", () => {
-  //       const place = autocomplete.getPlace();
-  //       let address = "";
-  //       let postalCode = "";
-
-  //       if (place.address_components) {
-  //         address = place.formatted_address;
-
-  //         const postalCodeComponent = place.address_components.find((component) =>
-  //           component.types.includes("postal_code")
-  //         );
-
-  //         postalCode = postalCodeComponent ? postalCodeComponent.short_name : "";
-  //       }
-
-  //       console.log("Formatted Address:", address);
-  //       console.log("Postal Code:", postalCode);
-
-  //       // Set the input value with a timeout to ensure reactivity
-
-  //       const latitude = place.geometry.location.lat();
-  //       const longitude = place.geometry.location.lng();
-  //       sendDataToParent(latitude, longitude, address, postalCode);
-  //     });
-  //   };
 
   return (
     <>
@@ -437,10 +397,10 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             <div className="relative mt-2">
               <input
                 onClick={() => setOpen(true)}
-                onChange={(e) => {
-                  createIncident.handleChange(e);
-                  console.log(createIncident.values.informer_address);
-                }}
+                // onChange={(e) => {
+                //   createIncident.handleChange(e);
+                //   console.log(createIncident.values.informer_address);
+                // }}
                 value={createIncident.values.informer_address}
                 type="text"
                 name="informer_address"
@@ -743,9 +703,17 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                           type="text"
                           placeholder="Enter a location"
                           onChange={handlePlaceChange}
-                          value={createIncident.values.informer_address}
+                          // value={createIncident.values.informer_address}
                         />
-                        <button onClick={() => setOpen(false)}>Close</button>
+                        <div style={{ marginTop: "10px" }}>
+                          <strong>Address:</strong> {address}
+                        </div>
+                        <button
+                          onClick={() => setOpen(false)}
+                          className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
+                        >
+                          Close
+                        </button>
                       </div>
                       <div
                         id="map"
@@ -769,9 +737,6 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                           onDragend={handleMarkerDragEnd}
                         />
                       </Map>
-                      <div style={{ marginTop: "10px" }}>
-                        <strong>Address:</strong> {address}
-                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>
