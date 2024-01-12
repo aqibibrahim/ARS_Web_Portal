@@ -11,7 +11,7 @@ import { json, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import Select from "react-tailwindcss-select";
 import InputMask from "react-input-mask";
@@ -49,7 +49,9 @@ const HealthCareFiles = () => {
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [selectedHealthCare, setSelectedHealthCare] = useState(null);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // You can adjust this based on your preference
+  const [totalDepartments, setTotalDepartments] = useState(0);
   const navigate = useNavigate();
   const handleChange = (value) => {
     console.log("values");
@@ -532,7 +534,7 @@ const HealthCareFiles = () => {
                 </tr>
               </thead>
               <tbody>
-                {ambulanceData?.map((healthcare) => (
+                {ambulanceData?.data?.map((healthcare) => (
                   <tr key={healthcare.id} className="hover:bg-gray-100">
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <span className="flex items-center justify-center gap-5">

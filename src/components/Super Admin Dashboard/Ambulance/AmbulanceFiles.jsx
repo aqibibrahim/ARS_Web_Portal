@@ -5,6 +5,8 @@ import {
   ExclamationTriangleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { Pagination } from "antd";
+
 import { BsArrowRightCircle, BsEye, BsSearch } from "react-icons/bs";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +33,8 @@ const AmbulanceFiles = () => {
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [updateFormOpen, setUpdateFormOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const [isLoading, setIsLoading] = useState(true);
   const [ambulanceData, setAmbulanceData] = useState([]);
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
@@ -95,7 +98,6 @@ const AmbulanceFiles = () => {
     setUpdateFormOpen(true);
   };
   const handleViewClick = (ambulance) => {
-    debugger;
     setViewOpen(true);
     setSelectedAmbulance(ambulance);
   };
@@ -118,30 +120,28 @@ const AmbulanceFiles = () => {
     fetchAmbulanceData();
   }, [submitDone]);
 
+  const fetchAmbulanceData = async (page = 1) => {
+    try {
+      await axios
+        .get(`${window.$BackEndUrl}/ambulances`, {
+          headers: headers,
+          params: {
+            page,
+            per_page: itemsPerPage,
+          },
+        })
+        .then((response) => {
+          setAmbulanceData(response.data?.data);
+          setIsLoading(false);
+          console.log(response?.data?.data);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
-    const fetchequipmentsData = async () => {
-      try {
-        await axios
-          .get(`${window.$BackEndUrl}/equipments`, {
-            headers: headers,
-          })
-          .then((response) => {
-            setMyData(
-              response.data?.data?.map((variant) => ({
-                label: variant.name,
-                value: variant.id,
-              }))
-            );
-            // setIsLoading(false);
-            console.log(response?.data?.data);
-          });
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchequipmentsData();
-  }, []);
-
+    fetchAmbulanceData(currentPage);
+  }, [submitDone, currentPage]);
   const CreateAmbulance = useFormik({
     initialValues: {
       plate_no: "",
@@ -460,13 +460,13 @@ const AmbulanceFiles = () => {
               placeholder="Search Ambulances..."
             />
           </div>
-          <button
+          {/* <button
             className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
             type="button"
             onClick={() => navigate("/equipment")}
           >
             Equipment
-          </button>
+          </button> */}
           <button
             className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
             type="button"
@@ -478,126 +478,143 @@ const AmbulanceFiles = () => {
         <div className="rtl">
           {isLoading ? (
             <p className="text-center text-xl text-primary-100">Loading...</p>
-          ) : ambulanceData.length == 0 ? (
+          ) : ambulanceData?.length == 0 ? (
             <p className="text-center text-xl text-primary-100">
               No data available
             </p>
           ) : (
-            <table className="min-w-full divide-y divide-gray-300 text-right">
-              <thead>
-                <tr>
-                  <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
-                    <span className="sr-only">Edit</span>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Status
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0"
-                  >
-                    Model
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Make
-                  </th>
-                  {/* <th
+            <>
+              {" "}
+              <table className="min-w-full divide-y divide-gray-300 text-right">
+                <thead>
+                  <tr>
+                    <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+                      <span className="sr-only">Edit</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0"
+                    >
+                      Model
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    >
+                      Make
+                    </th>
+                    {/* <th
                     scope="col"
                     className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                   >
                     Contact Number
                   </th> */}
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Plate No
-                  </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    >
+                      Plate No
+                    </th>
 
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    ID No
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {ambulanceData?.map((ambulance) => (
-                  <tr key={ambulance.id} className="hover:bg-gray-100">
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <span className="flex items-center justify-center gap-5">
-                        <span
-                          className="text-red-500 flex justify-center  hover:text-red-600"
-                          onClick={() => {
-                            setDelete(true);
-                            setDeleteID(ambulance?.id);
-                          }}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-6 h-6"
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    >
+                      ID No
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ambulanceData.data?.map((ambulance) => (
+                    <tr key={ambulance.id} className="hover:bg-gray-100">
+                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                        <span className="flex items-center justify-center gap-5">
+                          <span
+                            className="text-red-500 flex justify-center  hover:text-red-600"
+                            onClick={() => {
+                              setDelete(true);
+                              setDeleteID(ambulance?.id);
+                            }}
                           >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                            />
-                          </svg>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-6 h-6"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                              />
+                            </svg>
+                          </span>
+                          <button
+                            onClick={() => handleEditClick(ambulance)}
+                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                          >
+                            <BiEdit />
+                            <span className="sr-only">, {ambulance.name}</span>
+                          </button>
+                          <button
+                            onClick={() => handleViewClick(ambulance)}
+                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                          >
+                            <BsEye />
+                            <span className="sr-only">, {ambulance.name}</span>
+                          </button>
                         </span>
-                        <button
-                          onClick={() => handleEditClick(ambulance)}
-                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                        >
-                          <BiEdit />
-                          <span className="sr-only">, {ambulance.name}</span>
-                        </button>
-                        <button
-                          onClick={() => handleViewClick(ambulance)}
-                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                        >
-                          <BsEye />
-                          <span className="sr-only">, {ambulance.name}</span>
-                        </button>
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      <span className={getStatusStyle(ambulance.status)}>
-                        {ambulance.status}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {ambulance.model}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {ambulance.make}
-                    </td>
-                    {/* <td className="whitespace-nowrap px-3 py-4 text-md">
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                        <span className={getStatusStyle(ambulance.status)}>
+                          {ambulance.status}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                        {ambulance.model}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                        {ambulance.make}
+                      </td>
+                      {/* <td className="whitespace-nowrap px-3 py-4 text-md">
                       {ambulance?.contact_nos?.map((phone) => (
                       <div key={phone}>{phone}</div>
                     ))}
                     </td> */}
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {ambulance.plate_no}
-                    </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                        {ambulance.plate_no}
+                      </td>
 
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {ambulance.id_no}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                        {ambulance.id_no}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="flex justify-end mt-5 mb-2">
+                {" "}
+                <Pagination
+                  className="flex text-lg text-semi-bold"
+                  current={currentPage}
+                  total={ambulanceData?.total || 0}
+                  pageSize={itemsPerPage}
+                  onChange={(page) => setCurrentPage(page)}
+                  showSizeChanger={false}
+                  showTotal={(total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`
+                  }
+                />
+              </div>
+            </>
           )}
         </div>
       </div>

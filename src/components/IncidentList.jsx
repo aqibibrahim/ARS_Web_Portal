@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Modal } from "antd";
+import { Modal, Pagination } from "antd";
 
 import { Listbox } from "@headlessui/react";
 import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/20/solid";
@@ -66,7 +66,9 @@ export default function IncidentList({}) {
     });
   };
   const [myData, setMyData] = useState([]);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const [totalIncidents, setTotalIncidents] = useState("");
   const [updateFormOpen, setUpdateFormOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [incidentData, setIncidentData] = useState([]);
@@ -115,24 +117,30 @@ export default function IncidentList({}) {
     fetchSingleIncident();
   };
   // Get All Incidents
+  const fetchincidentData = async (page = 1) => {
+    try {
+      await axios
+        .get(`https://ars.disruptwave.com/api/incidents`, {
+          headers: headers,
+          params: {
+            page,
+            per_page: itemsPerPage,
+          },
+        })
+        .then((response) => {
+          debugger;
+          setIncidentData(response.data?.data);
+          setTotalIncidents(response.data?.data?.total || 0);
+          setIsLoading(false);
+          console.log(response?.data?.data);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
-    const fetchincidentData = async () => {
-      try {
-        await axios
-          .get(`https://ars.disruptwave.com/api/incidents`, {
-            headers: headers,
-          })
-          .then((response) => {
-            setIncidentData(response.data?.data);
-            setIsLoading(false);
-            console.log(response?.data?.data);
-          });
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchincidentData();
-  }, [deleteModal]);
+    fetchincidentData(currentPage);
+  }, [deleteModal, currentPage]);
   // Healtcare Facility Get
   useEffect(() => {
     const fetchHealthCareData = async () => {
@@ -539,119 +547,135 @@ export default function IncidentList({}) {
                 No data available
               </p>
             ) : (
-              <table className="min-w-full divide-y divide-gray-300 text-right">
-                <thead>
-                  <tr>
-                    {/* <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+              <>
+                {" "}
+                <table className="min-w-full divide-y divide-gray-300 text-right">
+                  <thead>
+                    <tr>
+                      {/* <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
 										<span className="sr-only">Edit</span>
 									</th> */}
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                    >
-                      Actions
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                    >
-                      Status
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                    >
-                      Contact Number
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                    >
-                      Created By
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                    >
-                      Emergency Type
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                    >
-                      Incident Type
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                    >
-                      Informer Name
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {incidentData?.map((incident) => (
-                    <tr key={incident?.id} className="hover:bg-gray-100">
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                        <span className="flex items-center justify-center gap-5">
-                          <button
-                            onClick={() => {
-                              handleEditClick(incident);
-                              sethealthCare(false);
-                              setSelectedHealthCareOpetion({});
-                            }}
-                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                          >
-                            <BiEdit />
-                          </button>
-                          <button
-                            onClick={() => {
-                              getIncidentDetail(incident?.id);
-                              sethealthCare(false);
-                              setSelectedHealthCareOpetion({});
-                            }}
-                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                          >
-                            <BsEye />
-                          </button>
-                        </span>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
-                        <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                          {incident.status}
-                        </span>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
-                        {incident?.informer?.phone_numbers?.map((phone) => (
-                          <div key={phone.id}>{phone.number}</div>
-                        ))}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
-                        {" "}
-                        {incident?.created_by?.first_name +
-                          " " +
-                          incident?.created_by?.last_name}
-                      </td>
-
-                      <td
-                        className={`whitespace-nowrap px-3 py-4 text-md ${
-                          incident.type === "Critical"
-                            ? "text-red-500"
-                            : "text-green-500"
-                        }`}
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                       >
-                        {incident?.type}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
-                        {incident?.incident_type?.name}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
-                        {incident?.informer?.name}
-                      </td>
+                        Actions
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                      >
+                        Status
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                      >
+                        Contact Number
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                      >
+                        Created By
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                      >
+                        Emergency Type
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                      >
+                        Incident Type
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                      >
+                        Informer Name
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {incidentData?.data?.map((incident) => (
+                      <tr key={incident?.id} className="hover:bg-gray-100">
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                          <span className="flex items-center justify-center gap-5">
+                            <button
+                              onClick={() => {
+                                handleEditClick(incident);
+                                sethealthCare(false);
+                                setSelectedHealthCareOpetion({});
+                              }}
+                              className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                            >
+                              <BiEdit />
+                            </button>
+                            <button
+                              onClick={() => {
+                                getIncidentDetail(incident?.id);
+                                sethealthCare(false);
+                                setSelectedHealthCareOpetion({});
+                              }}
+                              className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                            >
+                              <BsEye />
+                            </button>
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-md">
+                          <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                            {incident.status}
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-md">
+                          {incident?.informer?.phone_numbers?.map((phone) => (
+                            <div key={phone.id}>{phone.number}</div>
+                          ))}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-md">
+                          {" "}
+                          {incident?.created_by?.first_name +
+                            " " +
+                            incident?.created_by?.last_name}
+                        </td>
+
+                        <td
+                          className={`whitespace-nowrap px-3 py-4 text-md ${
+                            incident.type === "Critical"
+                              ? "text-red-500"
+                              : "text-green-500"
+                          }`}
+                        >
+                          {incident?.type}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-md">
+                          {incident?.incident_type?.name}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-md">
+                          {incident?.informer?.name}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="flex justify-end mt-5 mb-2">
+                  <Pagination
+                    current={currentPage}
+                    className="flex text-lg text-semi-bold"
+                    total={totalIncidents}
+                    pageSize={itemsPerPage}
+                    onChange={(page) => setCurrentPage(page)}
+                    showSizeChanger={false}
+                    showTotal={(total, range) =>
+                      `${range[0]}-${range[1]} of ${total} incidents`
+                    }
+                  />
+                </div>
+              </>
             )}
           </div>
         </div>
@@ -927,211 +951,6 @@ export default function IncidentList({}) {
                 </div>
               )}
               {ishealthCare && (
-                // <div className="p-5 h-[30rem] flex justify-between flex-col">
-                //   <div className="flex flex-row justify-between gap-4 mb-4">
-                //     <div className="flex flex-col space-y-2 w-full">
-                //       <div className="mb-5 mt-2">
-                //         {showAssignAmbulance.length === 0 ? (
-                //           <div className="flex mt-4 flex-col hover:bg-gray-100 cursor-pointer justify-end gap-1 border  border-gray-400 p-1 rounded-md mb-2 text-gray-800">
-                //             <p className="text-right">loading...</p>
-                //           </div>
-                //         ) : (
-                //           showAssignAmbulance?.map((ambulance, index) => (
-                //             <div
-                //               key={ambulance?.id}
-                //               className="flex mt-4 flex-col hover:bg-gray-100 cursor-pointer justify-end gap-1 border border-gray-400 p-1 rounded-md mb-2 text-gray-800"
-                //             >
-                //               <p className="text-right">
-                //                 Model:{ambulance?.model}
-                //               </p>
-                //               <p className="text-right">
-                //                 Persons Supported:{ambulance?.persons_supported}
-                //               </p>
-                //               <p className="text-right">
-                //                 Id No:{ambulance?.id_no}
-                //               </p>
-
-                //               {disabledAmbulanceIDs.includes(ambulance?.id) && (
-                //                 <div key={ambulance?.id}>
-                //                   <div className="border-t-4 flex justify-around ">
-                //                     <p className="flex text-xl font-bold ">
-                //                       Assigned Health Care
-                //                     </p>
-                //                     <button
-                //                       className="flex text-right text-blue-500 mt-2"
-                //                       onClick={() => {
-                //                         setOpen(true);
-                //                       }}
-                //                     >
-                //                       <BiEdit />
-                //                     </button>
-                //                   </div>
-                //                   <p>
-                //                     <span>Name: </span>{" "}
-                //                     {selectedFacilityOption?.name}
-                //                   </p>
-                //                   <p>
-                //                     <span>Address: </span>{" "}
-                //                     {selectedFacilityOption?.address}
-                //                   </p>
-                //                   <p>
-                //                     <span>Email: </span>{" "}
-                //                     {selectedFacilityOption?.email}
-                //                   </p>
-                //                   <p>
-                //                     <span>Phone Number: </span>
-                //                     {selectedFacilityOption?.phone_numbers?.map(
-                //                       (phone) => (
-                //                         <span key={phone?.id}>
-                //                           {phone?.number}
-                //                         </span>
-                //                       )
-                //                     )}
-                //                   </p>
-                //                   <p>
-                //                     <span>Focal Person: </span>
-                //                     {selectedFacilityOption?.focal_persons?.map(
-                //                       (person) => (
-                //                         <span key={person?.id}>
-                //                           {person?.first_name}
-                //                           {person?.last_name}
-                //                         </span>
-                //                       )
-                //                     )}
-                //                   </p>
-                //                 </div>
-                //               )}
-                //               {isAssignHealthcareVisible ? (
-                //                 !disabledAmbulanceIDs.includes(ambulance?.id) && (
-                //                   <button
-                //                     onClick={() => {
-                //                       setIsAssignHealthcareVisible(false);
-
-                //                       setOpen(true);
-                //                       setAmbulanceID(ambulance?.id);
-                //                       // Toggle the visibility of the div
-                //                       setVisibleDivIndex((prevIndex) =>
-                //                         prevIndex === index ? null : index
-                //                       );
-
-                //                       // Set the flag to true once the hidden div is shown
-                //                       //   setHasHiddenDivShown(true);
-
-                //                       // Disable the button and set the ambulance ID to the disabledAmbulanceIDs state
-                //                       setDisabledAmbulanceIDs((prevIDs) => [
-                //                         ...prevIDs,
-                //                         ambulance?.id,
-                //                       ]);
-                //                     }}
-                //                     className={`flex items-center m-1 px-1.5 py-1.5 w-36 rounded-md text-sm justify-center
-                // 						  ${
-                //                 visibleDivIndex === index
-                //                   ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                //                   : "bg-white border-2 border-primary-100 hover:border-primary-100 transition-all duration-300 hover:bg-primary-100 hover:text-white"
-                //               }
-                // 						`}
-                //                   >
-                //                     Select HealthCare
-                //                   </button>
-                //                 )
-                //               ) : (
-                //                 <Listbox
-                //                   value={selectedHealthCareOpetion}
-                //                   onChange={setSelectedHealthCareOpetion}
-                //                 >
-                //                   {({ open }) => (
-                //                     <>
-                //                       <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                //                         Select Health Care
-                //                       </Listbox.Label>
-                //                       <div className="relative mt-2">
-                //                         <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
-                //                           <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
-                //                             <ChevronUpDownIcon
-                //                               className="h-5 w-5 text-gray-400 transform rotate-180"
-                //                               aria-hidden="true"
-                //                             />
-                //                           </span>
-                //                           <span className="block truncate">
-                //                             {selectedHealthCareOpetion.name}
-                //                           </span>
-                //                         </Listbox.Button>
-
-                //                         <Transition
-                //                           show={open}
-                //                           as={React.Fragment}
-                //                           leave="transition ease-in duration-100"
-                //                           leaveFrom="opacity-100"
-                //                           leaveTo="opacity-0"
-                //                         >
-                //                           <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                //                             {menuIsOpen?.map((option) => (
-                //                               <Listbox.Option
-                //                                 key={option.name}
-                //                                 className={({ active }) =>
-                //                                   classNames(
-                //                                     active
-                //                                       ? "bg-primary-100 text-white"
-                //                                       : "text-gray-900",
-                //                                     "relative cursor-default select-none py-2 pl-8 pr-4 text-right"
-                //                                   )
-                //                                 }
-                //                                 value={option}
-                //                               >
-                //                                 {({ selected, active }) => (
-                //                                   <>
-                //                                     <span
-                //                                       className={classNames(
-                //                                         selected
-                //                                           ? "font-semibold"
-                //                                           : "font-normal",
-                //                                         "block truncate"
-                //                                       )}
-                //                                     >
-                //                                       {option.name}
-                //                                     </span>
-
-                //                                     {selected ? (
-                //                                       <span
-                //                                         className={classNames(
-                //                                           active
-                //                                             ? "text-white"
-                //                                             : "text-primary-100",
-                //                                           "absolute inset-y-0 left-0 flex items-center pl-1.5"
-                //                                         )}
-                //                                       >
-                //                                         <CheckIcon
-                //                                           className="h-5 w-5"
-                //                                           aria-hidden="true"
-                //                                         />
-                //                                       </span>
-                //                                     ) : null}
-                //                                   </>
-                //                                 )}
-                //                               </Listbox.Option>
-                //                             ))}
-                //                           </Listbox.Options>
-                //                         </Transition>
-                //                       </div>
-                //                     </>
-                //                   )}
-                //                 </Listbox>
-                //               )}
-                //             </div>
-                //           ))
-                //         )}
-                //       </div>
-                //     </div>
-                //   </div>
-                //   <div className="text-left mt-10">
-                //     <button
-                //       onClick={assignHealthCare.handleSubmit}
-                //       className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100`}
-                //     >
-                //       Assign HealthCare
-                //     </button>
-                //   </div>
-                // </div>
                 <EditHealthCare
                   datatt={ambulanceData}
                   openModal={setUpdateFormOpen}

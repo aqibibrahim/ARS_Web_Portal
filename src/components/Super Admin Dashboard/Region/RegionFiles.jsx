@@ -67,7 +67,7 @@ const RegionFiles = () => {
             console.log(response?.data?.data);
           });
       } catch (e) {
-        toast.error("An error occurred while fetching departments");
+        // toast.error("An error occurred while fetching departments");
         console.log(e);
       }
     };

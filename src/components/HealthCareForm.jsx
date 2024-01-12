@@ -128,7 +128,6 @@ const HealthCareForm = ({ onClick, datatt }) => {
     console.log(ambulanceID, "aaambID");
   };
   const activeIndex = (index) => {
-    debugger;
     setDynamicIndex(index);
   };
   return (
