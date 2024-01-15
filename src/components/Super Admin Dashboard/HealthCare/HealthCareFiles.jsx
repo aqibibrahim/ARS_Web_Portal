@@ -454,19 +454,19 @@ const HealthCareFiles = () => {
   };
   return (
     <div
-      className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+      className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
     >
       <Toaster position="bottom-right" richColors />
-      <div className="bg-lightGray-100 w-full h-auto rounded-lg p-2">
-        <div className="p-4 text-right">
-          <h1 className="text-2xl font-semibold">Healthcare</h1>
+      <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
+        <div className="p-4 text-right  bg-gray-100 ">
+          <h1 className="text-xl font-semibold">Health Cares</h1>
         </div>
-        <div className="flex flex-row items-center p-4 space-x-4">
+        <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100  ">
           <div className="flex flex-row space-x-2"></div>
-          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 py-1">
+          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
             <BsSearch width={9} height={9} />
             <input
-              className="bg-transparent focus:border-none border-0 w-full text-right"
+              className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
               placeholder="Search Ambulances..."
             />
@@ -479,7 +479,7 @@ const HealthCareFiles = () => {
               Department
             </button> */}
           <button
-            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
+            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
             type="button"
             onClick={handleCreateHealtCareClick}
           >
@@ -495,7 +495,7 @@ const HealthCareFiles = () => {
               No data available
             </p>
           ) : (
-            <table className="min-w-full divide-y divide-gray-300 text-right">
+            <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
               <thead>
                 <tr>
                   <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
@@ -503,31 +503,31 @@ const HealthCareFiles = () => {
                   </th>
                   <th
                     scope="col"
-                    className="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0"
+                    className="py-3 pl-4 pr-3 text-xs font-medium  tracking-wide text-gray-500 sm:pl-0"
                   >
                     Address
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
                     Status
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
                     Facility Email Address
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
                     Phone Number
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
                     Facilty Name
                   </th>
@@ -563,23 +563,23 @@ const HealthCareFiles = () => {
                         </button>
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
                       {healthcare.address}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
                       <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                         {healthcare.status}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
                       {healthcare.email}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
                       {healthcare.phone_numbers.map((phone) => (
                         <div key={phone.id}>{phone.number}</div>
                       ))}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
                       {healthcare.name}
                     </td>
                   </tr>
@@ -591,7 +591,7 @@ const HealthCareFiles = () => {
       </div>
       {viewOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full ">
-          <div className="relative top-1 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden  mb-5">
+          <div className="relative top-1 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden  mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -599,7 +599,7 @@ const HealthCareFiles = () => {
                 onClick={() => setViewOpen(false)}
               />
               <h3 className="text-xl font-semibold">
-                HealthCare Details
+                {selectedHealthCare?.name}
                 <span className="text-lime-600 ml-2">
                   {selectedHealthCare?.status}
                 </span>
@@ -644,17 +644,17 @@ const HealthCareFiles = () => {
                 <p className="text-lg text-right font-semibold">Focal Person</p>
                 {selectedHealthCare?.focal_persons?.map((person) => (
                   <p key={person.id} className="text-base text-right">
-                    {`${person?.first_name} ${person?.last_name}`}
+                    {`${person?.first_name || ""} ${person?.last_name || ""}`}
                   </p>
                 ))}
               </div>
               <div className="h-80 w-10">
                 <Map
                   google={window.google}
-                  zoom={10}
+                  zoom={8}
                   style={{ width: "100%", height: "100%" }}
                   initialCenter={{
-                    lat: parseFloat(selectedHealthCare?.latitude),
+                    lat: parseFloat(selectedHealthCare?.latitude - 0.956858),
                     lng: parseFloat(selectedHealthCare?.longitude),
                   }}
                 >
@@ -672,14 +672,14 @@ const HealthCareFiles = () => {
       )}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative mt-4 mx-auto -left-[14.5rem] p-0 border w-2/4 shadow-lg rounded-md bg-white  h-auto mb-5">
+          <div className="relative mt-4 mx-auto  p-0 border w-2/4 shadow-lg rounded-md bg-white  h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                 onClick={() => setIsModalOpen(false)}
               />
-              <h3 className="text-xl font-semibold">Create Healthcare</h3>
+              <h3 className="text-xl font-semibold">Create HealthCare</h3>
             </div>
             <form className="p-5" onSubmit={CreateHealtCare.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -713,7 +713,7 @@ const HealthCareFiles = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
+                    <label className="block text-sm font-medium leading-6 text-gray-900 text-right mb-2">
                       Departments
                     </label>
 
@@ -888,7 +888,7 @@ const HealthCareFiles = () => {
       )}
       {updateFormOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[17rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className="relative top-1 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -929,7 +929,7 @@ const HealthCareFiles = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
+                    <label className="block text-sm font-medium leading-6 mb-2 text-gray-900 text-right">
                       Departments
                     </label>
 

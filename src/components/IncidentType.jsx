@@ -380,22 +380,25 @@ export default function IncidentType() {
         okText="Delete"
       ></Modal>
       <div
-        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen  `}
       >
         {" "}
-        <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right">
-          <h1 className="text-2xl font-semibold m-2 mt-3"> Incident Type</h1>
-          <div>
-            <button
-              onClick={() => {
-                NewIncidentTypeCreation();
-              }}
-              className="mt-5 text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
-            >
-              Create New Incident Type +
-            </button>
+        <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
+          <div className="p-4 text-right  bg-gray-100 ">
+            <h1 className="text-xl font-semibold m-2">Incident Types</h1>
+            <div>
+              <button
+                className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
+                type="button"
+                onClick={() => {
+                  NewIncidentTypeCreation();
+                }}
+              >
+                + Create New Incident Type
+              </button>
+            </div>
           </div>
-          <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-gray-100">
+          <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-white-100">
             <thead>
               <tr>
                 <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">

@@ -384,7 +384,6 @@ export default function IncidentList({}) {
         .get(`${Vars.domain}/incidents/${id}`, { headers })
         .then((res) => {
           console.log(res);
-          toast.success("Fetched Successfuly");
           // setSubmitDone(!submitDone);
           // setSelectedOption(null);
           // handleAssignAmbulanceAndhealthCare(false);
@@ -505,19 +504,19 @@ export default function IncidentList({}) {
   return (
     <>
       <div
-        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+        className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
       >
         <Toaster position="bottom-right" richColors />
-        <div className="bg-lightGray-100 w-full h-auto rounded-lg p-2">
-          <div className="p-4 text-right">
-            <h1 className="text-2xl font-semibold">Incidents List</h1>
+        <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
+          <div className="p-4 text-right  bg-gray-100 ">
+            <h1 className="text-xl font-semibold">Incidents</h1>
           </div>
-          <div className="flex flex-row items-center p-4 space-x-4">
+          <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100  ">
             <div className="flex flex-row space-x-2"></div>
             <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 py-1">
               <BsSearch width={9} height={9} />
               <input
-                className="bg-transparent focus:border-none border-0 w-full text-right"
+                className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
                 type="text"
                 placeholder="Search Incidents..."
               />
@@ -547,7 +546,7 @@ export default function IncidentList({}) {
             ) : (
               <>
                 {" "}
-                <table className="min-w-full divide-y divide-gray-300 text-right">
+                <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
                   <thead>
                     <tr>
                       {/* <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
@@ -555,43 +554,43 @@ export default function IncidentList({}) {
 									</th> */}
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
-                        Actions
+                        {/* Actions */}
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Status
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Contact Number
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Created By
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Emergency Type
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Incident Type
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Informer Name
                       </th>
@@ -624,17 +623,17 @@ export default function IncidentList({}) {
                             </button>
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm">
                           <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                             {incident.status}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm">
                           {incident?.informer?.phone_numbers?.map((phone) => (
                             <div key={phone.id}>{phone.number}</div>
                           ))}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm">
                           {" "}
                           {incident?.created_by?.first_name +
                             " " +
@@ -642,7 +641,7 @@ export default function IncidentList({}) {
                         </td>
 
                         <td
-                          className={`whitespace-nowrap px-3 py-4 text-md ${
+                          className={`whitespace-nowrap px-3 py-4 text-sm ${
                             incident.type === "Critical"
                               ? "text-red-500"
                               : "text-green-500"
@@ -650,20 +649,20 @@ export default function IncidentList({}) {
                         >
                           {incident?.type}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm">
                           {incident?.incident_type?.name}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm">
                           {incident?.informer?.name}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                <div className="flex justify-end mt-5 mb-2">
+                <div className="flex justify-end mt-5 ">
                   <Pagination
                     current={currentPage}
-                    className="flex text-lg text-semi-bold"
+                    className="flex text-sm text-semi-bold mb-2"
                     total={totalIncidents}
                     pageSize={itemsPerPage}
                     onChange={(page) => setCurrentPage(page)}
@@ -687,10 +686,8 @@ export default function IncidentList({}) {
                   onClick={() => setViewOpen(false)}
                 />
                 <h3 className="text-xl font-semibold text-red-500">
-                  {selectedIncident?.incident_type?.name}
-                  <span className="text-lime-600 ml-2">
-                    {selectedIncident?.type}
-                  </span>
+                  {showData?.incident_type?.name}
+                  <span className="text-red-600 ml-2">{showData?.type}</span>
                 </h3>
               </div>
               <div className="p-5 text-right">
@@ -831,7 +828,7 @@ export default function IncidentList({}) {
         )}
         {updateFormOpen && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-            <div className="relative top-1 -left-[17rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+            <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
               <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full   p-5 overflow-hidden">
                 <BsArrowRightCircle
                   width={9}

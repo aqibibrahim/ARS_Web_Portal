@@ -108,6 +108,7 @@ const AmbulanceFiles = () => {
       address: "",
     });
     if (ambulance?.equipments.length === 0) {
+      s;
       setEditOptions(null);
     } else {
       setEditOptions(
@@ -465,19 +466,19 @@ const AmbulanceFiles = () => {
   };
   return (
     <div
-      className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+      className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
     >
       <Toaster position="bottom-right" richColors />
-      <div className="bg-lightGray-100 w-full h-auto rounded-lg p-2">
-        <div className="p-4 text-right">
-          <h1 className="text-2xl font-semibold">Ambulance List</h1>
+      <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
+        <div className="p-4 text-right  bg-gray-100 ">
+          <h1 className="text-xl font-semibold">Ambulances</h1>
         </div>
-        <div className="flex flex-row items-center p-4 space-x-4">
-          <div className="flex flex-row space-x-2"></div>
-          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 py-1">
+        <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100  ">
+          <div className="flex flex-row space-x-2 "></div>
+          <div className="flex flex-1 ml-4 items-center bg-gray-300 rounded-lg px-3 ">
             <BsSearch width={9} height={9} />
             <input
-              className="bg-transparent focus:border-none border-0 w-full text-right"
+              className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
               placeholder="Search Ambulances..."
             />
@@ -490,11 +491,11 @@ const AmbulanceFiles = () => {
             Equipment
           </button> */}
           <button
-            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
+            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
             type="button"
             onClick={handleCreateAmbulanceClick}
           >
-            Create Ambulance +
+            + Create Ambulance
           </button>
         </div>
         <div className="rtl">
@@ -507,7 +508,7 @@ const AmbulanceFiles = () => {
           ) : (
             <>
               {" "}
-              <table className="min-w-full divide-y divide-gray-300 text-right">
+              <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
                 <thead>
                   <tr>
                     <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
@@ -515,38 +516,38 @@ const AmbulanceFiles = () => {
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                    >
-                      Status
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0"
+                      className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
                     >
                       Model
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                      className="py-3 pl-4 pr-3 text-xs font-medium    tracking-wide text-gray-500 sm:pl-0"
                     >
                       Make
                     </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
+                    >
+                      Plate Number
+                    </th>
                     {/* <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
                   >
                     Contact Number
                   </th> */}
                     <th
                       scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                      className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
                     >
-                      Plate No
+                      Status
                     </th>
 
                     <th
                       scope="col"
-                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                      className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500 "
                     >
                       ID No
                     </th>
@@ -555,7 +556,7 @@ const AmbulanceFiles = () => {
                 <tbody>
                   {ambulanceData.data?.map((ambulance) => (
                     <tr key={ambulance.id} className="hover:bg-gray-100">
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                      <td className="m-auto  text-sm  sm:pr-0">
                         <span className="flex items-center justify-center gap-5">
                           <span
                             className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
@@ -582,15 +583,11 @@ const AmbulanceFiles = () => {
                           </button>
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
-                        <span className={getStatusStyle(ambulance.status)}>
-                          {ambulance.status}
-                        </span>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
+
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
                         {ambulance.model}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
                         {ambulance.make}
                       </td>
                       {/* <td className="whitespace-nowrap px-3 py-4 text-md">
@@ -598,21 +595,27 @@ const AmbulanceFiles = () => {
                       <div key={phone}>{phone}</div>
                     ))}
                     </td> */}
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
                         {ambulance.plate_no}
                       </td>
+                      <td className="px-2 py-4 text-md  flex items-baseline justify-end ">
+                        <span
+                          className={` ${getStatusStyle(ambulance.status)}`}
+                        >
+                          {ambulance.status}
+                        </span>
+                      </td>
 
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
                         {ambulance.id_no}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <div className="flex justify-end mt-5 mb-2">
-                {" "}
+              <div className="flex justify-end mt-5 ">
                 <Pagination
-                  className="flex text-lg text-semi-bold"
+                  className="flex text-sm text-semi-bold mb-2"
                   current={currentPage}
                   total={ambulanceData?.total || 0}
                   pageSize={itemsPerPage}
@@ -629,7 +632,7 @@ const AmbulanceFiles = () => {
       </div>
       {viewOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -712,7 +715,7 @@ const AmbulanceFiles = () => {
       )}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className=" top-5 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -992,7 +995,7 @@ const AmbulanceFiles = () => {
       )}
       {updateFormOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -1252,7 +1255,6 @@ const AmbulanceFiles = () => {
           </div>
         </div>
       )}
-
       <Transition.Root show={isDelete} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={setDelete}>
           <Transition.Child
@@ -1282,7 +1284,7 @@ const AmbulanceFiles = () => {
                   <div className="absolute left-0 top-0 hidden pl-4 pt-4 sm:block">
                     <button
                       type="button"
-                      className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      className="rounded-md bg-white text-gray-400 hover:text-gray-500 "
                       onClick={() => setDelete(false)}
                     >
                       <span className="sr-only">Close</span>
@@ -1302,7 +1304,7 @@ const AmbulanceFiles = () => {
                       </Dialog.Title>
                       <div className="mt-10 ">
                         <p className="text-sm flex justify-center items-center text-gray-500">
-                          Are you sure want to DELETE?
+                          Are you sure you want to Delete?
                         </p>
                       </div>
                     </div>

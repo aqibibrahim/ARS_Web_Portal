@@ -6,7 +6,7 @@ import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { useFormik } from "formik";
 import { Select as AntSelect } from "antd";
-import { BiMessageAltX } from "react-icons/bi";
+import { BiEdit, BiMessageAltX } from "react-icons/bi";
 
 const DepartmentsFiles = () => {
   var token = localStorage.getItem("token");
@@ -189,171 +189,24 @@ const DepartmentsFiles = () => {
   return (
     <>
       <div
-        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen  `}
       >
         {" "}
         <Toaster position="bottom-right" richColors />
-        <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right">
-          <h1 className="text-2xl font-semibold m-2">Departments</h1>
-          <div>
-            <button
-              className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
-              type="button"
-              onClick={handleAddDepartment}
-            >
-              Add Department
-            </button>
-
-            {isModalOpen && (
-              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-                <div className="relative top-0 mx-auto p-5 -left-[20rem] border w-[450px] shadow-lg rounded-md bg-white">
-                  <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-2 rounded-lg overflow-hidden">
-                    <BsArrowRightCircle
-                      width={9}
-                      className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                      onClick={handleModalClose}
-                    />
-                    <h3 className="text-xl font-semibold">
-                      Create New Department
-                    </h3>
-                  </div>
-                  <form onSubmit={CreateDepartments.handleSubmit}>
-                    <div className="flex flex-row justify-between gap-4 mb-4">
-                      <div className="flex flex-col space-y-2 w-full">
-                        <div>
-                          <label
-                            htmlFor="name"
-                            className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                          >
-                            Department Name
-                          </label>
-                          <div className="relative mt-2">
-                            <input
-                              id="name"
-                              name="name"
-                              onChange={CreateDepartments.handleChange}
-                              value={CreateDepartments.values.name}
-                              placeholder="Department Name"
-                              className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                              required
-                            />
-                            <div
-                              className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                              aria-hidden="true"
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                            Incident Type
-                          </label>
-
-                          <AntSelect
-                            value={options}
-                            placeholder="Select"
-                            onChange={(value) => handleChange(value)}
-                            mode="multiple"
-                            allowClear={true}
-                            showSearch={true}
-                            className="w-full"
-                            filterOption={(input, option) =>
-                              option?.label
-                                ?.toLowerCase()
-                                .indexOf(input?.toLowerCase()) >= 0
-                            }
-                          >
-                            {myData.map((item) => (
-                              <Option key={item.value} value={item.value}>
-                                {item.label}
-                              </Option>
-                            ))}
-                          </AntSelect>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-start mt-8">
-                      {loadingMessage ? (
-                        <button
-                          type="button"
-                          className="text-white bg-primary-100 w-60 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
-                        >
-                          loading...
-                        </button>
-                      ) : (
-                        <button
-                          type="submit"
-                          className="text-white bg-primary-100 rounded-md w-60 border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
-                        >
-                          Add Department
-                        </button>
-                      )}
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
-
-            {isUpdateModalOpen && (
-              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-                <div className="relative top-0 mx-auto p-5 -left-[21.5rem] border w-1/3 shadow-lg rounded-md bg-white">
-                  <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-2 rounded-lg overflow-hidden">
-                    <BsArrowRightCircle
-                      width={9}
-                      className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                      onClick={handleModalClose}
-                    />
-                    <h3 className="text-xl font-semibold">Update Department</h3>
-                  </div>
-                  <form onSubmit={updatedepartment.handleSubmit}>
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                      >
-                        Department Name
-                      </label>
-                      <div className="relative mt-2">
-                        <input
-                          id="name"
-                          name="name"
-                          onChange={updatedepartment.handleChange}
-                          value={updatedepartment.values.name}
-                          placeholder="Department Name"
-                          className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                          required
-                        />
-                        <div
-                          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                          aria-hidden="true"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex mt-8 justify-start">
-                      {loadingMessage ? (
-                        <button
-                          type="button"
-                          className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
-                        >
-                          loading...
-                        </button>
-                      ) : (
-                        <button
-                          type="submit"
-                          className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
-                        >
-                          Update
-                        </button>
-                      )}
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
+        <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
+          <div className="p-4 text-right  bg-gray-100 ">
+            <h1 className="text-xl font-semibold m-2">Departments</h1>
+            <div>
+              <button
+                className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
+                type="button"
+                onClick={handleAddDepartment}
+              >
+                + Add Department
+              </button>
+            </div>
           </div>
-
-          <div className="bg-gray-100 p-2 rounded-lg shadow my-2">
+          <div className="bg-white p-2 rounded-lg shadow my-2">
             {loading ? (
               <p className="text-gray-700 text-center">
                 Loading departments...
@@ -376,11 +229,11 @@ const DepartmentsFiles = () => {
                         <BiMessageAltX />
                       </span>
                       <button
-                        className="text-white bg-blue-500 rounded-md border-blue-500 hover:border-blue-500 py-1 px-4 transition-all duration-300 hover:bg-white hover:text-blue-500 mr-2"
+                        className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2 mr-4"
                         type="button"
                         onClick={() => handleEditDepartmentClick(item)}
                       >
-                        Edit
+                        <BiEdit />
                       </button>
                     </span>
                     <div

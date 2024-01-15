@@ -365,29 +365,52 @@ const RegionFiles = () => {
     },
     enableReinitialize: true,
   });
+  // const getStatusStyle = (status) => {
+  //   let backgroundColor, textColor;
 
+  //   switch (status) {
+  //     case "Available":
+  //       backgroundColor = "bg-green-400";
+  //       textColor = "text-white";
+  //       break;
+  //     case "Dispatched":
+  //       backgroundColor = "bg-blue-400";
+  //       textColor = "text-white";
+  //       break;
+  //     case "Inactive":
+  //       backgroundColor = "bg-red-400";
+  //       textColor = "text-white";
+  //       break;
+  //     default:
+  //       backgroundColor = "bg-yellow-400";
+  //       textColor = "text-white";
+  //       break;
+  //   }
+
+  //   return `inline-flex items-center rounded-full ${backgroundColor} px-2 py-1 text-xs font-medium ${textColor}`;
+  // };
   return (
     <div
-      className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+      className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
     >
       <Toaster position="bottom-right" richColors />
-      <div className="bg-lightGray-100 w-full h-auto rounded-lg p-2">
-        <div className="p-4 text-right">
-          <h1 className="text-2xl font-semibold">Region</h1>
+      <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
+        <div className="p-4 text-right  bg-gray-100 ">
+          <h1 className="text-xl font-semibold">Regions</h1>
         </div>
-        <div className="flex flex-row items-center p-4 space-x-4">
+        <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100  ">
           <div className="flex flex-row space-x-2"></div>
-          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 py-1">
+          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
             <BsSearch width={9} height={9} />
             <input
-              className="bg-transparent focus:border-none border-0 w-full text-right"
+              className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
               placeholder="Search Ambulances..."
             />
           </div>
 
           <button
-            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
+            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
             type="button"
             onClick={handleCreateRegionClick}
           >
@@ -403,7 +426,7 @@ const RegionFiles = () => {
               No data available
             </p>
           ) : (
-            <table className="min-w-full divide-y divide-gray-300 text-right">
+            <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
               <thead>
                 <tr>
                   <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
@@ -417,31 +440,31 @@ const RegionFiles = () => {
                   </th> */}
                   <th
                     scope="col"
-                    className="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0"
+                    className="py-3 pl-4 pr-3 text-xs font-medium  tracking-wide text-gray-500 sm:pl-0"
                   >
                     Ambulance Count
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
                     Status
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
                     Address
                   </th>
                   {/* <th
                 scope="col"
-                className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
               >
                 Location
               </th> */}
                   <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
                     Region Name
                   </th>
@@ -481,21 +504,24 @@ const RegionFiles = () => {
                         </p>
                       ))}
                     </td> */}
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-600 ">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      <span className="inline-flex items-center rounded-full  px-2 py-1 text-xs font-medium ">
                         {region?.ambulances?.length}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {region?.status}
+                    <td className="whitespace-nowrap px-3 py-1 mt-4 text-sm">
+                      {" "}
+                      <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                        {region?.status}
+                      </span>
                     </td>
-                    {/* <td className="whitespace-nowrap px-3 py-4 text-md">
+                    {/* <td className="whitespace-nowrap px-3 py-4 text-sm">
                   {region.latitude} {region.longitude}
                 </td> */}
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
                       {region?.address}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
                       {region?.name}
                     </td>
                   </tr>
@@ -507,7 +533,7 @@ const RegionFiles = () => {
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[17rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -638,7 +664,7 @@ const RegionFiles = () => {
       )}
       {updateFormOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[17rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className="relative top-1 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -772,7 +798,7 @@ const RegionFiles = () => {
                   <div className="absolute left-0 top-0 hidden pl-4 pt-4 sm:block">
                     <button
                       type="button"
-                      className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      className="rounded-md bg-white text-gray-400 hover:text-gray-500 "
                       onClick={() => setDelete(false)}
                     >
                       <span className="sr-only">Close</span>
@@ -792,7 +818,7 @@ const RegionFiles = () => {
                       </Dialog.Title>
                       <div className="mt-10 ">
                         <p className="text-sm flex justify-center items-center text-gray-500">
-                          Are you sure want to DELETE?
+                          Are you sure you want to Delete?
                         </p>
                       </div>
                     </div>

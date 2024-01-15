@@ -62,8 +62,8 @@ export default function Regions() {
     setLatitude(null);
     setOptions([]);
     setLocationAddress({
-      latitude:"",
-      longitude:"",
+      latitude: "",
+      longitude: "",
       address: "",
     });
     setIsModalOpen(true);
@@ -339,12 +339,12 @@ export default function Regions() {
 
   return (
     <div
-      className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+      className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
     >
       <Toaster position="bottom-right" richColors />
-      <div className="bg-lightGray-100 w-full h-auto rounded-lg p-2">
+      <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
         <div className="p-4 text-right">
-          <h1 className="text-2xl font-semibold">Region</h1>
+          <h1 className="text-xl font-semibold">Regions</h1>
         </div>
         <div className="flex flex-row items-center p-4 space-x-4">
           <div className="flex flex-row space-x-2"></div>
@@ -630,7 +630,7 @@ export default function Regions() {
                       htmlFor="addresss"
                       className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
                     >
-                     Address
+                      Address
                     </label>
                     <div className="relative mt-2">
                       <input

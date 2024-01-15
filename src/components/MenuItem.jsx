@@ -66,7 +66,7 @@ const MenuItem = ({
           bgColor === "primary" ? "bg-primary-100" : "bg-secondary-100"
         } ${
           fontColor === "white" ? "text-white" : "text-black"
-        } cursor-pointer p-1 w-full transition-all duration-300 flex-col justify-center items-center h-16 ${
+        } cursor-pointer p-1 w-full transition-all duration-300 flex-col justify-center items-center ${
           isActive
             ? "bg-white text-primary-100"
             : "hover:bg-white hover:text-primary-100"
@@ -75,7 +75,7 @@ const MenuItem = ({
         <div className={`rounded-xl p-2 m-0 flex-shrink-0 w-auto`}>
           {children}
         </div>
-        <div className={`flex-grow`}>
+        <div className={`flex-grow mb-1`}>
           <span className={`text-xs`}>{title}</span>
         </div>
       </div>

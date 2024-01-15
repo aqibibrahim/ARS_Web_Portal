@@ -8,64 +8,68 @@ const Lookups = () => {
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
+  const Tab = ({ selected, title, onClick }) => {
+    return (
+      <button
+        className={`px-4 py-2 transition-colors duration-150 ${
+          selected ? "bg-blue-500 text-white" : "bg-white text-black"
+        } focus:outline-none`}
+        onClick={onClick}
+        style={{
+          backgroundColor: selected ? "#3182ce !important" : "#fff !important",
+        }}
+      >
+        {title}
+      </button>
+    );
+  };
 
   return (
     <div
-      className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+      className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
     >
       {" "}
-      <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right">
-        <h1 className="text-2xl font-semibold m-2 mt-3"> Lookup</h1>
-      </div>
-      <div className="flex justify-center bg-white">
-        <div
-          onClick={() => handleTabClick("equipments")}
-          className={`cursor-pointer py-2 px-8 ${
-            activeTab === "equipments"
-              ? "bg-primary-100 text-white"
-              : "text-primary-100"
-          } border-2 border-primary-100 rounded-tl-md`}
-        >
-          Equipments
+      <div className="bg-lightGray-100 ml-20 rounded-t-lg     mt-2 ">
+        <div className="p-4 text-right   ">
+          <h1 className="text-2xl font-semibold m-2 mt-3"> Lookup</h1>
+        </div>{" "}
+        <div className="flex justify-end ">
+          {" "}
+          <Tab
+            selected={activeTab === "equipments"}
+            title="Equipments"
+            onClick={() => handleTabClick("equipments")}
+            className={`${
+              activeTab === "equipments"
+                ? "bg-blue-500 text-white"
+                : "bg-white text-blue-500"
+            }`}
+          />
+          <Tab
+            selected={activeTab === "Departments"}
+            onClick={() => handleTabClick("Departments")}
+            title="Departments"
+            className={`${
+              activeTab === "Departments"
+                ? "bg-blue-500 text-white"
+                : "bg-white text-blue-500"
+            }`}
+          />
+          <Tab
+            selected={activeTab === "incidentType"}
+            onClick={() => handleTabClick("incidentType")}
+            title="Incident Types"
+            className={`${
+              activeTab === "incidentType"
+                ? "bg-blue-500 text-white"
+                : "bg-white text-blue-500"
+            }`}
+          />
         </div>
-        <div
-          onClick={() => handleTabClick("Departments")}
-          className={`cursor-pointer py-2 px-8 ${
-            activeTab === "Departments"
-              ? "bg-primary-100 text-white"
-              : "text-primary-100"
-          } border-2 border-primary-100   `}
-        >
-          Departments
-        </div>
-        <div
-          onClick={() => handleTabClick("incidentType")}
-          className={`cursor-pointer py-2 px-8 ${
-            activeTab === "incidentType"
-              ? "bg-primary-100 text-white"
-              : "text-primary-100"
-          } border-2 border-primary-100 rounded-tr-md`}
-        >
-          Incident Type
-        </div>
       </div>
-      <div>
-        {activeTab === "equipments" && (
-          <div>
-            <Equipment />
-          </div>
-        )}
-        {activeTab === "Departments" && (
-          <div>
-            <DepartmentsFiles />
-          </div>
-        )}
-        {activeTab === "incidentType" && (
-          <div>
-            <IncidentType />
-          </div>
-        )}
-      </div>
+      {activeTab === "equipments" && <Equipment />}
+      {activeTab === "Departments" && <DepartmentsFiles />}
+      {activeTab === "incidentType" && <IncidentType />}
     </div>
   );
 };

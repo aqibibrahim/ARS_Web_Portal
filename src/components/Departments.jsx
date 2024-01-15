@@ -216,11 +216,11 @@ export default function Departments() {
   return (
     <>
       <div
-        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+        className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar h-screen `}
       >
         {" "}
         <Toaster position="bottom-right" richColors />
-        <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right">
+        <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <h1 className="text-2xl font-semibold m-2">Departments</h1>
           <div>
             <button

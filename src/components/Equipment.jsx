@@ -4,7 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Vars, getAllEquipment, getToken } from "../helpers/helpers";
 import { BsArrowRightCircle } from "react-icons/bs";
 import axios from "axios";
-import { BiMessageAltX } from "react-icons/bi";
+import { BiMessageAltX, BiEdit } from "react-icons/bi";
 
 import { Toaster, toast } from "sonner";
 import { useFormik } from "formik";
@@ -156,19 +156,21 @@ export default function Equipment() {
   return (
     <>
       <div
-        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen `}
       >
         <Toaster position="bottom-right" richColors />
-        <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right">
-          <h1 className="text-2xl font-semibold m-2">Equipment</h1>
-          <div>
-            <button
-              className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
-              type="button"
-              onClick={handleAddEquipmentClick}
-            >
-              Add Equipment
-            </button>
+        <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
+          <div className="p-4 text-right  bg-gray-100 ">
+            <h1 className="text-xl font-semibold m-2">Equipment</h1>
+            <div>
+              <button
+                className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
+                type="button"
+                onClick={handleAddEquipmentClick}
+              >
+                + Add Equipment
+              </button>
+            </div>
             {isModalOpen && (
               <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
                 <div className="relative top-[1rem] -left-[21rem] mx-auto p-5 border w-1/3 shadow-lg rounded-md bg-white">
@@ -280,7 +282,7 @@ export default function Equipment() {
               </div>
             )}
           </div>
-          <div className="bg-gray-100 p-2 rounded-lg shadow my-2">
+          <div className="bg-white p-2 rounded-lg shadow my-2">
             {loading ? (
               <p className="text-gray-700 text-center">Loading equipment...</p>
             ) : equipment.length == 0 ? (
@@ -304,11 +306,11 @@ export default function Equipment() {
                         <BiMessageAltX />
                       </span>
                       <button
-                        className="text-white bg-blue-500 rounded-md border-blue-500 hover:border-blue-500 py-1 px-4 transition-all duration-300 hover:bg-white hover:text-blue-500 mr-2"
+                        className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2 mr-4"
                         type="button"
                         onClick={() => handleEditEquipmentClick(item)}
                       >
-                        Edit
+                        <BiEdit />
                       </button>
                     </span>
                     <div

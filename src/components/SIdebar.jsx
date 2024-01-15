@@ -89,7 +89,7 @@ const SideBar = ({ parentData }) => {
     navigate("/Lookup");
   };
   return (
-    <div className="hidden right-0 lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:flex-col ">
+    <div className="hidden right-0 lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:flex-col  ">
       {/* Sidebar component, swap this element with another sidebar if you like */}
       <div className="flex grow flex-row gap-y-3 overflow-y-auto h-screen border-r border-gray-200 bg-transparent ">
         {isCreateIncidentOpen && (
