@@ -730,9 +730,9 @@ const AmbulanceFiles = () => {
                       Equipment
                     </label>
                     <div className="mt-[7px]">
-                      <AntSelect
+                      {/* <AntSelect
                         value={options}
-                        placeholder="Select"
+                        placeholder="Select Equipments"
                         onChange={(value) => handleChange(value)}
                         options={myData}
                         mode="multiple"
@@ -743,22 +743,22 @@ const AmbulanceFiles = () => {
                         className="w-full"
                       >
                         {/* Render options */}
-                        {myData.map((option) => (
+                      {/* {myData.map((option) => (
                           <Option key={option.value} value={option.value}>
                             {option.label}
                           </Option>
-                        ))}
-                      </AntSelect>
-                      {/* <Select
-												value={options}
-												placeholder="Select"
-												onChange={(e) => handleChange(e)}
-												options={myData}
-												isMultiple={true}
-												isClearable={true}
-												primaryColor={'blue'}
-												className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-											/> */}
+                        ))} */}
+                      {/* </AntSelect> */}
+                      <Select
+                        value={options}
+                        placeholder="Select"
+                        onChange={(e) => handleChange(e)}
+                        options={myData}
+                        isMultiple={true}
+                        isClearable={true}
+                        primaryColor={"blue"}
+                        className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                      />
                     </div>
                   </div>
                   <div>
