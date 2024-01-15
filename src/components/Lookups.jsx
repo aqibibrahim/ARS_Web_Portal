@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Equipment from "./Equipment";
 import DepartmentsFiles from "./Super Admin Dashboard/Departments/DepartmentsFiles";
 import IncidentType from "./IncidentType";
+import Departments from "./Departments";
 const Lookups = () => {
   const [activeTab, setActiveTab] = useState("equipments");
 
@@ -30,8 +31,11 @@ const Lookups = () => {
     >
       {" "}
       <div className="bg-lightGray-100 ml-20 rounded-t-lg     mt-2 ">
-        <div className="p-4 text-right   ">
-          <h1 className="text-2xl font-semibold m-2 mt-3"> Lookup</h1>
+        <div className="p-4 text-center  ">
+          <h1 className="text-2xl font-semibold m-2 mt-3 justify-center">
+            {" "}
+            Lookup
+          </h1>
         </div>{" "}
         <div className="flex justify-end ">
           {" "}
@@ -68,7 +72,7 @@ const Lookups = () => {
         </div>
       </div>
       {activeTab === "equipments" && <Equipment />}
-      {activeTab === "Departments" && <DepartmentsFiles />}
+      {activeTab === "Departments" && <Departments />}
       {activeTab === "incidentType" && <IncidentType />}
     </div>
   );

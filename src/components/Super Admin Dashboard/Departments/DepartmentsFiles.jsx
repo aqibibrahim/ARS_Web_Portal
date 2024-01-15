@@ -159,7 +159,6 @@ const DepartmentsFiles = () => {
   };
 
   const handleEditDepartmentClick = (item) => {
-    console.log("ITEM: ", item);
     setEditingDepartment(item);
     setIsUpdateModalOpen(true);
   };

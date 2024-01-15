@@ -300,8 +300,8 @@ const HealthCareFiles = () => {
   });
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
+    lat: 33.7519137,
+    lng: 72.7970134,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -654,7 +654,7 @@ const HealthCareFiles = () => {
                   zoom={8}
                   style={{ width: "100%", height: "100%" }}
                   initialCenter={{
-                    lat: parseFloat(selectedHealthCare?.latitude - 0.956858),
+                    lat: parseFloat(selectedHealthCare?.latitude),
                     lng: parseFloat(selectedHealthCare?.longitude),
                   }}
                 >
@@ -1191,8 +1191,17 @@ const HealthCareFiles = () => {
                           type="text"
                           placeholder="Enter a location"
                           onChange={handlePlaceChange}
+                          // value={createIncident.values.informer_address}
                         />
-                        <button onClick={() => setOpen(false)}>Close </button>
+                        <div style={{ marginTop: "10px" }}>
+                          <strong>Address:</strong> {address}
+                        </div>
+                        <button
+                          onClick={() => setOpen(false)}
+                          className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
+                        >
+                          Close
+                        </button>
                       </div>
                       <div
                         id="map"
@@ -1216,9 +1225,6 @@ const HealthCareFiles = () => {
                           onDragend={handleMarkerDragEnd}
                         />
                       </Map>
-                      <div style={{ marginTop: "10px" }}>
-                        <strong>Address:</strong> {address}
-                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>

@@ -1329,7 +1329,7 @@ const AmbulanceFiles = () => {
           </div>
         </Dialog>
       </Transition.Root>
-      <Transition.Root show={open} as={Fragment}>
+      {/* <Transition.Root show={open} as={Fragment}>
         <Dialog onClose={() => setOpen(false)}>
           <Transition.Child
             as={Fragment}
@@ -1404,6 +1404,94 @@ const AmbulanceFiles = () => {
                       <div style={{ marginTop: "10px" }}>
                         <strong>Address:</strong> {address}
                       </div>
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition.Root> */}
+      <Transition.Root show={open} as={Fragment}>
+        <Dialog onClose={() => setOpen(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 z-50  overflow-y-auto">
+            <div className="flex w-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              >
+                <Dialog.Panel className="relative transform mx-auto w-[90rem] h-screen overflow-hidden rounded-lg bg-white  shadow-xl transition-all">
+                  <div className="mt-2">
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100vh",
+                      }}
+                    >
+                      {" "}
+                      <div
+                        id="pac-card"
+                        className="flex rounded-md gap-10 justify-center my-4"
+                      >
+                        <input
+                          id="address"
+                          name="address"
+                          required
+                          className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                          type="text"
+                          placeholder="Enter a location"
+                          onChange={handlePlaceChange}
+                          // value={createIncident.values.informer_address}
+                        />
+                        <div style={{ marginTop: "10px" }}>
+                          <strong>Address:</strong> {address}
+                        </div>
+                        <button
+                          onClick={() => setOpen(false)}
+                          className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
+                        >
+                          Close
+                        </button>
+                      </div>
+                      <div
+                        id="map"
+                        // style={{ height: "0px", width: "0px" }}
+                      ></div>
+                      <Map
+                        google={google}
+                        zoom={10}
+                        onClick={handleMapClick}
+                        zoomControlOptions={{
+                          position: ControlPosition.BOTTOM_LEFT,
+                        }}
+                        mapTypeControlOptions={{
+                          position: ControlPosition.TOP_CENTER,
+                        }}
+                        initialCenter={position}
+                      >
+                        <Marker
+                          position={position}
+                          draggable={true}
+                          onDragend={handleMarkerDragEnd}
+                        />
+                      </Map>
                     </div>
                   </div>
                 </Dialog.Panel>

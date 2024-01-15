@@ -288,42 +288,73 @@ export default function Equipment() {
             ) : equipment.length == 0 ? (
               <p className="text-center  text-primary-100">No data available</p>
             ) : (
-              <ul className="list-none">
-                {equipment.map((item) => (
-                  <li
-                    key={item.id}
-                    className="border-b border-gray-300 last:border-0 p-2 flex justify-between items-center"
-                  >
-                    {" "}
-                    <span className="flex items-center justify-center gap-5">
-                      <span
-                        className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                        onClick={() => {
-                          setDelete(true);
-                          setDeleteID(item?.id);
-                        }}
-                      >
-                        <BiMessageAltX />
-                      </span>
-                      <button
-                        className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2 mr-4"
-                        type="button"
-                        onClick={() => handleEditEquipmentClick(item)}
-                      >
-                        <BiEdit />
-                      </button>
-                    </span>
-                    <div
-                      className={`px-2 py-1 rounded text-white ${
-                        item.status === "Active" ? "bg-green-300" : "bg-red-500"
-                      }`}
+              <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-white-100">
+                <thead>
+                  <tr>
+                    <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+                      <span className="sr-only">Edit</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
-                      {item.status}
-                    </div>
-                    <div className="text-gray-800 w-full">{item.name}</div>
-                  </li>
-                ))}
-              </ul>
+                      Status
+                    </th>
+
+                    {/* <th
+                  scope="col"
+                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                >
+                  PIN
+                </th> */}
+                    {/* <th
+                  scope="col"
+                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                >
+                  Driver Last Name
+                </th> */}
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    >
+                      Departments
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {equipment?.map((item, index) => (
+                    <tr key={index} className="hover:bg-white">
+                      <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                        <span className="flex gap-5">
+                          <span
+                            className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                            onClick={() => {
+                              setDelete(true);
+                              setDeleteID(item?.id);
+                            }}
+                          >
+                            <BiMessageAltX />
+                          </span>
+                          <button
+                            onClick={() => handleEditEquipmentClick(item)}
+                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                          >
+                            <BiEdit />
+                          </button>
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                        <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                          {item?.status}
+                        </span>
+                      </td>{" "}
+                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                        {item?.name}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </div>
         </div>

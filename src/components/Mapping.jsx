@@ -301,7 +301,7 @@ export default function Mapping() {
         className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
       >
         <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
-          <div className="p-4 text-right   ">
+          <div className="p-4 text-center   ">
             <h1 className="text-2xl font-semibold m-2 mt-3"> Mapping</h1>
           </div>
           <div className="flex justify-end ">

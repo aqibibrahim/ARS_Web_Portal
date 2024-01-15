@@ -218,8 +218,8 @@ const RegionFiles = () => {
   const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
+    lat: 33.7519137,
+    lng: 72.7970134,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -889,8 +889,17 @@ const RegionFiles = () => {
                           type="text"
                           placeholder="Enter a location"
                           onChange={handlePlaceChange}
+                          // value={createIncident.values.informer_address}
                         />
-                        <button onClick={() => setOpen(false)}>Close </button>
+                        <div style={{ marginTop: "10px" }}>
+                          <strong>Address:</strong> {address}
+                        </div>
+                        <button
+                          onClick={() => setOpen(false)}
+                          className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
+                        >
+                          Close
+                        </button>
                       </div>
                       <div
                         id="map"
@@ -914,9 +923,6 @@ const RegionFiles = () => {
                           onDragend={handleMarkerDragEnd}
                         />
                       </Map>
-                      <div style={{ marginTop: "10px" }}>
-                        <strong>Address:</strong> {address}
-                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>
