@@ -72,7 +72,7 @@ const Lookups = () => {
         </div>
       </div>
       {activeTab === "equipments" && <Equipment />}
-      {activeTab === "Departments" && <Departments />}
+      {activeTab === "Departments" && <DepartmentsFiles />}
       {activeTab === "incidentType" && <IncidentType />}
     </div>
   );

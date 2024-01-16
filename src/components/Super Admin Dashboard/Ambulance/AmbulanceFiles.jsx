@@ -61,7 +61,6 @@ const AmbulanceFiles = () => {
     setEditOptions(value);
     console.log("value:", value);
   };
-  console.log(options);
 
   const handleCreateAmbulanceClick = () => {
     setLongitude(null);

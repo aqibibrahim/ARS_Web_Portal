@@ -12,6 +12,7 @@ import { Toaster, toast } from "sonner";
 import Select from "react-tailwindcss-select";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { BsArrowRightCircle, BsEye, BsSearch } from "react-icons/bs";
+import InputMask from "react-input-mask";
 
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 const RegionFiles = () => {
@@ -23,6 +24,23 @@ const RegionFiles = () => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
+  const [validationErrors, setValidationErrors] = useState({
+    name: "",
+    email: "",
+    pin: "",
+    phoneNumbers: "",
+  });
+  const resetValidationErrors = () => {
+    setValidationErrors({
+      name: "",
+      email: "",
+      pin: "",
+      phoneNumbers: "",
+    });
+  };
+  const [editData, setEditData] = useState({
+    phoneNumbers: [],
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updateFormOpen, setUpdateFormOpen] = useState(false);
@@ -30,7 +48,8 @@ const RegionFiles = () => {
   const [ambulanceData, setAmbulanceData] = useState([]);
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState(false);
-
+  const [phoneNumbers, setPhoneNumbers] = useState([]);
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [locationAddress, setLocationAddress] = useState({});
   const [formattedAddress, setFormattedAddress] = useState();
   const [submitDone, setSubmitDone] = useState(false);
@@ -77,10 +96,13 @@ const RegionFiles = () => {
     setLongitude(null);
     setLatitude(null);
     setOptions(null);
+    setPhoneNumbers([]);
     setLocationAddress({
       latitude: "",
       longitude: "",
       address: "",
+      setNewPhoneNumber: "",
+      setPhoneNumbers: [],
     });
     setIsModalOpen(true);
   };
@@ -98,14 +120,15 @@ const RegionFiles = () => {
         }))
       );
     }
-
-    // console.log(ambulance);
+    setPhoneNumbers(region?.phone_numbers.map((phone) => phone.number));
+    debugger;
     setSelectedAmbulance(region);
     setLocationAddress({
       latitude: region?.latitude,
       longitude: region?.longitude,
       address: region?.address,
     });
+
     setUpdateFormOpen(true);
   };
   useEffect(() => {
@@ -143,6 +166,7 @@ const RegionFiles = () => {
         address: locationAddress?.address,
         latitude: locationAddress.latitude,
         longitude: locationAddress.longitude,
+        phone_numbers: phoneNumbers,
       };
       const UploadRegion = async () => {
         console.log(JSON);
@@ -154,13 +178,16 @@ const RegionFiles = () => {
               setSubmitDone(!submitDone);
               setLoadingMessage(false);
               toast.success("Created Successfuly");
+              setIsModalOpen(false);
             });
         } catch (e) {
           setLoadingMessage(false);
           if (e.response?.data?.code === 400) {
             toast.error(e.response.data.data.name[0]);
+            setLoadingMessage(false);
           } else {
             toast.error("failed");
+            setLoadingMessage(false);
           }
           console.log(e);
         }
@@ -186,6 +213,7 @@ const RegionFiles = () => {
         address: locationAddress?.address,
         latitude: locationAddress.latitude,
         longitude: locationAddress.longitude,
+        phone_numbers: phoneNumbers,
       };
       const UpdateRegion = async () => {
         console.log(JSON);
@@ -201,6 +229,7 @@ const RegionFiles = () => {
               setSubmitDone(!submitDone);
               setLoadingMessage(false);
               toast.success("Updated Successfuly");
+              setUpdateFormOpen(close);
             });
         } catch (e) {
           toast.error("failed");
@@ -218,8 +247,8 @@ const RegionFiles = () => {
   const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 33.7519137,
-    lng: 72.7970134,
+    lat: 23.8859,
+    lng: 45.0792,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -304,7 +333,7 @@ const RegionFiles = () => {
     const input = document.getElementById("address");
     const options = {
       bounds: defaultBounds,
-      componentRestrictions: { country: "sa" }, // Set the country to Pakistan
+      componentRestrictions: { country: null }, // Set the country to Pakistan
       fields: [
         "address_components",
         "geometry",
@@ -348,6 +377,17 @@ const RegionFiles = () => {
       sendDataToParent(latitude, longitude, address, postalCode);
     });
   };
+  const handleAddPhoneNumber = () => {
+    if (newPhoneNumber.trim() !== "") {
+      setPhoneNumbers([...phoneNumbers, newPhoneNumber]);
+      setNewPhoneNumber("");
+    }
+  };
+  const handleRemovePhoneNumber = (index) => {
+    const updatedPhoneNumbers = phoneNumbers.filter((_, i) => i !== index);
+    setPhoneNumbers(updatedPhoneNumbers);
+  };
+
   const AmbulanceDelete = useFormik({
     initialValues: {},
     onSubmit: async () => {
@@ -442,6 +482,12 @@ const RegionFiles = () => {
                     scope="col"
                     className="py-3 pl-4 pr-3 text-xs font-medium  tracking-wide text-gray-500 sm:pl-0"
                   >
+                    Phone Numbers
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                  >
                     Ambulance Count
                   </th>
                   <th
@@ -450,18 +496,18 @@ const RegionFiles = () => {
                   >
                     Status
                   </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                  >
-                    Address
-                  </th>
                   {/* <th
                 scope="col"
                 className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
               >
                 Location
               </th> */}
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                  >
+                    Address
+                  </th>
                   <th
                     scope="col"
                     className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
@@ -494,16 +540,16 @@ const RegionFiles = () => {
                         </button>{" "}
                       </span>
                     </td>
-                    {/* <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-md">
                       {region?.phone_numbers?.map((phone_numbers) => (
                         <p
-                          key={phone_numbers.id}
+                          key={phone_numbers?.id}
                           className="text-base text-right"
                         >
-                          {phone_numbers.number}
+                          {phone_numbers?.number}
                         </p>
                       ))}
-                    </td> */}
+                    </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm">
                       <span className="inline-flex items-center rounded-full  px-2 py-1 text-xs font-medium ">
                         {region?.ambulances?.length}
@@ -639,8 +685,105 @@ const RegionFiles = () => {
                       />
                     </div>
                   </div>
+                  <div>
+                    <label
+                      htmlFor="phone_numbers"
+                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Phone Number
+                    </label>
+
+                    <div className="w-full  mb-6 ">
+                      <div className="flex w-full ">
+                        <div
+                          className={`relative mt-2 ${
+                            newPhoneNumber ? "w-11/12" : "w-full"
+                          }`}
+                        >
+                          {/* <InputMask
+															mask="00218 99 9999999"
+															maskChar=""
+															placeholder="00218 XX XXXXXXX"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															type="tel"
+															name="phone_numbers"
+															id="phone_numbers"
+															className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															required
+														/> */}
+                          <InputMask
+                            mask="00218 99 9999999" // Define your desired mask here
+                            maskChar=""
+                            placeholder="00218 XX XXXXXXX"
+                            onChange={(e) => setNewPhoneNumber(e.target.value)}
+                            value={newPhoneNumber}
+                            type="tel"
+                            name="phone_numbers"
+                            id="phone_numbers"
+                            className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                          />
+                          {/* <input
+															type="number"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															placeholder="Enter Phone Number"
+															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															{...(phoneNumbers ? { required: false } : { required: true })}
+														/> */}
+                          <div
+                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div>
+                          {newPhoneNumber ? (
+                            <button
+                              type="button"
+                              onClick={handleAddPhoneNumber}
+                              className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
+                            >
+                              +
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                      {validationErrors.phoneNumbers && (
+                        <p className="text-red-500 text-sm">
+                          {validationErrors.phoneNumbers}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </div>{" "}
+              {phoneNumbers.length > 0 ? (
+                <div
+                  className={`grid grid-cols-2 gap-2 ${
+                    phoneNumbers.length > 0 ? "bg-gray-100" : ""
+                  } p-4`}
+                >
+                  {phoneNumbers.map((phoneNumber, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
+                    >
+                      <div className="flex text-sm">{phoneNumber}</div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhoneNumber(index)}
+                        className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
+                      >
+                        -
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
@@ -745,8 +888,105 @@ const RegionFiles = () => {
                       />
                     </div>
                   </div>
+                  <div>
+                    <label
+                      htmlFor="phone_numbers"
+                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Phone Number
+                    </label>
+
+                    <div className="w-full  mb-6 ">
+                      <div className="flex w-full ">
+                        <div
+                          className={`relative mt-2 ${
+                            newPhoneNumber ? "w-11/12" : "w-full"
+                          }`}
+                        >
+                          {/* <InputMask
+															mask="00218 99 9999999"
+															maskChar=""
+															placeholder="00218 XX XXXXXXX"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															type="tel"
+															name="phone_numbers"
+															id="phone_numbers"
+															className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															required
+														/> */}
+                          <InputMask
+                            mask="00218 99 9999999" // Define your desired mask here
+                            maskChar=""
+                            placeholder="00218 XX XXXXXXX"
+                            onChange={(e) => setNewPhoneNumber(e.target.value)}
+                            value={newPhoneNumber}
+                            type="tel"
+                            name="phone_numbers"
+                            id="phone_numbers"
+                            className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                          />
+                          {/* <input
+															type="number"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															placeholder="Enter Phone Number"
+															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															{...(phoneNumbers ? { required: false } : { required: true })}
+														/> */}
+                          <div
+                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div>
+                          {newPhoneNumber ? (
+                            <button
+                              type="button"
+                              onClick={handleAddPhoneNumber}
+                              className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
+                            >
+                              +
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                      {validationErrors.phoneNumbers && (
+                        <p className="text-red-500 text-sm">
+                          {validationErrors.phoneNumbers}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </div>{" "}
+              {phoneNumbers?.length > 0 ? (
+                <div
+                  className={`grid grid-cols-2 gap-2 ${
+                    phoneNumbers.length > 0 ? "bg-gray-100" : ""
+                  } p-4`}
+                >
+                  {phoneNumbers?.map((phoneNumber, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
+                    >
+                      <div className="flex text-sm">{phoneNumber}</div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhoneNumber(index)}
+                        className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
+                      >
+                        -
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
@@ -889,17 +1129,8 @@ const RegionFiles = () => {
                           type="text"
                           placeholder="Enter a location"
                           onChange={handlePlaceChange}
-                          // value={createIncident.values.informer_address}
                         />
-                        <div style={{ marginTop: "10px" }}>
-                          <strong>Address:</strong> {address}
-                        </div>
-                        <button
-                          onClick={() => setOpen(false)}
-                          className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
-                        >
-                          Close
-                        </button>
+                        <button onClick={() => setOpen(false)}>Close </button>
                       </div>
                       <div
                         id="map"
@@ -923,6 +1154,9 @@ const RegionFiles = () => {
                           onDragend={handleMarkerDragEnd}
                         />
                       </Map>
+                      <div style={{ marginTop: "10px" }}>
+                        <strong>Address:</strong> {address}
+                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>

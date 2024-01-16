@@ -538,7 +538,6 @@ export default function RolesPermission() {
               </div>
             </div>
             {/* </div> */}
-
             {/* Delete Role Modal */}
             <Modal
               title="Are you sure to delete this Role?"
@@ -602,9 +601,44 @@ export default function RolesPermission() {
                 </div>
               </div>
             </Modal>
-
+            <Modal
+              title={"Create New Role"}
+              open={isModalOpen}
+              onOk={handleNewRole}
+              onCancel={handleCancel}
+              closable={false}
+              maskClosable={false}
+              okButtonProps={{
+                style: { backgroundColor: "green", borderColor: "green" },
+              }}
+              okText={"Save"}
+            >
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                >
+                  Name
+                </label>
+                <div className="relative mt-2">
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    value={roleName}
+                    onChange={(e) => setRoleName(e.target.value)}
+                    placeholder="Enter Name"
+                    className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                    required
+                  />
+                  <div
+                    className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+            </Modal>{" "}
             {/* Assign Permission Modal */}
-
             <Modal
               // title="Assign Permissions"
               open={permissionModal}
@@ -798,43 +832,7 @@ export default function RolesPermission() {
               </div>
             </div>
             {/* </div> */}
-            <Modal
-              title={"Create New Role"}
-              open={isModalOpen}
-              onOk={handleNewRole}
-              onCancel={handleCancel}
-              closable={false}
-              maskClosable={false}
-              okButtonProps={{
-                style: { backgroundColor: "green", borderColor: "green" },
-              }}
-              okText={"Save"}
-            >
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                >
-                  Name
-                </label>
-                <div className="relative mt-2">
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    value={roleName}
-                    onChange={(e) => setRoleName(e.target.value)}
-                    placeholder="Enter Name"
-                    className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                    required
-                  />
-                  <div
-                    className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                    aria-hidden="true"
-                  />
-                </div>
-              </div>
-            </Modal>{" "}
+
             <Modal
               title={editFlag ? "Edit User" : "Create New User"}
               open={isUserModalOpen}

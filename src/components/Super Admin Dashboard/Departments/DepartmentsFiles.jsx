@@ -53,7 +53,7 @@ const DepartmentsFiles = () => {
       }
     };
     fetchDepartments();
-  }, [submitDone]);
+  }, [submitDone, isModalOpen]);
 
   useEffect(() => {
     const fetchAllIncidents = async () => {
@@ -82,38 +82,44 @@ const DepartmentsFiles = () => {
   const CreateDepartments = useFormik({
     initialValues: {
       name: "",
-      incident_types: "",
+      incident_types: [],
     },
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       setLoadingMessage(true);
       const JSON = {
         name: values.name,
-        incident_types: options?.map((item) => item.value),
+        incident_types: options?.map((item) => item),
       };
       const UploadDepartments = async () => {
         console.log(JSON);
 
         try {
-          await axios
-            .post(`${window.$BackEndUrl}/departments`, JSON, config)
-            .then((res) => {
-              console.log(res);
-              toast.success("Equipment added successfully!");
-              setIsModalOpen(false);
-              setLoadingMessage(false);
-              setSubmitDone(!submitDone);
-            });
+          const res = await axios.post(
+            `${window.$BackEndUrl}/departments`,
+            JSON,
+            config
+          );
+
+          if (res.status === 200 || res.status === 201) {
+            console.log(res);
+            toast.success("Equipment added successfully!");
+            setIsModalOpen(false);
+            setLoadingMessage(false);
+            setSubmitDone(!submitDone);
+            resetForm();
+            setOptions(null);
+          } else {
+            console.error(`Unexpected response status: ${res.status}`);
+            // Handle unexpected response status here
+          }
         } catch (e) {
           setLoadingMessage(false);
           toast.error(`${e?.response?.data?.data?.name[0]}`);
-          console.log(e);
+          console.error(e);
         }
       };
-
       UploadDepartments();
     },
-
-    enableReinitialize: true,
   });
 
   const updatedepartment = useFormik({
@@ -136,7 +142,7 @@ const DepartmentsFiles = () => {
               config
             )
             .then((res) => {
-              toast.success("Equipment added successfully!");
+              toast.success("Equipment Updated successfully!");
               setIsUpdateModalOpen(false);
               setLoadingMessage(false);
               setSubmitDone(!submitDone);
@@ -205,6 +211,152 @@ const DepartmentsFiles = () => {
               </button>
             </div>
           </div>
+          {isModalOpen && (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+              <div className="relative top-0 mx-auto p-5  border w-[450px] shadow-lg rounded-md bg-white">
+                <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-2 rounded-lg overflow-hidden">
+                  <BsArrowRightCircle
+                    width={9}
+                    className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
+                    onClick={handleModalClose}
+                  />
+                  <h3 className="text-xl font-semibold">
+                    Create New Department
+                  </h3>
+                </div>
+                <form onSubmit={CreateDepartments.handleSubmit}>
+                  <div className="flex flex-row justify-between gap-4 mb-4">
+                    <div className="flex flex-col space-y-2 w-full">
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="block  text-sm font-medium leading-6 text-gray-900 text-right"
+                        >
+                          Department Name
+                        </label>
+                        <div className="relative mt-2">
+                          <input
+                            id="name"
+                            name="name"
+                            onChange={CreateDepartments.handleChange}
+                            value={CreateDepartments.values.name}
+                            placeholder="Department Name"
+                            className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                            required
+                          />
+                          <div
+                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                            aria-hidden="true"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
+                          Incident Type
+                        </label>
+
+                        <AntSelect
+                          value={options}
+                          placeholder="Select"
+                          onChange={(value) => handleChange(value)}
+                          mode="multiple"
+                          allowClear={true}
+                          showSearch={true}
+                          className="w-full"
+                          filterOption={(input, option) =>
+                            option?.label
+                              ?.toLowerCase()
+                              .indexOf(input?.toLowerCase()) >= 0
+                          }
+                        >
+                          {myData.map((item) => (
+                            <Option key={item.value} value={item.value}>
+                              {item.label}
+                            </Option>
+                          ))}
+                        </AntSelect>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-start mt-8">
+                    {loadingMessage ? (
+                      <button
+                        type="button"
+                        className="text-white bg-primary-100 w-60 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
+                      >
+                        loading...
+                      </button>
+                    ) : (
+                      <button
+                        type="submit"
+                        className="text-white bg-primary-100 rounded-md w-60 border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
+                      >
+                        Add Department
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+          {isUpdateModalOpen && (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+              <div className="relative top-0 mx-auto p-5  border w-1/3 shadow-lg rounded-md bg-white">
+                <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-2 rounded-lg overflow-hidden">
+                  <BsArrowRightCircle
+                    width={9}
+                    className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
+                    onClick={handleModalClose}
+                  />
+                  <h3 className="text-xl font-semibold">Update Department</h3>
+                </div>
+                <form onSubmit={updatedepartment.handleSubmit}>
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Department Name
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        id="name"
+                        name="name"
+                        onChange={updatedepartment.handleChange}
+                        value={updatedepartment.values.name}
+                        placeholder="Department Name"
+                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                      />
+                      <div
+                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex mt-8 justify-start">
+                    {loadingMessage ? (
+                      <button
+                        type="button"
+                        className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
+                      >
+                        loading...
+                      </button>
+                    ) : (
+                      <button
+                        type="submit"
+                        className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
+                      >
+                        Update
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
           <div className="bg-white p-2 rounded-lg shadow my-2">
             {loading ? (
               <p className="text-gray-700 text-center">

@@ -50,7 +50,7 @@ export default function Equipment() {
     initialValues: {
       name: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       setLoadingMessage(true);
       const JSON = {
         name: values.name,
@@ -67,8 +67,11 @@ export default function Equipment() {
               setIsModalOpen(false);
               setLoadingMessage(false);
               setSubmitDone(!submitDone);
+              resetForm();
             });
         } catch (e) {
+          setLoading(false);
+          setLoadingMessage(false);
           toast.error(`${e?.response?.data?.data?.name[0]}`);
           console.log(e);
         }
@@ -173,7 +176,7 @@ export default function Equipment() {
             </div>
             {isModalOpen && (
               <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-                <div className="relative top-[1rem] -left-[21rem] mx-auto p-5 border w-1/3 shadow-lg rounded-md bg-white">
+                <div className="relative top-[1rem]  mx-auto p-5 border w-1/3 shadow-lg rounded-md bg-white">
                   <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-2 rounded-lg overflow-hidden">
                     <BsArrowRightCircle
                       width={9}
@@ -229,7 +232,7 @@ export default function Equipment() {
             )}
             {isUpdateModalOpen && (
               <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-                <div className="relative top-[2rem] -left-[21rem] mx-auto p-5 border w-1/3 shadow-lg rounded-md bg-white">
+                <div className="relative top-[2rem]  mx-auto p-5 border w-1/3 shadow-lg rounded-md bg-white">
                   <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-2 rounded-lg overflow-hidden">
                     <BsArrowRightCircle
                       width={9}
