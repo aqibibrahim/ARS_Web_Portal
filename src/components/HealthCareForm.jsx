@@ -64,7 +64,7 @@ const HealthCareForm = ({ onClick, datatt }) => {
             //    label:variant.model, value: variant.id ,persons_supported:variant.persons_supported, id_no: variant.id_no
             // })))
             // setIsLoading(false);
-            setMenuIsOpen(response?.data?.data?.data);
+            setMenuIsOpen(response?.data?.data);
             console.log(response?.data?.data);
           });
       } catch (e) {

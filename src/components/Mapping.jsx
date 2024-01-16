@@ -14,35 +14,27 @@ export default function Mapping() {
   const [departments, setDepartments] = useState([]);
   const [equipments, setEquipments] = useState([]);
   const [incident, setIncident] = useState([]);
-  const [selectedDepart, setSelectedDepart] = useState("");
-  const [selectedincident, setSelectedIncidentt] = useState("");
-
   const [selectedEquipment, setSelectedEquipment] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedIncidentId, setSelectedIncidentId] = useState("");
   const [activeTab, setActiveTab] = useState("departmentMapping");
-  const [myData, setMyData] = useState([]);
-  const [myinciData, setMyInciData] = useState([]);
-
   const [loading, setLoading] = useState(true);
   const handleCancelView = () => {
     setDepartmentMapping(false);
     setIncidentTypeMapping(false);
-    // setSelectedDepartment('')
-    setSelectedDepart("");
+    setSelectedDepartment("");
     setSelectedEquipment([]);
   };
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
-  const handleIncidentChange = (Incident) => {
-    setSelectedIncidentId(Incident.value);
-    setSelectedIncidentt(Incident);
+  const handleIncidentChange = (event) => {
+    const selectedId = event.target.value;
+    setSelectedIncidentId(selectedId);
   };
-  const handleDepartmentChange = (department) => {
-    setSelectedDepartment(department.value);
-    setSelectedDepart(department);
+  const handleDepartmentChange = (value) => {
+    setSelectedDepartment(value);
   };
 
   const handleMappingSubmit = async () => {
@@ -71,7 +63,6 @@ export default function Mapping() {
         toast.success("Mapping added Successfuly");
         setDepartmentMapping(false);
         setSelectedDepartment("");
-        setSelectedDepart("");
         setSelectedEquipment("");
       }
       handleCancelView();
@@ -104,7 +95,6 @@ export default function Mapping() {
         toast.success("Mapping added Successfuly");
         setIncidentTypeMapping(false);
         setSelectedDepartment("");
-        setSelectedDepart("");
         setSelectedEquipment("");
         setSelectedIncidentId("");
       }
@@ -128,12 +118,6 @@ export default function Mapping() {
 
         if (response.status === 200 || response.status === 201) {
           setDepartments(response?.data?.data);
-          setMyData(
-            response.data?.data?.map((variant) => ({
-              label: variant.name,
-              value: variant.id,
-            }))
-          );
         }
       } catch (error) {
         console.error("Error fetching departments:", error);
@@ -166,19 +150,6 @@ export default function Mapping() {
 
     getEquipments();
   }, []);
-  const Tab = ({ selected, title, onClick }) => {
-    return (
-      <button
-        className={`px-4 py-2 transition-colors duration-150 ${
-          selected ? "bg-blue-500 text-white" : "bg-white text-black"
-        } focus:outline-none`}
-        onClick={onClick}
-      >
-        {title}
-      </button>
-    );
-  };
-
   useEffect(() => {
     const getIncident = async () => {
       try {
@@ -194,12 +165,6 @@ export default function Mapping() {
 
         if (response.status === 200 || response.status === 201) {
           setIncident(response.data.data);
-          setMyInciData(
-            response.data?.data?.map((variant) => ({
-              label: variant.name,
-              value: variant.id,
-            }))
-          );
         }
       } catch (error) {
         console.error("Error fetching incidents:", error);
@@ -208,6 +173,19 @@ export default function Mapping() {
 
     getIncident();
   }, [incidentTypeMapping]);
+
+  const Tab = ({ selected, title, onClick }) => {
+    return (
+      <button
+        className={`px-4 py-2 transition-colors duration-150 ${
+          selected ? "bg-blue-500 text-white" : "bg-white text-black"
+        } focus:outline-none`}
+        onClick={onClick}
+      >
+        {title}
+      </button>
+    );
+  };
 
   return (
     <>
@@ -222,20 +200,20 @@ export default function Mapping() {
       >
         <div className="flex flex-col">
           <div className="flex p-5 ">
-            <AntSelect
-              value={selectedDepart}
-              placeholder="Select"
-              onChange={(selectedValue) =>
-                handleDepartmentChange(selectedValue)
-              }
-              options={myData}
-              allowClear={true}
-              showSearch
-              filterOption={(input, option) =>
-                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-              className="w-full"
-            />
+            <select
+              value={selectedDepartment}
+              onChange={(e) => handleDepartmentChange(e.target.value)}
+              className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl"
+            >
+              <option value="" disabled>
+                Select Department
+              </option>
+              {departments.map((details, index) => (
+                <option key={index} value={details?.id}>
+                  {details?.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <MultiSelectDropdown
@@ -243,7 +221,7 @@ export default function Mapping() {
               selectedOptions={selectedEquipment}
               setSelectedOptions={setSelectedEquipment}
               //   label={"Equipment"}
-              placeholder="Select Incident Types"
+              placeholder="Select Incident Type"
               bgColor={"#91EAAA"}
             />
           </div>
@@ -265,18 +243,20 @@ export default function Mapping() {
         {" "}
         <div className="flex flex-col">
           <div className="flex p-5 ">
-            <AntSelect
-              value={selectedincident}
-              placeholder="Select"
-              onChange={(selectedValue) => handleIncidentChange(selectedValue)}
-              options={myinciData}
-              allowClear={true}
-              showSearch
-              filterOption={(input, option) =>
-                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-              className="w-full"
-            />
+            <select
+              className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl"
+              onChange={handleIncidentChange}
+              value={selectedIncidentId}
+            >
+              <option value="" disabled selected>
+                Select Incident Type
+              </option>
+              {incident?.map((details, index) => (
+                <option key={details?.id} value={details?.id}>
+                  {details?.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <MultiSelectDropdown

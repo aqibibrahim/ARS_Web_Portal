@@ -164,7 +164,6 @@ export default function IncidentList({}) {
       incident?.ambulances?.map((ambulance) => ambulance.id) || [];
 
     setAssignedAmbulance(initialSelectedAmbulanceIds);
-    console.log("Hello", incident);
     try {
       await axios
         .get(
@@ -490,10 +489,17 @@ export default function IncidentList({}) {
   // };
 
   const handleChange = (selectedOptions) => {
-    const updatedIds = selectedOptions.map((option) => option.id);
-    setAssignedAmbulance(...initialSelectedAmbulanceIds, ...updatedIds);
+    const updatedIds = selectedOptions.map((option) => option.value);
+    setSelectedOption(selectedOptions);
+    if (assignedAmbulance) {
+      setAssignedAmbulance([...assignedAmbulance, ...updatedIds]);
+    } else {
+      setAssignedAmbulance([...updatedIds]);
+    }
+
     console.log(updatedIds);
   };
+
   const formatOptionLabel = ({ label, persons_supported, id_no }) => (
     <div className="flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border  border-gray-400 p-1 rounded-md mb-2 text-gray-800">
       <p className="text-right">Model:{label}</p>

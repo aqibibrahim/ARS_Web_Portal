@@ -283,7 +283,9 @@ const ModalComponent = (props) => {
                               name="phone_numbers"
                               id="phone_numbers"
                               className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                              required
+                              {...(phoneNumbers
+                                ? { required: false }
+                                : { required: true })}
                             />
                             {/* <input
 															type="number"

@@ -4,6 +4,7 @@ import axios from "axios";
 import { Vars } from "../helpers/helpers";
 import { Toaster, toast } from "sonner";
 import { BsArrowRightCircle } from "react-icons/bs";
+import InputMask from "react-input-mask";
 
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 const { TabPane } = Tabs;
@@ -163,11 +164,8 @@ export default function RolesPermission() {
         designation: state?.designation,
         role_id: state?.role,
       };
-
       let response;
-
       if (editFlag) {
-        // If editFlag is true, make a PATCH request
         const userId = editUserData.id; // Assuming you have the user ID in editUserData
         response = await axios.patch(
           `${Vars.domain}/users/${editUserID}`,
@@ -192,6 +190,7 @@ export default function RolesPermission() {
         setPhoneNumbers([]);
         setIsModalOpen(false);
         setEditUserModal(false);
+        handleCancel();
         setState({
           first_name: "",
           last_name: "",
@@ -253,7 +252,7 @@ export default function RolesPermission() {
       }
     };
     GetUsers();
-  }, [isModalOpen, deleteUserModal]);
+  }, [isModalOpen, deleteUserModal, isUserModalOpen]);
 
   const NewRole = () => {
     setState({});
@@ -274,6 +273,7 @@ export default function RolesPermission() {
     setEditModal(true);
   };
   const handleUserEdit = (data) => {
+    debugger;
     setEditUserID(data?.id);
     setIsUserModalOpen(true);
     setEditUserModal(true);
@@ -909,14 +909,18 @@ export default function RolesPermission() {
                           id="role"
                           onChange={(e) => handleRoleChange(e)}
                           value={state?.role}
-                          className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                          className="peer block  w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                         >
                           <option value="" disabled>
                             Select a Role
                           </option>
                           {allRoles.map((role) => (
-                            <option key={role.id} value={role.id}>
+                            <option
+                              key={role.id}
+                              value={role.id}
+                              selected={role.id === state?.id}
+                            >
                               {role.name}
                             </option>
                           ))}
@@ -945,18 +949,23 @@ export default function RolesPermission() {
                               newPhoneNumber ? "w-11/12" : "w-full"
                             }`}
                           >
-                            <input
-                              type="number"
+                            <InputMask
+                              mask="00218 99 9999999" // Define your desired mask here
+                              maskChar=""
+                              placeholder="00218 XX XXXXXXX"
                               onChange={(e) =>
                                 setNewPhoneNumber(e.target.value)
                               }
                               value={newPhoneNumber}
-                              placeholder="Enter Phone Number"
+                              type="tel"
+                              name="phone_numbers"
+                              id="phone_numbers"
                               className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                               {...(phoneNumbers
                                 ? { required: false }
                                 : { required: true })}
                             />
+
                             <div
                               className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                               aria-hidden="true"
