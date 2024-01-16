@@ -15,6 +15,7 @@ import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import Select from "react-tailwindcss-select";
 import InputMask from "react-input-mask";
+import { Pagination } from "antd";
 
 const HealthCareFiles = () => {
   var token = localStorage.getItem("token");
@@ -127,16 +128,20 @@ const HealthCareFiles = () => {
     setUpdateFormOpen(true);
   };
   useEffect(() => {
-    const fetchFacilitiesData = async () => {
+    const fetchFacilitiesData = async (page = 1) => {
       try {
         await axios
           .get(`${window.$BackEndUrl}/facilities`, {
             headers: headers,
+            params: {
+              page,
+              per_page: itemsPerPage,
+            },
           })
           .then((response) => {
-            setAmbulanceData(response.data?.data);
+            setAmbulanceData(response?.data?.data?.data);
             setIsLoading(false);
-            console.log(response?.data?.data);
+            console.log(response?.data?.data, "asds");
           });
       } catch (e) {
         if (e?.response?.data?.message === "Internal Server Error") {
@@ -495,97 +500,113 @@ const HealthCareFiles = () => {
               No data available
             </p>
           ) : (
-            <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
-              <thead>
-                <tr>
-                  <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
-                    <span className="sr-only">Edit</span>
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3 pl-4 pr-3 text-xs font-medium  tracking-wide text-gray-500 sm:pl-0"
-                  >
-                    Address
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                  >
-                    Status
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                  >
-                    Facility Email Address
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                  >
-                    Phone Number
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                  >
-                    Facilty Name
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {ambulanceData?.data?.map((healthcare) => (
-                  <tr key={healthcare.id} className="hover:bg-gray-100">
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <span className="flex items-center justify-center gap-5">
-                        <button
-                          className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                          onClick={() => {
-                            setDelete(true);
-                            setDeleteID(healthcare?.id);
-                          }}
-                        >
-                          <BiMessageAltX />
-                        </button>
-                        <button
-                          onClick={() => handleEditClick(healthcare)}
-                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                        >
-                          <BiEdit />
-                          <span className="sr-only">, {healthcare.name}</span>
-                        </button>{" "}
-                        <button
-                          onClick={() => handleViewClick(healthcare)}
-                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                        >
-                          <BsEye />
-                          <span className="sr-only">, {healthcare.name}</span>
-                        </button>
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                      {healthcare.address}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                      <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                        {healthcare.status}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                      {healthcare.email}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                      {healthcare.phone_numbers.map((phone) => (
-                        <div key={phone.id}>{phone.number}</div>
-                      ))}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                      {healthcare.name}
-                    </td>
+            <>
+              {" "}
+              <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
+                <thead>
+                  <tr>
+                    <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+                      <span className="sr-only">Edit</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 pl-4 pr-3 text-xs font-medium  tracking-wide text-gray-500 sm:pl-0"
+                    >
+                      Address
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                    >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                    >
+                      Facility Email Address
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                    >
+                      Phone Number
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                    >
+                      Facilty Name
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {ambulanceData?.map((healthcare) => (
+                    <tr key={healthcare.id} className="hover:bg-gray-100">
+                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                        <span className="flex items-center justify-center gap-5">
+                          <button
+                            className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                            onClick={() => {
+                              setDelete(true);
+                              setDeleteID(healthcare?.id);
+                            }}
+                          >
+                            <BiMessageAltX />
+                          </button>
+                          <button
+                            onClick={() => handleEditClick(healthcare)}
+                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                          >
+                            <BiEdit />
+                            <span className="sr-only">{healthcare?.name}</span>
+                          </button>{" "}
+                          <button
+                            onClick={() => handleViewClick(healthcare)}
+                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                          >
+                            <BsEye />
+                            <span className="sr-only"> {healthcare?.name}</span>
+                          </button>
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                        {healthcare?.address}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                        <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                          {healthcare?.status}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                        {healthcare?.email}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                        {healthcare?.phone_numbers?.map((phone) => (
+                          <div key={phone.id}>{phone.number}</div>
+                        ))}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                        {healthcare?.name}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="flex justify-end mt-5 ">
+                <Pagination
+                  className="flex text-sm text-semi-bold mb-2"
+                  current={currentPage}
+                  total={ambulanceData?.total || 0}
+                  pageSize={itemsPerPage}
+                  onChange={(page) => setCurrentPage(page)}
+                  showSizeChanger={false}
+                  showTotal={(total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`
+                  }
+                />
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -654,7 +675,7 @@ const HealthCareFiles = () => {
                   zoom={8}
                   style={{ width: "100%", height: "100%" }}
                   initialCenter={{
-                    lat: parseFloat(selectedHealthCare?.latitude),
+                    lat: parseFloat(selectedHealthCare?.latitude - 0.956858),
                     lng: parseFloat(selectedHealthCare?.longitude),
                   }}
                 >
