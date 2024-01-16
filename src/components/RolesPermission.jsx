@@ -4,6 +4,7 @@ import axios from "axios";
 import { Vars } from "../helpers/helpers";
 import { Toaster, toast } from "sonner";
 import { BsArrowRightCircle } from "react-icons/bs";
+import InputMask from "react-input-mask";
 
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 const { TabPane } = Tabs;
@@ -163,11 +164,8 @@ export default function RolesPermission() {
         designation: state?.designation,
         role_id: state?.role,
       };
-
       let response;
-
       if (editFlag) {
-        // If editFlag is true, make a PATCH request
         const userId = editUserData.id; // Assuming you have the user ID in editUserData
         response = await axios.patch(
           `${Vars.domain}/users/${editUserID}`,
@@ -192,6 +190,7 @@ export default function RolesPermission() {
         setPhoneNumbers([]);
         setIsModalOpen(false);
         setEditUserModal(false);
+        handleCancel();
         setState({
           first_name: "",
           last_name: "",
@@ -253,7 +252,7 @@ export default function RolesPermission() {
       }
     };
     GetUsers();
-  }, [isModalOpen, deleteUserModal]);
+  }, [isModalOpen, deleteUserModal, isUserModalOpen]);
 
   const NewRole = () => {
     setState({});
@@ -274,6 +273,7 @@ export default function RolesPermission() {
     setEditModal(true);
   };
   const handleUserEdit = (data) => {
+    debugger;
     setEditUserID(data?.id);
     setIsUserModalOpen(true);
     setEditUserModal(true);
@@ -425,7 +425,6 @@ export default function RolesPermission() {
       });
       if (response.status === 200 || response.status === 201) {
         setPermissionModals(response.data.data);
-        toast.success("Fetech Permissions");
       }
     } catch (error) {
       console.error("Error creating role:", error);
@@ -453,17 +452,19 @@ export default function RolesPermission() {
       {/* Create Role Modal */}
       <Toaster position="bottom-right" richColors />
 
-      <div className="w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20">
+      <div
+        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
+      >
         <Tabs defaultActiveKey="1" centered>
           <TabPane tab="Roles & Permissions" key="1">
             {/* <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right"> */}
             {/* List of roles */}
             <div
-              className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+              className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-52 h-screen ml-16`}
             >
               {" "}
-              <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right">
-                <h1 className="text-2xl font-semibold m-2 mt-3">
+              <div className="text-right flex-col bg-gray-100 rounded-lg p-2 flex justify-end items-right">
+                <h1 className="text-xl font-semibold m-2 mt-3">
                   {" "}
                   Roles & Permissions
                 </h1>
@@ -472,12 +473,14 @@ export default function RolesPermission() {
                     onClick={() => {
                       NewRole();
                     }}
-                    className="mt-5 text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
+                    className="text-white mt-5 bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm "
                   >
-                    Create New Role +
+                    + Create New Role
                   </button>
                 </div>
-                <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-gray-100">
+              </div>
+              <div className="bg-lightGray-100 ">
+                <table className="min-w-full divide-y divide-gray-300 text-right  mr-1">
                   <thead>
                     <tr>
                       <th
@@ -489,7 +492,7 @@ export default function RolesPermission() {
 
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Role Name
                       </th>
@@ -499,7 +502,7 @@ export default function RolesPermission() {
                     {allRoles?.map((data, index) => (
                       <tr key={index} className="hover:bg-white">
                         <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                          <span className="flex gap-5">
+                          <span className="flex items-center  gap-4">
                             <span
                               className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
                               onClick={() => {
@@ -535,7 +538,6 @@ export default function RolesPermission() {
               </div>
             </div>
             {/* </div> */}
-
             {/* Delete Role Modal */}
             <Modal
               title="Are you sure to delete this Role?"
@@ -574,20 +576,71 @@ export default function RolesPermission() {
               }}
               okText="Edit"
             >
-              <div className="flex w-full ">
-                <input
-                  placeholder="Enter Name of the Role"
-                  className="flex w-10/12 m-auto rounded-xl"
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                />
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                >
+                  Name
+                </label>
+                <div className="relative mt-2">
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    placeholder="Enter Name of the Role"
+                    className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                    required
+                  />
+                  <div
+                    className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                    aria-hidden="true"
+                  />
+                </div>
               </div>
             </Modal>
-
-            {/* Assign Permission Modal */}
-
             <Modal
-              title="Assign Permissions"
+              title={"Create New Role"}
+              open={isModalOpen}
+              onOk={handleNewRole}
+              onCancel={handleCancel}
+              closable={false}
+              maskClosable={false}
+              okButtonProps={{
+                style: { backgroundColor: "green", borderColor: "green" },
+              }}
+              okText={"Save"}
+            >
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                >
+                  Name
+                </label>
+                <div className="relative mt-2">
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    value={roleName}
+                    onChange={(e) => setRoleName(e.target.value)}
+                    placeholder="Enter Name"
+                    className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                    required
+                  />
+                  <div
+                    className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+            </Modal>{" "}
+            {/* Assign Permission Modal */}
+            <Modal
+              // title="Assign Permissions"
               open={permissionModal}
               onCancel={handleCancel}
               closable={false}
@@ -597,55 +650,68 @@ export default function RolesPermission() {
               okText="Assign"
               onOk={handleAssignPermissions}
             >
-              <div className="flex flex-col w-full">
+              <h2 className="text-center font-semibold text-lg mb-3">
+                Assign Permissions
+              </h2>
+              {/* Rest of your modal content */}
+              <div className="flex flex-col w-full ">
                 {permissionModalData.map((module, index) => (
                   <div
                     key={module.privilege_id}
-                    className="flex items-center mb-2"
+                    className="flex flex-row   mb-2"
                   >
-                    <span className="mr-2 font-semibold">
+                    <div className="mr-2 font-semibold">
                       {module.moduleName}:
-                    </span>
-                    <label className="mr-2">
-                      <input
-                        type="checkbox"
-                        checked={module.isView}
-                        onChange={() =>
-                          handleCheckboxChange(module.privilege_id, "isView")
-                        }
-                      />
-                      View
-                    </label>
-                    <label className="mr-2">
-                      <input
-                        type="checkbox"
-                        checked={module.isAdd}
-                        onChange={() =>
-                          handleCheckboxChange(module.privilege_id, "isAdd")
-                        }
-                      />
-                      Add
-                    </label>
-                    <label className="mr-2">
-                      <input
-                        type="checkbox"
-                        checked={module.isEdit}
-                        onChange={() =>
-                          handleCheckboxChange(module.privilege_id, "isEdit")
-                        }
-                      />
-                      Edit
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={module.isDelete}
-                        onChange={() =>
-                          handleCheckboxChange(module.privilege_id, "isDelete")
-                        }
-                      />
-                      Delete
-                    </label>
+                    </div>
+                    <div className="ml-auto">
+                      <label className="mr-2 ">
+                        <input
+                          className=" mb-2"
+                          type="checkbox"
+                          checked={module.isView}
+                          onChange={() =>
+                            handleCheckboxChange(module.privilege_id, "isView")
+                          }
+                        />
+                        <span> View</span>
+                      </label>
+                      <label className="mr-2">
+                        <input
+                          className=" mb-2"
+                          type="checkbox"
+                          checked={module.isAdd}
+                          onChange={() =>
+                            handleCheckboxChange(module.privilege_id, "isAdd")
+                          }
+                        />
+                        <span> Add </span>
+                      </label>
+                      <label className="mr-2">
+                        <input
+                          className=" mb-2"
+                          type="checkbox"
+                          checked={module.isEdit}
+                          onChange={() =>
+                            handleCheckboxChange(module.privilege_id, "isEdit")
+                          }
+                        />
+                        <span> Edit </span>
+                      </label>
+                      <label>
+                        <input
+                          className=" mb-2"
+                          type="checkbox"
+                          checked={module.isDelete}
+                          onChange={() =>
+                            handleCheckboxChange(
+                              module.privilege_id,
+                              "isDelete"
+                            )
+                          }
+                        />
+                        <span> Delete</span>
+                      </label>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -657,11 +723,12 @@ export default function RolesPermission() {
             {/* <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right"> */}
             {/* List of roles */}
             <div
-              className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+              className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-52 h-screen ml-16`}
             >
               {" "}
-              <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right">
-                <h1 className="text-2xl font-semibold m-2 mt-3"> Users</h1>
+              <div className="text-right flex-col bg-gray-100 rounded-lg p-2 flex justify-end items-right">
+                {" "}
+                <h1 className="text-xl font-semibold m-2 mt-3"> Users</h1>
                 <div>
                   <button
                     onClick={() => {
@@ -669,10 +736,12 @@ export default function RolesPermission() {
                     }}
                     className="mt-5 text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
                   >
-                    Create New User +
+                    + Create New User
                   </button>
                 </div>
-                <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-gray-100">
+              </div>
+              <div className="bg-lightGray-100 w-full ">
+                <table className="min-w-full divide-y divide-gray-300 text-right  mr-1 w-full">
                   <thead>
                     <tr>
                       <th
@@ -684,31 +753,31 @@ export default function RolesPermission() {
 
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         First Name
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Last Name
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Designation
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Phone Nmbers
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Role
                       </th>
@@ -718,7 +787,7 @@ export default function RolesPermission() {
                     {allUsers?.map((data, index) => (
                       <tr key={index} className="hover:bg-white">
                         <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                          <span className="flex gap-5">
+                          <span className="flex gap-4">
                             <span
                               className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
                               onClick={() => {
@@ -763,43 +832,7 @@ export default function RolesPermission() {
               </div>
             </div>
             {/* </div> */}
-            <Modal
-              title={"Edit Role"}
-              open={isModalOpen}
-              onOk={handleNewRole}
-              onCancel={handleCancel}
-              closable={false}
-              maskClosable={false}
-              okButtonProps={{
-                style: { backgroundColor: "green", borderColor: "green" },
-              }}
-              okText={"Edit"}
-            >
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                >
-                  Name
-                </label>
-                <div className="relative mt-2">
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    value={roleName}
-                    onChange={(e) => setRoleName(e.target.value)}
-                    placeholder="Enter Name"
-                    className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                    required
-                  />
-                  <div
-                    className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                    aria-hidden="true"
-                  />
-                </div>
-              </div>
-            </Modal>{" "}
+
             <Modal
               title={editFlag ? "Edit User" : "Create New User"}
               open={isUserModalOpen}
@@ -876,14 +909,18 @@ export default function RolesPermission() {
                           id="role"
                           onChange={(e) => handleRoleChange(e)}
                           value={state?.role}
-                          className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                          className="peer block  w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                         >
                           <option value="" disabled>
                             Select a Role
                           </option>
                           {allRoles.map((role) => (
-                            <option key={role.id} value={role.id}>
+                            <option
+                              key={role.id}
+                              value={role.id}
+                              selected={role.id === state?.id}
+                            >
                               {role.name}
                             </option>
                           ))}
@@ -912,18 +949,23 @@ export default function RolesPermission() {
                               newPhoneNumber ? "w-11/12" : "w-full"
                             }`}
                           >
-                            <input
-                              type="number"
+                            <InputMask
+                              mask="00218 99 9999999" // Define your desired mask here
+                              maskChar=""
+                              placeholder="00218 XX XXXXXXX"
                               onChange={(e) =>
                                 setNewPhoneNumber(e.target.value)
                               }
                               value={newPhoneNumber}
-                              placeholder="Enter Phone Number"
+                              type="tel"
+                              name="phone_numbers"
+                              id="phone_numbers"
                               className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                               {...(phoneNumbers
                                 ? { required: false }
                                 : { required: true })}
                             />
+
                             <div
                               className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                               aria-hidden="true"

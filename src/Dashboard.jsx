@@ -12,7 +12,7 @@ import RolesPermission from "./components/RolesPermission";
 import Departments from "./components/Departments";
 import AdminProfile from "./components/Admin Profile/AdminProfile";
 import ChangePassword from "./components/Admin Profile/ChangePassword";
-import DepartmentsFiles from "./components/Super Admin Dashboard/Departments/DepartmentsFiles";
+// import DepartmentsFiles from "./components/Super Admin Dashboard/Departments/DepartmentsFiles";
 import AmbulanceFiles from "./components/Super Admin Dashboard/Ambulance/AmbulanceFiles";
 import HealthCareFiles from "./components/Super Admin Dashboard/HealthCare/HealthCareFiles";
 import RegionFiles from "./components/Super Admin Dashboard/Region/RegionFiles";
@@ -41,7 +41,7 @@ const Dashboard = () => {
           <Route path="/regions" element={<Regions />} />
           <Route path="/equipment" element={<Equipment />} />
           <Route path="/departments" element={<Departments />} />
-          <Route path="/departments_files" element={<DepartmentsFiles />} />
+          {/* <Route path="/departments_files" element={<DepartmentsFiles />} /> */}
           <Route path="/healthcares_files" element={<HealthCareFiles />} />
           <Route path="/regions_files" element={<RegionFiles />} />
           <Route path="/ambulances_files" element={<AmbulanceFiles />} />

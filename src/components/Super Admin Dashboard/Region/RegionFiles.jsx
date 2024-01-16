@@ -12,6 +12,7 @@ import { Toaster, toast } from "sonner";
 import Select from "react-tailwindcss-select";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { BsArrowRightCircle, BsEye, BsSearch } from "react-icons/bs";
+import InputMask from "react-input-mask";
 
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 const RegionFiles = () => {
@@ -23,6 +24,23 @@ const RegionFiles = () => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
+  const [validationErrors, setValidationErrors] = useState({
+    name: "",
+    email: "",
+    pin: "",
+    phoneNumbers: "",
+  });
+  const resetValidationErrors = () => {
+    setValidationErrors({
+      name: "",
+      email: "",
+      pin: "",
+      phoneNumbers: "",
+    });
+  };
+  const [editData, setEditData] = useState({
+    phoneNumbers: [],
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updateFormOpen, setUpdateFormOpen] = useState(false);
@@ -30,7 +48,8 @@ const RegionFiles = () => {
   const [ambulanceData, setAmbulanceData] = useState([]);
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState(false);
-
+  const [phoneNumbers, setPhoneNumbers] = useState([]);
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [locationAddress, setLocationAddress] = useState({});
   const [formattedAddress, setFormattedAddress] = useState();
   const [submitDone, setSubmitDone] = useState(false);
@@ -77,10 +96,13 @@ const RegionFiles = () => {
     setLongitude(null);
     setLatitude(null);
     setOptions(null);
+    setPhoneNumbers([]);
     setLocationAddress({
       latitude: "",
       longitude: "",
       address: "",
+      setNewPhoneNumber: "",
+      setPhoneNumbers: [],
     });
     setIsModalOpen(true);
   };
@@ -98,14 +120,15 @@ const RegionFiles = () => {
         }))
       );
     }
-
-    // console.log(ambulance);
+    setPhoneNumbers(region?.phone_numbers.map((phone) => phone.number));
+    debugger;
     setSelectedAmbulance(region);
     setLocationAddress({
       latitude: region?.latitude,
       longitude: region?.longitude,
       address: region?.address,
     });
+
     setUpdateFormOpen(true);
   };
   useEffect(() => {
@@ -143,6 +166,7 @@ const RegionFiles = () => {
         address: locationAddress?.address,
         latitude: locationAddress.latitude,
         longitude: locationAddress.longitude,
+        phone_numbers: phoneNumbers,
       };
       const UploadRegion = async () => {
         console.log(JSON);
@@ -154,13 +178,16 @@ const RegionFiles = () => {
               setSubmitDone(!submitDone);
               setLoadingMessage(false);
               toast.success("Created Successfuly");
+              setIsModalOpen(false);
             });
         } catch (e) {
           setLoadingMessage(false);
           if (e.response?.data?.code === 400) {
             toast.error(e.response.data.data.name[0]);
+            setLoadingMessage(false);
           } else {
             toast.error("failed");
+            setLoadingMessage(false);
           }
           console.log(e);
         }
@@ -186,6 +213,7 @@ const RegionFiles = () => {
         address: locationAddress?.address,
         latitude: locationAddress.latitude,
         longitude: locationAddress.longitude,
+        phone_numbers: phoneNumbers,
       };
       const UpdateRegion = async () => {
         console.log(JSON);
@@ -201,6 +229,7 @@ const RegionFiles = () => {
               setSubmitDone(!submitDone);
               setLoadingMessage(false);
               toast.success("Updated Successfuly");
+              setUpdateFormOpen(close);
             });
         } catch (e) {
           toast.error("failed");
@@ -304,7 +333,7 @@ const RegionFiles = () => {
     const input = document.getElementById("address");
     const options = {
       bounds: defaultBounds,
-      componentRestrictions: { country: "sa" }, // Set the country to Pakistan
+      componentRestrictions: { country: null }, // Set the country to Pakistan
       fields: [
         "address_components",
         "geometry",
@@ -348,6 +377,17 @@ const RegionFiles = () => {
       sendDataToParent(latitude, longitude, address, postalCode);
     });
   };
+  const handleAddPhoneNumber = () => {
+    if (newPhoneNumber.trim() !== "") {
+      setPhoneNumbers([...phoneNumbers, newPhoneNumber]);
+      setNewPhoneNumber("");
+    }
+  };
+  const handleRemovePhoneNumber = (index) => {
+    const updatedPhoneNumbers = phoneNumbers.filter((_, i) => i !== index);
+    setPhoneNumbers(updatedPhoneNumbers);
+  };
+
   const AmbulanceDelete = useFormik({
     initialValues: {},
     onSubmit: async () => {
@@ -365,29 +405,52 @@ const RegionFiles = () => {
     },
     enableReinitialize: true,
   });
+  // const getStatusStyle = (status) => {
+  //   let backgroundColor, textColor;
 
+  //   switch (status) {
+  //     case "Available":
+  //       backgroundColor = "bg-green-400";
+  //       textColor = "text-white";
+  //       break;
+  //     case "Dispatched":
+  //       backgroundColor = "bg-blue-400";
+  //       textColor = "text-white";
+  //       break;
+  //     case "Inactive":
+  //       backgroundColor = "bg-red-400";
+  //       textColor = "text-white";
+  //       break;
+  //     default:
+  //       backgroundColor = "bg-yellow-400";
+  //       textColor = "text-white";
+  //       break;
+  //   }
+
+  //   return `inline-flex items-center rounded-full ${backgroundColor} px-2 py-1 text-xs font-medium ${textColor}`;
+  // };
   return (
     <div
-      className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+      className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
     >
       <Toaster position="bottom-right" richColors />
-      <div className="bg-lightGray-100 w-full h-auto rounded-lg p-2">
-        <div className="p-4 text-right">
-          <h1 className="text-2xl font-semibold">Region</h1>
+      <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
+        <div className="p-4 text-right  bg-gray-100 ">
+          <h1 className="text-xl font-semibold">Regions</h1>
         </div>
-        <div className="flex flex-row items-center p-4 space-x-4">
+        <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100  ">
           <div className="flex flex-row space-x-2"></div>
-          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 py-1">
+          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
             <BsSearch width={9} height={9} />
             <input
-              className="bg-transparent focus:border-none border-0 w-full text-right"
+              className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
               placeholder="Search Ambulances..."
             />
           </div>
 
           <button
-            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
+            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
             type="button"
             onClick={handleCreateRegionClick}
           >
@@ -403,7 +466,7 @@ const RegionFiles = () => {
               No data available
             </p>
           ) : (
-            <table className="min-w-full divide-y divide-gray-300 text-right">
+            <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
               <thead>
                 <tr>
                   <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
@@ -417,31 +480,37 @@ const RegionFiles = () => {
                   </th> */}
                   <th
                     scope="col"
-                    className="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0"
+                    className="py-3 pl-4 pr-3 text-xs font-medium  tracking-wide text-gray-500 sm:pl-0"
+                  >
+                    Phone Numbers
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
                     Ambulance Count
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
                     Status
                   </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Address
-                  </th>
                   {/* <th
                 scope="col"
-                className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
               >
                 Location
               </th> */}
                   <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                  >
+                    Address
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
                     Region Name
                   </th>
@@ -471,31 +540,34 @@ const RegionFiles = () => {
                         </button>{" "}
                       </span>
                     </td>
-                    {/* <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-md">
                       {region?.phone_numbers?.map((phone_numbers) => (
                         <p
-                          key={phone_numbers.id}
+                          key={phone_numbers?.id}
                           className="text-base text-right"
                         >
-                          {phone_numbers.number}
+                          {phone_numbers?.number}
                         </p>
                       ))}
-                    </td> */}
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-600 ">
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      <span className="inline-flex items-center rounded-full  px-2 py-1 text-xs font-medium ">
                         {region?.ambulances?.length}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
-                      {region?.status}
+                    <td className="whitespace-nowrap px-3 py-1 mt-4 text-sm">
+                      {" "}
+                      <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                        {region?.status}
+                      </span>
                     </td>
-                    {/* <td className="whitespace-nowrap px-3 py-4 text-md">
+                    {/* <td className="whitespace-nowrap px-3 py-4 text-sm">
                   {region.latitude} {region.longitude}
                 </td> */}
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
                       {region?.address}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
                       {region?.name}
                     </td>
                   </tr>
@@ -507,7 +579,7 @@ const RegionFiles = () => {
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[17rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -613,8 +685,105 @@ const RegionFiles = () => {
                       />
                     </div>
                   </div>
+                  <div>
+                    <label
+                      htmlFor="phone_numbers"
+                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Phone Number
+                    </label>
+
+                    <div className="w-full  mb-6 ">
+                      <div className="flex w-full ">
+                        <div
+                          className={`relative mt-2 ${
+                            newPhoneNumber ? "w-11/12" : "w-full"
+                          }`}
+                        >
+                          {/* <InputMask
+															mask="00218 99 9999999"
+															maskChar=""
+															placeholder="00218 XX XXXXXXX"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															type="tel"
+															name="phone_numbers"
+															id="phone_numbers"
+															className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															required
+														/> */}
+                          <InputMask
+                            mask="00218 99 9999999" // Define your desired mask here
+                            maskChar=""
+                            placeholder="00218 XX XXXXXXX"
+                            onChange={(e) => setNewPhoneNumber(e.target.value)}
+                            value={newPhoneNumber}
+                            type="tel"
+                            name="phone_numbers"
+                            id="phone_numbers"
+                            className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                          />
+                          {/* <input
+															type="number"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															placeholder="Enter Phone Number"
+															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															{...(phoneNumbers ? { required: false } : { required: true })}
+														/> */}
+                          <div
+                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div>
+                          {newPhoneNumber ? (
+                            <button
+                              type="button"
+                              onClick={handleAddPhoneNumber}
+                              className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
+                            >
+                              +
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                      {validationErrors.phoneNumbers && (
+                        <p className="text-red-500 text-sm">
+                          {validationErrors.phoneNumbers}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </div>{" "}
+              {phoneNumbers.length > 0 ? (
+                <div
+                  className={`grid grid-cols-2 gap-2 ${
+                    phoneNumbers.length > 0 ? "bg-gray-100" : ""
+                  } p-4`}
+                >
+                  {phoneNumbers.map((phoneNumber, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
+                    >
+                      <div className="flex text-sm">{phoneNumber}</div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhoneNumber(index)}
+                        className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
+                      >
+                        -
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
@@ -638,7 +807,7 @@ const RegionFiles = () => {
       )}
       {updateFormOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 -left-[17rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className="relative top-1 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -719,8 +888,105 @@ const RegionFiles = () => {
                       />
                     </div>
                   </div>
+                  <div>
+                    <label
+                      htmlFor="phone_numbers"
+                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Phone Number
+                    </label>
+
+                    <div className="w-full  mb-6 ">
+                      <div className="flex w-full ">
+                        <div
+                          className={`relative mt-2 ${
+                            newPhoneNumber ? "w-11/12" : "w-full"
+                          }`}
+                        >
+                          {/* <InputMask
+															mask="00218 99 9999999"
+															maskChar=""
+															placeholder="00218 XX XXXXXXX"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															type="tel"
+															name="phone_numbers"
+															id="phone_numbers"
+															className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															required
+														/> */}
+                          <InputMask
+                            mask="00218 99 9999999" // Define your desired mask here
+                            maskChar=""
+                            placeholder="00218 XX XXXXXXX"
+                            onChange={(e) => setNewPhoneNumber(e.target.value)}
+                            value={newPhoneNumber}
+                            type="tel"
+                            name="phone_numbers"
+                            id="phone_numbers"
+                            className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                          />
+                          {/* <input
+															type="number"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															placeholder="Enter Phone Number"
+															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															{...(phoneNumbers ? { required: false } : { required: true })}
+														/> */}
+                          <div
+                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div>
+                          {newPhoneNumber ? (
+                            <button
+                              type="button"
+                              onClick={handleAddPhoneNumber}
+                              className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
+                            >
+                              +
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                      {validationErrors.phoneNumbers && (
+                        <p className="text-red-500 text-sm">
+                          {validationErrors.phoneNumbers}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </div>{" "}
+              {phoneNumbers?.length > 0 ? (
+                <div
+                  className={`grid grid-cols-2 gap-2 ${
+                    phoneNumbers.length > 0 ? "bg-gray-100" : ""
+                  } p-4`}
+                >
+                  {phoneNumbers?.map((phoneNumber, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
+                    >
+                      <div className="flex text-sm">{phoneNumber}</div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhoneNumber(index)}
+                        className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
+                      >
+                        -
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
@@ -772,7 +1038,7 @@ const RegionFiles = () => {
                   <div className="absolute left-0 top-0 hidden pl-4 pt-4 sm:block">
                     <button
                       type="button"
-                      className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      className="rounded-md bg-white text-gray-400 hover:text-gray-500 "
                       onClick={() => setDelete(false)}
                     >
                       <span className="sr-only">Close</span>
@@ -792,7 +1058,7 @@ const RegionFiles = () => {
                       </Dialog.Title>
                       <div className="mt-10 ">
                         <p className="text-sm flex justify-center items-center text-gray-500">
-                          Are you sure want to DELETE?
+                          Are you sure you want to Delete?
                         </p>
                       </div>
                     </div>

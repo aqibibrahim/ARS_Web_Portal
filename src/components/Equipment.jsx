@@ -4,7 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Vars, getAllEquipment, getToken } from "../helpers/helpers";
 import { BsArrowRightCircle } from "react-icons/bs";
 import axios from "axios";
-import { BiMessageAltX } from "react-icons/bi";
+import { BiMessageAltX, BiEdit } from "react-icons/bi";
 
 import { Toaster, toast } from "sonner";
 import { useFormik } from "formik";
@@ -50,7 +50,7 @@ export default function Equipment() {
     initialValues: {
       name: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       setLoadingMessage(true);
       const JSON = {
         name: values.name,
@@ -67,8 +67,11 @@ export default function Equipment() {
               setIsModalOpen(false);
               setLoadingMessage(false);
               setSubmitDone(!submitDone);
+              resetForm();
             });
         } catch (e) {
+          setLoading(false);
+          setLoadingMessage(false);
           toast.error(`${e?.response?.data?.data?.name[0]}`);
           console.log(e);
         }
@@ -156,22 +159,24 @@ export default function Equipment() {
   return (
     <>
       <div
-        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen `}
       >
         <Toaster position="bottom-right" richColors />
-        <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right">
-          <h1 className="text-2xl font-semibold m-2">Equipment</h1>
-          <div>
-            <button
-              className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
-              type="button"
-              onClick={handleAddEquipmentClick}
-            >
-              Add Equipment
-            </button>
+        <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
+          <div className="p-4 text-right  bg-gray-100 ">
+            <h1 className="text-xl font-semibold m-2">Equipment</h1>
+            <div>
+              <button
+                className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
+                type="button"
+                onClick={handleAddEquipmentClick}
+              >
+                + Add Equipment
+              </button>
+            </div>
             {isModalOpen && (
               <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-                <div className="relative top-[1rem] -left-[21rem] mx-auto p-5 border w-1/3 shadow-lg rounded-md bg-white">
+                <div className="relative top-[1rem]  mx-auto p-5 border w-1/3 shadow-lg rounded-md bg-white">
                   <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-2 rounded-lg overflow-hidden">
                     <BsArrowRightCircle
                       width={9}
@@ -227,7 +232,7 @@ export default function Equipment() {
             )}
             {isUpdateModalOpen && (
               <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-                <div className="relative top-[2rem] -left-[21rem] mx-auto p-5 border w-1/3 shadow-lg rounded-md bg-white">
+                <div className="relative top-[2rem]  mx-auto p-5 border w-1/3 shadow-lg rounded-md bg-white">
                   <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-2 rounded-lg overflow-hidden">
                     <BsArrowRightCircle
                       width={9}
@@ -280,48 +285,79 @@ export default function Equipment() {
               </div>
             )}
           </div>
-          <div className="bg-gray-100 p-2 rounded-lg shadow my-2">
+          <div className="bg-white p-2 rounded-lg shadow my-2">
             {loading ? (
               <p className="text-gray-700 text-center">Loading equipment...</p>
             ) : equipment.length == 0 ? (
               <p className="text-center  text-primary-100">No data available</p>
             ) : (
-              <ul className="list-none">
-                {equipment.map((item) => (
-                  <li
-                    key={item.id}
-                    className="border-b border-gray-300 last:border-0 p-2 flex justify-between items-center"
-                  >
-                    {" "}
-                    <span className="flex items-center justify-center gap-5">
-                      <span
-                        className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                        onClick={() => {
-                          setDelete(true);
-                          setDeleteID(item?.id);
-                        }}
-                      >
-                        <BiMessageAltX />
-                      </span>
-                      <button
-                        className="text-white bg-blue-500 rounded-md border-blue-500 hover:border-blue-500 py-1 px-4 transition-all duration-300 hover:bg-white hover:text-blue-500 mr-2"
-                        type="button"
-                        onClick={() => handleEditEquipmentClick(item)}
-                      >
-                        Edit
-                      </button>
-                    </span>
-                    <div
-                      className={`px-2 py-1 rounded text-white ${
-                        item.status === "Active" ? "bg-green-300" : "bg-red-500"
-                      }`}
+              <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-white-100">
+                <thead>
+                  <tr>
+                    <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+                      <span className="sr-only">Edit</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
-                      {item.status}
-                    </div>
-                    <div className="text-gray-800 w-full">{item.name}</div>
-                  </li>
-                ))}
-              </ul>
+                      Status
+                    </th>
+
+                    {/* <th
+                  scope="col"
+                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                >
+                  PIN
+                </th> */}
+                    {/* <th
+                  scope="col"
+                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                >
+                  Driver Last Name
+                </th> */}
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                    >
+                      Departments
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {equipment?.map((item, index) => (
+                    <tr key={index} className="hover:bg-white">
+                      <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                        <span className="flex gap-5">
+                          <span
+                            className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                            onClick={() => {
+                              setDelete(true);
+                              setDeleteID(item?.id);
+                            }}
+                          >
+                            <BiMessageAltX />
+                          </span>
+                          <button
+                            onClick={() => handleEditEquipmentClick(item)}
+                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                          >
+                            <BiEdit />
+                          </button>
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                        <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                          {item?.status}
+                        </span>
+                      </td>{" "}
+                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                        {item?.name}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </div>
         </div>

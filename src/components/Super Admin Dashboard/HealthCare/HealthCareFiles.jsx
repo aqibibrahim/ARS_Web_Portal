@@ -51,13 +51,14 @@ const HealthCareFiles = () => {
   const [viewOpen, setViewOpen] = useState(false);
   const [selectedHealthCare, setSelectedHealthCare] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isUpdateDepartment, setIsUpdateDepartment] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+
   const itemsPerPage = 10; // You can adjust this based on your preference
   const [totalDepartments, setTotalDepartments] = useState(0);
   const navigate = useNavigate();
-  const handleChange = (value) => {
-    console.log("values");
-    setOptions(value);
-    console.log("value:", value);
+  const handleDepartmentChange = (value) => {
+    setSelectedDepartment(value);
   };
   const handleOnChange = (value) => {
     setupdateFocalPerson(value);
@@ -139,7 +140,7 @@ const HealthCareFiles = () => {
             },
           })
           .then((response) => {
-            setAmbulanceData(response?.data?.data?.data);
+            setAmbulanceData(response?.data?.data);
             setIsLoading(false);
             console.log(response?.data?.data, "asds");
           });
@@ -177,6 +178,9 @@ const HealthCareFiles = () => {
     };
     fetchusersData();
   }, []);
+  const handleModalClose = () => {
+    setIsUpdateDepartment(false);
+  };
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -217,6 +221,8 @@ const HealthCareFiles = () => {
     onSubmit: (values) => {
       const JSON = {
         focal_persons: optionsFocalPerson?.map((item) => item.value),
+        users: optionsFocalPerson?.map((item) => item.value),
+
         departments: options?.map((item) => item.value),
         name: values.name,
         email: values.email,
@@ -241,6 +247,7 @@ const HealthCareFiles = () => {
               setLocationAddress({ latitude: "", longitude: "", address: "" });
               setOptionsFocalPerson(null);
               setSubmitDone(!submitDone);
+              setIsModalOpen(false);
             });
         } catch (e) {
           toast.error("failed");
@@ -267,6 +274,7 @@ const HealthCareFiles = () => {
     onSubmit: (values) => {
       const JSON = {
         focal_persons: updateFocalPerson?.map((item) => item.value),
+        users: updateFocalPerson?.map((item) => item.value),
         departments: options?.map((item) => item.value),
         name: values.name,
         email: values.email,
@@ -279,22 +287,29 @@ const HealthCareFiles = () => {
         setLoadingMessage(true);
         console.log(JSON);
         try {
-          await axios
-            .patch(
-              `${window.$BackEndUrl}/facilities/${selectedAmbulance?.id}`,
-              JSON,
-              config
-            )
-            .then((res) => {
-              console.log(res);
-              toast.success("Updated Successfuly");
-              setLoadingMessage(false);
-              setSubmitDone(!submitDone);
-            });
+          const res = await axios.patch(
+            `${window.$BackEndUrl}/facilities/${selectedAmbulance?.id}`,
+            JSON,
+            config
+          );
+
+          if (res.status === 200 || res.status === 201) {
+            console.log(res);
+            toast.success("Updated Successfully");
+            setLoadingMessage(false);
+            setSubmitDone(!submitDone);
+            setIsModalOpen(false);
+            setUpdateFormOpen(false);
+          } else {
+            console.error(`Unexpected response status: ${res.status}`);
+            // Handle unexpected response status here
+            toast.error("Update failed");
+            setLoadingMessage(false);
+          }
         } catch (e) {
-          toast.error("failed");
+          console.error(e);
+          toast.error("Update failed");
           setLoadingMessage(false);
-          console.log(e);
         }
       };
 
@@ -305,8 +320,8 @@ const HealthCareFiles = () => {
   });
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
+    lat: 33.7519137,
+    lng: 72.7970134,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -364,6 +379,53 @@ const HealthCareFiles = () => {
 
     console.log(newPosition);
   };
+  const CreateDepartments = useFormik({
+    initialValues: {
+      incident_types: "",
+      total_beds: "",
+      occupied_beds_men: "",
+      occupied_beds_women: "",
+      unoccupied_beds_men: "",
+      unoccupied_beds_women: "",
+      department_id: "",
+    },
+    onSubmit: (values) => {
+      setLoadingMessage(true);
+      const JSON = {
+        department_id: parseInt(selectedDepartment),
+        total_beds: values.total_beds,
+        occupied_beds_men: values.occupied_beds_men,
+        occupied_beds_women: values.occupied_beds_women,
+        unoccupied_beds_men: values.unoccupied_beds_men,
+        unoccupied_beds_women: values.unoccupied_beds_women,
+        facility_id: selectedHealthCare,
+      };
+      const createequipment = async () => {
+        console.log(JSON);
+
+        try {
+          await axios
+            .post(`${window.$BackEndUrl}/facility-department/add`, JSON, config)
+            .then((res) => {
+              console.log(res);
+              toast.success("Department added successfully!");
+              setIsModalOpen(false);
+              setLoadingMessage(false);
+              setSubmitDone(!submitDone);
+              setIsUpdateDepartment(false);
+            });
+        } catch (e) {
+          setLoadingMessage(false);
+          toast.error(`${e?.response?.data?.data?.name[0]}`);
+          console.log(e);
+        }
+      };
+
+      createequipment();
+    },
+
+    enableReinitialize: true,
+  });
   const sendDataToParent = (latitude, longitude, formatted_address) => {
     setLocationAddress({
       latitude: latitude,
@@ -391,7 +453,7 @@ const HealthCareFiles = () => {
     const input = document.getElementById("address");
     const options = {
       bounds: defaultBounds,
-      componentRestrictions: { country: "sa" }, // Set the country to Pakistan
+      componentRestrictions: { country: null }, // Set the country to Pakistan
       fields: [
         "address_components",
         "geometry",
@@ -457,6 +519,10 @@ const HealthCareFiles = () => {
     setSelectedHealthCare(healthcare);
     setViewOpen(true);
   };
+  const handleUpdateDepartment = (healthcare) => {
+    setSelectedHealthCare(healthcare?.id);
+    setIsUpdateDepartment(true);
+  };
   return (
     <div
       className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
@@ -495,7 +561,7 @@ const HealthCareFiles = () => {
         <div className="rtl">
           {isLoading ? (
             <p className="text-center text-xl text-primary-100">Loading...</p>
-          ) : ambulanceData.length == 0 ? (
+          ) : ambulanceData?.data?.length == 0 ? (
             <p className="text-center text-xl text-primary-100">
               No data available
             </p>
@@ -541,10 +607,10 @@ const HealthCareFiles = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {ambulanceData?.map((healthcare) => (
+                  {ambulanceData?.data?.map((healthcare) => (
                     <tr key={healthcare.id} className="hover:bg-gray-100">
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                        <span className="flex items-center justify-center gap-5">
+                        <span className="flex items-center justify-center gap-3">
                           <button
                             className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
                             onClick={() => {
@@ -568,27 +634,32 @@ const HealthCareFiles = () => {
                             <BsEye />
                             <span className="sr-only"> {healthcare?.name}</span>
                           </button>
+                          <button
+                            onClick={() => handleUpdateDepartment(healthcare)}
+                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                          >
+                            <BsEye />
+                            <span className="sr-only"> {healthcare?.name}</span>
+                          </button>
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      <td className=" px-3 py-4 text-xs">
                         {healthcare?.address}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      <td className=" px-3 py-4 text-xs">
                         <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                           {healthcare?.status}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      <td className=" px-3 py-4 text-xs">
                         {healthcare?.email}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      <td className=" px-3 py-4 text-xs">
                         {healthcare?.phone_numbers?.map((phone) => (
                           <div key={phone.id}>{phone.number}</div>
                         ))}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
-                        {healthcare?.name}
-                      </td>
+                      <td className=" px-3 py-4 text-xs">{healthcare?.name}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -610,6 +681,224 @@ const HealthCareFiles = () => {
           )}
         </div>
       </div>
+      {isUpdateDepartment && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+          <div className="relative top-0 mx-auto p-5 border w-[650px] shadow-lg rounded-md bg-white">
+            <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-2 rounded-lg overflow-hidden">
+              <BsArrowRightCircle
+                width={9}
+                className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
+                onClick={handleModalClose}
+              />
+              <h3 className="text-xl font-semibold">Assign Department</h3>
+            </div>
+            <form onSubmit={CreateDepartments.handleSubmit}>
+              <div className="flex flex-row justify-between gap-4 mb-4">
+                <div className="flex flex-col space-y-2 w-full">
+                  <div>
+                    <label
+                      htmlFor="occupied_beds_women"
+                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Occupied Beds Women
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        id="occupied_beds_women"
+                        name="occupied_beds_women"
+                        type="number"
+                        min={0}
+                        onChange={CreateDepartments.handleChange}
+                        value={CreateDepartments.values.occupied_beds_women}
+                        placeholder="Occupied Beds Women"
+                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                      />
+                      <div
+                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>{" "}
+                  <div>
+                    <label
+                      htmlFor="unoccupied_beds_men"
+                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Unoccupied Beds Men
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        id="unoccupied_beds_men"
+                        name="unoccupied_beds_men"
+                        type="number"
+                        min={0}
+                        onChange={CreateDepartments.handleChange}
+                        value={CreateDepartments.values.unoccupied_beds_men}
+                        placeholder="Unoccupied Beds Men"
+                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                      />
+                      <div
+                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>{" "}
+                  <div>
+                    <label
+                      htmlFor="unoccupied_beds_women"
+                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Unoccupied Beds women
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        id="unoccupied_beds_women"
+                        name="unoccupied_beds_women"
+                        type="number"
+                        min={0}
+                        onChange={CreateDepartments.handleChange}
+                        value={CreateDepartments.values.unoccupied_beds_women}
+                        placeholder="Unoccupied Beds women"
+                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                      />
+                      <div
+                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col space-y-2 w-full">
+                  <div>
+                    <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
+                      Departments
+                    </label>
+                    <select
+                      value={selectedDepartment}
+                      onChange={(e) => handleDepartmentChange(e.target.value)}
+                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                    >
+                      <option value="" disabled>
+                        Select Department
+                      </option>
+                      {myData.map((details, index) => (
+                        <option key={index} value={details?.value}>
+                          {details?.label}
+                        </option>
+                      ))}
+                    </select>
+                    {/* <Select
+                      value={options}
+                      placeholder="Select"
+                      onChange={(e) => handleChange(e)}
+                      options={myData}
+                      isMultiple={false}
+                      isClearable={true}
+                      primaryColor={"blue"}
+                      isSearchable={true} // Add this line to enable search
+                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                    /> */}
+                  </div>{" "}
+                  <div>
+                    <label
+                      htmlFor="occupied_beds_men"
+                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Occupied Beds Men
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        id="occupied_beds_men"
+                        name="occupied_beds_men"
+                        type="number"
+                        min={0}
+                        onChange={CreateDepartments.handleChange}
+                        value={CreateDepartments.values.occupied_beds_men}
+                        placeholder="Occupied Beds Men"
+                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                      />
+                      <div
+                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                  {/* <div>
+                    <label
+                      htmlFor="name"
+                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Department Name
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        id="name"
+                        name="name"
+                        onChange={CreateDepartments.handleChange}
+                        value={CreateDepartments.values.name}
+                        placeholder="Department Name"
+                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                      />
+                      <div
+                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div> */}
+                  <div>
+                    <label
+                      htmlFor="total_beds"
+                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Total Beds
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        id="total_beds"
+                        name="total_beds"
+                        min={0}
+                        type="number"
+                        onChange={CreateDepartments.handleChange}
+                        value={CreateDepartments.values.total_beds}
+                        placeholder="Total Beds"
+                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                      />
+                      <div
+                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-start">
+                {loadingMessage ? (
+                  <button
+                    type="button"
+                    className="text-white bg-primary-100 w-60 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
+                  >
+                    loading...
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="text-white bg-primary-100 rounded-md w-60 border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
+                  >
+                    Add Department
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       {viewOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full ">
           <div className="relative top-1 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden  mb-5">
@@ -733,7 +1022,7 @@ const HealthCareFiles = () => {
                     </div>
                   </div>
 
-                  <div>
+                  {/* <div>
                     <label className="block text-sm font-medium leading-6 text-gray-900 text-right mb-2">
                       Departments
                     </label>
@@ -749,7 +1038,7 @@ const HealthCareFiles = () => {
                       isSearchable={true} // Add this line to enable search
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
-                  </div>
+                  </div> */}
                   <div>
                     <label
                       htmlFor="addresss"
@@ -949,7 +1238,7 @@ const HealthCareFiles = () => {
                     </div>
                   </div>
 
-                  <div>
+                  {/* <div>
                     <label className="block text-sm font-medium leading-6 mb-2 text-gray-900 text-right">
                       Departments
                     </label>
@@ -965,7 +1254,7 @@ const HealthCareFiles = () => {
                       isSearchable={true} // Add this line to enable search
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
-                  </div>
+                  </div> */}
                   <div>
                     <label
                       htmlFor="addresss"
@@ -1212,8 +1501,17 @@ const HealthCareFiles = () => {
                           type="text"
                           placeholder="Enter a location"
                           onChange={handlePlaceChange}
+                          // value={createIncident.values.informer_address}
                         />
-                        <button onClick={() => setOpen(false)}>Close </button>
+                        <div style={{ marginTop: "10px" }}>
+                          <strong>Address:</strong> {address}
+                        </div>
+                        <button
+                          onClick={() => setOpen(false)}
+                          className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
+                        >
+                          Close
+                        </button>
                       </div>
                       <div
                         id="map"
@@ -1237,9 +1535,6 @@ const HealthCareFiles = () => {
                           onDragend={handleMarkerDragEnd}
                         />
                       </Map>
-                      <div style={{ marginTop: "10px" }}>
-                        <strong>Address:</strong> {address}
-                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>
