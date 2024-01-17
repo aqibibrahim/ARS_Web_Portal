@@ -336,7 +336,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
     const input = document.getElementById("address");
     const options = {
       // bounds: defaultBounds, // Uncomment this line if you have specific bounds
-      componentRestrictions: { country: "pk" },
+      componentRestrictions: { country: null },
       fields: [
         "address_components",
         "geometry",
@@ -813,6 +813,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                           position: ControlPosition.TOP_CENTER,
                         }}
                         initialCenter={position}
+                        center={position}
                       >
                         <Marker
                           position={position}
