@@ -332,6 +332,12 @@ const AmbulanceFiles = () => {
             longitude: newPosition.lng,
             address: results[0].formatted_address,
           });
+          CreateAmbulance.setFieldValue("latitude", newPosition.lat);
+          CreateAmbulance.setFieldValue("longitude", newPosition.lng);
+          CreateAmbulance.setFieldValue(
+            "informer_address",
+            results[0].formatted_address
+          );
         } else {
           setAddress("No address available");
         }
@@ -350,34 +356,20 @@ const AmbulanceFiles = () => {
       longitude: longitude,
       address: formatted_address,
     });
-  };
-  const handlePlaceChange = () => {
-    const map = new window.google.maps.Map(document.getElementById("map"), {
-      center: {
-        lat: locationAddress?.latitude,
-        lng: locationAddress?.longitude,
-      },
-      zoom: 3,
+    setPosition({
+      lat: latitude,
+      lng: longitude,
     });
 
-    const card = document.getElementById("pac-card");
-    map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-    const center = {
-      lat: locationAddress?.latitude,
-      lng: locationAddress?.longitude,
-    };
-    const defaultBounds = {
-      north: center.lat + 0.1,
-      south: center.lat - 0.1,
-      east: center.lng + 0.1,
-      west: center.lng - 0.1,
-    };
-
+    CreateAmbulance.setFieldValue("latitude", latitude);
+    CreateAmbulance.setFieldValue("longitude", longitude);
+    CreateAmbulance.setFieldValue("informer_address", formatted_address);
+  };
+  const handlePlaceChange = () => {
     const input = document.getElementById("address");
     const options = {
-      bounds: defaultBounds,
-      componentRestrictions: { country: "sa" }, // Set the country to Pakistan
+      // bounds: defaultBounds, // Uncomment this line if you have specific bounds
+      componentRestrictions: { country: null },
       fields: [
         "address_components",
         "geometry",
@@ -415,12 +407,84 @@ const AmbulanceFiles = () => {
       console.log("Formatted Address:", address);
       console.log("Postal Code:", postalCode);
 
-      // The rest of your code...
+      // Set the input value with a timeout to ensure reactivity
+
       const latitude = place.geometry.location.lat();
       const longitude = place.geometry.location.lng();
       sendDataToParent(latitude, longitude, address, postalCode);
+      setUncontrolledAddress(address);
     });
   };
+  // const handlePlaceChange = () => {
+  //   const map = new window.google.maps.Map(document.getElementById("map"), {
+  //     center: {
+  //       lat: locationAddress?.latitude,
+  //       lng: locationAddress?.longitude,
+  //     },
+  //     zoom: 3,
+  //   });
+
+  //   const card = document.getElementById("pac-card");
+  //   map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
+
+  //   const center = {
+  //     lat: locationAddress?.latitude,
+  //     lng: locationAddress?.longitude,
+  //   };
+  //   const defaultBounds = {
+  //     north: center.lat + 0.1,
+  //     south: center.lat - 0.1,
+  //     east: center.lng + 0.1,
+  //     west: center.lng - 0.1,
+  //   };
+
+  //   const input = document.getElementById("address");
+  //   const options = {
+  //     bounds: defaultBounds,
+  //     componentRestrictions: { country: null }, // Set the country to Pakistan
+  //     fields: [
+  //       "address_components",
+  //       "geometry",
+  //       "icon",
+  //       "name",
+  //       "formatted_address",
+  //     ],
+  //     strictBounds: false,
+  //   };
+
+  //   const autocomplete = new window.google.maps.places.Autocomplete(
+  //     input,
+  //     options
+  //   );
+  //   const southwest = { lat: 23.6345, lng: 60.8724 };
+  //   const northeast = { lat: 37.0841, lng: 77.8375 };
+  //   const newBounds = new window.google.maps.LatLngBounds(southwest, northeast);
+  //   autocomplete.setBounds(newBounds);
+
+  //   autocomplete.addListener("place_changed", () => {
+  //     const place = autocomplete.getPlace();
+  //     let address = "";
+  //     let postalCode = "";
+
+  //     if (place.address_components) {
+  //       address = place.formatted_address;
+
+  //       const postalCodeComponent = place.address_components.find((component) =>
+  //         component.types.includes("postal_code")
+  //       );
+
+  //       postalCode = postalCodeComponent ? postalCodeComponent.short_name : "";
+  //     }
+
+  //     console.log("Formatted Address:", address);
+  //     console.log("Postal Code:", postalCode);
+
+  //     // The rest of your code...
+  //     const latitude = place.geometry.location.lat();
+  //     const longitude = place.geometry.location.lng();
+  //     sendDataToParent(latitude, longitude, address, postalCode);
+  //   });
+  // };
   const AmbulanceDelete = useFormik({
     initialValues: {},
     onSubmit: async () => {
@@ -1484,6 +1548,7 @@ const AmbulanceFiles = () => {
                           position: ControlPosition.TOP_CENTER,
                         }}
                         initialCenter={position}
+                        center={position}
                       >
                         <Marker
                           position={position}

@@ -98,8 +98,12 @@ const HealthCareFiles = () => {
   };
 
   const handleEditClick = (ambulance) => {
-    setLongitude(null);
-    setLatitude(null);
+    setLongitude(ambulance?.latitude);
+    setLatitude(ambulance?.longitude);
+    setPosition({
+      lat: ambulance?.latitude,
+      lng: ambulance?.longitude,
+    });
     if (ambulance?.focal_persons.length === 0) {
       setupdateFocalPerson(null);
     } else {
@@ -431,6 +435,10 @@ const HealthCareFiles = () => {
       latitude: latitude,
       longitude: longitude,
       address: formatted_address,
+    });
+    setPosition({
+      lat: latitude,
+      lng: longitude,
     });
   };
   const handlePlaceChange = () => {
@@ -1528,6 +1536,7 @@ const HealthCareFiles = () => {
                           position: ControlPosition.TOP_CENTER,
                         }}
                         initialCenter={position}
+                        center={position}
                       >
                         <Marker
                           position={position}

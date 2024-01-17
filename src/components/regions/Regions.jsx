@@ -275,7 +275,7 @@ export default function Regions() {
     const input = document.getElementById("address");
     const options = {
       bounds: defaultBounds,
-      componentRestrictions: { country: "sa" }, // Set the country to Pakistan
+      componentRestrictions: { country: null }, // Set the country to Pakistan
       fields: [
         "address_components",
         "geometry",
