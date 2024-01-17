@@ -51,9 +51,9 @@ export default function IncidentList({}) {
       description: "Show all active incidents.",
     },
     {
-      id: "closedIncidents",
-      name: "Closed Incidents",
-      description: "Show all closed incidents.",
+      id: "completedIncidents",
+      name: "Completed Incidents",
+      description: "Show all completed incidents.",
     },
   ];
   const [activeTab, setActiveTab] = useState("active");
@@ -536,7 +536,7 @@ export default function IncidentList({}) {
                 />
                 <Tab
                   selected={activeTab === "closed"}
-                  title="Closed Incidents"
+                  title="Completed Incidents"
                   onClick={() => setActiveTab("closed")}
                 />
               </div>

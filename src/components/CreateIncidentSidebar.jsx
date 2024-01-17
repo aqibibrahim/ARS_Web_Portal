@@ -32,9 +32,9 @@ const EmergencyType = [
   { label: "Mild", value: 3 },
 ];
 const Gender = [
-  { label: "Male", value: "Male" },
-  { label: "Female", value: "Female" },
-  { label: "Both", value: "Both" },
+  { label: "Male", value: 1 },
+  { label: "Female", value: 2 },
+  { label: "Both", value: 3 },
 ];
 const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
   const [activeTab, setActiveTab] = useState("Incident");
@@ -650,7 +650,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                       />
                     </span>
                     <span className="block truncate">
-                      {selectedGender.value}
+                      {selectedGender.label}
                     </span>
                   </Listbox.Button>
 

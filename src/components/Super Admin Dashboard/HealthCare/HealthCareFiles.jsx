@@ -5,7 +5,14 @@ import {
   ExclamationTriangleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { BsArrowRightCircle, BsEye, BsSearch } from "react-icons/bs";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+
+import {
+  BsArrowRightCircle,
+  BsEye,
+  BsSearch,
+  BsPlusCircle,
+} from "react-icons/bs";
 import { useFormik } from "formik";
 import { json, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -620,54 +627,91 @@ const HealthCareFiles = () => {
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                         <span className="flex items-center justify-center gap-3">
                           <button
-                            className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                            data-tooltip-id="my-tooltip-1"
+                            className="text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
                             onClick={() => {
                               setDelete(true);
                               setDeleteID(healthcare?.id);
                             }}
+                            data-tip
+                            data-for={`deleteTooltip${healthcare.id}`}
                           >
                             <BiMessageAltX />
                           </button>
+
                           <button
+                            data-tooltip-id="my-tooltip-2"
                             onClick={() => handleEditClick(healthcare)}
                             className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                            data-tip
+                            data-for={`editTooltip${healthcare.id}`}
                           >
                             <BiEdit />
                             <span className="sr-only">{healthcare?.name}</span>
-                          </button>{" "}
+                          </button>
+
                           <button
+                            data-tooltip-id="my-tooltip-3"
                             onClick={() => handleViewClick(healthcare)}
                             className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                            data-tip
+                            data-for={`viewTooltip${healthcare.id}`}
                           >
-                            <BsEye />
+                            <BsEye />{" "}
                             <span className="sr-only"> {healthcare?.name}</span>
                           </button>
+
                           <button
+                            data-tooltip-id="my-tooltip-4"
                             onClick={() => handleUpdateDepartment(healthcare)}
                             className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                            data-tip
+                            data-for={`updateDepartmentTooltip${healthcare.id}`}
                           >
-                            <BsEye />
+                            <BsPlusCircle />
                             <span className="sr-only"> {healthcare?.name}</span>
                           </button>
                         </span>
-                      </td>
-                      <td className=" px-3 py-4 text-xs">
+                      </td>{" "}
+                      <ReactTooltip
+                        id="my-tooltip-1"
+                        place="bottom"
+                        variant="info"
+                        content="Delete"
+                      />{" "}
+                      <ReactTooltip
+                        id="my-tooltip-2"
+                        place="bottom"
+                        variant="info"
+                        content="Edit"
+                      />{" "}
+                      <ReactTooltip
+                        id="my-tooltip-3"
+                        place="bottom"
+                        variant="info"
+                        content="View"
+                      />{" "}
+                      <ReactTooltip
+                        id="my-tooltip-4"
+                        place="bottom"
+                        variant="info"
+                        content="Add Department"
+                      />
+                      <td className="px-3 py-4 text-xs">
                         {healthcare?.address}
                       </td>
-                      <td className=" px-3 py-4 text-xs">
+                      <td className="px-3 py-4 text-xs">
                         <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                           {healthcare?.status}
                         </span>
                       </td>
-                      <td className=" px-3 py-4 text-xs">
-                        {healthcare?.email}
-                      </td>
-                      <td className=" px-3 py-4 text-xs">
+                      <td className="px-3 py-4 text-xs">{healthcare?.email}</td>
+                      <td className="px-3 py-4 text-xs">
                         {healthcare?.phone_numbers?.map((phone) => (
                           <div key={phone.id}>{phone.number}</div>
                         ))}
                       </td>
-                      <td className=" px-3 py-4 text-xs">{healthcare?.name}</td>
+                      <td className="px-3 py-4 text-xs">{healthcare?.name}</td>
                     </tr>
                   ))}
                 </tbody>
