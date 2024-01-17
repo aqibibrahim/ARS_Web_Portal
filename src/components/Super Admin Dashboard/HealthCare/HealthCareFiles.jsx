@@ -140,7 +140,8 @@ const HealthCareFiles = () => {
     setUpdateFormOpen(true);
   };
   useEffect(() => {
-    const fetchFacilitiesData = async (page = 1) => {
+    debugger;
+    const fetchFacilitiesData = async (page = currentPage) => {
       try {
         await axios
           .get(`${window.$BackEndUrl}/facilities`, {
@@ -164,7 +165,7 @@ const HealthCareFiles = () => {
       }
     };
     fetchFacilitiesData();
-  }, [submitDone]);
+  }, [submitDone, currentPage]);
 
   useEffect(() => {
     const fetchusersData = async () => {

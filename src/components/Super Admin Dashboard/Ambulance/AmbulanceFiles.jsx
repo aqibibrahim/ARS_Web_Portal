@@ -142,7 +142,7 @@ const AmbulanceFiles = () => {
     fetchAmbulanceData();
   }, [submitDone]);
 
-  const fetchAmbulanceData = async (page = 1) => {
+  const fetchAmbulanceData = async (page = currentPage) => {
     try {
       await axios
         .get(`${window.$BackEndUrl}/ambulances`, {
@@ -161,6 +161,7 @@ const AmbulanceFiles = () => {
       console.log(e);
     }
   };
+
   useEffect(() => {
     fetchAmbulanceData(currentPage);
   }, [submitDone, currentPage]);
