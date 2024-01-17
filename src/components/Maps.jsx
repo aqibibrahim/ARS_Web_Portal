@@ -299,7 +299,7 @@ const Maps = (props) => {
       }}
     >
       <Map Map google={google} zoom={10} initialCenter={position}>
-        {ambulanceData?.data?.map((c, index) => (
+        {ambulanceData.map((c, index) => (
           <Marker
             key={c?.id}
             className={"map"}
@@ -316,7 +316,7 @@ const Maps = (props) => {
             onClick={() => onAmbulanceMarkerClick(c)}
           />
         ))}
-        {healthCareData?.data?.map((healthCare, index) => (
+        {healthCareData.map((healthCare, index) => (
           <Marker
             key={healthCare?.id}
             className={"map"}
@@ -375,10 +375,10 @@ const Maps = (props) => {
                 {ambulanceInfo?.selectedPlace?.status}
                 <i className="bi bi-shield-check"></i>
               </p>
-              <div>
+              {/* <div>
                 <p className="text-base text-right">+9232 123456789012</p>
                 <p className="text-base text-right">+9232 123456789012</p>
-              </div>
+              </div> */}
             </div>
             {renderAmbulanceEquipment(ambulanceInfo?.selectedPlace?.id)}
             <p className="text-lg text-gray-900 text-right font-medium">
