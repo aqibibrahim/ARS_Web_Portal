@@ -125,22 +125,6 @@ export default function IncidentHealthCare({}) {
 	}, [submitDone])
 
 	useEffect(() => {
-		const fetchHealthCareData = async () => {
-			try {
-				await axios
-					.get(`https://ars.disruptwave.com/api/facilities`, {
-						headers: headers,
-					})
-					.then((response) => {
-						setMenuIsOpen(response?.data?.data)
-					})
-			} catch (e) {
-				console.log(e)
-			}
-		}
-		fetchHealthCareData()
-	}, [])
-	useEffect(() => {
 		const fetchAmbulanceData = async () => {
 			try {
 				await axios

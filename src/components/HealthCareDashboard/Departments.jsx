@@ -10,41 +10,6 @@ const statuses = {
 	Withdraw: 'text-gray-600 bg-gray-50 ring-gray-500/10',
 	Overdue: 'text-red-700 bg-red-50 ring-red-600/10',
 }
-const clients = [
-	{
-		id: 1,
-		name: 'Department Name',
-		imageUrl: 'https://tailwindui.com/img/logos/48x48/tuple.svg',
-		lastInvoice: {
-			date: 'December 13, 2022',
-			dateTime: '2022-12-13',
-			amount: '$2,000.00',
-			status: 'Overdue',
-		},
-	},
-	{
-		id: 2,
-		name: 'Department Name',
-		imageUrl: 'https://tailwindui.com/img/logos/48x48/savvycal.svg',
-		lastInvoice: {
-			date: 'January 22, 2023',
-			dateTime: '2023-01-22',
-			amount: '$14,000.00',
-			status: 'Paid',
-		},
-	},
-	{
-		id: 3,
-		name: 'Department Name',
-		imageUrl: 'https://tailwindui.com/img/logos/48x48/reform.svg',
-		lastInvoice: {
-			date: 'January 23, 2023',
-			dateTime: '2023-01-23',
-			amount: '$7,600.00',
-			status: 'Paid',
-		},
-	},
-]
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(' ')
@@ -65,6 +30,8 @@ export default function HealthCareDepartments() {
 	const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
 	const [loadingMessage, setLoadingMessage] = useState(false)
 	const [editingDepartment, setEditingDepartment] = useState(null)
+	const [menuIsOpen, setMenuIsOpen] = useState({})
+	const [facilityID, setFacilityID] = useState('')
 	useEffect(() => {
 		const fetchDepartments = async () => {
 			try {
@@ -84,9 +51,29 @@ export default function HealthCareDepartments() {
 		}
 		fetchDepartments()
 	}, [submitDone])
+	useEffect(() => {
+		const fetchHealthCareData = async () => {
+			try {
+				await axios
+					.get(`https://ars.disruptwave.com/api/view-healthcare`, {
+						headers: headers,
+					})
+					.then((response) => {
+						console.log(response)
+
+						setMenuIsOpen(response?.data?.data)
+						setFacilityID(response?.data?.data?.id)
+					})
+			} catch (e) {
+				console.log(e)
+			}
+		}
+		fetchHealthCareData()
+	}, [])
 	const updatedepartment = useFormik({
 		initialValues: {
-			name: editingDepartment?.name,
+			facility_id: facilityID,
+			department_id: editingDepartment?.id,
 			total_beds: editingDepartment?.pivot.total_beds,
 			occupied_beds_men: editingDepartment?.pivot.occupied_beds_men,
 			occupied_beds_women: editingDepartment?.pivot.occupied_beds_women,
@@ -96,7 +83,8 @@ export default function HealthCareDepartments() {
 		onSubmit: (values) => {
 			setLoadingMessage(true)
 			const JSON = {
-				name: values.name,
+				facility_id: facilityID,
+				department_id: values.department_id,
 				total_beds: values.total_beds,
 				occupied_beds_men: values.occupied_beds_men,
 				occupied_beds_women: values.occupied_beds_women,
@@ -104,17 +92,13 @@ export default function HealthCareDepartments() {
 				unoccupied_beds_women: values.unoccupied_beds_women,
 			}
 			const UpdateEquipment = async () => {
-				console.log(JSON)
-
 				try {
-					await axios
-						.patch(`https://ars.disruptwave.com/api/update-department/${editingDepartment?.id}`, JSON, config)
-						.then((res) => {
-							setSubmitDone(!submitDone)
-							setIsUpdateModalOpen(false)
-							setLoadingMessage(false)
-							toast.success('Department updated successfully!')
-						})
+					await axios.patch(`https://ars.disruptwave.com/api/facility-department/update/`, JSON, config).then((res) => {
+						setSubmitDone(!submitDone)
+						setIsUpdateModalOpen(false)
+						setLoadingMessage(false)
+						toast.success('Department updated successfully!')
+					})
 				} catch (e) {
 					toast.error('failed')
 					setLoadingMessage(false)
@@ -128,7 +112,6 @@ export default function HealthCareDepartments() {
 		enableReinitialize: true,
 	})
 	const handleEditDepartmentClick = (item) => {
-		console.log('ITEM: ', item)
 		setEditingDepartment(item)
 		setIsUpdateModalOpen(true)
 	}
@@ -229,26 +212,6 @@ export default function HealthCareDepartments() {
 							<h3 className="text-xl font-semibold">Update Department</h3>
 						</div>
 						<form onSubmit={updatedepartment.handleSubmit}>
-							<div>
-								<label htmlFor="name" className="block  text-sm font-medium leading-6 text-gray-900 text-right">
-									Department Name
-								</label>
-								<div className="relative mt-2">
-									<input
-										id="name"
-										name="name"
-										onChange={updatedepartment.handleChange}
-										value={updatedepartment.values.name}
-										placeholder="Department Name"
-										className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-										required
-									/>
-									<div
-										className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-										aria-hidden="true"
-									/>
-								</div>
-							</div>
 							<div>
 								<label htmlFor="total_beds" className="block  text-sm font-medium leading-6 text-gray-900 text-right">
 									Total Beds
