@@ -51,12 +51,15 @@ const ModalComponent = (props) => {
     }
 
     // Validate PIN
-    if (!state?.pin?.trim()) {
-      errors.pin = "PIN is required";
-      isValid = false;
-    } else if (state.pin.length !== 6 || !/^\d+$/.test(state.pin)) {
-      errors.pin = "PIN must be a 6-digit number";
-      isValid = false;
+    if (!editBit) {
+      // Perform validation only if editbit is false
+      if (!state?.pin?.trim()) {
+        errors.pin = "PIN is required";
+        isValid = false;
+      } else if (state.pin.length !== 6 || !/^\d+$/.test(state.pin)) {
+        errors.pin = "PIN must be a 6-digit number";
+        isValid = false;
+      }
     }
 
     // Validate phone numbers
@@ -81,6 +84,7 @@ const ModalComponent = (props) => {
       name: editData?.name,
       email: editData?.email,
       pin: editData?.pin,
+      id: editData?.id,
     }));
     setPhoneNumbers(editData?.phoneNumbers || []);
   }, [editData]);
@@ -133,7 +137,8 @@ const ModalComponent = (props) => {
       toast.error(error?.response?.data?.data?.pin);
     }
   };
-  const UpdateDriver = async (editData) => {
+  const UpdateDriver = async () => {
+    debugger;
     try {
       if (validateForm()) {
         var token = localStorage.getItem("token");
@@ -150,7 +155,7 @@ const ModalComponent = (props) => {
         };
 
         const response = await axios.patch(
-          `${Vars.domain}/drivers${editData?.id}`,
+          `${Vars.domain}/drivers/${state?.id}`,
           data,
           {
             headers,
@@ -237,11 +242,13 @@ const ModalComponent = (props) => {
                           aria-hidden="true"
                         />
                       </div>
-                      {validationErrors.pin && (
-                        <p className="text-red-500 text-sm">
-                          {validationErrors.pin}
-                        </p>
-                      )}
+                      {editBit
+                        ? ""
+                        : validationErrors.pin && (
+                            <p className="text-red-500 text-sm">
+                              {validationErrors.pin}
+                            </p>
+                          )}
                     </div>
 
                     <div>
