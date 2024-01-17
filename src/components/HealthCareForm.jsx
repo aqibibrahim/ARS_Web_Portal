@@ -238,7 +238,7 @@ const HealthCareForm = ({ onClick, datatt }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-50  overflow-y-auto">
@@ -252,7 +252,8 @@ const HealthCareForm = ({ onClick, datatt }) => {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative px-6 py-2 top-9 right-20 transform mx-auto w-[32rem] h-40  overflow-hidden rounded-lg bg-white  shadow-xl transition-all">
+                <Dialog.Panel className="relative px-6 py-2 top-9 right-20 transform mx-auto w-[32rem] h-40 rounded-lg bg-white  shadow-xl transition-all">
+                  {/* <Dialog.Panel className=" px-6 py-2 top-9 h-96 right-20  transform mx-auto w-[32rem] rounded-lg bg-white  shadow-xl transition-all"> */}
                   <div>
                     <div className="mb-5 mt-4">
                       <Listbox
@@ -263,10 +264,10 @@ const HealthCareForm = ({ onClick, datatt }) => {
                       >
                         {({ open }) => (
                           <>
-                            <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900 text-right">
+                            <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900 text-right ">
                               Select Facility
                             </Listbox.Label>
-                            <div className="relative mt-2">
+                            <div className=" mt-2 ">
                               <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
                                 <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
                                   <ChevronUpDownIcon
@@ -286,7 +287,7 @@ const HealthCareForm = ({ onClick, datatt }) => {
                                 leaveFrom="opacity-100"
                                 leaveTo="opacity-0"
                               >
-                                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-11/12 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                   {menuIsOpen?.map((option) => (
                                     <Listbox.Option
                                       key={option.name}

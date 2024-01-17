@@ -123,24 +123,24 @@ const AmbulanceFiles = () => {
     setViewOpen(true);
     setSelectedAmbulance(ambulance);
   };
-  useEffect(() => {
-    const fetchAmbulanceData = async () => {
-      try {
-        await axios
-          .get(`${window.$BackEndUrl}/ambulances`, {
-            headers: headers,
-          })
-          .then((response) => {
-            setAmbulanceData(response.data?.data);
-            setIsLoading(false);
-            console.log(response?.data?.data);
-          });
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchAmbulanceData();
-  }, [submitDone]);
+  // useEffect(() => {
+  //   const fetchAmbulanceData = async () => {
+  //     try {
+  //       await axios
+  //         .get(`${window.$BackEndUrl}/ambulances`, {
+  //           headers: headers,
+  //         })
+  //         .then((response) => {
+  //           setAmbulanceData(response.data?.data);
+  //           setIsLoading(false);
+  //           console.log(response?.data?.data);
+  //         });
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
+  //   fetchAmbulanceData();
+  // }, [submitDone]);
 
   const fetchAmbulanceData = async (page = currentPage) => {
     try {

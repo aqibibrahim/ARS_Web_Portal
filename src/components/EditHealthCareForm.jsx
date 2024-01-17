@@ -325,7 +325,7 @@ const EditHealthCare = ({ openModal, datatt }) => {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative px-6 py-2 top-9 right-20 transform mx-auto w-[32rem] h-40  overflow-hidden rounded-lg bg-white  shadow-xl transition-all">
+                <Dialog.Panel className="relative px-6 py-2 top-9 right-20 transform mx-auto w-[32rem] h-40 rounded-lg bg-white  shadow-xl transition-all">
                   <div>
                     <div className="mb-5 mt-4">
                       <Listbox
