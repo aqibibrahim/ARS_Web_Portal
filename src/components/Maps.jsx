@@ -189,51 +189,76 @@ const Maps = (props) => {
     setHealthCareInfo({ showingInfoWindow: false });
     setRegionInfo({ showingInfoWindow: false });
   };
-  const onAmbulanceMarkerClick = (props, marker) => {
+  const onAmbulanceMarkerClick = async (props, marker) => {
+    try {
+      await axios
+        .get(`https://ars.disruptwave.com/api/ambulances/${props?.id}`, {
+          headers: headers,
+        })
+        .then((response) => {
+          const data = response.data?.data;
+          setAmbulanceInfo({
+            selectedPlace: {
+              id: data?.id,
+              equipments: data?.equipments,
+              model: data?.model,
+              make: data?.make,
+              plate_no: data?.plate_no,
+              status: data?.status,
+              latitude: data?.parking_latitude,
+              longitude: data?.parking_longitude,
+              driver: data
+                ? {
+                    name: `${data?.driver?.first_name} ${data?.driver?.last_name}`,
+                    email: data?.driver?.email,
+                    status: data?.driver?.status,
+                  }
+                : null,
+              button: "Ambulance",
+            },
+            activeMarker: marker,
+            showingInfoWindow: true,
+          });
+          console.log("ambulance", response?.data?.data);
+        });
+    } catch (e) {
+      console.log(e);
+    }
     console.log("Props", props);
     const driverInfo = props?.driver;
-    setAmbulanceInfo({
-      selectedPlace: {
-        id: props?.id,
-        model: props?.model,
-        make: props?.make,
-        plate_no: props?.plate_no,
-        status: props?.status,
-        latitude: props?.parking_latitude,
-        longitude: props?.parking_longitude,
-        driver: driverInfo
-          ? {
-              name: `${driverInfo?.first_name} ${driverInfo?.last_name}`,
-              email: driverInfo?.email,
-              status: driverInfo?.status,
-            }
-          : null,
-        button: "Ambulance",
-      },
-      activeMarker: marker,
-      showingInfoWindow: true,
-    });
 
     // Close other info windows
     setHealthCareInfo({ showingInfoWindow: false });
     setRegionInfo({ showingInfoWindow: false });
   };
 
-  const onHealthCareMarkerClick = (props, marker) => {
-    setHealthCareInfo({
-      selectedPlace: {
-        name: props?.name,
-        status: props?.status,
-        phoneNumbers: props?.phone_numbers || [], // Add phoneNumbers to the selectedPlace
-        focalPersons: props?.focal_persons || [],
-        departments: props?.departments || [],
-        latitude: props?.latitude,
-        longitude: props?.longitude,
-        button: "HealthCare",
-      },
-      activeMarker: marker,
-      showingInfoWindow: true,
-    });
+  const onHealthCareMarkerClick = async (props, marker) => {
+    try {
+      await axios
+        .get(`https://ars.disruptwave.com/api/facilities/${props?.id}`, {
+          headers: headers,
+        })
+        .then((response) => {
+          const data = response?.data?.data;
+          setHealthCareInfo({
+            selectedPlace: {
+              name: data?.name,
+              status: data?.status,
+              phoneNumbers: data?.phone_numbers || [], // Add phoneNumbers to the selectedPlace
+              focalPersons: data?.focal_persons || [],
+              departments: data?.departments || [],
+              latitude: data?.latitude,
+              longitude: data?.longitude,
+              button: "HealthCare",
+            },
+            activeMarker: marker,
+            showingInfoWindow: true,
+          });
+          console.log(">>>>>>>>", response?.data?.data);
+        });
+    } catch (e) {
+      console.log(e);
+    }
 
     // Close other info windows
     setAmbulanceInfo({ showingInfoWindow: false });
@@ -380,12 +405,25 @@ const Maps = (props) => {
                 <p className="text-base text-right">+9232 123456789012</p>
               </div> */}
             </div>
+            <p className="text-lg text-gray-900 text-right font-medium">
+              Equipments
+            </p>
+            {ambulanceInfo?.selectedPlace?.equipments?.length > 0 ? (
+              ambulanceInfo?.selectedPlace?.equipments?.map((equipment) => (
+                <p key={equipment.id} className="text-base text-right">
+                  {equipment.name}
+                </p>
+              ))
+            ) : (
+              <p className="text-md text-right">No Data Found</p>
+            )}
             {renderAmbulanceEquipment(ambulanceInfo?.selectedPlace?.id)}
             <p className="text-lg text-gray-900 text-right font-medium">
               Driver Information
             </p>
 
-            {ambulanceInfo?.selectedPlace?.driver !== null ? (
+            {ambulanceInfo?.selectedPlace?.driver?.status !== undefined &&
+            ambulanceInfo?.selectedPlace?.driver !== null ? (
               <div className="mb-2 flex gap-y-2 flex-col">
                 <p className="text-base text-right">
                   {ambulanceInfo?.selectedPlace?.driver?.name}
@@ -424,7 +462,7 @@ const Maps = (props) => {
               </p>
 
               <div>
-                {healthCareInfo?.selectedPlace?.phoneNumbers?.length > 0 && (
+                {healthCareInfo?.selectedPlace?.phoneNumbers?.length > 0 ? (
                   <div>
                     <p className="text-lg my-2 text-gray-900 text-right font-medium">
                       Phone Number<i className="bi bi-shield-check"></i>
@@ -440,32 +478,43 @@ const Maps = (props) => {
                       )
                     )}
                   </div>
+                ) : (
+                  <p>NO Data Found</p>
                 )}
               </div>
             </div>
             <p className="text-lg my-2 text-gray-900 text-right font-medium">
               Focal Persons <i className="bi bi-shield-check"></i>
             </p>
+
             <div>
-              {healthCareInfo?.selectedPlace?.focalPersons?.map(
-                (focalPerson) => (
-                  <p key={focalPerson.id} className="text-base text-right">
-                    {focalPerson.first_name}
-                    {focalPerson.last_name}
-                  </p>
+              {healthCareInfo?.selectedPlace?.focalPersons?.length > 0 ? (
+                healthCareInfo?.selectedPlace?.focalPersons?.map(
+                  (focalPerson) => (
+                    <p key={focalPerson.id} className="text-base text-right">
+                      {focalPerson.first_name}
+                      {focalPerson.last_name}
+                    </p>
+                  )
                 )
+              ) : (
+                <p>No Data Found</p>
               )}
             </div>
             <p className="text-lg my-2 text-gray-900 text-right font-medium">
               Departments<i className="bi bi-shield-check"></i>
             </p>
             <div>
-              {healthCareInfo?.selectedPlace?.departments?.map(
-                (departments) => (
-                  <p key={departments.id} className="text-base text-right">
-                    {departments.name}
-                  </p>
+              {healthCareInfo?.selectedPlace?.departments?.length > 0 ? (
+                healthCareInfo?.selectedPlace?.departments?.map(
+                  (departments) => (
+                    <p key={departments.id} className="text-base text-right">
+                      {departments.name}
+                    </p>
+                  )
                 )
+              ) : (
+                <p className="text-md text-right">No Data Found</p>
               )}
             </div>
           </div>
