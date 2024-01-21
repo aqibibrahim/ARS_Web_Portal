@@ -98,10 +98,17 @@ const AmbulanceForm = ({
           .then((response) => {
             setMyData(
               response.data?.data?.map((variant) => ({
-                label: variant.model,
+                label:
+                  variant.make + " " + variant.model + " " + variant?.plate_no,
                 value: variant.id,
                 persons_supported: variant.persons_supported,
                 id_no: variant.id_no,
+                distance: variant?.distance_info
+                  ? variant?.distance_info?.rows[0]?.elements[0]?.distance?.text
+                  : "Distance Not Available",
+                duration:
+                  variant?.distance_info?.rows[0]?.elements[0]?.duration?.text,
+                criteriaMatched: variant?.criteria_matched,
               }))
             );
             // setIsLoading(false);
@@ -143,11 +150,27 @@ const AmbulanceForm = ({
     setSelectedAmbulance(selectedAmbulance);
     setAmbulanceId(selectedAmbulance);
   };
-  const formatOptionLabel = ({ label, persons_supported, id_no, value }) => (
-    <div className="flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border  border-gray-400 p-1 rounded-md mb-2 text-gray-800">
-      <p className="text-right">Model:{label}</p>
-      <p className="text-right">Persons Supported:{persons_supported}</p>
-      <p className="text-right">Id No:{id_no}</p>
+  const formatOptionLabel = ({
+    label,
+    persons_supported,
+    id_no,
+    value,
+    distance,
+    duration,
+    criteriaMatched,
+  }) => (
+    <div
+      className={`flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border ${
+        criteriaMatched ? "border-green-500 border-2" : "border-gray-400"
+      } p-1 rounded-md mb-2 text-gray-800`}
+    >
+      <p className="text-right">{label}</p>
+      <p className="text-right">Persons Supported: {persons_supported}</p>
+      <p className="text-right">Id No: {id_no}</p>
+      <p className="text-right text-green-500">
+        {distance} {duration}
+      </p>
+
       <p
         className="text-blue-500 text-right hover:underline focus:outline-none"
         onClick={() => handleViewOnMap(value)}

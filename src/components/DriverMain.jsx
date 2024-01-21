@@ -11,8 +11,9 @@ import {
   BiMessageAltError,
   BiMessageAltX,
 } from "react-icons/bi";
-import { BsArrowRightCircle, BsSearch } from "react-icons/bs";
+import { BsArrowRightCircle, BsSearch, BsShieldCheck } from "react-icons/bs";
 import { Pagination } from "antd";
+import { Spin } from "antd";
 
 export default function DriverMain() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,13 +21,23 @@ export default function DriverMain() {
   const [viewData, setViewData] = useState("");
   const [deleteID, setDeleteID] = useState("");
   const [deleteModal, setDeleteModal] = useState(false);
-
+  const [pinModal, setPinModal] = useState(false);
+  const [updatePINId, setUpdatePINId] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [allDrivers, setAllDrivers] = useState([""]);
   const [editBit, setEditBit] = useState(false);
   const [state, setState] = useState({
     name: "",
     email: "",
     pin: "",
+  });
+  const [updatePinState, setupdatePinState] = useState({
+    oldPin: "",
+    newPin: "",
+  });
+  const [validationErrors, setValidationErrors] = useState({
+    oldPin: "",
+    newPin: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -42,6 +53,19 @@ export default function DriverMain() {
   const handleCancel = () => {
     setDeleteModal(false);
     setDeleteID("");
+    setPinModal(false);
+    resetPinState();
+  };
+  const resetPinState = () => {
+    setupdatePinState({
+      oldPin: "",
+      newPin: "",
+    });
+    // Reset any validation errors
+    setValidationErrors({
+      oldPin: "",
+      newPin: "",
+    });
   };
   const validateForm = () => {
     const errors = {};
@@ -81,7 +105,50 @@ export default function DriverMain() {
 
     return isValid;
   };
+  const validatePinForm = () => {
+    const errors = {};
+    let isValid = true;
 
+    // Validate old PIN
+    if (!updatePinState.oldPin.trim()) {
+      errors.oldPin = "Old PIN is required";
+      isValid = false;
+    } else if (
+      updatePinState.oldPin.length !== 6 ||
+      !/^\d+$/.test(updatePinState.oldPin)
+    ) {
+      errors.oldPin = "Old PIN must be a 6-digit number";
+      isValid = false;
+    }
+
+    // Validate new PIN
+    if (!updatePinState.newPin.trim()) {
+      errors.newPin = "New PIN is required";
+      isValid = false;
+    } else if (
+      updatePinState.newPin.length !== 6 ||
+      !/^\d+$/.test(updatePinState.newPin)
+    ) {
+      errors.newPin = "New PIN must be a 6-digit number";
+      isValid = false;
+    }
+
+    setValidationErrors(errors);
+
+    return isValid;
+  };
+  const handlePinChange = (event) => {
+    const inputValue = event.target.value;
+    const maxLength = 6;
+
+    if (inputValue.length > maxLength) {
+      event.target.value = inputValue.slice(0, maxLength);
+    }
+    setupdatePinState({
+      ...updatePinState,
+      [event.target.name]: event.target.value,
+    });
+  };
   const updateDriver = async () => {
     try {
       if (validateForm()) {
@@ -150,6 +217,7 @@ export default function DriverMain() {
       console.log(response.data.data, "response");
       if (response.status === 200 || response.status === 201) {
         setAllDrivers(response?.data?.data);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Error creating role:", error);
@@ -160,6 +228,40 @@ export default function DriverMain() {
   }, [deleteModal, isModalOpen, currentPage]);
   const handleDelete = () => {
     DeleteDriver();
+  };
+  const handleNewPin = async () => {
+    try {
+      if (validatePinForm()) {
+        var token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+
+        const data = {
+          new_pin: updatePinState.newPin,
+          old_pin: updatePinState.oldPin,
+        };
+
+        const response = await axios.patch(
+          `${Vars.domain}/drivers/update-pin/${updatePINId}`,
+          data,
+          {
+            headers,
+          }
+        );
+
+        console.log(response, "res");
+        if (response.status === 200 || response.status === 201) {
+          toast.success("Driver Pin Updated Successfully");
+          resetPinState();
+          setPinModal(false);
+          setUpdatePINId("");
+        }
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
   };
   const handleEditClick = (data) => {
     setIsModalOpen(true);
@@ -174,6 +276,10 @@ export default function DriverMain() {
   };
   const handleCancelView = () => {
     setisViewModal(false);
+  };
+  const handleUpdatePin = (data) => {
+    setPinModal(true);
+    setUpdatePINId(data?.id);
   };
 
   const DeleteDriver = async () => {
@@ -242,95 +348,113 @@ export default function DriverMain() {
               + Create Driver
             </button>
           </div>
-
-          <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
-            <thead>
-              <tr>
-                <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
-                  <span className="sr-only">Edit</span>
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                >
-                  Phone Numbers
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                >
-                  Email
-                </th>
-                {/* <th
+          {isLoading ? (
+            <div className="  align-middle justify-center m-auto  w-full ">
+              <p className="text-center justify-center flex m-auto p-56">
+                {" "}
+                <Spin size="large" />
+              </p>
+            </div>
+          ) : (
+            <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
+              <thead>
+                <tr>
+                  <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+                    <span className="sr-only">Edit</span>
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                  >
+                    Phone Numbers
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                  >
+                    Email
+                  </th>
+                  {/* <th
                   scope="col"
                   className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                 >
                   PIN
                 </th> */}
-                {/* <th
+                  {/* <th
                   scope="col"
                   className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                 >
                   Driver Last Name
                 </th> */}
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                >
-                  Driver Name
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {allDrivers?.data?.map((data, index) => (
-                <tr key={index} className="hover:bg-white">
-                  <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                    <span className="flex gap-5">
-                      <button
-                        className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                        onClick={() => {
-                          setDeleteID(data?.id);
-                          setDeleteModal(true);
-                        }}
-                      >
-                        <BiMessageAltX />
-                      </button>
-                      <button
-                        onClick={() => handleEditClick(data)}
-                        className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                      >
-                        <BiEdit />
-                      </button>
-                    </span>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm">
-                    {data?.phone_numbers?.map((phone) => (
-                      <div key={phone.id}>{phone.number}</div>
-                    ))}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm">
-                    {data?.email}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm">
-                    {data?.first_name}
-                  </td>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                  >
+                    Driver Name
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="flex justify-end mt-5 ">
-            <Pagination
-              className="flex text-sm text-semi-bold mb-2"
-              current={currentPage}
-              total={allDrivers?.total || 0}
-              pageSize={itemsPerPage}
-              onChange={(page) => setCurrentPage(page)}
-              showSizeChanger={false}
-              showTotal={(total, range) =>
-                `${range[0]}-${range[1]} of ${total} items`
-              }
-            />
-          </div>
+              </thead>
+              <tbody>
+                {allDrivers?.data?.reverse().map((data, index) => (
+                  <tr key={index} className="hover:bg-white">
+                    <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                      <span className="flex gap-5">
+                        <button
+                          className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                          onClick={() => {
+                            setDeleteID(data?.id);
+                            setDeleteModal(true);
+                          }}
+                        >
+                          <BiMessageAltX />
+                        </button>
+                        <button
+                          onClick={() => handleEditClick(data)}
+                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                        >
+                          <BiEdit />
+                        </button>{" "}
+                        <button
+                          onClick={() => handleUpdatePin(data)}
+                          className="text-green-400 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                        >
+                          <BsShieldCheck />
+                        </button>
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-xs">
+                      {data?.phone_numbers?.map((phone) => (
+                        <div key={phone.id}>{phone.number}</div>
+                      ))}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-xs">
+                      {data?.email}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-xs">
+                      {data?.first_name}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {isLoading ? (
+            ""
+          ) : (
+            <div className="flex justify-end mt-5 ">
+              <Pagination
+                className="flex text-sm text-semi-bold mb-2"
+                current={currentPage}
+                total={allDrivers?.total || 0}
+                pageSize={itemsPerPage}
+                onChange={(page) => setCurrentPage(page)}
+                showSizeChanger={false}
+                showTotal={(total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`
+                }
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -345,6 +469,80 @@ export default function DriverMain() {
         }}
         okText="Delete"
       ></Modal>
+      <Modal
+        title="Update Pin"
+        open={pinModal}
+        onOk={handleNewPin}
+        onCancel={handleCancel}
+        closable={false}
+        okButtonProps={{
+          style: { backgroundColor: "green" },
+        }}
+        okText="Update"
+      >
+        <div className="flex flex-col space-y-2 w-full">
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium leading-6  text-gray-900 text-right"
+            >
+              Old PIN
+            </label>
+            <div className="relative mt-2">
+              <input
+                onChange={handlePinChange}
+                name="oldPin"
+                value={updatePinState.oldPin}
+                type="number"
+                placeholder="Enter Old PIN"
+                className={`peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right ${
+                  validationErrors.oldPin ? "border-red-500" : ""
+                }`}
+                required
+              />
+              {validationErrors.oldPin && (
+                <span className="text-red-500 text-xs mt-1">
+                  {validationErrors.oldPin}
+                </span>
+              )}
+              <div
+                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium leading-6  text-gray-900 text-right"
+            >
+              New PIN
+            </label>
+            <div className="relative mt-2">
+              <input
+                onChange={handlePinChange}
+                value={updatePinState.newPin}
+                name="newPin"
+                type="number"
+                placeholder="Enter New PIN"
+                className={`peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right ${
+                  validationErrors.newPin ? "border-red-500" : ""
+                }`}
+                required
+              />
+              {validationErrors.newPin && (
+                <span className="text-red-500 text-xs mt-1">
+                  {validationErrors.newPin}
+                </span>
+              )}
+              <div
+                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

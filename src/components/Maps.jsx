@@ -6,6 +6,7 @@ import HealthCare from "../assets/HealthCare.png";
 import Regions from "../assets/Regions.png";
 import { PlusCircleIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { useAmbulanceContext } from "./AmbulanceContext";
+import "../index.css";
 
 const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
 
@@ -170,8 +171,8 @@ const Maps = (props) => {
         make: props?.make,
         plate_no: props?.plate_no,
         status: props?.status,
-        latitude: props?.parking_latitude,
-        longitude: props?.parking_longitude,
+        latitude: props?.gps_latitude,
+        longitude: props?.gps_longitude,
         driver: driverInfo
           ? {
               name: `${driverInfo?.first_name} ${driverInfo?.last_name}`,
@@ -205,8 +206,8 @@ const Maps = (props) => {
               make: data?.make,
               plate_no: data?.plate_no,
               status: data?.status,
-              latitude: data?.parking_latitude,
-              longitude: data?.parking_longitude,
+              latitude: data?.gps_latitude,
+              longitude: data?.gps_longitude,
               driver: data
                 ? {
                     name: `${data?.driver?.first_name} ${data?.driver?.last_name}`,
@@ -329,8 +330,8 @@ const Maps = (props) => {
             key={c?.id}
             className={"map"}
             position={{
-              lat: Number(c?.parking_latitude),
-              lng: Number(c?.parking_longitude),
+              lat: Number(c?.gps_latitude),
+              lng: Number(c?.gps_longitude),
             }}
             name={c.model}
             icon={{
@@ -385,54 +386,65 @@ const Maps = (props) => {
           }}
           onClose={() => setAmbulanceInfo({ showingInfoWindow: false })}
         >
-          <div className="max-w-xs p-4 bg-white shadow-md">
-            <div className="pb-4 ">
-              <h2 className="text-xl text-right font-bold mb-2">
+          <div
+            className="m-auto  w-72 bg-white  "
+            style={{ fontFamily: "Inter, sans-serif" }}
+          >
+            {/* <div className="pb-4 ">
+              <h2 className="text-base text-right font-bold mb-2">
                 {ambulanceInfo?.selectedPlace?.model +
-                  "-" +
+                  " " +
                   ambulanceInfo?.selectedPlace?.make +
-                  "-" +
+                  " - " +
                   ambulanceInfo?.selectedPlace?.plate_no}
               </h2>
-            </div>
-            <div className="mb-2 flex gap-y-2 flex-col">
-              <p className="text-lg my-2 text-gray-900 text-right font-medium">
+            </div> */}
+            <div className="mb-5 text-right  ml-auto ">
+              <span className=" text-sm bg-green-500 p-1 rounded-xl text-white">
                 {ambulanceInfo?.selectedPlace?.status}
-                <i className="bi bi-shield-check"></i>
-              </p>
-              {/* <div>
-                <p className="text-base text-right">+9232 123456789012</p>
-                <p className="text-base text-right">+9232 123456789012</p>
-              </div> */}
+              </span>
+              <span className="text-lg font-bold mb-2 font-Inter ml-2">
+                {ambulanceInfo?.selectedPlace?.model +
+                  " " +
+                  ambulanceInfo?.selectedPlace?.make}{" "}
+              </span>
+              <p className="text-md font-bold mb-2 font-Inter ml-2">
+                {ambulanceInfo?.selectedPlace?.plate_no}{" "}
+              </p>{" "}
             </div>
-            <p className="text-lg text-gray-900 text-right font-medium">
+
+            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
               Equipments
             </p>
-            {ambulanceInfo?.selectedPlace?.equipments?.length > 0 ? (
-              ambulanceInfo?.selectedPlace?.equipments?.map((equipment) => (
-                <p key={equipment.id} className="text-base text-right">
-                  {equipment.name}
-                </p>
-              ))
-            ) : (
-              <p className="text-md text-right">No Data Found</p>
-            )}
+            <div className="justify-end flex-wrap flex ">
+              {ambulanceInfo?.selectedPlace?.equipments?.length > 0 ? (
+                ambulanceInfo?.selectedPlace?.equipments?.map((equipment) => (
+                  <p key={equipment.id} className="text-base text-right">
+                    <p className="text-sm text-right inline-block font-semibold text-white bg-blue-400 px-2 m-1 rounded-xl">
+                      {equipment.name}
+                    </p>
+                  </p>
+                ))
+              ) : (
+                <p className="text-md text-right">No Data Found</p>
+              )}
+            </div>
             {renderAmbulanceEquipment(ambulanceInfo?.selectedPlace?.id)}
-            <p className="text-lg text-gray-900 text-right font-medium">
+            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
               Driver Information
             </p>
 
             {ambulanceInfo?.selectedPlace?.driver?.status !== undefined &&
             ambulanceInfo?.selectedPlace?.driver !== null ? (
-              <div className="mb-2 flex gap-y-2 flex-col">
-                <p className="text-base text-right">
-                  {ambulanceInfo?.selectedPlace?.driver?.name}
-                </p>
-                <p className="text-base text-right">
-                  {ambulanceInfo?.selectedPlace?.driver?.email}
-                </p>
-                <p className="text-base text-right">
+              <div className="mb-2 text-right  gap-y-2">
+                <span className=" text-sm bg-green-500 px-2 rounded-xl mr-1 text-white">
                   {ambulanceInfo?.selectedPlace?.driver?.status}
+                </span>
+                <span className="text-sm text-gray-500  text-right font-semibold ">
+                  {ambulanceInfo?.selectedPlace?.driver?.name}
+                </span>
+                <p className="text-sm text-gray-500  text-right font-semibold ">
+                  {ambulanceInfo?.selectedPlace?.driver?.email}
                 </p>
               </div>
             ) : (
@@ -450,30 +462,35 @@ const Maps = (props) => {
           }}
           onClose={() => setHealthCareInfo({ showingInfoWindow: false })}
         >
-          <div className="max-w-xs p-4 bg-white shadow-md">
-            <div className="pb-4 ">
-              <h2 className="text-xl text-right font-bold mb-2">
-                {healthCareInfo?.selectedPlace?.name}
-              </h2>
-            </div>
-            <div className="mb-2 flex gap-y-2 flex-col">
-              <p className="text-lg text-gray-900 text-right font-medium">
+          <div
+            className="m-auto  w-72 bg-white  "
+            style={{ fontFamily: "Inter, sans-serif" }}
+          >
+            <div className="mb-5 text-right  ml-auto ">
+              <span className="mr-2 text-md bg-green-500 p-1 rounded-xl text-white">
                 {healthCareInfo?.selectedPlace?.status}
-              </p>
-
+              </span>
+              <span className="text-lg font-bold mb-2 font-Inter">
+                {healthCareInfo?.selectedPlace?.name}
+              </span>
+            </div>
+            <div className="mb-2 flex gap-y-2 flex-col text-right">
+              {/* <p className="text-lg text-gray-900 text-left font-medium">
+                {healthCareInfo?.selectedPlace?.status}
+              </p> */}
               <div>
                 {healthCareInfo?.selectedPlace?.phoneNumbers?.length > 0 ? (
                   <div>
-                    <p className="text-lg my-2 text-gray-900 text-right font-medium">
+                    <p className="text-base font-semibold mb-1 text-gray-900   text-right">
                       Phone Number<i className="bi bi-shield-check"></i>
                     </p>
                     {healthCareInfo?.selectedPlace?.phoneNumbers.map(
                       (phoneNumber) => (
                         <p
                           key={phoneNumber.id}
-                          className="text-base text-right"
+                          className="text-sm text-gray-500  text-right font-semibold "
                         >
-                          {phoneNumber.number}
+                          +{phoneNumber.number}
                         </p>
                       )
                     )}
@@ -483,7 +500,31 @@ const Maps = (props) => {
                 )}
               </div>
             </div>
-            <p className="text-lg my-2 text-gray-900 text-right font-medium">
+
+            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+              {healthCareInfo?.selectedPlace?.departments?.length}{" "}
+              {healthCareInfo?.selectedPlace?.departments?.length === 1
+                ? "Department "
+                : "Departments "}
+              Available
+              <i className="bi bi-shield-check"></i>
+            </p>
+            <div className="justify-end flex-wrap flex ">
+              {healthCareInfo?.selectedPlace?.departments?.length > 0 ? (
+                healthCareInfo?.selectedPlace?.departments?.map(
+                  (departments) => (
+                    <p key={departments.id}>
+                      <p className="text-sm text-right inline-block font-semibold text-white bg-blue-400 px-2 m-1 rounded-xl">
+                        {departments.name}
+                      </p>
+                    </p>
+                  )
+                )
+              ) : (
+                <p className="text-md text-left">No Data Found</p>
+              )}
+            </div>
+            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
               Focal Persons <i className="bi bi-shield-check"></i>
             </p>
 
@@ -491,9 +532,11 @@ const Maps = (props) => {
               {healthCareInfo?.selectedPlace?.focalPersons?.length > 0 ? (
                 healthCareInfo?.selectedPlace?.focalPersons?.map(
                   (focalPerson) => (
-                    <p key={focalPerson.id} className="text-base text-right">
-                      {focalPerson.first_name}
-                      {focalPerson.last_name}
+                    <p
+                      key={focalPerson.id}
+                      className="text-sm text-gray-500  text-right font-semibold "
+                    >
+                      {focalPerson.first_name} {focalPerson.last_name}
                     </p>
                   )
                 )
@@ -501,23 +544,8 @@ const Maps = (props) => {
                 <p>No Data Found</p>
               )}
             </div>
-            <p className="text-lg my-2 text-gray-900 text-right font-medium">
-              Departments<i className="bi bi-shield-check"></i>
-            </p>
-            <div>
-              {healthCareInfo?.selectedPlace?.departments?.length > 0 ? (
-                healthCareInfo?.selectedPlace?.departments?.map(
-                  (departments) => (
-                    <p key={departments.id} className="text-base text-right">
-                      {departments.name}
-                    </p>
-                  )
-                )
-              ) : (
-                <p className="text-md text-right">No Data Found</p>
-              )}
-            </div>
           </div>
+          {/* </div> */}
         </InfoWindow>
 
         <InfoWindow

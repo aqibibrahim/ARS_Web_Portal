@@ -7,7 +7,7 @@ import { Toaster, toast } from "sonner";
 import { useFormik } from "formik";
 import { Select as AntSelect } from "antd";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
-
+import { Spin } from "antd";
 const DepartmentsFiles = () => {
   var token = localStorage.getItem("token");
   const headers = {
@@ -359,48 +359,132 @@ const DepartmentsFiles = () => {
           )}
           <div className="bg-white p-2 rounded-lg shadow my-2">
             {loading ? (
-              <p className="text-gray-700 text-center">
-                Loading departments...
+              <p className="text-center justify-center flex m-auto p-32">
+                <Spin size="large" />{" "}
               </p>
             ) : (
-              <ul className="list-none">
-                {departments.map((item) => (
-                  <li
-                    key={item.id}
-                    className="border-b border-gray-300 last:border-0 p-2 flex justify-between items-center"
+              <>
+                {" "}
+                <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-white-100">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        className="relative py-3 pl-3 pr-4 sm:pr-0"
+                      >
+                        <span className="sr-only">Edit</span>
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                      >
+                        Status
+                      </th>
+
+                      {/* <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                   >
-                    <span className="flex items-center justify-center gap-5">
-                      <span
-                        className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                        onClick={() => {
-                          setDelete(true);
-                          setDeleteID(item?.id);
-                        }}
+                    PIN
+                  </th> */}
+                      {/* <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                  >
+                    Driver Last Name
+                  </th> */}
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                       >
-                        <BiMessageAltX />
-                      </span>
-                      <button
-                        className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2 mr-4"
-                        type="button"
-                        onClick={() => handleEditDepartmentClick(item)}
-                      >
-                        <BiEdit />
-                      </button>
-                    </span>
-                    <div
-                      className={`px-2 py-1 rounded text-white ${
-                        item.status === "Active" ? "bg-green-300" : "bg-red-500"
-                      }`}
+                        Departments{" "}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {departments?.map((data, index) => (
+                      <tr key={index} className="hover:bg-white">
+                        <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                          <span className="flex gap-5">
+                            <span
+                              className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                              onClick={() => {
+                                setDelete(true);
+                                setDeleteID(item?.id);
+                              }}
+                            >
+                              <BiMessageAltX />
+                            </span>
+                            <button
+                              className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2 mr-4"
+                              type="button"
+                              onClick={() => handleEditDepartmentClick(data)}
+                            >
+                              <BiEdit />
+                            </button>
+                            {/* <button
+                              onClick={() => {
+                                handleView(data);
+                              }}
+                              className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                            >
+                              <BsEye />
+                            </button> */}
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm">
+                          <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                            {data?.status}
+                          </span>
+                        </td>{" "}
+                        <td className="whitespace-nowrap px-3 py-4 text-sm">
+                          {data?.name}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {/* <ul className="list-none">
+                  {departments.map((item) => (
+                    <li
+                      key={item.id}
+                      className="border-b border-gray-300 last:border-0 p-2 flex justify-between items-center"
                     >
-                      {item.status}
-                    </div>
-                    <div className="text-gray-800 w-full">
-                      {item.incident_types.name}
-                    </div>
-                    <div className="text-gray-800 w-full">{item.name}</div>
-                  </li>
-                ))}
-              </ul>
+                      <span className="flex items-center justify-center gap-5">
+                        <span
+                          className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                          onClick={() => {
+                            setDelete(true);
+                            setDeleteID(item?.id);
+                          }}
+                        >
+                          <BiMessageAltX />
+                        </span>
+                        <button
+                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2 mr-4"
+                          type="button"
+                          onClick={() => handleEditDepartmentClick(item)}
+                        >
+                          <BiEdit />
+                        </button>
+                      </span>
+                      <div
+                        className={`px-2 py-1 rounded text-white ${
+                          item.status === "Active"
+                            ? "bg-green-300"
+                            : "bg-red-500"
+                        }`}
+                      >
+                        {item.status}
+                      </div>
+                      <div className="text-gray-800 w-full">
+                        {item.incident_types.name}
+                      </div>
+                      <div className="text-gray-800 w-full">{item.name}</div>
+                    </li>
+                  ))}
+                </ul> */}
+              </>
             )}
           </div>
         </div>

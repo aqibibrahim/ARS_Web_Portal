@@ -5,7 +5,7 @@ import { Vars, getAllEquipment, getToken } from "../helpers/helpers";
 import { BsArrowRightCircle } from "react-icons/bs";
 import axios from "axios";
 import { BiMessageAltX, BiEdit } from "react-icons/bi";
-
+import { Spin } from "antd";
 import { Toaster, toast } from "sonner";
 import { useFormik } from "formik";
 export default function Equipment() {
@@ -287,7 +287,9 @@ export default function Equipment() {
           </div>
           <div className="bg-white p-2 rounded-lg shadow my-2">
             {loading ? (
-              <p className="text-gray-700 text-center">Loading equipment...</p>
+              <p className="text-center justify-center flex m-auto p-32">
+                <Spin size="large" />
+              </p>
             ) : equipment.length == 0 ? (
               <p className="text-center  text-primary-100">No data available</p>
             ) : (
@@ -346,12 +348,12 @@ export default function Equipment() {
                           </button>
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
                         <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                           {item?.status}
                         </span>
                       </td>{" "}
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                      <td className="whitespace-nowrap px-3 py-4 text-xs">
                         {item?.name}
                       </td>
                     </tr>
