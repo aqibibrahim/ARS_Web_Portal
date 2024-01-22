@@ -5,8 +5,9 @@ import { Vars } from "../helpers/helpers";
 import { Toaster, toast } from "sonner";
 import { BsArrowRightCircle } from "react-icons/bs";
 import InputMask from "react-input-mask";
-
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
+import { Spin } from "antd";
+
 const { TabPane } = Tabs;
 export default function RolesPermission() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,6 +18,7 @@ export default function RolesPermission() {
   const [editModal, setEditModal] = useState(false);
   const [editUserModal, setEditUserModal] = useState(false);
   const [deleteUserModal, setDeleteUserModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [permissionModal, setPermissionModal] = useState(false);
   const [phoneNumbers, setPhoneNumbers] = useState([]);
@@ -29,7 +31,11 @@ export default function RolesPermission() {
   const [deleteID, setDeleteID] = useState("");
   const [editID, setEditID] = useState("");
   const [editUserID, setEditUserID] = useState("");
+  const [activeTab, setActiveTab] = useState("Role");
 
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName);
+  };
   const [state, setState] = useState({
     first_name: "",
     last_name: "",
@@ -190,6 +196,7 @@ export default function RolesPermission() {
         setPhoneNumbers([]);
         setIsModalOpen(false);
         setEditUserModal(false);
+        setIsLoading(false);
         handleCancel();
         setState({
           first_name: "",
@@ -223,6 +230,7 @@ export default function RolesPermission() {
 
         if (response.status === 200 || response.status === 201) {
           setAllRoles(response?.data?.data);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Error creating role:", error);
@@ -246,6 +254,7 @@ export default function RolesPermission() {
 
         if (response.status === 200 || response.status === 201) {
           setAllUsers(response?.data?.data);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Error creating role:", error);
@@ -273,7 +282,6 @@ export default function RolesPermission() {
     setEditModal(true);
   };
   const handleUserEdit = (data) => {
-    debugger;
     setEditUserID(data?.id);
     setIsUserModalOpen(true);
     setEditUserModal(true);
@@ -446,423 +454,201 @@ export default function RolesPermission() {
 
     setPermissionModalData(moduleData);
   };
-
+  const Tab = ({ selected, title, onClick }) => {
+    return (
+      <button
+        className={`px-4 py-2 transition-colors duration-150 ${
+          selected ? "bg-blue-500 text-white" : "bg-white text-black"
+        } focus:outline-none`}
+        onClick={onClick}
+      >
+        {title}
+      </button>
+    );
+  };
   return (
     <>
+      {" "}
       {/* Create Role Modal */}
       <Toaster position="bottom-right" richColors />
-
       <div
         className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
       >
-        <Tabs defaultActiveKey="1" centered>
-          <TabPane tab="Roles & Permissions" key="1">
-            {/* <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right"> */}
-            {/* List of roles */}
-            <div
-              className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-52 h-screen ml-16`}
-            >
-              {" "}
-              <div className="text-right flex-col bg-gray-100 rounded-lg p-2 flex justify-end items-right">
-                <h1 className="text-xl font-semibold m-2 mt-3">
-                  {" "}
-                  Roles & Permissions
-                </h1>
-                <div>
-                  <button
-                    onClick={() => {
-                      NewRole();
-                    }}
-                    className="text-white mt-5 bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm "
-                  >
-                    + Create New Role
-                  </button>
-                </div>
-              </div>
-              <div className="bg-lightGray-100 ">
-                <table className="min-w-full divide-y divide-gray-300 text-right  mr-1">
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="relative py-3 pl-3 pr-4 sm:pr-0"
-                      >
-                        <span className="sr-only">Edit</span>
-                      </th>
-
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Role Name
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {allRoles?.map((data, index) => (
-                      <tr key={index} className="hover:bg-white">
-                        <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                          <span className="flex items-center  gap-4">
-                            <span
-                              className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                              onClick={() => {
-                                setDeleteID(data?.id);
-                                setDeleteModal(true);
-                              }}
-                            >
-                              <BiMessageAltX />
-                            </span>
-                            <button
-                              onClick={() =>
-                                handleEditClick(data?.name, data?.id)
-                              }
-                              className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                            >
-                              <BiEdit />
-                            </button>
-                            <button
-                              onClick={() => handlePermissionClick(data?.id)}
-                              className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                            >
-                              Assign Permissions
-                            </button>
-                          </span>
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
-                          {data?.name}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+        {/* <Tabs defaultActiveKey="2" centered> */}
+        <div>
+          {/* <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right"> */}
+          {/* List of roles */}
+          <div
+            className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-52 h-screen ml-16`}
+          >
+            {" "}
+            <div className="text-right flex-col bg-gray-100 rounded-lg p-2 flex justify-end items-right">
+              <h1 className="text-xl font-semibold m-2 mt-3 text-center">
+                Roles & Permissions
+              </h1>
+              <div className="flex justify-end mb-2">
+                <Tab
+                  selected={activeTab === "User"}
+                  title="Users"
+                  onClick={() => handleTabChange("User")}
+                  className={`${
+                    activeTab === "User"
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-blue-500"
+                  }`}
+                />{" "}
+                <Tab
+                  selected={activeTab === "Role"}
+                  title="Roles"
+                  onClick={() => handleTabChange("Role")}
+                  className={`${
+                    activeTab === "Role"
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-blue-500"
+                  }`}
+                />{" "}
               </div>
             </div>
-            {/* </div> */}
-            {/* Delete Role Modal */}
-            <Modal
-              title="Are you sure to delete this Role?"
-              open={deleteModal}
-              onOk={handleDelete}
-              onCancel={handleCancel}
-              closable={false}
-              maskClosable={false}
-              okButtonProps={{
-                style: { backgroundColor: "red" },
-              }}
-              okText="Delete"
-            ></Modal>
-            <Modal
-              title="Are you sure to delete this User?"
-              open={deleteUserModal}
-              onOk={handleDeleteUser}
-              onCancel={handleCancel}
-              closable={false}
-              maskClosable={false}
-              okButtonProps={{
-                style: { backgroundColor: "red" },
-              }}
-              okText="Delete"
-            ></Modal>
-            {/* Edit Role Modal */}
-            <Modal
-              title="Edit Role"
-              open={editModal}
-              onOk={handleEdit}
-              onCancel={handleCancel}
-              maskClosable={false}
-              closable={false}
-              okButtonProps={{
-                style: { backgroundColor: "green", borderColor: "green" },
-              }}
-              okText="Edit"
-            >
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                >
-                  Name
-                </label>
-                <div className="relative mt-2">
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    placeholder="Enter Name of the Role"
-                    className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                    required
-                  />
-                  <div
-                    className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                    aria-hidden="true"
-                  />
-                </div>
-              </div>
-            </Modal>
-            <Modal
-              title={"Create New Role"}
-              open={isModalOpen}
-              onOk={handleNewRole}
-              onCancel={handleCancel}
-              closable={false}
-              maskClosable={false}
-              okButtonProps={{
-                style: { backgroundColor: "green", borderColor: "green" },
-              }}
-              okText={"Save"}
-            >
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                >
-                  Name
-                </label>
-                <div className="relative mt-2">
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    value={roleName}
-                    onChange={(e) => setRoleName(e.target.value)}
-                    placeholder="Enter Name"
-                    className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                    required
-                  />
-                  <div
-                    className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                    aria-hidden="true"
-                  />
-                </div>
-              </div>
-            </Modal>{" "}
-            {/* Assign Permission Modal */}
-            <Modal
-              // title="Assign Permissions"
-              open={permissionModal}
-              onCancel={handleCancel}
-              closable={false}
-              okButtonProps={{
-                style: { backgroundColor: "green", borderColor: "green" },
-              }}
-              okText="Assign"
-              onOk={handleAssignPermissions}
-            >
-              <h2 className="text-center font-semibold text-lg mb-3">
-                Assign Permissions
-              </h2>
-              {/* Rest of your modal content */}
-              <div className="flex flex-col w-full ">
-                {permissionModalData.map((module, index) => (
-                  <div
-                    key={module.privilege_id}
-                    className="flex flex-row   mb-2"
-                  >
-                    <div className="mr-2 font-semibold">
-                      {module.moduleName}:
+            <div className="m-auto bg-white ">
+              {activeTab === "Role" && (
+                <>
+                  <div className="flex justify-end flex-col">
+                    <div className="text-right flex-col  rounded-lg p-2 flex justify-end ">
+                      <h1 className="text-xl font-semibold ml-2 mt-3 ">
+                        Roles
+                      </h1>
                     </div>
-                    <div className="ml-auto">
-                      <label className="mr-2 ">
-                        <input
-                          className=" mb-2"
-                          type="checkbox"
-                          checked={module.isView}
-                          onChange={() =>
-                            handleCheckboxChange(module.privilege_id, "isView")
-                          }
-                        />
-                        <span> View</span>
-                      </label>
-                      <label className="mr-2">
-                        <input
-                          className=" mb-2"
-                          type="checkbox"
-                          checked={module.isAdd}
-                          onChange={() =>
-                            handleCheckboxChange(module.privilege_id, "isAdd")
-                          }
-                        />
-                        <span> Add </span>
-                      </label>
-                      <label className="mr-2">
-                        <input
-                          className=" mb-2"
-                          type="checkbox"
-                          checked={module.isEdit}
-                          onChange={() =>
-                            handleCheckboxChange(module.privilege_id, "isEdit")
-                          }
-                        />
-                        <span> Edit </span>
-                      </label>
-                      <label>
-                        <input
-                          className=" mb-2"
-                          type="checkbox"
-                          checked={module.isDelete}
-                          onChange={() =>
-                            handleCheckboxChange(
-                              module.privilege_id,
-                              "isDelete"
-                            )
-                          }
-                        />
-                        <span> Delete</span>
-                      </label>
+                    <div className="flex justify-end mr-2">
+                      {" "}
+                      <button
+                        onClick={() => {
+                          NewRole();
+                        }}
+                        className="text-white  bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm "
+                      >
+                        + Create New Role
+                      </button>
                     </div>
                   </div>
-                ))}
-              </div>
-            </Modal>
-          </TabPane>
+                  <div className="bg-lightGray-100 flex ">
+                    {isLoading ? (
+                      <p className="text-center justify-center flex m-auto p-56">
+                        <Spin size="large" />
+                      </p>
+                    ) : (
+                      <table className="min-w-full divide-y divide-gray-300 text-right  mr-1">
+                        <thead>
+                          <tr>
+                            <th
+                              scope="col"
+                              className="relative py-3 pl-3 pr-4 sm:pr-0"
+                            >
+                              <span className="sr-only">Edit</span>
+                            </th>
 
-          {/* Users Tab */}
-          <TabPane tab="Users" key="2">
-            {/* <div className="text-right flex-col bg-white rounded-lg p-2 flex justify-end items-right"> */}
-            {/* List of roles */}
-            <div
-              className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-52 h-screen ml-16`}
-            >
-              {" "}
-              <div className="text-right flex-col bg-gray-100 rounded-lg p-2 flex justify-end items-right">
-                {" "}
-                <h1 className="text-xl font-semibold m-2 mt-3"> Users</h1>
-                <div>
-                  <button
-                    onClick={() => {
-                      NewUser();
+                            <th
+                              scope="col"
+                              className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                            >
+                              Role Name
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {allRoles?.map((data, index) => (
+                            <tr key={index} className="hover:bg-white">
+                              <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                                <span className="flex items-center  gap-4">
+                                  <span
+                                    className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                                    onClick={() => {
+                                      setDeleteID(data?.id);
+                                      setDeleteModal(true);
+                                    }}
+                                  >
+                                    <BiMessageAltX />
+                                  </span>
+                                  <button
+                                    onClick={() =>
+                                      handleEditClick(data?.name, data?.id)
+                                    }
+                                    className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                                  >
+                                    <BiEdit />
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handlePermissionClick(data?.id)
+                                    }
+                                    className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                                  >
+                                    Assign Permissions
+                                  </button>
+                                </span>
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm">
+                                {data?.name}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                  {/* </div> */}
+                  {/* Delete Role Modal */}
+                  <Modal
+                    title="Are you sure to delete this Role?"
+                    open={deleteModal}
+                    onOk={handleDelete}
+                    onCancel={handleCancel}
+                    closable={false}
+                    maskClosable={false}
+                    okButtonProps={{
+                      style: { backgroundColor: "red" },
                     }}
-                    className="mt-5 text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
+                    okText="Delete"
+                  ></Modal>
+                  <Modal
+                    title="Are you sure to delete this User?"
+                    open={deleteUserModal}
+                    onOk={handleDeleteUser}
+                    onCancel={handleCancel}
+                    closable={false}
+                    maskClosable={false}
+                    okButtonProps={{
+                      style: { backgroundColor: "red" },
+                    }}
+                    okText="Delete"
+                  ></Modal>
+                  {/* Edit Role Modal */}
+                  <Modal
+                    title="Edit Role"
+                    open={editModal}
+                    onOk={handleEdit}
+                    onCancel={handleCancel}
+                    maskClosable={false}
+                    closable={false}
+                    okButtonProps={{
+                      style: { backgroundColor: "green", borderColor: "green" },
+                    }}
+                    okText="Edit"
                   >
-                    + Create New User
-                  </button>
-                </div>
-              </div>
-              <div className="bg-lightGray-100 w-full ">
-                <table className="min-w-full divide-y divide-gray-300 text-right  mr-1 w-full">
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="relative py-3 pl-3 pr-4 sm:pr-0"
-                      >
-                        <span className="sr-only">Edit</span>
-                      </th>
-
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        First Name
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Last Name
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Designation
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Phone Nmbers
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Role
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {allUsers?.map((data, index) => (
-                      <tr key={index} className="hover:bg-white">
-                        <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                          <span className="flex gap-4">
-                            <span
-                              className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                              onClick={() => {
-                                setDeleteID(data?.id);
-                                setDeleteUserModal(true);
-                              }}
-                            >
-                              <BiMessageAltX />
-                            </span>
-                            <button
-                              onClick={() => handleUserEdit(data)}
-                              className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                            >
-                              <BiEdit />
-                            </button>
-                          </span>
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
-                          {data?.first_name}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
-                          {data?.last_name}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
-                          {data?.designation}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
-                          {data?.phone_numbers.map((phoneNumber, i) => (
-                            <span key={i}>
-                              {phoneNumber?.number}
-                              <br />
-                            </span>
-                          ))}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-md">
-                          {data?.role?.name}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            {/* </div> */}
-
-            <Modal
-              title={editFlag ? "Edit User" : "Create New User"}
-              open={isUserModalOpen}
-              onOk={createNewUser}
-              onCancel={handleCancel}
-              closable={false}
-              maskClosable={false}
-              okButtonProps={{
-                style: { backgroundColor: "green", borderColor: "green" },
-              }}
-              okText={editFlag ? "Save " : "Create"}
-            >
-              <div className="p-5">
-                <div className="flex flex-row justify-between gap-4 mb-4">
-                  <div className="flex flex-col space-y-2 w-full">
                     <div>
                       <label
                         htmlFor="name"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        Last Name
+                        Name
                       </label>
                       <div className="relative mt-2">
                         <input
                           type="text"
-                          name="last_name"
-                          id="last_name"
-                          onChange={handleChange}
-                          value={state?.last_name}
-                          placeholder="Enter Last Name"
+                          name="name"
+                          id="name"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          placeholder="Enter Name of the Role"
                           className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                         />
@@ -872,21 +658,34 @@ export default function RolesPermission() {
                         />
                       </div>
                     </div>
+                  </Modal>
+                  <Modal
+                    title={"Create New Role"}
+                    open={isModalOpen}
+                    onOk={handleNewRole}
+                    onCancel={handleCancel}
+                    closable={false}
+                    maskClosable={false}
+                    okButtonProps={{
+                      style: { backgroundColor: "green", borderColor: "green" },
+                    }}
+                    okText={"Save"}
+                  >
                     <div>
                       <label
                         htmlFor="name"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        Designation
+                        Name
                       </label>
                       <div className="relative mt-2">
                         <input
                           type="text"
-                          name="designation"
-                          id="designation"
-                          onChange={handleChange}
-                          value={state?.designation}
-                          placeholder="Enter Designation"
+                          name="name"
+                          id="name"
+                          value={roleName}
+                          onChange={(e) => setRoleName(e.target.value)}
+                          placeholder="Enter Name"
                           className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                         />
@@ -896,219 +695,491 @@ export default function RolesPermission() {
                         />
                       </div>
                     </div>
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                      >
-                        Roles
-                      </label>
-                      <div className="relative mt-2">
-                        <select
-                          name="role"
-                          id="role"
-                          onChange={(e) => handleRoleChange(e)}
-                          value={state?.role}
-                          className="peer block  w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                          required
+                  </Modal>{" "}
+                  {/* Assign Permission Modal */}
+                  <Modal
+                    // title="Assign Permissions"
+                    open={permissionModal}
+                    onCancel={handleCancel}
+                    closable={false}
+                    okButtonProps={{
+                      style: { backgroundColor: "green", borderColor: "green" },
+                    }}
+                    okText="Assign"
+                    onOk={handleAssignPermissions}
+                  >
+                    <h2 className="text-center font-semibold text-lg mb-3">
+                      Assign Permissions
+                    </h2>
+                    {/* Rest of your modal content */}
+                    <div className="flex flex-col w-full ">
+                      {permissionModalData.map((module, index) => (
+                        <div
+                          key={module.privilege_id}
+                          className="flex flex-row   mb-2"
                         >
-                          <option value="" disabled>
-                            Select a Role
-                          </option>
-                          {allRoles.map((role) => (
-                            <option
-                              key={role.id}
-                              value={role.id}
-                              selected={role.id === state?.id}
-                            >
-                              {role.name}
-                            </option>
-                          ))}
-                        </select>
-
-                        <div
-                          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                          aria-hidden="true"
-                        />
-                      </div>
+                          <div className="mr-2 font-semibold">
+                            {module.moduleName}:
+                          </div>
+                          <div className="ml-auto">
+                            <label className="mr-2 ">
+                              <input
+                                className=" mb-2"
+                                type="checkbox"
+                                checked={module.isView}
+                                onChange={() =>
+                                  handleCheckboxChange(
+                                    module.privilege_id,
+                                    "isView"
+                                  )
+                                }
+                              />
+                              <span> View</span>
+                            </label>
+                            <label className="mr-2">
+                              <input
+                                className=" mb-2"
+                                type="checkbox"
+                                checked={module.isAdd}
+                                onChange={() =>
+                                  handleCheckboxChange(
+                                    module.privilege_id,
+                                    "isAdd"
+                                  )
+                                }
+                              />
+                              <span> Add </span>
+                            </label>
+                            <label className="mr-2">
+                              <input
+                                className=" mb-2"
+                                type="checkbox"
+                                checked={module.isEdit}
+                                onChange={() =>
+                                  handleCheckboxChange(
+                                    module.privilege_id,
+                                    "isEdit"
+                                  )
+                                }
+                              />
+                              <span> Edit </span>
+                            </label>
+                            <label>
+                              <input
+                                className=" mb-2"
+                                type="checkbox"
+                                checked={module.isDelete}
+                                onChange={() =>
+                                  handleCheckboxChange(
+                                    module.privilege_id,
+                                    "isDelete"
+                                  )
+                                }
+                              />
+                              <span> Delete</span>
+                            </label>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div>
-                      <label
-                        htmlFor="phone_numbers"
-                        className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                  </Modal>
+                </>
+              )}
+            </div>
+            <div className="m-auto bg-white ">
+              {activeTab === "User" && (
+                <div className="flex justify-end -mt-2 flex-col">
+                  <div className="text-right flex-col  rounded-lg p-2 flex justify-end ">
+                    {" "}
+                    <h1 className="text-xl font-semibold m-2 mt-3"> Users</h1>
+                    <div className="flex justify-end">
+                      {" "}
+                      <button
+                        onClick={() => {}}
+                        className="text-white  bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm "
                       >
-                        Phone Number
-                      </label>
+                        + Create New User
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-lightGray-100 w-full ">
+                    {isLoading ? (
+                      <p className="text-center  text-primary-100 h-screen align-middle justify-center flex  mt-72 m-auto  ">
+                        <Spin size="large" />
+                      </p>
+                    ) : (
+                      <table className="min-w-full divide-y divide-gray-300 text-right  mr-1 w-full">
+                        <thead>
+                          <tr>
+                            <th
+                              scope="col"
+                              className="relative py-3 pl-3 pr-4 sm:pr-0"
+                            >
+                              <span className="sr-only">Edit</span>
+                            </th>
 
-                      <div className="w-full  mb-6 ">
-                        {/* <div className="flex w-full justify-center m-auto"> */}
+                            <th
+                              scope="col"
+                              className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                            >
+                              First Name
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                            >
+                              Last Name
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                            >
+                              Designation
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                            >
+                              Phone Nmbers
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                            >
+                              Role
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {allUsers?.map((data, index) => (
+                            <tr key={index} className="hover:bg-white">
+                              <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                                <span className="flex gap-4">
+                                  <span
+                                    className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                                    onClick={() => {
+                                      setDeleteID(data?.id);
+                                      setDeleteUserModal(true);
+                                    }}
+                                  >
+                                    <BiMessageAltX />
+                                  </span>
+                                  <button
+                                    onClick={() => handleUserEdit(data)}
+                                    className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                                  >
+                                    <BiEdit />
+                                  </button>
+                                </span>
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-xs">
+                                {data?.first_name}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-xs">
+                                {data?.last_name}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-xs">
+                                {data?.designation}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-xs">
+                                {data?.phone_numbers.map((phoneNumber, i) => (
+                                  <span key={i}>
+                                    {phoneNumber?.number}
+                                    <br />
+                                  </span>
+                                ))}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-xs">
+                                {data?.role?.name}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
 
-                        <div className="flex w-full ">
-                          <div
-                            className={`relative mt-2 ${
-                              newPhoneNumber ? "w-11/12" : "w-full"
-                            }`}
-                          >
-                            <InputMask
-                              mask="00218 99 9999999" // Define your desired mask here
-                              maskChar=""
-                              placeholder="00218 XX XXXXXXX"
-                              onChange={(e) =>
-                                setNewPhoneNumber(e.target.value)
-                              }
-                              value={newPhoneNumber}
-                              type="tel"
-                              name="phone_numbers"
-                              id="phone_numbers"
-                              className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                              {...(phoneNumbers
-                                ? { required: false }
-                                : { required: true })}
-                            />
+                  {/* </div> */}
 
-                            <div
-                              className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                              aria-hidden="true"
-                            />
+                  <Modal
+                    title={editFlag ? "Edit User" : "Create New User"}
+                    open={isUserModalOpen}
+                    onOk={createNewUser}
+                    onCancel={handleCancel}
+                    closable={false}
+                    maskClosable={false}
+                    okButtonProps={{
+                      style: { backgroundColor: "green", borderColor: "green" },
+                    }}
+                    okText={editFlag ? "Save " : "Create"}
+                  >
+                    <div className="p-5">
+                      <div className="flex flex-row justify-between gap-4 mb-4">
+                        <div className="flex flex-col space-y-2 w-full">
+                          <div>
+                            <label
+                              htmlFor="name"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              Last Name
+                            </label>
+                            <div className="relative mt-2">
+                              <input
+                                type="text"
+                                name="last_name"
+                                id="last_name"
+                                onChange={handleChange}
+                                value={state?.last_name}
+                                placeholder="Enter Last Name"
+                                className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                required
+                              />
+                              <div
+                                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                                aria-hidden="true"
+                              />
+                            </div>
                           </div>
                           <div>
-                            {newPhoneNumber ? (
-                              <button
-                                type="button"
-                                onClick={handleAddPhoneNumber}
-                                className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
+                            <label
+                              htmlFor="name"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              Designation
+                            </label>
+                            <div className="relative mt-2">
+                              <input
+                                type="text"
+                                name="designation"
+                                id="designation"
+                                onChange={handleChange}
+                                value={state?.designation}
+                                placeholder="Enter Designation"
+                                className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                required
+                              />
+                              <div
+                                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="name"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              Roles
+                            </label>
+                            <div className="relative mt-2">
+                              <select
+                                name="role"
+                                id="role"
+                                onChange={(e) => handleRoleChange(e)}
+                                value={state?.role}
+                                className="peer block  w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                required
                               >
-                                +
-                              </button>
-                            ) : (
-                              ""
-                            )}
+                                <option value="" disabled>
+                                  Select a Role
+                                </option>
+                                {allRoles.map((role) => (
+                                  <option
+                                    key={role.id}
+                                    value={role.id}
+                                    selected={role.id === state?.id}
+                                  >
+                                    {role.name}
+                                  </option>
+                                ))}
+                              </select>
+
+                              <div
+                                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="phone_numbers"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              Phone Number
+                            </label>
+
+                            <div className="w-full  mb-6 ">
+                              {/* <div className="flex w-full justify-center m-auto"> */}
+
+                              <div className="flex w-full ">
+                                <div
+                                  className={`relative mt-2 ${
+                                    newPhoneNumber ? "w-11/12" : "w-full"
+                                  }`}
+                                >
+                                  <InputMask
+                                    mask="00218 99 9999999" // Define your desired mask here
+                                    maskChar=""
+                                    placeholder="00218 XX XXXXXXX"
+                                    onChange={(e) =>
+                                      setNewPhoneNumber(e.target.value)
+                                    }
+                                    value={newPhoneNumber}
+                                    type="tel"
+                                    name="phone_numbers"
+                                    id="phone_numbers"
+                                    className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                    {...(phoneNumbers
+                                      ? { required: false }
+                                      : { required: true })}
+                                  />
+
+                                  <div
+                                    className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                                    aria-hidden="true"
+                                  />
+                                </div>
+                                <div>
+                                  {newPhoneNumber ? (
+                                    <button
+                                      type="button"
+                                      onClick={handleAddPhoneNumber}
+                                      className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
+                                    >
+                                      +
+                                    </button>
+                                  ) : (
+                                    ""
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* </div> */}
+                            </div>
                           </div>
                         </div>
 
-                        {/* </div> */}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col space-y-2 w-full">
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                      >
-                        First Name
-                      </label>
-                      <div className="relative mt-2">
-                        <input
-                          type="text"
-                          name="first_name"
-                          id="first_name"
-                          onChange={handleChange}
-                          value={state?.first_name}
-                          placeholder="Enter First Name"
-                          className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                          required
-                        />
-                        <div
-                          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                          aria-hidden="true"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                      >
-                        Password
-                      </label>
-                      <div className="relative mt-2">
-                        <input
-                          type="text"
-                          name="password"
-                          id="password"
-                          onChange={handleChange}
-                          value={state?.password}
-                          placeholder="Enter Password"
-                          className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                          required
-                        />
-                        <div
-                          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                          aria-hidden="true"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                      >
-                        Email
-                      </label>
-                      <div className="relative mt-2">
-                        <input
-                          name="email"
-                          onChange={handleChange}
-                          placeholder="Enter Email"
-                          className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                          required
-                          value={state?.email}
-                        />
-                        <div
-                          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                          aria-hidden="true"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {phoneNumbers?.length > 0 ? (
-                  <div
-                    className={`grid grid-cols-2 gap-2 ${
-                      phoneNumbers?.length > 0 ? "bg-gray-100" : ""
-                    } p-4`}
-                  >
-                    {phoneNumbers.map((phoneNumber, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
-                      >
-                        <div className="flex text-sm">
-                          {phoneNumber?.number || phoneNumber}
+                        <div className="flex flex-col space-y-2 w-full">
+                          <div>
+                            <label
+                              htmlFor="name"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              First Name
+                            </label>
+                            <div className="relative mt-2">
+                              <input
+                                type="text"
+                                name="first_name"
+                                id="first_name"
+                                onChange={handleChange}
+                                value={state?.first_name}
+                                placeholder="Enter First Name"
+                                className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                required
+                              />
+                              <div
+                                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="name"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              Password
+                            </label>
+                            <div className="relative mt-2">
+                              <input
+                                type="text"
+                                name="password"
+                                id="password"
+                                onChange={handleChange}
+                                value={state?.password}
+                                placeholder="Enter Password"
+                                className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                required
+                              />
+                              <div
+                                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="email"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              Email
+                            </label>
+                            <div className="relative mt-2">
+                              <input
+                                name="email"
+                                onChange={handleChange}
+                                placeholder="Enter Email"
+                                className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                required
+                                value={state?.email}
+                              />
+                              <div
+                                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          </div>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => handleRemovePhoneNumber(index)}
-                          className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
-                        >
-                          -
-                        </button>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
-            </Modal>
-            {/* Delete Role Modal */}
-            <Modal
-              title="Are you sure to delete this Role?"
-              open={deleteModal}
-              onOk={handleDelete}
-              onCancel={handleCancel}
-              maskClosable={false}
-              closable={false}
-              okButtonProps={{
-                style: { backgroundColor: "red" },
-              }}
-              okText="Delete"
-            ></Modal>
-            {/* Edit Role Modal */}
-          </TabPane>
-        </Tabs>
+                      {phoneNumbers?.length > 0 ? (
+                        <div
+                          className={`grid grid-cols-2 gap-2 ${
+                            phoneNumbers?.length > 0 ? "bg-gray-100" : ""
+                          } p-4`}
+                        >
+                          {phoneNumbers.map((phoneNumber, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
+                            >
+                              <div className="flex text-sm">
+                                {phoneNumber?.number || phoneNumber}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => handleRemovePhoneNumber(index)}
+                                className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
+                              >
+                                -
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </Modal>
+                  {/* Delete Role Modal */}
+                  <Modal
+                    title="Are you sure to delete this Role?"
+                    open={deleteModal}
+                    onOk={handleDelete}
+                    onCancel={handleCancel}
+                    maskClosable={false}
+                    closable={false}
+                    okButtonProps={{
+                      style: { backgroundColor: "red" },
+                    }}
+                    okText="Delete"
+                  ></Modal>
+                  {/* Edit Role Modal */}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

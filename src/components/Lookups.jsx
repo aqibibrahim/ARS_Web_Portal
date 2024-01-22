@@ -3,6 +3,7 @@ import Equipment from "./Equipment";
 import DepartmentsFiles from "./Super Admin Dashboard/Departments/DepartmentsFiles";
 import IncidentType from "./IncidentType";
 import Departments from "./Departments";
+import Gender from "./Gender";
 const Lookups = () => {
   const [activeTab, setActiveTab] = useState("equipments");
 
@@ -40,16 +41,6 @@ const Lookups = () => {
         <div className="flex justify-end ">
           {" "}
           <Tab
-            selected={activeTab === "equipments"}
-            title="Equipments"
-            onClick={() => handleTabClick("equipments")}
-            className={`${
-              activeTab === "equipments"
-                ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500"
-            }`}
-          />
-          <Tab
             selected={activeTab === "Departments"}
             onClick={() => handleTabClick("Departments")}
             title="Departments"
@@ -69,11 +60,32 @@ const Lookups = () => {
                 : "bg-white text-blue-500"
             }`}
           />
+          {/* <Tab
+            selected={activeTab === "gender"}
+            onClick={() => handleTabClick("gender")}
+            title="Gender"
+            className={`${
+              activeTab === "gender"
+                ? "bg-blue-500 text-white"
+                : "bg-white text-blue-500"
+            }`}
+          />{" "} */}
+          <Tab
+            selected={activeTab === "equipments"}
+            title="Equipments"
+            onClick={() => handleTabClick("equipments")}
+            className={`${
+              activeTab === "equipments"
+                ? "bg-blue-500 text-white"
+                : "bg-white text-blue-500"
+            }`}
+          />
         </div>
       </div>
       {activeTab === "equipments" && <Equipment />}
       {activeTab === "Departments" && <DepartmentsFiles />}
       {activeTab === "incidentType" && <IncidentType />}
+      {/* {activeTab === "gender" && <Gender />} */}
     </div>
   );
 };

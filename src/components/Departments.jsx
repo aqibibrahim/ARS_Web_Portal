@@ -689,7 +689,7 @@ export default function Departments() {
                           {item?.status}
                         </span>
                       </td>{" "}
-                      <td className="whitespace-nowrap px-3 py-4 text-md">
+                      <td className="whitespace-nowrap px-3 py-4 text-lg">
                         {item?.name}
                       </td>
                     </tr>

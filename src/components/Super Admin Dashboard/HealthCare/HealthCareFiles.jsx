@@ -22,7 +22,7 @@ import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import Select from "react-tailwindcss-select";
 import InputMask from "react-input-mask";
-import { Pagination } from "antd";
+import { Pagination, Spin } from "antd";
 
 const HealthCareFiles = () => {
   var token = localStorage.getItem("token");
@@ -33,7 +33,8 @@ const HealthCareFiles = () => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-
+  const [phoneNumbers, setPhoneNumbers] = useState([]);
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updateFormOpen, setUpdateFormOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,7 +60,7 @@ const HealthCareFiles = () => {
   const [selectedHealthCare, setSelectedHealthCare] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isUpdateDepartment, setIsUpdateDepartment] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState([]);
 
   const itemsPerPage = 10; // You can adjust this based on your preference
   const [totalDepartments, setTotalDepartments] = useState(0);
@@ -89,7 +90,16 @@ const HealthCareFiles = () => {
     );
     console.log(">>Card", cardFocalPersons);
   };
-
+  const handleAddPhoneNumber = () => {
+    if (newPhoneNumber.trim() !== "") {
+      setPhoneNumbers([...phoneNumbers, newPhoneNumber]);
+      setNewPhoneNumber("");
+    }
+  };
+  const handleRemovePhoneNumber = (index) => {
+    const updatedPhoneNumbers = phoneNumbers.filter((_, i) => i !== index);
+    setPhoneNumbers(updatedPhoneNumbers);
+  };
   const handleCreateHealtCareClick = () => {
     setLongitude(null);
     setLatitude(null);
@@ -98,6 +108,8 @@ const HealthCareFiles = () => {
       longitude: "",
       address: "",
     });
+    setPhoneNumbers([]);
+
     setOptions(null);
     setIsModalOpen(true);
     setCardFocalPersons([]);
@@ -106,6 +118,8 @@ const HealthCareFiles = () => {
 
   const handleEditClick = (ambulance) => {
     setLongitude(ambulance?.latitude);
+    setPhoneNumbers(ambulance?.phone_numbers.map((phone) => phone.number));
+
     setLatitude(ambulance?.longitude);
     setPosition({
       lat: ambulance?.latitude,
@@ -140,7 +154,6 @@ const HealthCareFiles = () => {
     setUpdateFormOpen(true);
   };
   useEffect(() => {
-    debugger;
     const fetchFacilitiesData = async (page = currentPage) => {
       try {
         await axios
@@ -225,7 +238,7 @@ const HealthCareFiles = () => {
       departments: "",
       name: "",
       email: "",
-      phone_numbers: "",
+      // phone_numbers: "",
       latitude: "",
       longitude: "",
       address: "",
@@ -234,11 +247,10 @@ const HealthCareFiles = () => {
       const JSON = {
         focal_persons: optionsFocalPerson?.map((item) => item.value),
         users: optionsFocalPerson?.map((item) => item.value),
-
         departments: options?.map((item) => item.value),
         name: values.name,
         email: values.email,
-        phone_numbers: [values.phone_numbers],
+        phone_numbers: phoneNumbers,
         address: locationAddress?.address,
         latitude: locationAddress.latitude,
         longitude: locationAddress.longitude,
@@ -278,7 +290,7 @@ const HealthCareFiles = () => {
       departments: "",
       name: selectedAmbulance?.name,
       email: selectedAmbulance?.email,
-      phone_numbers: selectedAmbulance?.phone_numbers[0]?.number,
+      // phone_numbers: selectedAmbulance?.phone_numbers[0]?.number,
       latitude: selectedAmbulance?.latitude,
       longitude: selectedAmbulance?.longitude,
       address: "",
@@ -290,7 +302,7 @@ const HealthCareFiles = () => {
         departments: options?.map((item) => item.value),
         name: values.name,
         email: values.email,
-        phone_numbers: [values.phone_numbers],
+        phone_numbers: phoneNumbers,
         latitude: selectedAmbulance?.latitude,
         longitude: selectedAmbulance?.longitude,
         address: locationAddress?.address,
@@ -393,28 +405,28 @@ const HealthCareFiles = () => {
   };
   const CreateDepartments = useFormik({
     initialValues: {
-      incident_types: "",
-      total_beds: "",
-      occupied_beds_men: "",
-      occupied_beds_women: "",
-      unoccupied_beds_men: "",
-      unoccupied_beds_women: "",
-      department_id: "",
+      // incident_types: "",
+      // total_beds: "",
+      // occupied_beds_men: "",
+      // occupied_beds_women: "",
+      // unoccupied_beds_men: "",
+      // unoccupied_beds_women: "",
+      // department_id: "",
     },
+
     onSubmit: (values) => {
       setLoadingMessage(true);
       const JSON = {
-        department_id: parseInt(selectedDepartment),
-        total_beds: values.total_beds,
-        occupied_beds_men: values.occupied_beds_men,
-        occupied_beds_women: values.occupied_beds_women,
-        unoccupied_beds_men: values.unoccupied_beds_men,
-        unoccupied_beds_women: values.unoccupied_beds_women,
-        facility_id: selectedHealthCare,
+        department_id: selectedDepartment?.map((item) => item?.value),
+        // total_beds: values.total_beds,
+        // occupied_beds_men: values.occupied_beds_men,
+        // occupied_beds_women: values.occupied_beds_women,
+        // unoccupied_beds_men: values.unoccupied_beds_men,
+        // unoccupied_beds_women: values.unoccupied_beds_women,
+        // facility_id: selectedHealthCare,
       };
       const createequipment = async () => {
         console.log(JSON);
-
         try {
           await axios
             .post(`${window.$BackEndUrl}/facility-department/add`, JSON, config)
@@ -450,26 +462,10 @@ const HealthCareFiles = () => {
     });
   };
   const handlePlaceChange = () => {
-    const map = new window.google.maps.Map(document.getElementById("map"), {
-      center: { lat: 50.064192, lng: -130.605469 },
-      zoom: 3,
-    });
-
-    const card = document.getElementById("pac-card");
-    map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-    const center = { lat: 50.064192, lng: -130.605469 };
-    const defaultBounds = {
-      north: center.lat + 0.1,
-      south: center.lat - 0.1,
-      east: center.lng + 0.1,
-      west: center.lng - 0.1,
-    };
-
     const input = document.getElementById("address");
     const options = {
-      bounds: defaultBounds,
-      componentRestrictions: { country: null }, // Set the country to Pakistan
+      // bounds: defaultBounds, // Uncomment this line if you have specific bounds
+      componentRestrictions: { country: null },
       fields: [
         "address_components",
         "geometry",
@@ -507,12 +503,78 @@ const HealthCareFiles = () => {
       console.log("Formatted Address:", address);
       console.log("Postal Code:", postalCode);
 
-      // The rest of your code...
+      // Set the input value with a timeout to ensure reactivity
+
       const latitude = place.geometry.location.lat();
       const longitude = place.geometry.location.lng();
       sendDataToParent(latitude, longitude, address, postalCode);
+      setUncontrolledAddress(address);
     });
   };
+  // const handlePlaceChange = () => {
+  //   const map = new window.google.maps.Map(document.getElementById("map"), {
+  //     center: { lat: 50.064192, lng: -130.605469 },
+  //     zoom: 3,
+  //   });
+
+  //   const card = document.getElementById("pac-card");
+  //   map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
+
+  //   const center = { lat: 50.064192, lng: -130.605469 };
+  //   const defaultBounds = {
+  //     north: center.lat + 0.1,
+  //     south: center.lat - 0.1,
+  //     east: center.lng + 0.1,
+  //     west: center.lng - 0.1,
+  //   };
+
+  //   const input = document.getElementById("address");
+  //   const options = {
+  //     bounds: defaultBounds,
+  //     componentRestrictions: { country: null }, // Set the country to Pakistan
+  //     fields: [
+  //       "address_components",
+  //       "geometry",
+  //       "icon",
+  //       "name",
+  //       "formatted_address",
+  //     ],
+  //     strictBounds: false,
+  //   };
+
+  //   const autocomplete = new window.google.maps.places.Autocomplete(
+  //     input,
+  //     options
+  //   );
+  //   const southwest = { lat: 23.6345, lng: 60.8724 };
+  //   const northeast = { lat: 37.0841, lng: 77.8375 };
+  //   const newBounds = new window.google.maps.LatLngBounds(southwest, northeast);
+  //   autocomplete.setBounds(newBounds);
+
+  //   autocomplete.addListener("place_changed", () => {
+  //     const place = autocomplete.getPlace();
+  //     let address = "";
+  //     let postalCode = "";
+
+  //     if (place.address_components) {
+  //       address = place.formatted_address;
+
+  //       const postalCodeComponent = place.address_components.find((component) =>
+  //         component.types.includes("postal_code")
+  //       );
+
+  //       postalCode = postalCodeComponent ? postalCodeComponent.short_name : "";
+  //     }
+
+  //     console.log("Formatted Address:", address);
+  //     console.log("Postal Code:", postalCode);
+
+  //     // The rest of your code...
+  //     const latitude = place.geometry.location.lat();
+  //     const longitude = place.geometry.location.lng();
+  //     sendDataToParent(latitude, longitude, address, postalCode);
+  //   });
+  // };
   const AmbulanceDelete = useFormik({
     initialValues: {},
     onSubmit: async () => {
@@ -576,7 +638,9 @@ const HealthCareFiles = () => {
 
         <div className="rtl">
           {isLoading ? (
-            <p className="text-center text-xl text-primary-100">Loading...</p>
+            <p className="text-center justify-center flex m-auto p-56">
+              <Spin size="large" />
+            </p>
           ) : ambulanceData?.data?.length == 0 ? (
             <p className="text-center text-xl text-primary-100">
               No data available
@@ -674,30 +738,30 @@ const HealthCareFiles = () => {
                           </button>
                         </span>
                       </td>{" "}
-                      <ReactTooltip
+                      {/* <ReactTooltip
                         id="my-tooltip-1"
-                        place="bottom"
+                        // place="bottom"
                         variant="info"
                         content="Delete"
                       />{" "}
                       <ReactTooltip
                         id="my-tooltip-2"
-                        place="bottom"
+                        // place="bottom"
                         variant="info"
                         content="Edit"
                       />{" "}
                       <ReactTooltip
                         id="my-tooltip-3"
-                        place="bottom"
+                        // place="bottom"
                         variant="info"
                         content="View"
                       />{" "}
                       <ReactTooltip
                         id="my-tooltip-4"
-                        place="bottom"
+                        // place="bottom"
                         variant="info"
                         content="Add Department"
-                      />
+                      /> */}
                       <td className="px-3 py-4 text-xs">
                         {healthcare?.address}
                       </td>
@@ -747,7 +811,7 @@ const HealthCareFiles = () => {
             </div>
             <form onSubmit={CreateDepartments.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
-                <div className="flex flex-col space-y-2 w-full">
+                {/* <div className="flex flex-col space-y-2 w-full">
                   <div>
                     <label
                       htmlFor="occupied_beds_women"
@@ -823,14 +887,24 @@ const HealthCareFiles = () => {
                       />
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
                     <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
                       Departments
                     </label>
-                    <select
+                    <Select
+                      value={selectedDepartment}
+                      placeholder="Select Department"
+                      onChange={(e) => handleDepartmentChange(e)}
+                      options={myData}
+                      isMultiple={true}
+                      isClearable={true}
+                      primaryColor={"blue"}
+                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                    />
+                    {/* <select
                       value={selectedDepartment}
                       onChange={(e) => handleDepartmentChange(e.target.value)}
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
@@ -843,7 +917,7 @@ const HealthCareFiles = () => {
                           {details?.label}
                         </option>
                       ))}
-                    </select>
+                    </select> */}
                     {/* <Select
                       value={options}
                       placeholder="Select"
@@ -856,7 +930,7 @@ const HealthCareFiles = () => {
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     /> */}
                   </div>{" "}
-                  <div>
+                  {/* <div>
                     <label
                       htmlFor="occupied_beds_men"
                       className="block  text-sm font-medium leading-6 text-gray-900 text-right"
@@ -880,7 +954,7 @@ const HealthCareFiles = () => {
                         aria-hidden="true"
                       />
                     </div>
-                  </div>
+                  </div> */}
                   {/* <div>
                     <label
                       htmlFor="name"
@@ -904,7 +978,7 @@ const HealthCareFiles = () => {
                       />
                     </div>
                   </div> */}
-                  <div>
+                  {/* <div>
                     <label
                       htmlFor="total_beds"
                       className="block  text-sm font-medium leading-6 text-gray-900 text-right"
@@ -928,7 +1002,7 @@ const HealthCareFiles = () => {
                         aria-hidden="true"
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="flex justify-start">
@@ -1054,24 +1128,69 @@ const HealthCareFiles = () => {
                     >
                       Phone Number
                     </label>
-                    <div className="relative mt-2">
-                      <InputMask
-                        mask="00218 99 9999999"
-                        maskChar=""
-                        placeholder="00218 XX XXXXXXX"
-                        onChange={CreateHealtCare.handleChange}
-                        value={CreateHealtCare.values.phone_numbers}
-                        type="tel"
-                        name="phone_numbers"
-                        id="phone_numbers"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
 
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                    <div className="w-full   ">
+                      <div className="flex w-full ">
+                        <div
+                          className={`relative mt-2 ${
+                            newPhoneNumber ? "w-11/12" : "w-full"
+                          }`}
+                        >
+                          {/* <InputMask
+															mask="00218 99 9999999"
+															maskChar=""
+															placeholder="00218 XX XXXXXXX"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															type="tel"
+															name="phone_numbers"
+															id="phone_numbers"
+															className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															required
+														/> */}
+                          <InputMask
+                            mask="00218 99 9999999" // Define your desired mask here
+                            maskChar=""
+                            placeholder="00218 XX XXXXXXX"
+                            onChange={(e) => setNewPhoneNumber(e.target.value)}
+                            value={newPhoneNumber}
+                            type="tel"
+                            name="phone_numbers"
+                            id="phone_numbers"
+                            className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                          />
+                          {/* <input
+															type="number"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															placeholder="Enter Phone Number"
+															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															{...(phoneNumbers ? { required: false } : { required: true })}
+														/> */}
+                          <div
+                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div>
+                          {newPhoneNumber ? (
+                            <button
+                              type="button"
+                              onClick={handleAddPhoneNumber}
+                              className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
+                            >
+                              +
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                      {/* {validationErrors.phoneNumbers && (
+                        <p className="text-red-500 text-sm">
+                          {validationErrors.phoneNumbers}
+                        </p>
+                      )} */}
                     </div>
                   </div>
 
@@ -1125,7 +1244,7 @@ const HealthCareFiles = () => {
                       htmlFor="name"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Name
+                      HealthCare Name
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1134,7 +1253,7 @@ const HealthCareFiles = () => {
                         id="name"
                         onChange={CreateHealtCare.handleChange}
                         value={CreateHealtCare.values.name}
-                        placeholder="Enter Name"
+                        placeholder="Enter Healthcare Name"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -1199,6 +1318,31 @@ const HealthCareFiles = () => {
                   </div>
                 </div>
               </div>
+              {phoneNumbers.length > 0 ? (
+                <div
+                  className={`grid grid-cols-2 gap-2 ${
+                    phoneNumbers.length > 0 ? "bg-gray-100" : ""
+                  } p-4`}
+                >
+                  {phoneNumbers.map((phoneNumber, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
+                    >
+                      <div className="flex text-sm">{phoneNumber}</div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhoneNumber(index)}
+                        className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
+                      >
+                        -
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
               <ul
                 role="list"
                 className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
@@ -1270,24 +1414,64 @@ const HealthCareFiles = () => {
                     >
                       Phone Number
                     </label>
-                    <div className="relative mt-2">
-                      <InputMask
-                        mask="00218 99 9999999"
-                        maskChar=""
-                        placeholder="00218 XX XXXXXXX"
-                        onChange={UpdateHealtCare.handleChange}
-                        value={UpdateHealtCare.values.phone_numbers}
-                        type="tel"
-                        name="phone_numbers"
-                        id="phone_numbers"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
 
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                    <div className="w-full  mb-6 ">
+                      <div className="flex w-full ">
+                        <div
+                          className={`relative mt-2 ${
+                            newPhoneNumber ? "w-11/12" : "w-full"
+                          }`}
+                        >
+                          {/* <InputMask
+															mask="00218 99 9999999"
+															maskChar=""
+															placeholder="00218 XX XXXXXXX"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															type="tel"
+															name="phone_numbers"
+															id="phone_numbers"
+															className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															required
+														/> */}
+                          <InputMask
+                            mask="00218 99 9999999" // Define your desired mask here
+                            maskChar=""
+                            placeholder="00218 XX XXXXXXX"
+                            onChange={(e) => setNewPhoneNumber(e.target.value)}
+                            value={newPhoneNumber}
+                            type="tel"
+                            name="phone_numbers"
+                            id="phone_numbers"
+                            className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                          />
+                          {/* <input
+															type="number"
+															onChange={(e) => setNewPhoneNumber(e.target.value)}
+															value={newPhoneNumber}
+															placeholder="Enter Phone Number"
+															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+															{...(phoneNumbers ? { required: false } : { required: true })}
+														/> */}
+                          <div
+                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div>
+                          {newPhoneNumber ? (
+                            <button
+                              type="button"
+                              onClick={handleAddPhoneNumber}
+                              className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
+                            >
+                              +
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -1411,7 +1595,31 @@ const HealthCareFiles = () => {
                   </div>
                 </div>
               </div>
-
+              {phoneNumbers?.length > 0 ? (
+                <div
+                  className={`grid grid-cols-2 gap-2 ${
+                    phoneNumbers.length > 0 ? "bg-gray-100" : ""
+                  } p-4`}
+                >
+                  {phoneNumbers?.map((phoneNumber, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
+                    >
+                      <div className="flex text-sm">{phoneNumber}</div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhoneNumber(index)}
+                        className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
+                      >
+                        -
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
@@ -1533,7 +1741,7 @@ const HealthCareFiles = () => {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform mx-auto w-[90rem] h-screen overflow-hidden rounded-lg bg-white  shadow-xl transition-all">
+                {/* <Dialog.Panel className="relative transform mx-auto w-[90rem] h-screen overflow-hidden rounded-lg bg-white  shadow-xl transition-all">
                   <div className="mt-2">
                     <div
                       style={{
@@ -1590,6 +1798,55 @@ const HealthCareFiles = () => {
                         />
                       </Map>
                     </div>
+                  </div>
+                </Dialog.Panel> */}
+
+                <Dialog.Panel className="relative transform mx-auto w-[90rem] h-screen overflow-hidden rounded-lg bg-white shadow-xl transition-all">
+                  <div className="flex flex-col h-full">
+                    <div
+                      id="pac-card"
+                      className="flex rounded-md gap-10 justify-center my-4 p-4 bg-white relative z-10"
+                    >
+                      <input
+                        id="address"
+                        name="address"
+                        required
+                        className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        type="text"
+                        placeholder="Enter a location"
+                        onChange={handlePlaceChange}
+                      />
+                      <div style={{ marginTop: "10px" }}>
+                        <strong>Address:</strong> {address}
+                      </div>
+                      <button
+                        onClick={() => setOpen(false)}
+                        className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
+                      >
+                        Close
+                      </button>
+                    </div>
+                    <Map
+                      google={google}
+                      zoom={10}
+                      onClick={handleMapClick}
+                      disableDefaultUI
+                      zoomControlOptions={{
+                        position: ControlPosition.BOTTOM_LEFT,
+                      }}
+                      mapTypeControlOptions={{
+                        position: ControlPosition.TOP_CENTER,
+                      }}
+                      initialCenter={position}
+                      center={position}
+                      className="flex-grow z-0"
+                    >
+                      <Marker
+                        position={position}
+                        draggable={true}
+                        onDragend={handleMarkerDragEnd}
+                      />
+                    </Map>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

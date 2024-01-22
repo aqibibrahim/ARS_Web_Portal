@@ -7,34 +7,32 @@ import ModalComponent from "./Common/ModalComponent";
 import { BsEye } from "react-icons/bs";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { BsArrowRightCircle, BsSearch } from "react-icons/bs";
-import { Spin } from "antd";
 
-export default function IncidentType() {
+export default function Gender() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [allIncidentTypes, setAllDriverIncidentTypes] = useState([""]);
+  const [allGenders, setAllGenders] = useState([""]);
   const [viewOpen, setViewOpen] = useState(false);
   const [editData, setEditData] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editIncidentType, setEditIncidentType] = useState("");
   const [editIncidentID, setEditIncidentID] = useState("");
   const [deleteIncidentID, setDeleteIncidentID] = useState("");
-  const [loading, setLoading] = useState(true);
   const [deleteModal, setDeleteModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState({
-    IncidentTypeName: "",
+    GenderName: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
-    IncidentTypeName: "",
-    editIncidentType: "",
+    GenderName: "",
+    editGenderName: "",
   });
 
   const validateForm = () => {
     const errors = {};
     let isValid = true;
 
-    if (!state.IncidentTypeName.trim()) {
-      errors.IncidentTypeName = "Incident Type Name is required";
+    if (!state.GenderName.trim()) {
+      errors.GenderName = "Gender Name is required";
       isValid = false;
     }
 
@@ -61,7 +59,7 @@ export default function IncidentType() {
     setDeleteModal(false);
   };
   useEffect(() => {
-    const getIncidentTypes = async () => {
+    const getGenders = async () => {
       try {
         var token = localStorage.getItem("token");
         const headers = {
@@ -69,19 +67,18 @@ export default function IncidentType() {
           Authorization: `Bearer ${token}`,
         };
 
-        const response = await axios.get(`${Vars.domain}/incident-type`, {
+        const response = await axios.get(`${Vars.domain}/genders`, {
           headers,
         });
 
         if (response.status === 200 || response.status === 201) {
-          setAllDriverIncidentTypes(response?.data?.data);
-          setLoading(false);
+          setAllGenders(response?.data?.data);
         }
       } catch (error) {
         console.error("Error getting role:", error);
       }
     };
-    getIncidentTypes();
+    getGenders();
   }, [isModalOpen, editOpen, deleteModal]);
   const handleView = (data) => {
     setViewOpen(true);
@@ -208,9 +205,7 @@ export default function IncidentType() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">
-                Create New Incident Type
-              </h3>
+              <h3 className="text-xl font-semibold">Create New Gender</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -220,15 +215,15 @@ export default function IncidentType() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Name:
+                      Gender Name:
                     </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
                         name="IncidentTypeName"
                         onChange={handleChange}
-                        value={state?.IncidentTypeName}
-                        placeholder="Name of Incident Type"
+                        value={state?.GenderName}
+                        placeholder="Name of Gender"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -238,9 +233,9 @@ export default function IncidentType() {
                       />
                     </div>
                   </div>{" "}
-                  {validationErrors.IncidentTypeName && (
+                  {validationErrors.GenderName && (
                     <p className="text-red-500 text-sm text-right">
-                      {validationErrors.IncidentTypeName}
+                      {validationErrors.GenderName}
                     </p>
                   )}
                 </div>
@@ -278,7 +273,7 @@ export default function IncidentType() {
                 onClick={() => setViewOpen(false)}
               />
               <h3 className="text-xl font-semibold">
-                Incident Type Details
+                Gender Details
                 <span className="text-lime-600 ml-2">{editData?.status}</span>
               </h3>
             </div>
@@ -313,7 +308,7 @@ export default function IncidentType() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">Edit Incident Type</h3>
+              <h3 className="text-xl font-semibold">Edit Gender Name</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -372,7 +367,7 @@ export default function IncidentType() {
         </div>
       )}
       <Modal
-        title="Are you sure to delete this Role?"
+        title="Are you sure to delete this Gender?"
         open={deleteModal}
         onOk={deleteIncidentType}
         onCancel={handleCancel}
@@ -388,7 +383,7 @@ export default function IncidentType() {
         {" "}
         <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold m-2">Incident Types</h1>
+            <h1 className="text-xl font-semibold m-2">Gender</h1>
             <div>
               <button
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
@@ -397,95 +392,87 @@ export default function IncidentType() {
                   NewIncidentTypeCreation();
                 }}
               >
-                + Create New Incident Type
+                + Create New Gender
               </button>
             </div>
           </div>
-          {loading ? (
-            <p className="text-center justify-center flex m-auto p-32">
-              <Spin size="large" />
-            </p>
-          ) : allIncidentTypes.length == 0 ? (
-            <p className="text-center  text-primary-100">No data available</p>
-          ) : (
-            <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-white-100">
-              <thead>
-                <tr>
-                  <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
-                    <span className="sr-only">Edit</span>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Status
-                  </th>
+          <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-white-100">
+            <thead>
+              <tr>
+                <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+                  <span className="sr-only">Edit</span>
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                >
+                  Status
+                </th>
 
-                  {/* <th
+                {/* <th
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
                   PIN
                 </th> */}
-                  {/* <th
+                {/* <th
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
                   Driver Last Name
                 </th> */}
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    Incident Type Name
-                  </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                >
+                  Gender
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {allGenders?.map((data, index) => (
+                <tr key={index} className="hover:bg-white">
+                  <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                    <span className="flex gap-5">
+                      <span
+                        className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                        onClick={() => {
+                          setDeleteIncidentID(data?.id);
+                          setDeleteModal(true);
+                        }}
+                      >
+                        <BiMessageAltX />
+                      </span>
+                      <button
+                        onClick={() => {
+                          handleEdit(data);
+                        }}
+                        className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                      >
+                        <BiEdit />
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleView(data);
+                        }}
+                        className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                      >
+                        <BsEye />
+                      </button>
+                    </span>
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                      {data?.status}
+                    </span>
+                  </td>{" "}
+                  <td className="whitespace-nowrap px-3 py-4 text-md">
+                    {data?.name}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {allIncidentTypes?.map((data, index) => (
-                  <tr key={index} className="hover:bg-white">
-                    <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <span className="flex gap-5">
-                        <span
-                          className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                          onClick={() => {
-                            setDeleteIncidentID(data?.id);
-                            setDeleteModal(true);
-                          }}
-                        >
-                          <BiMessageAltX />
-                        </span>
-                        <button
-                          onClick={() => {
-                            handleEdit(data);
-                          }}
-                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                        >
-                          <BiEdit />
-                        </button>
-                        <button
-                          onClick={() => {
-                            handleView(data);
-                          }}
-                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                        >
-                          <BsEye />
-                        </button>
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                      <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                        {data?.status}
-                      </span>
-                    </td>{" "}
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                      {data?.name}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}{" "}
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </>

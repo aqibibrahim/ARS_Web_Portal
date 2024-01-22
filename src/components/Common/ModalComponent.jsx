@@ -138,7 +138,6 @@ const ModalComponent = (props) => {
     }
   };
   const UpdateDriver = async () => {
-    debugger;
     try {
       if (validateForm()) {
         var token = localStorage.getItem("token");
@@ -219,37 +218,41 @@ const ModalComponent = (props) => {
               <div className="p-5">
                 <div className="flex flex-row justify-between gap-4 mb-4">
                   <div className="flex flex-col space-y-2 w-full">
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium leading-6  text-gray-900 text-right"
-                      >
-                        PIN
-                      </label>
-                      <div className="relative mt-2">
-                        <input
-                          onChange={handlePinChange}
-                          name="pin"
-                          type="number"
-                          placeholder="Enter PIN"
-                          className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                          required
-                          disabled={!editBit ? false : true}
-                        />
+                    {editBit ? (
+                      ""
+                    ) : (
+                      <div>
+                        <label
+                          htmlFor="email"
+                          className="block text-sm font-medium leading-6  text-gray-900 text-right"
+                        >
+                          PIN
+                        </label>
+                        <div className="relative mt-2">
+                          <input
+                            onChange={handlePinChange}
+                            name="pin"
+                            type="number"
+                            placeholder="Enter PIN"
+                            className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                            required
+                            disabled={!editBit ? false : true}
+                          />
 
-                        <div
-                          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                          aria-hidden="true"
-                        />
+                          <div
+                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        {editBit
+                          ? ""
+                          : validationErrors.pin && (
+                              <p className="text-red-500 text-sm">
+                                {validationErrors.pin}
+                              </p>
+                            )}
                       </div>
-                      {editBit
-                        ? ""
-                        : validationErrors.pin && (
-                            <p className="text-red-500 text-sm">
-                              {validationErrors.pin}
-                            </p>
-                          )}
-                    </div>
+                    )}
 
                     <div>
                       <label

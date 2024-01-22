@@ -16,6 +16,8 @@ import Select from "react-tailwindcss-select";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Select as AntSelect } from "antd";
+import { Spin } from "antd";
+
 const { Option } = AntSelect;
 const AmbulanceFiles = () => {
   var token = localStorage.getItem("token");
@@ -107,7 +109,6 @@ const AmbulanceFiles = () => {
       address: "",
     });
     if (ambulance?.equipments.length === 0) {
-      s;
       setEditOptions(null);
     } else {
       setEditOptions(
@@ -187,8 +188,8 @@ const AmbulanceFiles = () => {
         gps_no: values.gps_no,
         persons_supported: values.persons_supported,
         password: values.password,
-        gps_latitude: "77.89797",
-        gps_longitude: "-77.84568",
+        gps_latitude: locationAddress?.latitude,
+        gps_longitude: locationAddress?.longitude,
         parking_latitude: locationAddress?.latitude,
         parking_longitude: locationAddress?.longitude,
         equipments: options?.map((item) => item?.value),
@@ -564,7 +565,9 @@ const AmbulanceFiles = () => {
         </div>
         <div className="rtl">
           {isLoading ? (
-            <p className="text-center text-xl text-primary-100">Loading...</p>
+            <p className="text-center justify-center flex m-auto p-56">
+              <Spin size="large" />
+            </p>
           ) : ambulanceData?.length == 0 ? (
             <p className="text-center text-xl text-primary-100">
               No data available
@@ -578,6 +581,12 @@ const AmbulanceFiles = () => {
                     <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
                       <span className="sr-only">Edit</span>
                     </th>
+                    {/* <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
+                      >
+                        Region
+                      </th>{" "} */}
                     <th
                       scope="col"
                       className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
@@ -608,7 +617,6 @@ const AmbulanceFiles = () => {
                     >
                       Status
                     </th>
-
                     <th
                       scope="col"
                       className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500 "
@@ -618,7 +626,7 @@ const AmbulanceFiles = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {ambulanceData.data?.map((ambulance) => (
+                  {ambulanceData.data?.reverse().map((ambulance) => (
                     <tr key={ambulance.id} className="hover:bg-gray-100">
                       <td className="m-auto  text-sm  sm:pr-0">
                         <span className="flex items-center justify-center gap-5">
@@ -647,11 +655,13 @@ const AmbulanceFiles = () => {
                           </button>
                         </span>
                       </td>
-
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      {/* <td className="whitespace-nowrap px-3 py-4 text-xs">
+                        {ambulance?.regions[0]?.name}
+                      </td> */}
+                      <td className="whitespace-nowrap px-3 py-4 text-xs">
                         {ambulance.model}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      <td className="whitespace-nowrap px-3 py-4 text-xs">
                         {ambulance.make}
                       </td>
                       {/* <td className="whitespace-nowrap px-3 py-4 text-md">
@@ -659,7 +669,7 @@ const AmbulanceFiles = () => {
                       <div key={phone}>{phone}</div>
                     ))}
                     </td> */}
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      <td className="whitespace-nowrap px-3 py-4 text-xs">
                         {ambulance.plate_no}
                       </td>
                       <td className="px-2 py-4 text-md  flex items-baseline justify-end ">
@@ -670,7 +680,7 @@ const AmbulanceFiles = () => {
                         </span>
                       </td>
 
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                      <td className="whitespace-nowrap px-3 py-4 text-xs">
                         {ambulance.id_no}
                       </td>
                     </tr>
@@ -696,8 +706,8 @@ const AmbulanceFiles = () => {
       </div>
       {viewOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
-            <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
+          <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden  mb-5 ">
+            <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden z-10">
               <BsArrowRightCircle
                 width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
@@ -755,20 +765,20 @@ const AmbulanceFiles = () => {
                   </p>
                 ))}
               </div>
-              <div className="h-80">
+              <div className="h-80 z-50">
                 <Map
                   google={window.google}
                   zoom={10}
                   style={{ width: "100%", height: "100%" }}
                   initialCenter={{
-                    lat: parseFloat(selectedAmbulance?.parking_latitude),
-                    lng: parseFloat(selectedAmbulance?.parking_longitude),
+                    lat: parseFloat(selectedAmbulance?.gps_latitude),
+                    lng: parseFloat(selectedAmbulance?.gps_longitude),
                   }}
                 >
                   <Marker
                     position={{
-                      lat: parseFloat(selectedAmbulance?.parking_latitude),
-                      lng: parseFloat(selectedAmbulance?.parking_longitude),
+                      lat: parseFloat(selectedAmbulance?.gps_latitude),
+                      lng: parseFloat(selectedAmbulance?.gps_longitude),
                     }}
                   />
                 </Map>
@@ -784,7 +794,10 @@ const AmbulanceFiles = () => {
               <BsArrowRightCircle
                 width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => {
+                  setIsModalOpen(false);
+                  CreateAmbulance.resetForm();
+                }}
               />
               <h3 className="text-xl font-semibold">Create New Ambulance</h3>
             </div>
@@ -1501,63 +1514,52 @@ const AmbulanceFiles = () => {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform mx-auto w-[90rem] h-screen overflow-hidden rounded-lg bg-white  shadow-xl transition-all">
-                  <div className="mt-2">
+                <Dialog.Panel className="relative transform mx-auto w-[90rem] h-screen overflow-hidden rounded-lg bg-white shadow-xl transition-all">
+                  <div className="flex flex-col h-full">
                     <div
-                      style={{
-                        width: "100%",
-                        height: "100vh",
-                      }}
+                      id="pac-card"
+                      className="flex rounded-md gap-10 justify-center my-4 p-4 bg-white relative z-10"
                     >
-                      {" "}
-                      <div
-                        id="pac-card"
-                        className="flex rounded-md gap-10 justify-center my-4"
-                      >
-                        <input
-                          id="address"
-                          name="address"
-                          required
-                          className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                          type="text"
-                          placeholder="Enter a location"
-                          onChange={handlePlaceChange}
-                          // value={createIncident.values.informer_address}
-                        />
-                        <div style={{ marginTop: "10px" }}>
-                          <strong>Address:</strong> {address}
-                        </div>
-                        <button
-                          onClick={() => setOpen(false)}
-                          className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
-                        >
-                          Close
-                        </button>
+                      <input
+                        id="address"
+                        name="address"
+                        required
+                        className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        type="text"
+                        placeholder="Enter a location"
+                        onChange={handlePlaceChange}
+                      />
+                      <div style={{ marginTop: "10px" }}>
+                        <strong>Address:</strong> {address}
                       </div>
-                      <div
-                        id="map"
-                        // style={{ height: "0px", width: "0px" }}
-                      ></div>
-                      <Map
-                        google={google}
-                        zoom={10}
-                        onClick={handleMapClick}
-                        zoomControlOptions={{
-                          position: ControlPosition.BOTTOM_LEFT,
-                        }}
-                        mapTypeControlOptions={{
-                          position: ControlPosition.TOP_CENTER,
-                        }}
-                        initialCenter={position}
-                        center={position}
+                      <button
+                        onClick={() => setOpen(false)}
+                        className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
                       >
-                        <Marker
-                          position={position}
-                          draggable={true}
-                          onDragend={handleMarkerDragEnd}
-                        />
-                      </Map>
+                        Close
+                      </button>
                     </div>
+                    <Map
+                      google={google}
+                      zoom={10}
+                      onClick={handleMapClick}
+                      disableDefaultUI
+                      zoomControlOptions={{
+                        position: ControlPosition.BOTTOM_LEFT,
+                      }}
+                      mapTypeControlOptions={{
+                        position: ControlPosition.TOP_CENTER,
+                      }}
+                      initialCenter={position}
+                      center={position}
+                      className="flex-grow z-0"
+                    >
+                      <Marker
+                        position={position}
+                        draggable={true}
+                        onDragend={handleMarkerDragEnd}
+                      />
+                    </Map>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

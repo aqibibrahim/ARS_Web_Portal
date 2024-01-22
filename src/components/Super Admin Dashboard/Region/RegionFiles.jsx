@@ -15,6 +15,8 @@ import { BsArrowRightCircle, BsEye, BsSearch } from "react-icons/bs";
 import InputMask from "react-input-mask";
 import { Select as AntSelect } from "antd";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
+import { Spin } from "antd";
+
 const RegionFiles = () => {
   var token = localStorage.getItem("token");
   const headers = {
@@ -59,14 +61,14 @@ const RegionFiles = () => {
   const [isDeleteID, setDeleteID] = useState(null);
   const [isDelete, setDelete] = useState(false);
   const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState(null);
+  const [options, setOptions] = useState([]);
   const [myData, setMyData] = useState([]);
   const navigate = useNavigate();
   const handleChange = (value) => {
     setOptions(value);
+
     console.log("value:", value);
   };
-  console.log(options);
   useEffect(() => {
     const fetchambulances = async () => {
       try {
@@ -126,7 +128,6 @@ const RegionFiles = () => {
       );
     }
     setPhoneNumbers(region?.phone_numbers.map((phone) => phone.number));
-    debugger;
     setSelectedAmbulance(region);
     setLocationAddress({
       latitude: region?.latitude,
@@ -161,18 +162,19 @@ const RegionFiles = () => {
       name: "",
       latitude: "",
       longitude: "",
-      address: locationAddress?.address,
+      address: "",
     },
     onSubmit: (values) => {
       setLoadingMessage(true);
       const JSON = {
-        ambulances: options?.map((item) => item.value),
+        ambulances: options?.map((item) => item),
         name: values.name,
         address: locationAddress?.address,
         latitude: locationAddress.latitude,
         longitude: locationAddress.longitude,
         phone_numbers: phoneNumbers,
       };
+
       const UploadRegion = async () => {
         console.log(JSON);
         try {
@@ -184,6 +186,7 @@ const RegionFiles = () => {
               setLoadingMessage(false);
               toast.success("Created Successfuly");
               setIsModalOpen(false);
+              CreateRegion.resetForm();
             });
         } catch (e) {
           setLoadingMessage(false);
@@ -323,26 +326,10 @@ const RegionFiles = () => {
     });
   };
   const handlePlaceChange = () => {
-    const map = new window.google.maps.Map(document.getElementById("map"), {
-      center: { lat: 50.064192, lng: -130.605469 },
-      zoom: 3,
-    });
-
-    const card = document.getElementById("pac-card");
-    map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-    const center = { lat: 50.064192, lng: -130.605469 };
-    const defaultBounds = {
-      north: center.lat + 0.1,
-      south: center.lat - 0.1,
-      east: center.lng + 0.1,
-      west: center.lng - 0.1,
-    };
-
     const input = document.getElementById("address");
     const options = {
-      bounds: defaultBounds,
-      componentRestrictions: { country: null }, // Set the country to Pakistan
+      // bounds: defaultBounds, // Uncomment this line if you have specific bounds
+      componentRestrictions: { country: null },
       fields: [
         "address_components",
         "geometry",
@@ -380,12 +367,78 @@ const RegionFiles = () => {
       console.log("Formatted Address:", address);
       console.log("Postal Code:", postalCode);
 
-      // The rest of your code...
+      // Set the input value with a timeout to ensure reactivity
+
       const latitude = place.geometry.location.lat();
       const longitude = place.geometry.location.lng();
       sendDataToParent(latitude, longitude, address, postalCode);
+      setUncontrolledAddress(address);
     });
   };
+  // const handlePlaceChange = () => {
+  //   const map = new window.google.maps.Map(document.getElementById("map"), {
+  //     center: { lat: 50.064192, lng: -130.605469 },
+  //     zoom: 3,
+  //   });
+
+  //   const card = document.getElementById("pac-card");
+  //   map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
+
+  //   const center = { lat: 50.064192, lng: -130.605469 };
+  //   const defaultBounds = {
+  //     north: center.lat + 0.1,
+  //     south: center.lat - 0.1,
+  //     east: center.lng + 0.1,
+  //     west: center.lng - 0.1,
+  //   };
+
+  //   const input = document.getElementById("address");
+  //   const options = {
+  //     bounds: defaultBounds,
+  //     componentRestrictions: { country: null }, // Set the country to Pakistan
+  //     fields: [
+  //       "address_components",
+  //       "geometry",
+  //       "icon",
+  //       "name",
+  //       "formatted_address",
+  //     ],
+  //     strictBounds: false,
+  //   };
+
+  //   const autocomplete = new window.google.maps.places.Autocomplete(
+  //     input,
+  //     options
+  //   );
+  //   const southwest = { lat: 23.6345, lng: 60.8724 };
+  //   const northeast = { lat: 37.0841, lng: 77.8375 };
+  //   const newBounds = new window.google.maps.LatLngBounds(southwest, northeast);
+  //   autocomplete.setBounds(newBounds);
+
+  //   autocomplete.addListener("place_changed", () => {
+  //     const place = autocomplete.getPlace();
+  //     let address = "";
+  //     let postalCode = "";
+
+  //     if (place.address_components) {
+  //       address = place.formatted_address;
+
+  //       const postalCodeComponent = place.address_components.find((component) =>
+  //         component.types.includes("postal_code")
+  //       );
+
+  //       postalCode = postalCodeComponent ? postalCodeComponent.short_name : "";
+  //     }
+
+  //     console.log("Formatted Address:", address);
+  //     console.log("Postal Code:", postalCode);
+
+  //     // The rest of your code...
+  //     const latitude = place.geometry.location.lat();
+  //     const longitude = place.geometry.location.lng();
+  //     sendDataToParent(latitude, longitude, address, postalCode);
+  //   });
+  // };
   const handleAddPhoneNumber = () => {
     if (newPhoneNumber.trim() !== "") {
       setPhoneNumbers([...phoneNumbers, newPhoneNumber]);
@@ -469,7 +522,9 @@ const RegionFiles = () => {
 
         <div className="rtl">
           {isLoading ? (
-            <p className="text-center text-xl text-primary-100">Loading...</p>
+            <p className="text-center justify-center flex m-auto p-56">
+              <Spin size="large" />
+            </p>
           ) : ambulanceData?.length == 0 ? (
             <p className="text-center text-xl text-primary-100">
               No data available
@@ -549,22 +604,22 @@ const RegionFiles = () => {
                         </button>{" "}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <td className="whitespace-nowrap px-3 py-4 text-xs">
                       {region?.phone_numbers?.map((phone_numbers) => (
                         <p
                           key={phone_numbers?.id}
-                          className="text-base text-right"
+                          className=" text-right text-xs"
                         >
                           {phone_numbers?.number}
                         </p>
                       ))}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
+                    <td className="whitespace-nowrap px-3 py-4 text-xs">
                       <span className="inline-flex items-center rounded-full  px-2 py-1 text-xs font-medium ">
                         {region?.ambulances?.length}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-3 py-1 mt-4 text-sm">
+                    <td className="whitespace-nowrap px-3 py-1 mt-4 text-xs">
                       {" "}
                       <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                         {region?.status}
@@ -573,10 +628,10 @@ const RegionFiles = () => {
                     {/* <td className="whitespace-nowrap px-3 py-4 text-sm">
                   {region.latitude} {region.longitude}
                 </td> */}
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
+                    <td className="whitespace-nowrap px-3 py-4 text-xs">
                       {region?.address}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
+                    <td className="whitespace-nowrap px-3 py-4 text-xs">
                       {region?.name}
                     </td>
                   </tr>
@@ -591,9 +646,11 @@ const RegionFiles = () => {
           <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
-                width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => {
+                  setIsModalOpen(false);
+                  CreateRegion.resetForm();
+                }}
               />
               <h3 className="text-xl font-semibold">Create Region</h3>
             </div>
@@ -607,13 +664,13 @@ const RegionFiles = () => {
 
                     <AntSelect
                       mode="multiple"
-                      value={options || []}
+                      value={options}
                       placeholder="Select"
                       onChange={(value) => handleChange(value)}
                       options={myData}
                       showSearch
                       optionFilterProp="label"
-                      className="w-full"
+                      className="w-full mt-2"
                     />
                   </div>
                   {/* <div>
@@ -652,11 +709,11 @@ const RegionFiles = () => {
                       <input
                         onClick={() => setOpen(true)}
                         onChange={CreateRegion.handleChange}
-                        value={CreateRegion.values.address}
+                        value={locationAddress?.address}
                         type="text"
                         name="addresss"
                         id="addresss"
-                        className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        className="peer mt-3 block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         placeholder=" Choose On Map"
                         required
                         readOnly
@@ -708,18 +765,6 @@ const RegionFiles = () => {
                             newPhoneNumber ? "w-11/12" : "w-full"
                           }`}
                         >
-                          {/* <InputMask
-															mask="00218 99 9999999"
-															maskChar=""
-															placeholder="00218 XX XXXXXXX"
-															onChange={(e) => setNewPhoneNumber(e.target.value)}
-															value={newPhoneNumber}
-															type="tel"
-															name="phone_numbers"
-															id="phone_numbers"
-															className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-															required
-														/> */}
                           <InputMask
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
@@ -731,14 +776,7 @@ const RegionFiles = () => {
                             id="phone_numbers"
                             className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           />
-                          {/* <input
-															type="number"
-															onChange={(e) => setNewPhoneNumber(e.target.value)}
-															value={newPhoneNumber}
-															placeholder="Enter Phone Number"
-															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-															{...(phoneNumbers ? { required: false } : { required: true })}
-														/> */}
+
                           <div
                             className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                             aria-hidden="true"
@@ -1116,63 +1154,52 @@ const RegionFiles = () => {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform mx-auto w-[90rem] h-screen overflow-hidden rounded-lg bg-white  shadow-xl transition-all">
-                  <div className="mt-2">
+                <Dialog.Panel className="relative transform mx-auto w-[90rem] h-screen overflow-hidden rounded-lg bg-white shadow-xl transition-all">
+                  <div className="flex flex-col h-full">
                     <div
-                      style={{
-                        width: "100%",
-                        height: "100vh",
-                      }}
+                      id="pac-card"
+                      className="flex rounded-md gap-10 justify-center my-4 p-4 bg-white relative z-10"
                     >
-                      {" "}
-                      <div
-                        id="pac-card"
-                        className="flex rounded-md gap-10 justify-center my-4"
-                      >
-                        <input
-                          id="address"
-                          name="address"
-                          required
-                          className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                          type="text"
-                          placeholder="Enter a location"
-                          onChange={handlePlaceChange}
-                          // value={createIncident.values.informer_address}
-                        />
-                        <div style={{ marginTop: "10px" }}>
-                          <strong>Address:</strong> {address}
-                        </div>
-                        <button
-                          onClick={() => setOpen(false)}
-                          className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
-                        >
-                          Close
-                        </button>
+                      <input
+                        id="address"
+                        name="address"
+                        required
+                        className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        type="text"
+                        placeholder="Enter a location"
+                        onChange={handlePlaceChange}
+                      />
+                      <div style={{ marginTop: "10px" }}>
+                        <strong>Address:</strong> {address}
                       </div>
-                      <div
-                        id="map"
-                        // style={{ height: "0px", width: "0px" }}
-                      ></div>
-                      <Map
-                        google={google}
-                        zoom={10}
-                        onClick={handleMapClick}
-                        zoomControlOptions={{
-                          position: ControlPosition.BOTTOM_LEFT,
-                        }}
-                        mapTypeControlOptions={{
-                          position: ControlPosition.TOP_CENTER,
-                        }}
-                        initialCenter={position}
-                        center={position}
+                      <button
+                        onClick={() => setOpen(false)}
+                        className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
                       >
-                        <Marker
-                          position={position}
-                          draggable={true}
-                          onDragend={handleMarkerDragEnd}
-                        />
-                      </Map>
+                        Close
+                      </button>
                     </div>
+                    <Map
+                      google={google}
+                      zoom={10}
+                      onClick={handleMapClick}
+                      disableDefaultUI
+                      zoomControlOptions={{
+                        position: ControlPosition.BOTTOM_LEFT,
+                      }}
+                      mapTypeControlOptions={{
+                        position: ControlPosition.TOP_CENTER,
+                      }}
+                      initialCenter={position}
+                      center={position}
+                      className="flex-grow z-0"
+                    >
+                      <Marker
+                        position={position}
+                        draggable={true}
+                        onDragend={handleMarkerDragEnd}
+                      />
+                    </Map>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

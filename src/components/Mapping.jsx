@@ -7,7 +7,7 @@ import { Vars } from "../helpers/helpers";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import { Toaster, toast } from "sonner";
 import Select from "react-tailwindcss-select";
-
+import { Spin } from "antd";
 export default function Mapping() {
   const [departmentMapping, setDepartmentMapping] = useState(false);
   const [incidentTypeMapping, setIncidentTypeMapping] = useState(false);
@@ -286,21 +286,21 @@ export default function Mapping() {
           </div>
           <div className="flex justify-end ">
             <Tab
-              selected={activeTab === "departmentMapping"}
-              title="Department Mapping"
-              onClick={() => handleTabChange("departmentMapping")}
-              className={`${
-                activeTab === "departmentMapping"
-                  ? "bg-blue-500 text-white"
-                  : "bg-white text-blue-500"
-              }`}
-            />
-            <Tab
               selected={activeTab === "incidentTypeMapping"}
               title="Incident Type Mapping"
               onClick={() => handleTabChange("incidentTypeMapping")}
               className={`${
                 activeTab === "incidentTypeMapping"
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-blue-500"
+              }`}
+            />{" "}
+            <Tab
+              selected={activeTab === "departmentMapping"}
+              title="Department Mapping"
+              onClick={() => handleTabChange("departmentMapping")}
+              className={`${
+                activeTab === "departmentMapping"
                   ? "bg-blue-500 text-white"
                   : "bg-white text-blue-500"
               }`}
@@ -346,7 +346,7 @@ export default function Mapping() {
                   <div className="bg-white p-2 rounded-lg shadow my-2">
                     {loading ? (
                       <p className="text-gray-700 text-center">
-                        Loading departments...
+                        <Spin size="large" />{" "}
                       </p>
                     ) : (
                       <table className="w-full">
