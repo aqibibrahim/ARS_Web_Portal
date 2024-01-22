@@ -56,23 +56,26 @@ const HealthCareForm = ({ onClick, datatt }) => {
     const fetchRegionData = async () => {
       try {
         await axios
-          .get(`https://ars.disruptwave.com/api/facilities`, {
-            headers: headers,
-          })
+          .get(
+            `https://ars.disruptwave.com/api/get-available-facilities?incident_id=${datatt}`,
+            {
+              headers: headers,
+            }
+          )
           .then((response) => {
             // setMyData(response.data?.data?.map(variant => ({
             //    label:variant.model, value: variant.id ,persons_supported:variant.persons_supported, id_no: variant.id_no
             // })))
             // setIsLoading(false);
             setMenuIsOpen(response?.data?.data);
-            console.log(response?.data?.data);
+            console.log(response?.data?.data, "asds");
           });
       } catch (e) {
         console.log(e);
       }
     };
     fetchRegionData();
-  }, []);
+  }, [datatt]);
   useEffect(() => {
     const fetchsingleincidentsData = async () => {
       try {
@@ -144,12 +147,22 @@ const HealthCareForm = ({ onClick, datatt }) => {
             key={ambulance?.id}
             className="flex mt-4 flex-col hover:bg-gray-100 cursor-pointer justify-end gap-1 border border-gray-400 p-1 rounded-md mb-2 text-gray-800"
           >
-            <p className="text-right">Model:{ambulance?.model}</p>
+            <p className="text-right">
+              Model:
+              {ambulance?.make +
+                " " +
+                ambulance?.model +
+                " " +
+                ambulance?.plate_no}
+            </p>
             <p className="text-right">
               Persons Supported:{ambulance?.persons_supported}
-            </p>
+            </p>{" "}
+            {/* <p className="text-right">
+              Persons Supported:
+              {ambulance?.distance_info}
+            </p> */}
             <p className="text-right">Id No:{ambulance?.id_no}</p>
-
             {disabledAmbulanceIDs.includes(ambulance?.id) && (
               <div key={ambulance?.id}>
                 <div className="border-t-4 flex justify-around ">
@@ -189,9 +202,17 @@ const HealthCareForm = ({ onClick, datatt }) => {
                     </span>
                   ))}
                 </p>
+                <p>
+                  <span>Focal Person: </span>
+                  {selectedFacilityOption?.focal_persons?.map((person) => (
+                    <span key={person?.id}>
+                      {person?.first_name}
+                      {person?.last_name}
+                    </span>
+                  ))}
+                </p>
               </div>
             )}
-
             {!disabledAmbulanceIDs.includes(ambulance?.id) && (
               <button
                 onClick={() => {

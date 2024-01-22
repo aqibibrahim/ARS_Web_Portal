@@ -97,7 +97,9 @@ export default function IncidentList({}) {
     {}
   );
   const [activeIncidents, setActiveIncidents] = useState([]);
+  const [completedIncidentDetails, setCompletedIncidentDetails] = useState([]);
   const [completedIncidents, setCompletedIncidents] = useState([]);
+  const [completedIncidentsView, setCompletedIncidentsView] = useState(false);
   const handleAssignAmbulanceAndhealthCare = (data) => {
     if (data === "Assign Ambulance") {
       setAssignAmbulance(true);
@@ -135,9 +137,8 @@ export default function IncidentList({}) {
           setIncidentData(response.data?.data);
           if (status === "active") {
             setActiveIncidents(response.data?.data);
-          } else if (status === "Complete") {
-            setCompletedIncidents(response.data?.data);
           }
+
           setTotalIncidents(response.data?.data?.total || 0);
           setIsLoading(false);
           console.log(response?.data?.data);
@@ -146,7 +147,34 @@ export default function IncidentList({}) {
       console.log(e);
     }
   };
+  const fetchCompleteincidentData = async () => {
+    try {
+      await axios
+        .get(`https://ars.disruptwave.com/api/view-incidents-history`, {
+          headers: headers,
+          params: {
+            // page,
+            // per_page: itemsPerPage,
+            // status,
+          },
+        })
+        .then((response) => {
+          setCompletedIncidents(response.data?.data.reverse());
+          // if (status === "active") {
+          //   setActiveIncidents(response.data?.data);
+          // } else if (status === "Complete") {
+          //   setCompletedIncidents(response.data?.data);
+          // }
+          // setTotalIncidents(response.data?.data?.total || 0);
+          setIsLoading(false);
+          console.log(response?.data?.data);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
+    fetchCompleteincidentData();
     fetchincidentData(
       currentPage,
       activeTab === "active" ? "active" : "Complete"
@@ -260,39 +288,39 @@ export default function IncidentList({}) {
   // 	fetchAmbulanceData()
   // }, [])
 
-  useEffect(() => {
-    const fetchSingleIncident = async () => {
-      console.log("Hello", selectedIncident);
-      try {
-        await axios
-          .get(
-            `https://ars.disruptwave.com/api/incidents/${selectedIncident.id}`,
-            {
-              headers: headers,
-            }
-          )
-          .then((response) => {
-            setShowAssignAmbulance(response?.data?.data?.ambulances);
+  // useEffect(() => {
+  //   const fetchSingleIncident = async () => {
+  //     console.log("Hello", selectedIncident);
+  //     try {
+  //       await axios
+  //         .get(
+  //           `https://ars.disruptwave.com/api/incidents/${selectedIncident.id}`,
+  //           {
+  //             headers: headers,
+  //           }
+  //         )
+  //         .then((response) => {
+  //           setShowAssignAmbulance(response?.data?.data?.ambulances);
 
-            // setMyData(
-            // 	response.data?.data?.map((variant) => ({
-            // 		label: variant.model,
-            // 		value: variant.id,
-            // 		persons_supported: variant.persons_supported,
-            // 		make: variant.make,
-            // 		plate_no: variant.plate_no,
-            // 		id_no: variant.id_no,
-            // 	}))
-            // )
-            // setIsLoading(false);
-            console.log(response?.data?.data);
-          });
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchSingleIncident();
-  }, [deleteModal, assignedAmbulance]);
+  //           // setMyData(
+  //           // 	response.data?.data?.map((variant) => ({
+  //           // 		label: variant.model,
+  //           // 		value: variant.id,
+  //           // 		persons_supported: variant.persons_supported,
+  //           // 		make: variant.make,
+  //           // 		plate_no: variant.plate_no,
+  //           // 		id_no: variant.id_no,
+  //           // 	}))
+  //           // )
+  //           // setIsLoading(false);
+  //           console.log(response?.data?.data);
+  //         });
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
+  //   fetchSingleIncident();
+  // }, [deleteModal, assignedAmbulance]);
   const assignAmbulance = useFormik({
     initialValues: {
       ambulances: "",
@@ -732,11 +760,11 @@ export default function IncidentList({}) {
                     </tr>
                   </thead>
                   <tbody>
-                    {completedIncidents?.data?.reverse().map((incident) => (
+                    {completedIncidents?.map((incident) => (
                       <tr key={incident?.id} className="hover:bg-gray-100">
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                           <span className="flex items-center justify-center gap-5">
-                            <button
+                            {/* <button
                               onClick={() => {
                                 handleEditClick(incident);
                                 sethealthCare(false);
@@ -745,12 +773,14 @@ export default function IncidentList({}) {
                               className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                             >
                               <BiEdit />
-                            </button>
+                            </button> */}
                             <button
                               onClick={() => {
-                                getIncidentDetail(incident?.id);
+                                // getIncidentDetail(incident?.id);
+                                setCompletedIncidentsView(true);
                                 sethealthCare(false);
                                 setSelectedHealthCareOpetion({});
+                                setCompletedIncidentDetails(incident);
                               }}
                               className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                             >
@@ -760,42 +790,45 @@ export default function IncidentList({}) {
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-xs">
                           <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                            {incident.status}
+                            {console.log(incident.incident, "asdd")}
+                            {incident.incident.status}
                           </span>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-xs">
-                          {incident?.informer?.phone_numbers?.map((phone) => (
-                            <div key={phone.id}>{phone.number}</div>
-                          ))}
+                          {incident?.incident?.informer?.phone_numbers?.map(
+                            (phone) => (
+                              <div key={phone.id}>{phone.number}</div>
+                            )
+                          )}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-xs">
                           {" "}
-                          {incident?.created_by?.first_name +
+                          {incident?.incident?.created_by?.first_name +
                             " " +
-                            incident?.created_by?.last_name}
+                            incident?.incident?.created_by?.last_name}
                         </td>
 
                         <td
                           className={`whitespace-nowrap px-3 py-4 text-xs ${
-                            incident.type === "Critical"
+                            incident.incident.type === "Critical"
                               ? "text-red-500"
                               : "text-green-500"
                           }`}
                         >
-                          {incident?.type}
+                          {incident?.incident.type}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-xs">
-                          {incident?.incident_type?.name}
+                          {incident?.incident?.incident_type_id}
                         </td>
                         <td className=" px-3 py-4 text-xs">
-                          {incident?.informer?.name}
+                          {incident?.incident?.informer?.name}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
                 <div className="flex justify-end mt-5 ">
-                  <Pagination
+                  {/* <Pagination
                     current={currentPage}
                     className="flex text-sm text-semi-bold mb-2"
                     total={totalIncidents}
@@ -805,7 +838,7 @@ export default function IncidentList({}) {
                     showTotal={(total, range) =>
                       `${range[0]}-${range[1]} of ${total} incidents`
                     }
-                  />
+                  /> */}
                 </div>
               </>
             )}
@@ -1105,7 +1138,249 @@ export default function IncidentList({}) {
             </div>
           </div>
         )}
+        {completedIncidentsView && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+            <div className="mx-auto mt-10 p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+              <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
+                <BsArrowRightCircle
+                  width={9}
+                  className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
+                  onClick={() => setCompletedIncidentsView(false)}
+                />
+                <h3 className="text-xl font-semibold ">
+                  Incident Details
+                  {/* <span className="text-red-600 ml-2">
+                    {completedIncidentDetails?.incident?.status}
+                  </span> */}
+                </h3>
+              </div>
+              <div className="p-5 text-right">
+                <p className="text-xl text-right font-bold">Informer Details</p>
+                <p>
+                  <span className="font-semibold">Name: </span>{" "}
+                  {completedIncidentDetails?.incident?.informer?.name}
+                </p>
+                <p>
+                  {" "}
+                  <span className="font-semibold">Phone Number: </span>{" "}
+                  {
+                    completedIncidentDetails?.incident.informer
+                      ?.phone_numbers[0]?.number
+                  }
+                </p>
+              </div>
+              <div className="p-5 text-right">
+                <p className="text-xl text-right font-bold">Incident Details</p>
+                <p>
+                  <span className="font-semibold">Incident Status: </span>{" "}
+                  <span className="text-green-500">
+                    {completedIncidentDetails?.incident?.status}
+                  </span>
+                </p>
+                <p>
+                  {" "}
+                  <span className="font-semibold"> Incident Type: </span>{" "}
+                  <span
+                    className={`${
+                      completedIncidentDetails?.incident?.type === "Critical"
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }`}
+                  >
+                    {completedIncidentDetails?.incident?.type}
+                  </span>
+                </p>{" "}
+                {/* <p>
+                  {" "}
+                  <span className="font-semibold">
+                    {" "}
+                    Number of Person:{" "}
+                  </span>{" "}
+                  {completedIncidentDetails?.incident?.number_of_persons}
+                </p> */}
+              </div>
+              <div>
+                {/* <div className=" text-right p-5">
+                <p>
+                  {" "}
+                  <span className="font-semibold text-right">
+                    Phone No:{" "}
+                  </span>{" "}
+                  {selectedIncident?.informer?.phone_numbers[0]?.number}
+                </p> */}
+                {/* <p>
+                  <span className="font-semibold">Model:</span>{" "}
+                  {selectedAmbulance?.model}
+                </p>
+                <p>
+                  <span className="font-semibold">Plate#:</span>{" "}
+                  {selectedAmbulance?.plate_no}
+                </p> */}
+                {/* </div> */}
+                <div className="px-5">
+                  <p className="text-lg text-right font-semibold">
+                    Ambulance Details
+                  </p>
+                  <div
+                    className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2"
+                    key={completedIncidentDetails.ambulance.id}
+                  >
+                    <div className="flex flex-col">
+                      <div className="flex gap-20 justify-evenly text-sm ">
+                        {/* <p className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center">
+                          {index + 1}
+                        </p> */}
+                        <p>
+                          {" "}
+                          <span className="font-semibold">Make: </span>{" "}
+                          {completedIncidentDetails.ambulance?.make}
+                        </p>
+                        <p>
+                          <span className="font-semibold">Model:</span>{" "}
+                          {completedIncidentDetails.ambulance.model}
+                        </p>
+                        <p>
+                          <span className="font-semibold">Plate#:</span>{" "}
+                          {completedIncidentDetails.ambulance?.plate_no}
+                        </p>
+                        {/* <p>
+                          <span className="font-semibold">Status:</span>{" "}
+                          {completedIncidentDetails.ambulance?.status}
+                        </p> */}
+                      </div>
+                      {/* <p className="text-md m-5 text-right font-semibold">
+                        Equipments Details
+                      </p> */}
+                      {/* {ambulance.equipments.map((equipmentDetails, index) => (
+                        <div
+                          className="flex flex-row justify-between p-5 px-10  w-full  bg-gray-200 mb-5 mt-2"
+                          key={equipmentDetails?.id}
+                        >
+                          <div className="flex justify-between gap-16 w-full   ">
+                            <p className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center">
+                              {index + 1}
+                            </p>
+                            <p>
+                              {" "}
+                              <span className="font-semibold">Name: </span>
+                              {equipmentDetails?.name}
+                            </p>
+                            <p>
+                              <span className="font-semibold">Status:</span>{" "}
+                              {equipmentDetails?.status}
+                            </p>
+                          </div>
+                        </div>
+                      ))} */}
+                    </div>
+                  </div>
+                </div>
 
+                <div className="px-5">
+                  <p className="text-lg text-right font-semibold">
+                    Facility Details
+                  </p>
+                  {/* {completedIncidentDetails?.ambulances?.length > 0 ? (
+                    showData?.ambulances?.map((facility, index) => ( */}
+                  <div
+                    className="flex flex-row justify-between p-4 bg-gray-100 mb-5 mt-2"
+                    key={completedIncidentDetails.facility?.id}
+                  >
+                    <div className="flex justify-between gap-8  ">
+                      {/* <p className="bg-blue-200 p-2 rounded-full w-7 h-7 flex items-center justify-center">
+                        {index + 1}
+                      </p> */}
+                      <p>
+                        {" "}
+                        <span className="font-semibold text-base">
+                          Name:{" "}
+                        </span>{" "}
+                        <span className="text-sm">
+                          {" "}
+                          {completedIncidentDetails?.facility?.name
+                            ? completedIncidentDetails?.facility?.name
+                            : "Not Assigned"}
+                        </span>
+                      </p>
+                      <p>
+                        <span className="font-semibold">Status:</span>{" "}
+                        <span className="text-sm">
+                          {" "}
+                          {completedIncidentDetails?.facility?.status
+                            ? completedIncidentDetails?.facility?.status
+                            : "Not Available"}
+                        </span>
+                      </p>
+                      <p>
+                        <span className="font-semibold">Address: </span>{" "}
+                        <span className="text-sm">
+                          {completedIncidentDetails?.facility?.address
+                            ? completedIncidentDetails?.facility?.address
+                            : "Not Available"}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* ))
+                  ) : (
+                    <p className="text-right">No Data Found</p>
+                  )} */}
+                </div>
+                <div className="px-5">
+                  <p className="text-lg text-right font-semibold">
+                    Driver Details
+                  </p>
+                  <div
+                    className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2"
+                    key={completedIncidentDetails?.driver.id}
+                  >
+                    <div className="flex flex-col">
+                      <div className="flex justify-between gap-12 text-sm ">
+                        {/* <p className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center">
+                          {index + 1}
+                        </p> */}
+                        <p>
+                          {" "}
+                          <span className="font-semibold">Name: </span>{" "}
+                          {completedIncidentDetails.driver?.first_name}
+                        </p>
+                        <p>
+                          <span className="font-semibold">Email:</span>{" "}
+                          {completedIncidentDetails.driver?.email}
+                        </p>
+                      </div>
+                      {/* <p className="text-md m-5 text-right font-semibold">
+                        Equipments Details
+                      </p> */}
+                      {/* {ambulance.equipments.map((equipmentDetails, index) => (
+                        <div
+                          className="flex flex-row justify-between p-5 px-10  w-full  bg-gray-200 mb-5 mt-2"
+                          key={equipmentDetails?.id}
+                        >
+                          <div className="flex justify-between gap-16 w-full   ">
+                            <p className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center">
+                              {index + 1}
+                            </p>
+                            <p>
+                              {" "}
+                              <span className="font-semibold">Name: </span>
+                              {equipmentDetails?.name}
+                            </p>
+                            <p>
+                              <span className="font-semibold">Status:</span>{" "}
+                              {equipmentDetails?.status}
+                            </p>
+                          </div>
+                        </div>
+                      ))} */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <Transition.Root show={isDelete} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={setDelete}>
             <Transition.Child

@@ -109,7 +109,6 @@ const AmbulanceFiles = () => {
       address: "",
     });
     if (ambulance?.equipments.length === 0) {
-      s;
       setEditOptions(null);
     } else {
       setEditOptions(
@@ -189,8 +188,8 @@ const AmbulanceFiles = () => {
         gps_no: values.gps_no,
         persons_supported: values.persons_supported,
         password: values.password,
-        gps_latitude: "77.89797",
-        gps_longitude: "-77.84568",
+        gps_latitude: locationAddress?.latitude,
+        gps_longitude: locationAddress?.longitude,
         parking_latitude: locationAddress?.latitude,
         parking_longitude: locationAddress?.longitude,
         equipments: options?.map((item) => item?.value),
@@ -582,6 +581,12 @@ const AmbulanceFiles = () => {
                     <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
                       <span className="sr-only">Edit</span>
                     </th>
+                    {/* <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
+                      >
+                        Region
+                      </th>{" "} */}
                     <th
                       scope="col"
                       className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
@@ -612,7 +617,6 @@ const AmbulanceFiles = () => {
                     >
                       Status
                     </th>
-
                     <th
                       scope="col"
                       className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500 "
@@ -651,7 +655,9 @@ const AmbulanceFiles = () => {
                           </button>
                         </span>
                       </td>
-
+                      {/* <td className="whitespace-nowrap px-3 py-4 text-xs">
+                        {ambulance?.regions[0]?.name}
+                      </td> */}
                       <td className="whitespace-nowrap px-3 py-4 text-xs">
                         {ambulance.model}
                       </td>
@@ -765,14 +771,14 @@ const AmbulanceFiles = () => {
                   zoom={10}
                   style={{ width: "100%", height: "100%" }}
                   initialCenter={{
-                    lat: parseFloat(selectedAmbulance?.parking_latitude),
-                    lng: parseFloat(selectedAmbulance?.parking_longitude),
+                    lat: parseFloat(selectedAmbulance?.gps_latitude),
+                    lng: parseFloat(selectedAmbulance?.gps_longitude),
                   }}
                 >
                   <Marker
                     position={{
-                      lat: parseFloat(selectedAmbulance?.parking_latitude),
-                      lng: parseFloat(selectedAmbulance?.parking_longitude),
+                      lat: parseFloat(selectedAmbulance?.gps_latitude),
+                      lng: parseFloat(selectedAmbulance?.gps_longitude),
                     }}
                   />
                 </Map>
