@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StyledInput from "./StyledInput";
 import { Toaster, toast } from "sonner";
-
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // Track password visibility
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -72,16 +75,26 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div className="mb-6">
+        <div className="mb-6 relative rtl">
           <StyledInput
             label={"Password"}
             id={"password"}
-            type={"password"}
+            type={showPassword ? "text" : "password"} // Toggle between text and password
             placeholder={"Password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="pl-10" // Add padding to accommodate the icon
           />
+          {/* Show/Hide password button */}
+          <button
+            type="button"
+            onClick={togglePasswordVisibility}
+            className="relative -top-7 left-1 cursor-pointer z-10"
+          >
+            {showPassword ? <BsEyeSlash /> : <BsEye />}
+          </button>
         </div>
+
         <div className="flex items-center justify-between">
           {loading ? (
             <div
