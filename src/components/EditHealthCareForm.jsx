@@ -116,7 +116,7 @@ const EditHealthCare = ({ openModal, datatt }) => {
         .patch(`${Vars.domain}/ambulances/${ambulanceID}`, JSON, config)
         .then((res) => {
           console.log(res);
-          toast.success("Updated Successfuly");
+          toast.success("Healthcare Assigned Successfuly");
           setBtnDisbale(true);
           setOpen(false);
           // openModal(false);
@@ -143,13 +143,19 @@ const EditHealthCare = ({ openModal, datatt }) => {
         showAssignAmbulance?.map((ambulance, index) => (
           <div
             key={ambulance?.id}
-            className="flex mt-4 flex-col hover:bg-gray-100 cursor-pointer justify-end gap-1 border border-gray-400 p-1 rounded-md mb-2 text-gray-800"
+            className="flex mt-4 m-5 flex-col hover:bg-gray-100 cursor-pointer justify-end gap-1 border border-gray-400 p-1 rounded-md mb-2 text-gray-800"
           >
-            <p className="text-right">Model:{ambulance?.model}</p>
             <p className="text-right">
-              Persons Supported:{ambulance?.persons_supported}
+              Model: {ambulance?.make} {ambulance?.model} {ambulance?.plate_no}
             </p>
             <p className="text-right">Id No:{ambulance?.id_no}</p>
+            <p className="text-right">
+              Persons Supported:{ambulance?.persons_supported}
+            </p>{" "}
+            <p className="text-right">Drver: {ambulance?.driver?.first_name}</p>{" "}
+            <p className="text-right">
+              Driver Email: {ambulance?.driver?.email}
+            </p>{" "}
             {ambulance?.facility ? (
               <div key={ambulance?.id}>
                 <div className="border-t-4 flex justify-around ">
@@ -177,8 +183,8 @@ const EditHealthCare = ({ openModal, datatt }) => {
                 <p>
                   <span>Email: </span>{" "}
                   {selectedFacilityOption?.email || ambulance?.facility?.email}
-                </p>
-                <p>
+                </p>{" "}
+                {/* <p>
                   <span>Phone Number: </span>
                   {ambulance
                     ? ambulance?.facility?.phone_numbers?.map((phone) => (
@@ -187,8 +193,8 @@ const EditHealthCare = ({ openModal, datatt }) => {
                     : selectedFacilityOption?.phone_numbers?.map((phone) => (
                         <span key={phone?.id}>{phone?.number}</span>
                       ))}
-                </p>
-                <p>
+                </p> */}
+                {/* <p>
                   <span>Focal Person: </span>
                   {ambulance
                     ? ambulance?.facility?.focal_persons?.map((person) => (
@@ -203,7 +209,7 @@ const EditHealthCare = ({ openModal, datatt }) => {
                           {person?.last_name}
                         </span>
                       ))}
-                </p>
+                </p> */}
               </div>
             ) : (
               disabledAmbulanceIDs.includes(ambulance?.id) && (
@@ -264,7 +270,6 @@ const EditHealthCare = ({ openModal, datatt }) => {
                 </div>
               )
             )}
-
             {!disabledAmbulanceIDs.includes(ambulance?.id) && (
               <button
                 onClick={() => {

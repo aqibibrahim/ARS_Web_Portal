@@ -795,7 +795,9 @@ export default function RolesPermission() {
                     <div className="flex justify-end">
                       {" "}
                       <button
-                        onClick={() => {}}
+                        onClick={() => {
+                          NewUser();
+                        }}
                         className="text-white  bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm "
                       >
                         + Create New User

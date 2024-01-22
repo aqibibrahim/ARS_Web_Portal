@@ -1085,13 +1085,13 @@ const HealthCareFiles = () => {
                   </p>
                 ))}
               </div>
-              <div className="h-80 w-10">
+              <div className="h-80 z-50 relative">
                 <Map
                   google={window.google}
                   zoom={8}
                   style={{ width: "100%", height: "100%" }}
                   initialCenter={{
-                    lat: parseFloat(selectedHealthCare?.latitude - 0.956858),
+                    lat: parseFloat(selectedHealthCare?.latitude),
                     lng: parseFloat(selectedHealthCare?.longitude),
                   }}
                 >

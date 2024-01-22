@@ -32,11 +32,9 @@ export default function DriverMain() {
     pin: "",
   });
   const [updatePinState, setupdatePinState] = useState({
-    oldPin: "",
     newPin: "",
   });
   const [validationErrors, setValidationErrors] = useState({
-    oldPin: "",
     newPin: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,12 +56,10 @@ export default function DriverMain() {
   };
   const resetPinState = () => {
     setupdatePinState({
-      oldPin: "",
       newPin: "",
     });
     // Reset any validation errors
     setValidationErrors({
-      oldPin: "",
       newPin: "",
     });
   };
@@ -110,33 +106,22 @@ export default function DriverMain() {
     let isValid = true;
 
     // Validate old PIN
-    if (!updatePinState.oldPin.trim()) {
-      errors.oldPin = "Old PIN is required";
-      isValid = false;
-    } else if (
-      updatePinState.oldPin.length !== 6 ||
-      !/^\d+$/.test(updatePinState.oldPin)
-    ) {
-      errors.oldPin = "Old PIN must be a 6-digit number";
-      isValid = false;
-    }
 
     // Validate new PIN
     if (!updatePinState.newPin.trim()) {
       errors.newPin = "New PIN is required";
       isValid = false;
-    } else if (
-      updatePinState.newPin.length !== 6 ||
-      !/^\d+$/.test(updatePinState.newPin)
-    ) {
+    } else if (updatePinState.newPin.length !== 6) {
       errors.newPin = "New PIN must be a 6-digit number";
       isValid = false;
     }
 
+    // Additional validation for other PIN rules if needed
     setValidationErrors(errors);
 
-    return isValid;
+    return { errors, isValid };
   };
+
   const handlePinChange = (event) => {
     const inputValue = event.target.value;
     const maxLength = 6;
@@ -230,8 +215,9 @@ export default function DriverMain() {
     DeleteDriver();
   };
   const handleNewPin = async () => {
-    try {
-      if (validatePinForm()) {
+    const { isValid } = validatePinForm();
+    if (isValid) {
+      try {
         var token = localStorage.getItem("token");
         const headers = {
           "Content-Type": "application/json",
@@ -240,7 +226,6 @@ export default function DriverMain() {
 
         const data = {
           new_pin: updatePinState.newPin,
-          old_pin: updatePinState.oldPin,
         };
 
         const response = await axios.patch(
@@ -258,9 +243,9 @@ export default function DriverMain() {
           setPinModal(false);
           setUpdatePINId("");
         }
+      } catch (error) {
+        toast.error(error?.response?.data?.message);
       }
-    } catch (error) {
-      toast.error(error?.response?.data?.message);
     }
   };
   const handleEditClick = (data) => {
@@ -481,7 +466,7 @@ export default function DriverMain() {
         okText="Update"
       >
         <div className="flex flex-col space-y-2 w-full">
-          <div>
+          {/* <div>
             <label
               htmlFor="email"
               className="block text-sm font-medium leading-6  text-gray-900 text-right"
@@ -510,7 +495,7 @@ export default function DriverMain() {
                 aria-hidden="true"
               />
             </div>
-          </div>
+          </div> */}
           <div>
             <label
               htmlFor="email"

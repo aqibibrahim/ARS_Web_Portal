@@ -119,7 +119,7 @@ const HealthCareForm = ({ onClick, datatt }) => {
         .patch(`${Vars.domain}/ambulances/${ambulanceID}`, JSON, config)
         .then((res) => {
           console.log(res);
-          toast.success("Updated Successfuly");
+          toast.success("HealthCare Assigned Successfuly");
           setBtnDisbale(true);
           setOpen(false);
         });
@@ -163,8 +163,14 @@ const HealthCareForm = ({ onClick, datatt }) => {
               {ambulance?.distance_info}
             </p> */}
             <p className="text-right">Id No:{ambulance?.id_no}</p>
+            <p className="text-right">
+              Drver: {ambulance?.driver?.first_name}
+            </p>{" "}
+            <p className="text-right">
+              Driver Email: {ambulance?.driver?.email}
+            </p>{" "}
             {disabledAmbulanceIDs.includes(ambulance?.id) && (
-              <div key={ambulance?.id}>
+              <div key={ambulance?.id} className="text-right">
                 <div className="border-t-4 flex justify-around ">
                   <p className="flex text-xl font-bold ">
                     Assigned Health Care
@@ -179,7 +185,7 @@ const HealthCareForm = ({ onClick, datatt }) => {
                   </button>
                 </div>
                 <p>
-                  <span>Name: </span> {selectedFacilityOption?.name}
+                  <span>Facility Name: </span> {selectedFacilityOption?.name}
                 </p>
                 <p>
                   <span>Address: </span> {selectedFacilityOption?.address}
@@ -187,13 +193,13 @@ const HealthCareForm = ({ onClick, datatt }) => {
                 <p>
                   <span>Email: </span> {selectedFacilityOption?.email}
                 </p>
-                <p>
+                {/* <p>
                   <span>Phone Number: </span>
                   {selectedFacilityOption?.phone_numbers?.map((phone) => (
                     <span key={phone?.id}>{phone?.number}</span>
                   ))}
-                </p>
-                <p>
+                </p> */}
+                {/* <p>
                   <span>Focal Person: </span>
                   {selectedFacilityOption?.focal_persons?.map((person) => (
                     <span key={person?.id}>
@@ -201,8 +207,19 @@ const HealthCareForm = ({ onClick, datatt }) => {
                       {person?.last_name}
                     </span>
                   ))}
-                </p>
+                </p> */}
                 <p>
+                  <span>Distance: </span>
+                  <span className=" text-green-400">
+                    {" "}
+                    {selectedFacilityOption?.distance_info?.rows[0]?.elements[0]
+                      ?.distance?.text +
+                      " " +
+                      selectedFacilityOption?.distance_info?.rows[0]
+                        ?.elements[0]?.duration?.text}
+                  </span>
+                </p>
+                {/* <p>
                   <span>Focal Person: </span>
                   {selectedFacilityOption?.focal_persons?.map((person) => (
                     <span key={person?.id}>
@@ -210,7 +227,7 @@ const HealthCareForm = ({ onClick, datatt }) => {
                       {person?.last_name}
                     </span>
                   ))}
-                </p>
+                </p> */}
               </div>
             )}
             {!disabledAmbulanceIDs.includes(ambulance?.id) && (
@@ -369,11 +386,11 @@ const HealthCareForm = ({ onClick, datatt }) => {
           Next
         </button> */}
                       <button
-                        className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
+                        className="text-white text-sm bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100"
                         type="submit"
                         onClick={createAssignAmbulance}
                       >
-                        Assign HealthCares
+                        Assign HealthCare
                       </button>
                     </div>
                   </div>

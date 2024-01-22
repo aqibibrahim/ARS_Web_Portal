@@ -68,6 +68,8 @@ export default function IncidentList({}) {
   };
   const [myData, setMyData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentCompletedPage, setCurrentCompletedPage] = useState(1);
+
   const itemsPerPage = 10;
   const [totalIncidents, setTotalIncidents] = useState("");
   const [updateFormOpen, setUpdateFormOpen] = useState(false);
@@ -128,7 +130,7 @@ export default function IncidentList({}) {
         .get(`https://ars.disruptwave.com/api/incidents`, {
           headers: headers,
           params: {
-            page,
+            page: currentPage,
             per_page: itemsPerPage,
             status,
           },
@@ -147,25 +149,24 @@ export default function IncidentList({}) {
       console.log(e);
     }
   };
-  const fetchCompleteincidentData = async () => {
+  const fetchCompleteincidentData = async (page = 1) => {
     try {
       await axios
         .get(`https://ars.disruptwave.com/api/view-incidents-history`, {
           headers: headers,
           params: {
-            // page,
-            // per_page: itemsPerPage,
-            // status,
+            page: currentCompletedPage,
+            per_page: itemsPerPage,
           },
         })
         .then((response) => {
-          setCompletedIncidents(response.data?.data.reverse());
+          setCompletedIncidents(response.data?.data?.data);
           // if (status === "active") {
           //   setActiveIncidents(response.data?.data);
           // } else if (status === "Complete") {
           //   setCompletedIncidents(response.data?.data);
           // }
-          // setTotalIncidents(response.data?.data?.total || 0);
+          setTotalIncidents(response.data?.data?.total || 0);
           setIsLoading(false);
           console.log(response?.data?.data);
         });
@@ -180,6 +181,9 @@ export default function IncidentList({}) {
       activeTab === "active" ? "active" : "Complete"
     );
   }, [deleteModal, currentPage, activeTab]);
+  useEffect(() => {
+    fetchCompleteincidentData();
+  }, [activeTab, currentCompletedPage]);
   // Healtcare Facility Get
   useEffect(() => {
     const fetchHealthCareData = async () => {
@@ -202,8 +206,8 @@ export default function IncidentList({}) {
   const fetchAmbulanceData = async (incident) => {
     const initialSelectedAmbulanceIds =
       incident?.ambulances?.map((ambulance) => ambulance.id) || [];
-
     setAssignedAmbulance(initialSelectedAmbulanceIds);
+
     try {
       await axios
         .get(
@@ -828,17 +832,17 @@ export default function IncidentList({}) {
                   </tbody>
                 </table>
                 <div className="flex justify-end mt-5 ">
-                  {/* <Pagination
-                    current={currentPage}
+                  <Pagination
+                    current={currentCompletedPage}
                     className="flex text-sm text-semi-bold mb-2"
                     total={totalIncidents}
                     pageSize={itemsPerPage}
-                    onChange={(page) => setCurrentPage(page)}
+                    onChange={(page) => setCurrentCompletedPage(page)}
                     showSizeChanger={false}
                     showTotal={(total, range) =>
                       `${range[0]}-${range[1]} of ${total} incidents`
                     }
-                  /> */}
+                  />
                 </div>
               </>
             )}
@@ -1237,7 +1241,7 @@ export default function IncidentList({}) {
                         </p>
                         <p>
                           <span className="font-semibold">Model:</span>{" "}
-                          {completedIncidentDetails.ambulance.model}
+                          {completedIncidentDetails.ambulance?.model}
                         </p>
                         <p>
                           <span className="font-semibold">Plate#:</span>{" "}
@@ -1321,11 +1325,6 @@ export default function IncidentList({}) {
                       </p>
                     </div>
                   </div>
-
-                  {/* ))
-                  ) : (
-                    <p className="text-right">No Data Found</p>
-                  )} */}
                 </div>
                 <div className="px-5">
                   <p className="text-lg text-right font-semibold">

@@ -27,19 +27,21 @@ export default function Gender() {
     editGenderName: "",
   });
 
-  const validateForm = () => {
-    const errors = {};
-    let isValid = true;
+  // const validateForm = () => {
+  //   const errors = {};
+  //   let isValid = true;
 
-    if (!state.GenderName.trim()) {
-      errors.GenderName = "Gender Name is required";
-      isValid = false;
-    }
+  //   if (!state.GenderName) {
+  //     errors.GenderName = "Gender Name is required";
+  //     isValid = false;
+  //   } else if (!state.editGenderName) {
+  //     errors.GenderName = "Gender Name is required";
+  //     isValid = false;
+  //   }
+  //   setValidationErrors(errors);
 
-    setValidationErrors(errors);
-
-    return isValid;
-  };
+  //   return isValid;
+  // };
   const resetValidationErrors = () => {
     setValidationErrors({
       IncidentTypeName: "",
@@ -48,10 +50,10 @@ export default function Gender() {
   };
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.value });
-    setEditIncidentType(event.target.value);
-    setValidationErrors({ ...validationErrors, [event.target.name]: "" });
+    // setEditIncidentType(event.target.value);
+    // setValidationErrors({ ...validationErrors, [event.target.name]: "" });
   };
-  const NewIncidentTypeCreation = () => {
+  const createNewGenderClick = () => {
     setIsModalOpen(true);
   };
   const handleCancel = () => {
@@ -80,19 +82,22 @@ export default function Gender() {
     };
     getGenders();
   }, [isModalOpen, editOpen, deleteModal]);
+
   const handleView = (data) => {
     setViewOpen(true);
     setEditData(data);
   };
   const handleEdit = (data) => {
     setEditOpen(true);
-    setEditIncidentType(data?.name);
+    setState({
+      editGenderName: data?.name,
+    });
     setEditIncidentID(data?.id);
   };
-  const createNewIncidentType = async () => {
-    if (!validateForm()) {
-      return;
-    }
+  const createNewGender = async () => {
+    // if (!validateForm()) {
+    //   return;
+    // }
 
     setIsLoading(true);
 
@@ -103,16 +108,16 @@ export default function Gender() {
         Authorization: `Bearer ${token}`,
       };
       const data = {
-        name: state?.IncidentTypeName,
+        name: state?.GenderName,
       };
 
-      const response = await axios.post(`${Vars.domain}/incident-type`, data, {
+      const response = await axios.post(`${Vars.domain}/genders`, data, {
         headers,
       });
       if (response.status === 200 || response.status === 201) {
-        toast.success("Incident Type Created Successfully");
+        toast.success("Gender Created Successfully");
         setIsLoading(false);
-        setState({ IncidentTypeName: "" });
+        setState({ GenderName: "" });
         setIsModalOpen(false);
       }
     } catch (error) {
@@ -123,11 +128,7 @@ export default function Gender() {
     setIsLoading(false);
   };
 
-  const editNewIncidentType = async () => {
-    if (!validateForm()) {
-      return;
-    }
-
+  const editGender = async () => {
     setIsLoading(true);
 
     try {
@@ -137,20 +138,19 @@ export default function Gender() {
         Authorization: `Bearer ${token}`,
       };
       const data = {
-        name: editIncidentType,
+        name: state.editGenderName, // Use state.editGenderName instead of editIncidentType
       };
 
       const response = await axios.patch(
-        `${Vars.domain}/incident-type/${editIncidentID}`,
+        `${Vars.domain}/genders/${editIncidentID}`,
         data,
         {
           headers,
         }
       );
       if (response.status === 200 || response.status === 201) {
-        toast.success("Incident Type Updated Successfully");
+        toast.success("Gender Updated Successfully");
         setIsLoading(false);
-        setEditIncidentType("");
         setEditIncidentID("");
         setEditOpen(false);
       }
@@ -162,7 +162,46 @@ export default function Gender() {
     setIsLoading(false);
   };
 
-  const deleteIncidentType = async () => {
+  // const editGender = async () => {
+  //   if (!validateForm()) {
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+
+  //   try {
+  //     var token = localStorage.getItem("token");
+  //     const headers = {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${token}`,
+  //     };
+  //     const data = {
+  //       name: editIncidentType,
+  //     };
+
+  //     const response = await axios.patch(
+  //       `${Vars.domain}/genders/${editIncidentID}`,
+  //       data,
+  //       {
+  //         headers,
+  //       }
+  //     );
+  //     if (response.status === 200 || response.status === 201) {
+  //       toast.success("Gender Updated Successfully");
+  //       setIsLoading(false);
+  //       setEditIncidentType("");
+  //       setEditIncidentID("");
+  //       setEditOpen(false);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating Incident Type:", error);
+  //     toast.error(error?.response?.data?.message);
+  //   }
+
+  //   setIsLoading(false);
+  // };
+
+  const deleteGender = async () => {
     setIsLoading(true);
 
     try {
@@ -173,13 +212,13 @@ export default function Gender() {
       };
 
       const response = await axios.delete(
-        `${Vars.domain}/incident-type/${deleteIncidentID}`,
+        `${Vars.domain}/genders/${deleteIncidentID}`,
         {
           headers,
         }
       );
       if (response.status === 204 || response.status === 201) {
-        toast.success("Incident Type Deleted Successfuly");
+        toast.success("Gender Deleted Successfuly");
         setIsLoading(false);
         setDeleteIncidentID("");
         setDeleteModal(false);
@@ -220,7 +259,7 @@ export default function Gender() {
                     <div className="relative mt-2">
                       <input
                         type="text"
-                        name="IncidentTypeName"
+                        name="GenderName"
                         onChange={handleChange}
                         value={state?.GenderName}
                         placeholder="Name of Gender"
@@ -252,7 +291,7 @@ export default function Gender() {
                   </button>
                 ) : (
                   <button
-                    onClick={createNewIncidentType}
+                    onClick={createNewGender}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
                     Create
@@ -274,7 +313,7 @@ export default function Gender() {
               />
               <h3 className="text-xl font-semibold">
                 Gender Details
-                <span className="text-lime-600 ml-2">{editData?.status}</span>
+                {/* <span className="text-lime-600 ml-2">{editData?.status}</span> */}
               </h3>
             </div>
             <div>
@@ -323,9 +362,9 @@ export default function Gender() {
                     <div className="relative mt-2">
                       <input
                         type="text"
-                        name="IncidentTypeName"
+                        name="editGenderName"
                         onChange={handleChange}
-                        value={editIncidentType}
+                        value={state?.editGenderName}
                         placeholder="Name of Incident Type"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
@@ -355,7 +394,7 @@ export default function Gender() {
                   </button>
                 ) : (
                   <button
-                    onClick={editNewIncidentType}
+                    onClick={editGender}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
                     Update
@@ -369,7 +408,7 @@ export default function Gender() {
       <Modal
         title="Are you sure to delete this Gender?"
         open={deleteModal}
-        onOk={deleteIncidentType}
+        onOk={deleteGender}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
@@ -389,7 +428,7 @@ export default function Gender() {
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
                 type="button"
                 onClick={() => {
-                  NewIncidentTypeCreation();
+                  createNewGenderClick();
                 }}
               >
                 + Create New Gender
@@ -406,21 +445,21 @@ export default function Gender() {
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Status
+                  {/* Status */}
                 </th>
 
-                {/* <th
+                <th
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  PIN
-                </th> */}
-                {/* <th
+                  {/* PIN */}
+                </th>
+                <th
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Driver Last Name
-                </th> */}
+                  {/* Driver Last Name */}
+                </th>
                 <th
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
@@ -462,9 +501,13 @@ export default function Gender() {
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-md">
-                    <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                      {data?.status}
-                    </span>
+                    <span className="">{/* {data?.status} */}</span>
+                  </td>{" "}
+                  <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <span className="">{/* {data?.status} */}</span>
+                  </td>{" "}
+                  <td className="whitespace-nowrap px-3 py-4 text-md">
+                    <span className="">{/* {data?.status} */}</span>
                   </td>{" "}
                   <td className="whitespace-nowrap px-3 py-4 text-md">
                     {data?.name}

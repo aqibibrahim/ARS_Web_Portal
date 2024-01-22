@@ -26,16 +26,16 @@ const tabConfig = {
   HealthCare: "Select HealthCare",
 };
 
-const EmergencyType = [
-  { label: "Critical", value: 1 },
-  { label: "Moderate", value: 2 },
-  { label: "Mild", value: 3 },
-];
-const Gender = [
-  { label: "Male", value: 1 },
-  { label: "Female", value: 2 },
-  { label: "Both", value: 3 },
-];
+// const EmergencyType = [
+//   { label: "Critical", value: 1 },
+//   { label: "Moderate", value: 2 },
+//   { label: "Mild", value: 3 },
+// ];
+// const Gender = [
+//   { label: "Male", value: 1 },
+//   { label: "Female", value: 2 },
+//   { label: "Both", value: 3 },
+// ];
 const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
   const [activeTab, setActiveTab] = useState("Incident");
   const [isAssignedAmbulancesVisible, setIsAssignedAmbulancesVisible] =
@@ -72,6 +72,7 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
         console.error("Error getting role:", error);
       }
     };
+
     getIncidentTypes();
   }, []);
 
@@ -186,7 +187,59 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
         console.error("Error getting role:", error);
       }
     };
+    const getGenders = async () => {
+      try {
+        var token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+
+        const response = await axios.get(`${Vars.domain}/genders`, {
+          headers,
+        });
+
+        if (response.status === 200 || response.status === 201) {
+          // set(response?.data?.data);
+          setGender(
+            response.data?.data?.map((variant) => ({
+              label: variant.name,
+              value: variant.id,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Error getting role:", error);
+      }
+    };
+    const getEmergencyType = async () => {
+      try {
+        var token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+
+        const response = await axios.get(`${Vars.domain}/emergency-types`, {
+          headers,
+        });
+
+        if (response.status === 200 || response.status === 201) {
+          // set(response?.data?.data);
+          setEmergencyType(
+            response.data?.data?.map((variant) => ({
+              label: variant.name,
+              value: variant.id,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Error getting role:", error);
+      }
+    };
+    getGenders();
     getIncidentTypes();
+    getEmergencyType();
   }, []);
   const [open, setOpen] = useState(false);
   const [emergencyOpen, setEmergecnyOpen] = useState(false);
@@ -194,6 +247,8 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
   const [selectedOption, setSelectedOption] = useState({});
   const [selectedEmergencyOption, setSelectedEmergencyOption] = useState({});
   const [selectedGender, setSelectedGender] = useState({});
+  const [gender, setGender] = useState([]);
+  const [emergencyType, setEmergencyType] = useState([]);
 
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [locationAddress, setLocationAddress] = useState({});
@@ -396,9 +451,9 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
               <button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="block text-sm font-sm leading-6 text-gray-900 text-right"
+                className=" text-sm  leading-6 text-gray-900 text-right w-full flex justify-end pr-2 "
               >
-                Choose Map
+                Choose Incident Location
               </button>
             </label>
             <div className="relative mt-2">
@@ -429,7 +484,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
               htmlFor="informer_name"
               className="block text-sm font-sm leading-6 text-gray-900 text-right placeholder:text-sm mr-2"
             >
-              Name
+              Informer Name
             </label>
             <div className="relative mt-2">
               <input
@@ -439,7 +494,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                 name="informer_name"
                 id="informer_name"
                 className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                placeholder="Enter Name"
+                placeholder="Enter Informer Name"
                 required
               />
               <div
@@ -484,7 +539,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             {({ open }) => (
               <>
                 <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
-                  Incident type
+                  Select Incident type
                 </Listbox.Label>
                 <div className="relative mt-2">
                   <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
@@ -563,7 +618,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             {({ open }) => (
               <>
                 <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
-                  Emergency type
+                  Select Emergency type
                 </Listbox.Label>
                 <div className="relative mt-2">
                   <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
@@ -586,7 +641,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                     leaveTo="opacity-0"
                   >
                     <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {EmergencyType.map((option) => (
+                      {emergencyType.map((option) => (
                         <Listbox.Option
                           key={option.label}
                           className={({ active }) =>
@@ -639,7 +694,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             {({ open }) => (
               <>
                 <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
-                  Gender{" "}
+                  Select Gender
                 </Listbox.Label>
                 <div className="relative mt-2">
                   <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
@@ -662,7 +717,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                     leaveTo="opacity-0"
                   >
                     <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {Gender.map((option) => (
+                      {gender.map((option) => (
                         <Listbox.Option
                           key={option.label}
                           className={({ active }) =>

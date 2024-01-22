@@ -4,6 +4,7 @@ import DepartmentsFiles from "./Super Admin Dashboard/Departments/DepartmentsFil
 import IncidentType from "./IncidentType";
 import Departments from "./Departments";
 import Gender from "./Gender";
+import EmergencyType from "./EmergencyType";
 const Lookups = () => {
   const [activeTab, setActiveTab] = useState("equipments");
 
@@ -60,7 +61,7 @@ const Lookups = () => {
                 : "bg-white text-blue-500"
             }`}
           />
-          {/* <Tab
+          <Tab
             selected={activeTab === "gender"}
             onClick={() => handleTabClick("gender")}
             title="Gender"
@@ -69,7 +70,17 @@ const Lookups = () => {
                 ? "bg-blue-500 text-white"
                 : "bg-white text-blue-500"
             }`}
-          />{" "} */}
+          />{" "}
+          <Tab
+            selected={activeTab === "emergencyType"}
+            title="Emergency Type"
+            onClick={() => handleTabClick("emergencyType")}
+            className={`${
+              activeTab === "emergencyType"
+                ? "bg-blue-500 text-white"
+                : "bg-white text-blue-500"
+            }`}
+          />
           <Tab
             selected={activeTab === "equipments"}
             title="Equipments"
@@ -85,7 +96,8 @@ const Lookups = () => {
       {activeTab === "equipments" && <Equipment />}
       {activeTab === "Departments" && <DepartmentsFiles />}
       {activeTab === "incidentType" && <IncidentType />}
-      {/* {activeTab === "gender" && <Gender />} */}
+      {activeTab === "emergencyType" && <EmergencyType />}
+      {activeTab === "gender" && <Gender />}
     </div>
   );
 };

@@ -753,9 +753,24 @@ const AmbulanceFiles = () => {
                     </p>
                   </div>
                 )}
+                <div className=" mt-2">
+                  <p className="text-lg text-right font-semibold">
+                    Driver Phone No.
+                  </p>
+                  {selectedAmbulance?.driver?.phone_numbers.map(
+                    (phone_numbers) => (
+                      <p
+                        key={phone_numbers.id}
+                        className="text-base text-right"
+                      >
+                        {phone_numbers.number}
+                      </p>
+                    )
+                  )}
+                </div>
                 {/* Add other details as needed */}
               </div>
-              <div className="px-5 mt-4">
+              <div className="px-5 mt-3 mb-2">
                 <p className="text-lg text-right font-semibold">
                   Equipment Details
                 </p>
@@ -765,7 +780,7 @@ const AmbulanceFiles = () => {
                   </p>
                 ))}
               </div>
-              <div className="h-80 z-50">
+              <div className="h-80 z-50 relative">
                 <Map
                   google={window.google}
                   zoom={10}
