@@ -350,7 +350,13 @@ const Maps = (props) => {
         height: "100vh",
       }}
     >
-      <Map Map google={google} zoom={10} initialCenter={position}>
+      <Map
+        Map
+        google={google}
+        zoom={10}
+        initialCenter={position}
+        disableDefaultUI
+      >
         {ambulanceData.map((c, index) => (
           <Marker
             key={c?.id}
