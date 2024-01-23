@@ -175,7 +175,8 @@ const Maps = (props) => {
         longitude: props?.gps_longitude,
         driver: driverInfo
           ? {
-              name: `${driverInfo?.first_name} ${driverInfo?.last_name}`,
+              name: `${driverInfo?.first_name} 
+              }`,
               email: driverInfo?.email,
               status: driverInfo?.status,
             }
@@ -210,7 +211,7 @@ const Maps = (props) => {
               longitude: data?.gps_longitude,
               driver: data
                 ? {
-                    name: `${data?.driver?.first_name} ${data?.driver?.last_name}`,
+                    name: `${data?.driver?.first_name} `,
                     email: data?.driver?.email,
                     status: data?.driver?.status,
                   }

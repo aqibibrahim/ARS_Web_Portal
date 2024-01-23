@@ -98,6 +98,8 @@ export default function IncidentList({}) {
   const [selectedHealthCareOpetion, setSelectedHealthCareOpetion] = useState(
     {}
   );
+  const [totalActiveIncidents, setTotalActiveIncidents] = useState();
+  const [totalCompletedIncidents, setTotalCompletedIncidents] = useState();
   const [activeIncidents, setActiveIncidents] = useState([]);
   const [completedIncidentDetails, setCompletedIncidentDetails] = useState([]);
   const [completedIncidents, setCompletedIncidents] = useState([]);
@@ -141,7 +143,7 @@ export default function IncidentList({}) {
             setActiveIncidents(response.data?.data);
           }
 
-          setTotalIncidents(response.data?.data?.total || 0);
+          setTotalActiveIncidents(response.data?.data?.total || 0);
           setIsLoading(false);
           console.log(response?.data?.data);
         });
@@ -166,7 +168,7 @@ export default function IncidentList({}) {
           // } else if (status === "Complete") {
           //   setCompletedIncidents(response.data?.data);
           // }
-          setTotalIncidents(response.data?.data?.total || 0);
+          setTotalCompletedIncidents(response.data?.data?.total || 0);
           setIsLoading(false);
           console.log(response?.data?.data);
         });
@@ -680,12 +682,12 @@ export default function IncidentList({}) {
 
                         <td
                           className={`whitespace-nowrap px-3 py-4 text-xs ${
-                            incident.type === "Critical"
+                            incident?.emergency_type?.name === "Critical"
                               ? "text-red-500"
                               : "text-green-500"
                           }`}
                         >
-                          {incident?.type}
+                          {incident?.emergency_type?.name}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-xs">
                           {incident?.incident_type?.name}
@@ -701,7 +703,7 @@ export default function IncidentList({}) {
                   <Pagination
                     current={currentPage}
                     className="flex text-sm text-semi-bold mb-2"
-                    total={totalIncidents}
+                    total={totalActiveIncidents}
                     pageSize={itemsPerPage}
                     onChange={(page) => setCurrentPage(page)}
                     showSizeChanger={false}
@@ -814,12 +816,12 @@ export default function IncidentList({}) {
 
                         <td
                           className={`whitespace-nowrap px-3 py-4 text-xs ${
-                            incident.incident.type === "Critical"
+                            incident?.emergency_type?.name === "Critical"
                               ? "text-red-500"
                               : "text-green-500"
                           }`}
                         >
-                          {incident?.incident.type}
+                          {incident?.emergency_type?.name}{" "}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-xs">
                           {incident?.incident?.incident_type_id}
@@ -835,7 +837,7 @@ export default function IncidentList({}) {
                   <Pagination
                     current={currentCompletedPage}
                     className="flex text-sm text-semi-bold mb-2"
-                    total={totalIncidents}
+                    total={totalCompletedIncidents}
                     pageSize={itemsPerPage}
                     onChange={(page) => setCurrentCompletedPage(page)}
                     showSizeChanger={false}

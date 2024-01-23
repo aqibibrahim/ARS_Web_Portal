@@ -275,10 +275,10 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
         informer_name: values.informer_name,
         informer_phone_numbers: [values.informer_phone_numbers],
         informer_address: locationAddress.address,
-        type: selectedEmergencyOption.label,
-        gender: selectedGender.value,
+        emergency_type_id: selectedEmergencyOption.value,
+        gender_id: selectedGender.value,
       };
-      console.log(JSON);
+      console.log(JSON, "obj");
       const createIncident = async () => {
         try {
           await axios

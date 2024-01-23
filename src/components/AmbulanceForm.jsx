@@ -23,7 +23,6 @@ const AmbulanceForm = ({
   // onViewOnMap,
 }) => {
   var token = localStorage.getItem("token");
-  const { setAmbulanceId } = useAmbulanceContext();
 
   const headers = {
     "Content-Type": "application/json",
@@ -37,6 +36,8 @@ const AmbulanceForm = ({
   const [selectedRegionOption, setSelectedRegionOption] = useState({});
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
   const [driver, setDriver] = useState("");
+  const { selectedAmbulanceId, setAmbulanceId, resetState } =
+    useAmbulanceContext();
   const assignAmbulance = useFormik({
     initialValues: {
       ambulances: "",
@@ -146,10 +147,13 @@ const AmbulanceForm = ({
     setSelectedOption(selectedOptions);
     console.log(selectedOptions);
   };
+
   const handleViewOnMap = (selectedAmbulance) => {
+    // Prevent the click event from propagating to the parent elements
     setSelectedAmbulance(selectedAmbulance);
     setAmbulanceId(selectedAmbulance);
   };
+
   const formatOptionLabel = ({
     label,
     persons_supported,
@@ -170,13 +174,14 @@ const AmbulanceForm = ({
       <p className="text-right text-green-500">
         {distance} {duration}
       </p>
-
-      <p
-        className="text-blue-500 text-right hover:underline focus:outline-none"
-        onClick={() => handleViewOnMap(value)}
-      >
-        View on Map
-      </p>
+      <div className="flex justify-end">
+        <p
+          className="text-white bg-blue-400 p-1 w-28 flex justify-center justify-items-end hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border rounded-xl text-right focus:outline-none"
+          onClick={handleViewOnMap(value)}
+        >
+          View on Map
+        </p>
+      </div>
     </div>
   );
   return (
