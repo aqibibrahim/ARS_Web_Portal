@@ -106,131 +106,129 @@ const SideBar = ({ parentData }) => {
   };
   return (
     <div className=" right-0 z-50 lg:fixed lg:z-40 lg:flex lg:flex-col -mx-3  lg:justify-center ">
-      <div className="     ">
+      <div className=" right-28 mr-2 mt-5 absolute  ">
         {isCreateIncidentOpen && (
-          <div className="flex">
-            {" "}
-            <CreateIncidentSidebar
-              onClose={() => setCreateIncidentOpen(false)}
-              data={parentData}
-            />
-          </div>
+          <CreateIncidentSidebar
+            onClose={() => setCreateIncidentOpen(false)}
+            data={parentData}
+          />
         )}
-        <div
-          className={`flex flex-col   ${
-            isCreateIncidentOpen ? "bg-grayBg-100 " : "bg-transparent"
-          }  overflow-hidden  text-center duration-30`}
-        >
-          <div className=" w-8/12 mt-2 ml-2 -px-4">
-            {/* Call Center Operator */}
-            {localStorage?.role == "Call Center Operator" ||
-            localStorage?.role == "Admin" ? (
-              <div className="mb-5  rounded-lg overflow-hidden">
-                <MenuItem
-                  title="Create Incident"
-                  bgColor="primary"
-                  fontColor="white"
-                  onClick={handleCreateIncidentClick}
-                >
-                  <BiSolidEditLocation className="w-4 h-4" />
-                </MenuItem>
-              </div>
-            ) : null}
-            {localStorage?.role == "Admin" && (
-              <div className="rounded-lg overflow-hidden">
-                <MenuItem
-                  icon={incidentIcon}
-                  title="Home"
-                  onClick={handleHomeClick}
-                  isActive={isActive("/")}
-                >
-                  <RxHome className="w-4 h-4" />
-                </MenuItem>
-                <MenuItem
-                  icon={incidentIcon}
-                  title="Incidents"
-                  onClick={handleIncidentClick}
-                  isActive={isActive("/incidents")}
-                >
-                  <BiLocationPlus className="w-4 h-4" />
-                </MenuItem>
-                <MenuItem
-                  icon={ambulanceIcon}
-                  title="Ambulances"
-                  onClick={HandleAmbulanceClick}
-                  isActive={isActive("/ambulances_files")}
-                >
-                  <BiCalculator className="w-4 h-4" />
-                </MenuItem>
-                <MenuItem
-                  icon={healthcareIcon}
-                  title="HealthCares"
-                  onClick={handleHealthCareClick}
-                  isActive={isActive("/healthcares_files")}
-                >
-                  <BiFirstAid className="w-4 h-4" />
-                </MenuItem>
-                <MenuItem
-                  icon={regionIcon}
-                  title="Regions"
-                  onClick={handleRegionClick}
-                  isActive={isActive("/regions_files")}
-                >
-                  <FaRegCompass className="w-4 h-4" />
-                </MenuItem>
+      </div>
+      <div
+        className={`flex flex-col  ${
+          isCreateIncidentOpen ? "bg-grayBg-100 " : "bg-transparent"
+        }  overflow-hidden  text-center duration-30`}
+      >
+        <div className=" w-8/12 mt-2 ml-2 -px-4 flex-col flex h-screen">
+          {/* Call Center Operator */}
+          {localStorage?.role == "Call Center Operator" ||
+          localStorage?.role == "Admin" ? (
+            <div className="mb-5  rounded-lg overflow-hidden">
+              <MenuItem
+                title="Create Incident"
+                bgColor="primary"
+                fontColor="white"
+                onClick={handleCreateIncidentClick}
+              >
+                <BiSolidEditLocation className="w-4 h-4" />
+              </MenuItem>
+            </div>
+          ) : null}
+          {localStorage?.role == "Admin" && (
+            <div className="rounded-lg overflow-hidden">
+              <MenuItem
+                icon={incidentIcon}
+                title="Home"
+                onClick={handleHomeClick}
+                isActive={isActive("/")}
+              >
+                <RxHome className="w-4 h-4" />
+              </MenuItem>
+              <MenuItem
+                icon={incidentIcon}
+                title="Incidents"
+                onClick={handleIncidentClick}
+                isActive={isActive("/incidents")}
+              >
+                <BiLocationPlus className="w-4 h-4" />
+              </MenuItem>
+              <MenuItem
+                icon={ambulanceIcon}
+                title="Ambulances"
+                onClick={HandleAmbulanceClick}
+                isActive={isActive("/ambulances_files")}
+              >
+                <BiCalculator className="w-4 h-4" />
+              </MenuItem>
+              <MenuItem
+                icon={healthcareIcon}
+                title="HealthCares"
+                onClick={handleHealthCareClick}
+                isActive={isActive("/healthcares_files")}
+              >
+                <BiFirstAid className="w-4 h-4" />
+              </MenuItem>
+              <MenuItem
+                icon={regionIcon}
+                title="Regions"
+                onClick={handleRegionClick}
+                isActive={isActive("/regions_files")}
+              >
+                <FaRegCompass className="w-4 h-4" />
+              </MenuItem>
 
-                <MenuItem
-                  // icon={rolesPermissionIcon}
-                  title={`Roles & Permissions`}
-                  onClick={handleRolesPermissionClick}
-                  isActive={isActive("/RolesPermission")}
-                >
-                  {/* <rolesPermissionIcon /> */}
-                  <UsersIcon className="w-4 h-4" />
-                </MenuItem>
-                <MenuItem
-                  // icon={rolesPermissionIcon}
-                  title={`Driver`}
-                  onClick={handleDriverClick}
-                  isActive={isActive("/Driver")}
-                >
-                  <UserCircleIcon className="w-4 h-4" />
-                </MenuItem>
+              <MenuItem
+                // icon={rolesPermissionIcon}
+                title={`Roles & Permissions`}
+                onClick={handleRolesPermissionClick}
+                isActive={isActive("/RolesPermission")}
+              >
+                {/* <rolesPermissionIcon /> */}
+                <UsersIcon className="w-4 h-4" />
+              </MenuItem>
+              <MenuItem
+                // icon={rolesPermissionIcon}
+                title={`Driver`}
+                onClick={handleDriverClick}
+                isActive={isActive("/Driver")}
+              >
+                <UserCircleIcon className="w-4 h-4" />
+              </MenuItem>
 
-                <MenuItem
-                  title={`Mapping`}
-                  onClick={handleMapping}
-                  isActive={isActive("/Mapping")}
-                  lookUpOpen={lookUpOpen}
+              <MenuItem
+                title={`Mapping`}
+                onClick={handleMapping}
+                isActive={isActive("/Mapping")}
+                lookUpOpen={lookUpOpen}
 
-                  // {
-                  //   title: "Sub Item 2",
-                  //   onClick: () => console.log("Sub Item 2 clicked"),
-                  // },
-                  // Add more sub-menu items as needed
-                >
-                  <BookOpenIcon className="w-4 h-4" />
-                </MenuItem>
-                <MenuItem
-                  title={`Lookup`}
-                  onClick={handleLookup}
-                  isActive={isActive("/Lookup")}
-                  lookUpOpen={lookUpOpen}
+                // {
+                //   title: "Sub Item 2",
+                //   onClick: () => console.log("Sub Item 2 clicked"),
+                // },
+                // Add more sub-menu items as needed
+              >
+                <BookOpenIcon className="w-4 h-4" />
+              </MenuItem>
+              <MenuItem
+                title={`Lookup`}
+                onClick={handleLookup}
+                isActive={isActive("/Lookup")}
+                lookUpOpen={lookUpOpen}
 
-                  // {
-                  //   title: "Sub Item 2",
-                  //   onClick: () => console.log("Sub Item 2 clicked"),
-                  // },
-                  // Add more sub-menu items as needed
-                >
-                  <ChartPieIcon className="w-4 h-4" />
-                </MenuItem>
-              </div>
-            )}
+                // {
+                //   title: "Sub Item 2",
+                //   onClick: () => console.log("Sub Item 2 clicked"),
+                // },
+                // Add more sub-menu items as needed
+              >
+                <ChartPieIcon className="w-4 h-4" />
+              </MenuItem>
+            </div>
+          )}
 
-            {localStorage?.role == "Healthcare Manager" && (
-              <div className="rounded-lg overflow-hidden">
-                {/* <MenuItem
+          {localStorage?.role == "Healthcare Manager" && (
+            <div className="rounded-lg overflow-hidden">
+              {/* <MenuItem
 									icon={incidentIcon}
 									title="Home"
 									onClick={handleHealthCareHomeClick}
@@ -238,30 +236,29 @@ const SideBar = ({ parentData }) => {
 								>
 									<RxHome className="w-4 h-4" />
 								</MenuItem> */}
-                <MenuItem
-                  icon={healthcareIcon}
-                  title="Incidents"
-                  onClick={handleHealthCareIncidentsClick}
-                  isActive={isActive("/IncidentHealthCare")}
-                  style={{ padding: "10px" }}
-                >
-                  <BiLocationPlus className="w-4 h-4" />
-                </MenuItem>{" "}
-                <MenuItem
-                  icon={healthcareIcon}
-                  title="Departments"
-                  onClick={handleHealthCareDepartmentClick}
-                  isActive={isActive("/IncidentHealthCare")}
-                  style={{ padding: "10px" }}
-                >
-                  <BiLocationPlus className="w-4 h-4" />
-                </MenuItem>
-              </div>
-            )}
-          </div>
+              <MenuItem
+                icon={healthcareIcon}
+                title="Incidents"
+                onClick={handleHealthCareIncidentsClick}
+                isActive={isActive("/IncidentHealthCare")}
+                style={{ padding: "10px" }}
+              >
+                <BiLocationPlus className="w-4 h-4" />
+              </MenuItem>{" "}
+              <MenuItem
+                icon={healthcareIcon}
+                title="Departments"
+                onClick={handleHealthCareDepartmentClick}
+                isActive={isActive("/IncidentHealthCare")}
+                style={{ padding: "10px" }}
+              >
+                <BiLocationPlus className="w-4 h-4" />
+              </MenuItem>
+            </div>
+          )}
           {localStorage?.role == "Admin" && (
             // <div className="rounded-lg">
-            <div className=" w-8/12 mt-20 ml-1 rounded-lg overflow-hidden">
+            <div className=" mt-auto w-full mb-5 overflow-auto rounded-lg ">
               <MenuItem
                 icon={healthcareIcon}
                 onClick={handleAdmiProfileClick}

@@ -16,6 +16,7 @@ import { Vars } from "../helpers/helpers";
 import { Fragment } from "react";
 import { Dialog } from "@headlessui/react";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
+import "../App.css";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -130,8 +131,8 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
           } 
            overflow-y-scroll no-scrollbar`}
         >
-          <div className="flex flex-col px-2 py-1 my-2 rounded-[12px] bg-white w-[400px] h-screen overflow-hidden">
-            <div className="flex flex-row justify-between items-center p-2">
+          <div className="flex flex-col px-2 py-1  rounded-[12px] bg-white w-[450px] h-screen overflow-hidden">
+            <div className="flex flex-row justify-between items-center p-2.5">
               <img
                 src={closeIcon}
                 alt="close"
@@ -140,10 +141,12 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
               />
               <h1 className="text-2xl font-semi">{tabConfig[activeTab]}</h1>
             </div>
-
-            <Tabs activeTab={activeTab} onTabClick={setActiveTab} />
-
-            <div className="flex-1 overflow-y-auto ">{renderFormForTab()}</div>
+            <div className="mb-3">
+              <Tabs activeTab={activeTab} onTabClick={setActiveTab} />
+            </div>
+            <div className="flex-1 overflow-y-auto custom-scroll-style ">
+              {renderFormForTab()}
+            </div>
           </div>
         </div>
       </div>
@@ -788,7 +791,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
         </div>
 
         <button
-          className="text-primary-100 bg-white rounded-md border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
+          className="text-primary-100 bg-white rounded-md border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white mb-5"
           type="submit"
         >
           Next
