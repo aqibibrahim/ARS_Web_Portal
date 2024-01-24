@@ -349,18 +349,26 @@ export default function IncidentList({}) {
                 config
               )
               .then((res) => {
-                console.log(res);
-                // setSubmitDone(!submitDone);
-                // setLoadingMessage(false);
-                toast.success("Ambulance Assign Successfuly");
-                fetchSingleIncident();
-                handleAssignAmbulanceAndhealthCare("Assign HealthCare");
-                setAmbulanceData(res?.data?.data);
+                if (res.status === 200 || res.status === 201) {
+                  console.log(res);
+                  // setSubmitDone(!submitDone);
+                  // setLoadingMessage(false);
+                  toast.success("Ambulance Assign Successfuly");
+                  fetchSingleIncident();
+                  handleAssignAmbulanceAndhealthCare("Assign HealthCare");
+                  setAmbulanceData(res?.data?.data);
+                  setAssignAmbulance(false);
+                  setAssignedAmbulance([]);
+                } else {
+                  // Handle non-success status codes
+                  console.error("Request failed with status:", res.status);
+                  toast.error("Ambulance Assignment Failed");
+                }
               });
           } catch (e) {
             // setLoadingMessage(false);
-            toast.error("failed");
-            console.log(e);
+            toast.error("Failed to assign ambulance");
+            console.error(e);
           }
         };
         createAssignAmbulance();
