@@ -214,6 +214,7 @@ const Maps = (props) => {
                     name: `${data?.driver?.first_name} `,
                     email: data?.driver?.email,
                     status: data?.driver?.status,
+                    phoneNumber: data?.driver?.phone_numbers,
                   }
                 : null,
               button: "Ambulance",
@@ -431,7 +432,9 @@ const Maps = (props) => {
                   ambulanceInfo?.selectedPlace?.plate_no}
               </h2>
             </div> */}
-            <div className="mb-5 text-right  ml-auto ">
+
+            {/* Heading div */}
+            <div className="mb-5 text-right  ml-auto bg-white bg-opacity-90 ">
               <span
                 className={`text-sm ${getStatusStyle(
                   ambulanceInfo?.selectedPlace?.status
@@ -479,6 +482,14 @@ const Maps = (props) => {
                 <span className="text-sm text-gray-500  text-right font-semibold ">
                   {ambulanceInfo?.selectedPlace?.driver?.name}
                 </span>
+
+                {ambulanceInfo?.selectedPlace?.driver?.phoneNumber?.map(
+                  (phoneNumber) => (
+                    <p className="text-sm text-gray-500  text-right font-semibold ">
+                      +{phoneNumber?.number}
+                    </p>
+                  )
+                )}
                 <p className="text-sm text-gray-500  text-right font-semibold ">
                   {ambulanceInfo?.selectedPlace?.driver?.email}
                 </p>
