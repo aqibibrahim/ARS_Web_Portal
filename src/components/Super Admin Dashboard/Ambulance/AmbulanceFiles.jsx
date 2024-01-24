@@ -249,8 +249,8 @@ const AmbulanceFiles = () => {
         gps_no: values.gps_no,
         persons_supported: values?.persons_supported,
         password: values.password,
-        gps_latitude: "77.89797",
-        gps_longitude: "-77.89798",
+        gps_latitude: locationAddress?.latitude,
+        gps_longitude: locationAddress?.longitude,
         parking_latitude: locationAddress?.latitude,
         parking_longitude: locationAddress?.longitude,
         equipments: editOptions?.map((item) => item?.value),
@@ -495,12 +495,19 @@ const AmbulanceFiles = () => {
           `${window.$BackEndUrl}/ambulances/${isDeleteID}`,
           config
         );
-        toast.success("Deleted successfully");
-        setDelete(false);
-        setSubmitDone(!submitDone);
+
+        if (result.status === 200 || result.status === 201) {
+          toast.success("Deleted successfully");
+          setDelete(false);
+          setSubmitDone(!submitDone);
+        } else {
+          // Handle other status codes if needed
+          console.error(`Unexpected status code: ${result.status}`);
+          toast.error(result?.message);
+        }
       } catch (e) {
         console.error(e);
-        toast.error("Failed to delete");
+        toast.error(e.response?.data?.message);
       }
     },
     enableReinitialize: true,
@@ -950,6 +957,7 @@ const AmbulanceFiles = () => {
                         placeholder="Enter Plate No"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        autoComplete="off"
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -1032,6 +1040,7 @@ const AmbulanceFiles = () => {
                       placeholder="Enter Plate No"
                       className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       required
+                      autoComplete="off"
                     />
                     <div
                       className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
