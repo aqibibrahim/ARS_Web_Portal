@@ -449,7 +449,6 @@ export default function IncidentList({}) {
   //   const updatedAmbulances = (assignedAmbulance || []).filter(
   //     (id) => id !== isDeleteID
   //   );
-  //   debugger;
   //   setAssignedAmbulance(updatedAmbulances);
   //   const JSON = {
   //     ambulances: updatedAmbulances, // Use updatedAmbulances here instead of assignedAmbulance
@@ -479,11 +478,9 @@ export default function IncidentList({}) {
   // };
   // const handleChange = (selectedOptions) => {
   //   console.log("Selected Options:", selectedOptions);
-  //   debugger;
   //   // Ensure selectedOptions is not null or undefined
   //   const updatedIds = selectedOptions?.map((option) => option?.value) || [];
   //   console.log("Updated Ids:", updatedIds);
-  //   debugger;
   //   setSelectedOption(selectedOptions);
   //   setAssignedAmbulance([...assignedAmbulance, ...updatedIds]);
 
@@ -576,6 +573,21 @@ export default function IncidentList({}) {
       </p>
     </div>
   );
+
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
+  // Usage
+
   return (
     <>
       <div
@@ -679,7 +691,7 @@ export default function IncidentList({}) {
                     </tr>
                   </thead>
                   <tbody>
-                    {activeIncidents?.data?.reverse()?.map((incident) => (
+                    {activeIncidents?.data?.map((incident) => (
                       <tr key={incident?.id} className="hover:bg-gray-100">
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                           <span className="flex items-center justify-center gap-5">
@@ -719,13 +731,15 @@ export default function IncidentList({}) {
                           {" "}
                           {incident?.created_by?.first_name +
                             " " +
-                            incident?.created_by?.last_name}
+                            incident?.created_by?.last_name}{" "}
+                          <p>{formatDateTime(incident?.created_at)}</p>
                         </td>
-
                         <td
                           className={`whitespace-nowrap px-3 py-4 text-xs ${
                             incident?.emergency_type?.name === "Critical"
                               ? "text-red-500"
+                              : incident?.emergency_type?.name === "Moderate"
+                              ? "text-yellow-500"
                               : "text-green-500"
                           }`}
                         >
@@ -838,7 +852,6 @@ export default function IncidentList({}) {
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-xs">
                           <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                            {console.log(incident.incident, "asdd")}
                             {incident.incident.status}
                           </span>
                         </td>
@@ -854,19 +867,26 @@ export default function IncidentList({}) {
                           {incident?.incident?.created_by?.first_name +
                             " " +
                             incident?.incident?.created_by?.last_name}
+                          <p>
+                            {formatDateTime(incident?.incident?.created_at)}
+                          </p>
                         </td>
 
                         <td
                           className={`whitespace-nowrap px-3 py-4 text-xs ${
-                            incident?.emergency_type?.name === "Critical"
+                            incident?.incident?.emergency_type?.name ===
+                            "Critical"
                               ? "text-red-500"
+                              : incident?.incident?.emergency_type?.name ===
+                                "Moderate"
+                              ? "text-yellow-500"
                               : "text-green-500"
                           }`}
                         >
-                          {incident?.emergency_type?.name}{" "}
+                          {incident?.incident?.emergency_type?.name}{" "}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-xs">
-                          {incident?.incident?.incident_type_id}
+                          {incident?.incident?.incident_type?.name}
                         </td>
                         <td className=" px-3 py-4 text-xs">
                           {incident?.incident?.informer?.name}

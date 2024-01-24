@@ -380,7 +380,7 @@ export default function DriverMain() {
                 </tr>
               </thead>
               <tbody>
-                {allDrivers?.data?.reverse().map((data, index) => (
+                {allDrivers?.data?.map((data, index) => (
                   <tr key={index} className="hover:bg-white">
                     <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <span className="flex gap-5">

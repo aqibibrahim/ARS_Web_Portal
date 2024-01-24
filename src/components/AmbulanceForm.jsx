@@ -38,6 +38,8 @@ const AmbulanceForm = ({
   const [driver, setDriver] = useState("");
   const { selectedAmbulanceId, setAmbulanceId, resetState } =
     useAmbulanceContext();
+  // setAmbulanceId(null);
+  console.log(selectedAmbulanceId, "selected");
   const assignAmbulance = useFormik({
     initialValues: {
       ambulances: "",
@@ -145,15 +147,19 @@ const AmbulanceForm = ({
 
   const handleChange = (selectedOptions) => {
     setSelectedOption(selectedOptions);
+
     console.log(selectedOptions);
   };
 
-  const handleViewOnMap = (selectedAmbulance) => {
-    // Prevent the click event from propagating to the parent elements
-    setSelectedAmbulance(selectedAmbulance);
-    setAmbulanceId(selectedAmbulance);
+  // const handleViewOnMap = (selectedAmbulance) => () => {
+  //   // Prevent the click event from propagating to the parent elements
+  //   // setSelectedAmbulance(selectedAmbulance);
+  //   setAmbulanceId(selectedAmbulance);
+  // };
+  const handleViewOnMap = (value) => (event) => {
+    event.stopPropagation(); // Prevent the click event from propagating to the parent elements
+    setAmbulanceId(value);
   };
-
   const formatOptionLabel = ({
     label,
     persons_supported,
@@ -163,26 +169,29 @@ const AmbulanceForm = ({
     duration,
     criteriaMatched,
   }) => (
-    <div
-      className={`flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border ${
-        criteriaMatched ? "border-green-500 border-2" : "border-gray-400"
-      } p-1 rounded-md mb-2 text-gray-800`}
-    >
-      <p className="text-right">{label}</p>
-      <p className="text-right">Persons Supported: {persons_supported}</p>
-      <p className="text-right">Id No: {id_no}</p>
-      <p className="text-right text-green-500">
-        {distance} {duration}
-      </p>
-      <div className="flex justify-end">
-        <p
-          className="text-white bg-blue-400 p-1 w-28 flex justify-center justify-items-end hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border rounded-xl text-right focus:outline-none"
-          onClick={handleViewOnMap(value)}
-        >
-          View on Map
-        </p>
-      </div>
-    </div>
+    <>
+      {" "}
+      <div
+        className={`flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border ${
+          criteriaMatched ? "border-green-500 border-2" : "border-gray-400"
+        } p-1 rounded-md mb-2 text-gray-800`}
+      >
+        <p className="text-right">{label}</p>
+        <p className="text-right">Persons Supported: {persons_supported}</p>
+        <p className="text-right">Id No: {id_no}</p>
+        <p className="text-right text-green-500">
+          {distance} {duration}
+        </p>{" "}
+        <div className="flex justify-end">
+          <p
+            className="text-white bg-blue-400 p-1 w-28 flex justify-center justify-items-end hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border rounded-xl text-right focus:outline-none"
+            onClick={handleViewOnMap(value)}
+          >
+            View on Map
+          </p>
+        </div>
+      </div>{" "}
+    </>
   );
   return (
     <>

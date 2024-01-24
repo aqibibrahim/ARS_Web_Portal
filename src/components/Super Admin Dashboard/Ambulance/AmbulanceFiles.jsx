@@ -626,7 +626,7 @@ const AmbulanceFiles = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {ambulanceData.data?.reverse().map((ambulance) => (
+                  {ambulanceData.data?.map((ambulance) => (
                     <tr key={ambulance.id} className="hover:bg-gray-100">
                       <td className="m-auto  text-sm  sm:pr-0">
                         <span className="flex items-center justify-center gap-5">

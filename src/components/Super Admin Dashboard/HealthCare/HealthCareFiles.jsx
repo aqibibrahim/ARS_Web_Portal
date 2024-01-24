@@ -771,7 +771,7 @@ const HealthCareFiles = () => {
                         </span>
                       </td>
                       <td className="px-3 py-4 text-xs">{healthcare?.email}</td>
-                      <td className="px-3 py-4 text-xs">
+                      <td className="px-3 py-4 text-xs whitespace-nowrap leading-4 ">
                         {healthcare?.phone_numbers?.map((phone) => (
                           <div key={phone.id}>{phone.number}</div>
                         ))}

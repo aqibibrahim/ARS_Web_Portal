@@ -11,9 +11,10 @@ import "../index.css";
 const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
 
 const Maps = (props) => {
-  const { selectedAmbulanceId } = useAmbulanceContext();
+  const { selectedAmbulanceId, resetState } = useAmbulanceContext();
   console.log("Selected Ambulance ID in Other Component:", selectedAmbulanceId);
-
+  // const { resetState } = useAmbulanceContext();
+  // resetState();
   // const { ControlPosition } = props.google.map;
   console.log(props);
   var token = localStorage.getItem("token");
@@ -417,7 +418,10 @@ const Maps = (props) => {
             lat: Number(ambulanceInfo?.selectedPlace?.latitude),
             lng: Number(ambulanceInfo?.selectedPlace?.longitude),
           }}
-          onClose={() => setAmbulanceInfo({ showingInfoWindow: false })}
+          onClose={() => {
+            setAmbulanceInfo({ showingInfoWindow: false });
+            resetState();
+          }}
         >
           <div
             className="m-auto  w-72 bg-white  "
