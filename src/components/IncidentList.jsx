@@ -221,6 +221,7 @@ export default function IncidentList({}) {
         .then((response) => {
           setMyData(
             response.data?.data?.map((variant) => ({
+              id: variant?.id,
               label:
                 variant.make + " " + variant.model + " " + variant?.plate_no,
               value: variant.id,
@@ -273,7 +274,7 @@ export default function IncidentList({}) {
         )
         .then((response) => {
           setShowAssignAmbulance(response?.data?.data?.ambulances);
-          setAssignedAmbulance(response?.data?.data?.ambulances);
+          // setAssignedAmbulance(response?.data?.data?.ambulances);
           // setMyData(
           // 	response.data?.data?.map((variant) => ({
           // 		label: variant.model,
@@ -435,67 +436,100 @@ export default function IncidentList({}) {
   //   );
   //   setAssignedAmbulance(updatedAmbulances);
   // }, [deleteModal]);
-  const AmbulanceDelete = async () => {
-    // Ensure assignedAmbulances is initialized as an array
-    const updatedAmbulances = (assignedAmbulance || []).filter(
-      (id) => id !== isDeleteID
-    );
-    setAssignedAmbulance(updatedAmbulances);
-    const JSON = {
-      ambulances: updatedAmbulances, // Use updatedAmbulances here instead of assignedAmbulance
-    };
+  // const AmbulanceDelete = async () => {
+  //   // Ensure assignedAmbulances is initialized as an array
+  //   const updatedAmbulances = (assignedAmbulance || []).filter(
+  //     (id) => id !== isDeleteID
+  //   );
+  //   debugger;
+  //   setAssignedAmbulance(updatedAmbulances);
+  //   const JSON = {
+  //     ambulances: updatedAmbulances, // Use updatedAmbulances here instead of assignedAmbulance
+  //   };
 
-    try {
-      const res = await axios.patch(
-        `${Vars.domain}/incidents/${selectedIncident.id}`,
-        JSON,
-        config
-      );
+  //   try {
+  //     const res = await axios.patch(
+  //       `${Vars.domain}/incidents/${selectedIncident.id}`,
+  //       JSON,
+  //       config
+  //     );
 
-      if (res.status === 200) {
-        // Successful deletion
-        setDeleteModal(false);
-        toast.success("Ambulance deleted successfully");
-        fetchSingleIncident();
-        setAmbulanceData(res?.data?.data);
-      } else {
-        // Handle other HTTP status codes if needed
-        toast.error(`Failed to delete ambulance. Status: ${res.status}`);
-      }
-    } catch (e) {
-      toast.error("Failed to delete ambulance");
-      console.log(e);
-    }
-  };
+  //     if (res.status === 200) {
+  //       // Successful deletion
+  //       setDeleteModal(false);
+  //       toast.success("Ambulance deleted successfully");
+  //       fetchSingleIncident();
+  //       setAmbulanceData(res?.data?.data);
+  //     } else {
+  //       // Handle other HTTP status codes if needed
+  //       toast.error(`Failed to delete ambulance. Status: ${res.status}`);
+  //     }
+  //   } catch (e) {
+  //     toast.error("Failed to delete ambulance");
+  //     console.log(e);
+  //   }
+  // };
+  // const handleChange = (selectedOptions) => {
+  //   console.log("Selected Options:", selectedOptions);
+  //   debugger;
+  //   // Ensure selectedOptions is not null or undefined
+  //   const updatedIds = selectedOptions?.map((option) => option?.value) || [];
+  //   console.log("Updated Ids:", updatedIds);
+  //   debugger;
+  //   setSelectedOption(selectedOptions);
+  //   setAssignedAmbulance([...assignedAmbulance, ...updatedIds]);
+
+  //   if (assignedAmbulance) {
+  //     // Identify removed options by comparing previous and current selectedIds
+  //     const removedIds = assignedAmbulance.filter(
+  //       (id) => !updatedIds.includes(id)
+  //     );
+
+  //     if (removedIds.length > 0) {
+  //       // Handle removal of options
+  //       console.log("Removed Ids:", removedIds);
+  //       setAssignedAmbulance(updatedIds);
+  //     } else {
+  //       // Handle addition of options
+  //       console.log("Added Ids:", updatedIds);
+  //       setAssignedAmbulance([...assignedAmbulance, ...updatedIds]);
+  //     }
+  //   } else {
+  //     // Handle the case when assignedAmbulance is initially empty
+  //     setAssignedAmbulance([...updatedIds]);
+  //   }
+
+  //   console.log("Assigned Ambulance:", assignedAmbulance);
+  // };
   const handleChange = (selectedOptions) => {
     console.log("Selected Options:", selectedOptions);
-
     // Ensure selectedOptions is not null or undefined
     const updatedIds = selectedOptions?.map((option) => option?.value) || [];
     console.log("Updated Ids:", updatedIds);
 
     setSelectedOption(selectedOptions);
 
-    if (assignedAmbulance) {
-      // Identify removed options by comparing previous and current selectedIds
-      const removedIds = assignedAmbulance.filter(
-        (id) => !updatedIds.includes(id)
-      );
+    // setAssignedAmbulance((prevAssignedAmbulance) => {
+    //   // Use the previous state to update the new state
+    //   const newState = [...prevAssignedAmbulance, ...updatedIds];
 
-      if (removedIds.length > 0) {
-        // Handle removal of options
-        console.log("Removed Ids:", removedIds);
-        setAssignedAmbulance(updatedIds);
-      } else {
-        // Handle addition of options
-        console.log("Added Ids:", updatedIds);
-        setAssignedAmbulance([...assignedAmbulance, ...updatedIds]);
-      }
-    } else {
-      // Handle the case when assignedAmbulance is initially empty
-      setAssignedAmbulance([...updatedIds]);
-    }
+    // if (prevAssignedAmbulance) {
+    //   const removedIds = prevAssignedAmbulance.filter(
+    //     (id) => !updatedIds.includes(id)
+    //   );
 
+    //   if (removedIds.length > 0) {
+    //     console.log("Removed Ids:", removedIds);
+    //     return updatedIds;
+    //   } else {
+    //     console.log("Added Ids:", updatedIds);
+    //     return newState;
+    //   }
+    // } else {
+    //   return newState;
+    // }
+    // });
+    setAssignedAmbulance([...assignedAmbulance, ...updatedIds]);
     console.log("Assigned Ambulance:", assignedAmbulance);
   };
 
@@ -1457,7 +1491,7 @@ export default function IncidentList({}) {
           </Dialog>
         </Transition.Root>
       </div>
-      <Modal
+      {/* <Modal
         title="Are you sure to delete this Driver?"
         open={deleteModal}
         onOk={AmbulanceDelete}
@@ -1467,7 +1501,7 @@ export default function IncidentList({}) {
           style: { backgroundColor: "red" },
         }}
         okText="Delete"
-      ></Modal>
+      ></Modal> */}
     </>
   );
 }
