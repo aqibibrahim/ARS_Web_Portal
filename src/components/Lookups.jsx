@@ -5,6 +5,7 @@ import IncidentType from "./IncidentType";
 import Departments from "./Departments";
 import Gender from "./Gender";
 import EmergencyType from "./EmergencyType";
+import Reasons from "./Reasons";
 const Lookups = () => {
   const [activeTab, setActiveTab] = useState("equipments");
 
@@ -15,7 +16,9 @@ const Lookups = () => {
     return (
       <button
         className={`px-4 py-2 transition-colors duration-150 ${
-          selected ? "bg-blue-500 text-white" : "bg-white text-black"
+          selected
+            ? "bg-blue-500 text-white"
+            : "bg-white  hover:bg-gray-200  text-black"
         } focus:outline-none`}
         onClick={onClick}
         style={{
@@ -80,6 +83,16 @@ const Lookups = () => {
                 ? "bg-blue-500 text-white"
                 : "bg-white text-blue-500"
             }`}
+          />{" "}
+          <Tab
+            selected={activeTab === "reasons"}
+            title="Reasons"
+            onClick={() => handleTabClick("reasons")}
+            className={`${
+              activeTab === "reasons"
+                ? "bg-blue-500 text-white"
+                : "bg-white text-blue-500"
+            }`}
           />
           <Tab
             selected={activeTab === "equipments"}
@@ -88,9 +101,9 @@ const Lookups = () => {
             className={`${
               activeTab === "equipments"
                 ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500"
+                : "bg-white text-blue-500 hover:bg-gray-200"
             }`}
-          />
+          />{" "}
         </div>
       </div>
       {activeTab === "equipments" && <Equipment />}
@@ -98,6 +111,7 @@ const Lookups = () => {
       {activeTab === "incidentType" && <IncidentType />}
       {activeTab === "emergencyType" && <EmergencyType />}
       {activeTab === "gender" && <Gender />}
+      {activeTab === "reasons" && <Reasons />}
     </div>
   );
 };

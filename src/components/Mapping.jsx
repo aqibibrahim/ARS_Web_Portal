@@ -178,7 +178,9 @@ export default function Mapping() {
     return (
       <button
         className={`px-4 py-2 transition-colors duration-150 ${
-          selected ? "bg-blue-500 text-white" : "bg-white text-black"
+          selected
+            ? "bg-blue-500 text-white "
+            : "bg-white text-black hover:bg-gray-200 "
         } focus:outline-none`}
         onClick={onClick}
       >

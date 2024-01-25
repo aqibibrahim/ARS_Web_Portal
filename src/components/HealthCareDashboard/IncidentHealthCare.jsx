@@ -25,7 +25,9 @@ const Tab = ({ selected, title, onClick }) => {
   return (
     <button
       className={`px-4 py-2 transition-colors duration-150 ${
-        selected ? "bg-blue-500 text-white" : "bg-white text-black"
+        selected
+          ? "bg-blue-500 text-white"
+          : "bg-white text-black hover:bg-gray-200"
       } focus:outline-none`}
       onClick={onClick}
     >
@@ -531,156 +533,161 @@ export default function IncidentHealthCare({}) {
           <div className="rtl">
             {isLoading ? (
               <p className="text-center text-xl text-primary-100">Loading...</p>
-            ) : incidentData.length == 0 ? (
+            ) : incidentData?.active?.length == 0 ? (
               <p className="text-center text-xl text-primary-100">
                 No data available
               </p>
             ) : (
-              incidentData.map((incident) =>
-                incident.status === "Active" ? (
-                  <div className="w-full  justify-end items-center gap-2.5 inline-flex mt-5">
-                    <div className="w-full bg-white bg-opacity-50 rounded-2xl shadow backdrop-blur-[20px] justify-end items-center flex">
-                      <div className="grow shrink basis-0 self-stretch p-[15px] bg-white bg-opacity-50 justify-end items-center gap-[15px] flex">
-                        <div className="grow shrink basis-0 h-[35px] justify-start items-end gap-3.5 flex">
-                          <div className=" rounded-lg justify-center items-center gap-2.5 flex">
-                            <button
-                              className={`text-white text-xs font-semibold font-inter`}
-                            >
-                              {incident?.ambulances?.map((ambulance, index) => (
-                                <span
-                                  className={`py-2.5 px-[15px]  ${getStatusStyle(
-                                    ambulance?.status
-                                  )}`}
-                                  key={index}
-                                >
-                                  {ambulance?.status}
-                                </span>
-                              ))}
-                            </button>
-                          </div>
-                        </div>
-                        <div className="grow shrink basis-0 flex-col justify-center items-end gap-[3px] inline-flex">
-                          <div className="self-stretch h-[88px] flex-col justify-start items-end gap-[5px] flex">
-                            <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter'] rtl">
-                              اسم السائق -{" "}
-                              {incident?.ambulances?.map((ambulance, index) => (
-                                <span key={index}>
-                                  {ambulance?.driver?.first_name}
-                                </span>
-                              ))}
-                            </div>
-                            <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
-                              {incident?.ambulances?.map((ambulance, index) => (
-                                <>
-                                  {" "}
-                                  <span key={index}>
-                                    {ambulance?.driver?.first_name}
-                                  </span>
-                                  <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
-                                    <div
-                                      className={`grow shrink basis-0 ml-2 text-right  ${getStatusStyle(
-                                        ambulance?.driver?.status
-                                      )} text-xs font-normal font-['Inter']`}
+              incidentData.map(
+                (incident) =>
+                  incident.status === "Active" && (
+                    <div className="w-full  justify-end items-center gap-2.5 inline-flex mt-5">
+                      <div className="w-full bg-white bg-opacity-50 rounded-2xl shadow backdrop-blur-[20px] justify-end items-center flex">
+                        <div className="grow shrink basis-0 self-stretch p-[15px] bg-white bg-opacity-50 justify-end items-center gap-[15px] flex">
+                          <div className="grow shrink basis-0 h-[35px] justify-start items-end gap-3.5 flex">
+                            <div className=" rounded-lg justify-center items-center gap-2.5 flex">
+                              <button
+                                className={`text-white text-xs font-semibold font-inter`}
+                              >
+                                {incident?.ambulances?.map(
+                                  (ambulance, index) => (
+                                    <span
+                                      className={`py-2.5 px-[15px]  ${getStatusStyle(
+                                        ambulance?.status
+                                      )}`}
+                                      key={index}
                                     >
-                                      {ambulance?.driver?.status}
-                                    </div>
-                                  </div>
-                                </>
-                              ))}
+                                      {ambulance?.status}
+                                    </span>
+                                  )
+                                )}
+                              </button>
                             </div>
-
-                            <div className="  items-center ">
-                              <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                          </div>
+                          <div className="grow shrink basis-0 flex-col justify-center items-end gap-[3px] inline-flex">
+                            <div className="self-stretch h-[88px] flex-col justify-start items-end gap-[5px] flex">
+                              <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter'] rtl">
+                                اسم السائق -{" "}
                                 {incident?.ambulances?.map(
                                   (ambulance, index) => (
                                     <span key={index}>
-                                      {ambulance?.make}- {ambulance?.model} -{" "}
-                                      {ambulance?.plate_no}
+                                      {ambulance?.driver?.first_name}
                                     </span>
                                   )
                                 )}
                               </div>
-                              <div className="w-6 h-6 px-0.5 pt-[5px] pb-1 justify-center items-center flex">
-                                <div className="w-5 h-[15px] relative flex-col justify-start items-start flex" />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="grow shrink basis-0 self-stretch p-[15px] justify-end items-center gap-2.5 flex">
-                        <div className="grow shrink basis-0 flex-col justify-start items-end gap-[5px] inline-flex">
-                          <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
-                            <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
-                              {incident?.latitude}- {incident?.longitude}
-                            </div>
-                            <div className="w-6 h-6 px-1 py-[2.50px] justify-center items-center flex">
-                              <div className="w-4 h-[19px] relative">
-                                <MapPinIcon />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
-                            Description{" "}
-                          </div>
-                          <div className="w-[316px] h-[42px] text-right text-black text-opacity-50 text-xs font-normal font-['Inter']">
-                            {incident?.description}{" "}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="w-[292px] self-stretch p-[15px] justify-end items-center gap-2.5 flex">
-                        <div className="grow shrink basis-0 flex-col justify-start items-end gap-[5px] inline-flex">
-                          <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
-                            اسم المريض - {incident?.informer?.name}
-                          </div>
-                          <div className="justify-end items-start gap-[5px] inline-flex">
-                            <div className="px-1.5 py-[3px] bg-blue-500 bg-opacity-50 rounded-[20px] justify-center items-center gap-[5px] flex">
-                              <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
-                                {incident?.incident_type?.name}
-                              </div>
-                            </div>
-                            <div className="px-1.5 py-[3px] bg-fuchsia-500 bg-opacity-75 rounded-[20px] justify-center items-center gap-[5px] flex">
-                              <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
-                                أنثى
-                              </div>
-                            </div>
-                          </div>
-                          <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
-                            {incident?.informer?.phone_numbers?.map(
-                              (phoneNumber, index) => (
-                                <p key={index}>{phoneNumber?.number}</p>
-                              )
-                            )}
-                          </div>
-                          <div className="h-5 px-[15px] py-2.5 bg-red-600 rounded-lg justify-center items-center gap-2.5 inline-flex">
-                            <div className="text-white text-xs font-semibold font-['Inter']">
-                              {incident?.type}{" "}
-                            </div>
-                          </div>
-                          <div className="text-black text-xs font-semibold font-inter">
-                            {
-                              <span>
-                                {new Date(incident.created_at).toLocaleString(
-                                  "en-US",
-                                  {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    second: "numeric",
-                                    timeZoneName: "short",
-                                  }
+                              <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                                {incident?.ambulances?.map(
+                                  (ambulance, index) => (
+                                    <>
+                                      {" "}
+                                      <span key={index}>
+                                        {ambulance?.driver?.first_name}
+                                      </span>
+                                      <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
+                                        <div
+                                          className={`grow shrink basis-0 ml-2 text-right  ${getStatusStyle(
+                                            ambulance?.driver?.status
+                                          )} text-xs font-normal font-['Inter']`}
+                                        >
+                                          {ambulance?.driver?.status}
+                                        </div>
+                                      </div>
+                                    </>
+                                  )
                                 )}
-                              </span>
-                            }
+                              </div>
+
+                              <div className="  items-center ">
+                                <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                                  {incident?.ambulances?.map(
+                                    (ambulance, index) => (
+                                      <span key={index}>
+                                        {ambulance?.make}- {ambulance?.model} -{" "}
+                                        {ambulance?.plate_no}
+                                      </span>
+                                    )
+                                  )}
+                                </div>
+                                <div className="w-6 h-6 px-0.5 pt-[5px] pb-1 justify-center items-center flex">
+                                  <div className="w-5 h-[15px] relative flex-col justify-start items-start flex" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grow shrink basis-0 self-stretch p-[15px] justify-end items-center gap-2.5 flex">
+                          <div className="grow shrink basis-0 flex-col justify-start items-end gap-[5px] inline-flex">
+                            <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
+                              <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                                {incident?.latitude}- {incident?.longitude}
+                              </div>
+                              <div className="w-6 h-6 px-1 py-[2.50px] justify-center items-center flex">
+                                <div className="w-4 h-[19px] relative">
+                                  <MapPinIcon />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
+                              Description{" "}
+                            </div>
+                            <div className="w-[316px] h-[42px] text-right text-black text-opacity-50 text-xs font-normal font-['Inter']">
+                              {incident?.description}{" "}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="w-[292px] self-stretch p-[15px] justify-end items-center gap-2.5 flex">
+                          <div className="grow shrink basis-0 flex-col justify-start items-end gap-[5px] inline-flex">
+                            <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
+                              اسم المريض - {incident?.informer?.name}
+                            </div>
+                            <div className="justify-end items-start gap-[5px] inline-flex">
+                              <div className="px-1.5 py-[3px] bg-blue-500 bg-opacity-50 rounded-[20px] justify-center items-center gap-[5px] flex">
+                                <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
+                                  {incident?.incident_type?.name}
+                                </div>
+                              </div>
+                              <div className="px-1.5 py-[3px] bg-fuchsia-500 bg-opacity-75 rounded-[20px] justify-center items-center gap-[5px] flex">
+                                <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
+                                  أنثى
+                                </div>
+                              </div>
+                            </div>
+                            <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                              {incident?.informer?.phone_numbers?.map(
+                                (phoneNumber, index) => (
+                                  <p key={index}>{phoneNumber?.number}</p>
+                                )
+                              )}
+                            </div>
+                            <div className="h-5 px-[15px] py-2.5 bg-red-600 rounded-lg justify-center items-center gap-2.5 inline-flex">
+                              <div className="text-white text-xs font-semibold font-['Inter']">
+                                {incident?.type}{" "}
+                              </div>
+                            </div>
+                            <div className="text-black text-xs font-semibold font-inter">
+                              {
+                                <span>
+                                  {new Date(incident.created_at).toLocaleString(
+                                    "en-US",
+                                    {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                      hour: "numeric",
+                                      minute: "numeric",
+                                      second: "numeric",
+                                      timeZoneName: "short",
+                                    }
+                                  )}
+                                </span>
+                              }
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  ""
-                )
+                  )
               )
             )}
           </div>
@@ -731,6 +738,7 @@ export default function IncidentHealthCare({}) {
                                   incident?.ambulance.model +
                                   " " +
                                   incident?.ambulance.plate_no}
+                                <p>{incident?.ambulance?.driver?.first_name}</p>
                                 {/* </span> */}
                                 <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
                                   {/* <div
@@ -795,9 +803,7 @@ export default function IncidentHealthCare({}) {
                               </div>
                             </div>
                             <div className="px-1.5 py-[3px] bg-fuchsia-500 bg-opacity-75 rounded-[20px] justify-center items-center gap-[5px] flex">
-                              <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
-                                أنثى
-                              </div>
+                              <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']"></div>
                             </div>
                           </div>
                           <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
@@ -809,7 +815,7 @@ export default function IncidentHealthCare({}) {
                           </div>
                           <div className="h-5 px-[15px] py-2.5 bg-red-600 rounded-lg justify-center items-center gap-2.5 inline-flex">
                             <div className="text-white text-xs font-semibold font-['Inter']">
-                              {incident?.type}{" "}
+                              {incident?.incident_type?.name}
                             </div>
                           </div>
                           <div className="text-black text-xs font-semibold font-inter">

@@ -264,9 +264,23 @@ const ModalComponent = (props) => {
 
                       <div className="w-full  mb-6 ">
                         <div className="flex w-full ">
+                          {" "}
+                          <div>
+                            {newPhoneNumber ? (
+                              <button
+                                type="button"
+                                onClick={handleAddPhoneNumber}
+                                className="flex bg-gray-300 p-1 mr-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
+                              >
+                                +
+                              </button>
+                            ) : (
+                              ""
+                            )}
+                          </div>
                           <div
-                            className={`relative mt-2 ${
-                              newPhoneNumber ? "w-11/12" : "w-full"
+                            className={`relative right-0 mt-2 ${
+                              newPhoneNumber ? " w-11/12" : "w-full"
                             }`}
                           >
                             {/* <InputMask
@@ -309,19 +323,6 @@ const ModalComponent = (props) => {
                               className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                               aria-hidden="true"
                             />
-                          </div>
-                          <div>
-                            {newPhoneNumber ? (
-                              <button
-                                type="button"
-                                onClick={handleAddPhoneNumber}
-                                className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
-                              >
-                                +
-                              </button>
-                            ) : (
-                              ""
-                            )}
                           </div>
                         </div>
                         {validationErrors.phoneNumbers && (

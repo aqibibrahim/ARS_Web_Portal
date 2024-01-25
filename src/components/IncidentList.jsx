@@ -19,12 +19,16 @@ import { BsArrowRightCircle, BsEye, BsSearch } from "react-icons/bs";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import EditHealthCare from "./EditHealthCareForm";
 import { Spin } from "antd";
+import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
+import IncidentVIewModal from "./IncidentVIewModal";
 
 const Tab = ({ selected, title, onClick }) => {
   return (
     <button
       className={`px-4 py-2 transition-colors duration-150 ${
-        selected ? "bg-blue-500 text-white" : "bg-white text-black"
+        selected
+          ? "bg-blue-500 text-white"
+          : "bg-white text-black hover:bg-gray-200 "
       } focus:outline-none`}
       onClick={onClick}
     >
@@ -138,17 +142,16 @@ export default function IncidentList({}) {
           },
         })
         .then((response) => {
-          setIncidentData(response.data?.data);
-          if (status === "active") {
-            setActiveIncidents(response.data?.data);
-          }
+          setActiveIncidents(response.data?.data);
 
           setTotalActiveIncidents(response.data?.data?.total || 0);
-          setIsLoading(false);
           console.log(response?.data?.data);
         });
     } catch (e) {
       console.log(e);
+    } finally {
+      // Update isLoading state to false
+      setIsLoading(false);
     }
   };
   const fetchCompleteincidentData = async (page = 1) => {
@@ -169,7 +172,6 @@ export default function IncidentList({}) {
           //   setCompletedIncidents(response.data?.data);
           // }
           setTotalCompletedIncidents(response.data?.data?.total || 0);
-          setIsLoading(false);
           console.log(response?.data?.data);
         });
     } catch (e) {
@@ -799,7 +801,7 @@ export default function IncidentList({}) {
                         scope="col"
                         className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
-                        Created By
+                        Updated By
                       </th>
                       <th
                         scope="col"
@@ -868,7 +870,7 @@ export default function IncidentList({}) {
                             " " +
                             incident?.incident?.created_by?.last_name}
                           <p>
-                            {formatDateTime(incident?.incident?.created_at)}
+                            {formatDateTime(incident?.incident?.updated_at)}
                           </p>
                         </td>
 
@@ -924,160 +926,12 @@ export default function IncidentList({}) {
 						)}
 					</div> */}
         </div>
-        {viewOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-            <div className="mx-auto mt-10 p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
-              <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
-                <BsArrowRightCircle
-                  width={9}
-                  className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                  onClick={() => setViewOpen(false)}
-                />
-                <h3 className="text-xl font-semibold text-red-500">
-                  {showData?.incident_type?.name}
-                  <span className="text-red-600 ml-2">{showData?.type}</span>
-                </h3>
-              </div>
-              <div className="p-5 text-right">
-                <p className="text-xl text-right font-bold">Informer Details</p>
-                <p>
-                  {" "}
-                  <span className="font-semibold">Name: </span>{" "}
-                  {showData?.informer?.name}
-                </p>
-                <p>
-                  {" "}
-                  <span className="font-semibold">Phone Number: </span>{" "}
-                  {showData?.informer?.phone_numbers[0]?.number}
-                </p>
-              </div>
-              <div>
-                {/* <div className=" text-right p-5">
-                <p>
-                  {" "}
-                  <span className="font-semibold text-right">
-                    Phone No:{" "}
-                  </span>{" "}
-                  {selectedIncident?.informer?.phone_numbers[0]?.number}
-                </p> */}
-                {/* <p>
-                  <span className="font-semibold">Model:</span>{" "}
-                  {selectedAmbulance?.model}
-                </p>
-                <p>
-                  <span className="font-semibold">Plate#:</span>{" "}
-                  {selectedAmbulance?.plate_no}
-                </p> */}
-                {/* </div> */}
-                <div className="px-5">
-                  <p className="text-lg text-right font-semibold">
-                    Ambulance Details
-                  </p>
-                  {showData?.ambulances?.length > 0 ? (
-                    showData?.ambulances?.map((ambulance, index) => (
-                      <div
-                        className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2"
-                        key={ambulance.id}
-                      >
-                        <div className="flex flex-col">
-                          <div className="flex justify-between gap-12 text-sm ">
-                            <p className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center">
-                              {index + 1}
-                            </p>
-                            <p>
-                              {" "}
-                              <span className="font-semibold">Make: </span>{" "}
-                              {ambulance?.make}
-                            </p>
-                            <p>
-                              <span className="font-semibold">Model:</span>{" "}
-                              {ambulance?.model}
-                            </p>
-                            <p>
-                              <span className="font-semibold">Plate#:</span>{" "}
-                              {ambulance?.plate_no}
-                            </p>
-                            <p>
-                              <span className="font-semibold">Status:</span>{" "}
-                              {ambulance?.status}
-                            </p>
-                          </div>
-                          <p className="text-md m-5 text-right font-semibold">
-                            Equipments Details
-                          </p>
-                          {ambulance.equipments.map(
-                            (equipmentDetails, index) => (
-                              <div
-                                className="flex flex-row justify-between p-5 px-10  w-full  bg-gray-200 mb-5 mt-2"
-                                key={equipmentDetails?.id}
-                              >
-                                <div className="flex justify-between gap-16 w-full   ">
-                                  <p className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center">
-                                    {index + 1}
-                                  </p>
-                                  <p>
-                                    {" "}
-                                    <span className="font-semibold">
-                                      Name:{" "}
-                                    </span>
-                                    {equipmentDetails?.name}
-                                  </p>
-                                  <p>
-                                    <span className="font-semibold">
-                                      Status:
-                                    </span>{" "}
-                                    {equipmentDetails?.status}
-                                  </p>
-                                </div>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-right">No Data Found</p>
-                  )}
-                </div>
+        <IncidentVIewModal
+          viewOpen={viewOpen}
+          setViewOpen={setViewOpen}
+          showData={showData}
+        />
 
-                <div className="px-5">
-                  <p className="text-lg text-right font-semibold">
-                    Facility Details
-                  </p>
-                  {showData?.ambulances?.length > 0 ? (
-                    showData?.ambulances?.map((facility, index) => (
-                      <div
-                        className="flex flex-row justify-between p-4 bg-gray-100 mb-5 mt-2"
-                        key={facility?.id}
-                      >
-                        <div className="flex justify-between gap-10  ">
-                          <p className="bg-blue-200 p-2 rounded-full w-7 h-7 flex items-center justify-center">
-                            {index + 1}
-                          </p>
-                          <p>
-                            {" "}
-                            <span className="font-semibold">Name: </span>{" "}
-                            {facility?.facility?.name}
-                          </p>
-                          <p>
-                            <span className="font-semibold">Status:</span>{" "}
-                            {facility?.facility?.status}
-                          </p>
-                          <p>
-                            <span className="font-semibold">Address: </span>{" "}
-                            {facility?.facility?.address}
-                          </p>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-right">No Data Found</p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
         {updateFormOpen && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
             <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
@@ -1247,17 +1101,52 @@ export default function IncidentList({}) {
                 </p>
                 <p>
                   {" "}
-                  <span className="font-semibold"> Incident Type: </span>{" "}
+                  <span className="font-semibold"> Emergency Type: </span>{" "}
                   <span
-                    className={`${
-                      completedIncidentDetails?.incident?.type === "Critical"
+                    className={` ${
+                      completedIncidentDetails?.incident?.emergency_type
+                        ?.name === "Critical"
                         ? "text-red-500"
+                        : completedIncidentDetails?.incident?.emergency_type
+                            ?.name === "Moderate"
+                        ? "text-yellow-500"
                         : "text-green-500"
                     }`}
+                    // className={`${
+                    //   completedIncidentDetails?.incident?.type === "Critical"
+                    //     ? "text-red-500"
+                    //     : "text-green-500"
+                    // }`}
                   >
-                    {completedIncidentDetails?.incident?.type}
+                    {completedIncidentDetails?.incident?.emergency_type?.name}
                   </span>
                 </p>{" "}
+                <p>
+                  {" "}
+                  <span className="font-semibold"> Incident Type: </span>{" "}
+                  <span
+                  // className={`${
+                  //   completedIncidentDetails?.incident?.type === "Critical"
+                  //     ? "text-red-500"
+                  //     : "text-green-500"
+                  // }`}
+                  >
+                    {completedIncidentDetails?.incident?.incident_type?.name}
+                  </span>{" "}
+                </p>{" "}
+                <p>
+                  {" "}
+                  <span className="font-semibold"> Description: </span>{" "}
+                  <span
+                  // className={`${
+                  //   completedIncidentDetails?.incident?.type === "Critical"
+                  //     ? "text-red-500"
+                  //     : "text-green-500"
+                  // }`}
+                  >
+                    {completedIncidentDetails?.incident?.description}
+                  </span>{" "}
+                </p>
                 {/* <p>
                   {" "}
                   <span className="font-semibold">

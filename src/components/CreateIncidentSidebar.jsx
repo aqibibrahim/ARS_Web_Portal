@@ -263,6 +263,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
     initialValues: {
       ambulances: "",
       name: "",
+      number_of_persons: "",
       latitude: "",
       longitude: "",
       address: "",
@@ -280,6 +281,7 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
         informer_address: locationAddress.address,
         emergency_type_id: selectedEmergencyOption.value,
         gender_id: selectedGender.value,
+        number_of_persons: values.number_of_persons,
       };
       console.log(JSON, "obj");
       const createIncident = async () => {
@@ -507,14 +509,13 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             </div>
           </div>
         </div>
-
         <div className="mb-5">
           <div>
             <label
               htmlFor="informer_phone_numbers"
               className="block text-sm mr-2 leading-6 text-gray-900 text-right"
             >
-              Contact
+              Contact Number
             </label>
             <div className="relative mt-2">
               <InputMask
@@ -530,6 +531,32 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                 required
               />
 
+              <div
+                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        </div>{" "}
+        <div className="mb-5">
+          <div>
+            <label
+              htmlFor="informer_phone_numbers"
+              className="block text-sm mr-2 leading-6 text-gray-900 text-right"
+            >
+              No. of Person
+            </label>
+            <div className="relative mt-2">
+              <input
+                onChange={createIncident.handleChange}
+                value={createIncident.values.number_of_persons}
+                type="text"
+                name="number_of_persons"
+                id="number_of_persons"
+                className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                placeholder="Enter Number of Person"
+                required
+              />
               <div
                 className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                 aria-hidden="true"
@@ -789,7 +816,6 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             </div>
           </div>
         </div>
-
         <button
           className="text-primary-100 bg-white rounded-md border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white mb-5"
           type="submit"

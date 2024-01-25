@@ -458,7 +458,9 @@ export default function RolesPermission() {
     return (
       <button
         className={`px-4 py-2 transition-colors duration-150 ${
-          selected ? "bg-blue-500 text-white" : "bg-white text-black"
+          selected
+            ? "bg-blue-500 text-white"
+            : "bg-white text-black hover:bg-gray-200 "
         } focus:outline-none`}
         onClick={onClick}
       >
@@ -472,7 +474,7 @@ export default function RolesPermission() {
       {/* Create Role Modal */}
       <Toaster position="bottom-right" richColors />
       <div
-        className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
+        className={`w-full bg-grayBg-100  transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
       >
         {/* <Tabs defaultActiveKey="2" centered> */}
         <div>
@@ -819,7 +821,12 @@ export default function RolesPermission() {
                             >
                               <span className="sr-only">Edit</span>
                             </th>
-
+                            <th
+                              scope="col"
+                              className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                            >
+                              Email
+                            </th>
                             <th
                               scope="col"
                               className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
@@ -873,6 +880,9 @@ export default function RolesPermission() {
                                     <BiEdit />
                                   </button>
                                 </span>
+                              </td>{" "}
+                              <td className="whitespace-nowrap px-3 py-4 text-xs">
+                                {data?.email}
                               </td>
                               <td className="whitespace-nowrap px-3 py-4 text-xs">
                                 {data?.first_name}
@@ -893,7 +903,7 @@ export default function RolesPermission() {
                               </td>
                               <td className="whitespace-nowrap px-3 py-4 text-xs">
                                 {data?.role?.name}
-                              </td>
+                              </td>{" "}
                             </tr>
                           ))}
                         </tbody>

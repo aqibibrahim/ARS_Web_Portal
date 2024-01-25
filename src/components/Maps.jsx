@@ -34,6 +34,10 @@ const Maps = (props) => {
     lat: 33.7519137,
     lng: 72.7970134,
   });
+  const [newposition, setNewPosition] = useState({
+    lat: "",
+    lng: "",
+  });
   const [childData, setChildData] = useState("Data from child");
   const sendDataToParent = (e) => {
     props.onData(e);
@@ -165,9 +169,14 @@ const Maps = (props) => {
   });
   const SelectedAmbulanceView = (props, marker) => {
     const driverInfo = props?.driver;
+    setNewPosition({
+      lat: props?.gps_latitude,
+      lng: props?.gps_longitude,
+    });
     setAmbulanceInfo({
       selectedPlace: {
         id: props?.id,
+        equipments: props?.equipments,
         model: props?.model,
         make: props?.make,
         plate_no: props?.plate_no,
@@ -177,9 +186,10 @@ const Maps = (props) => {
         driver: driverInfo
           ? {
               name: `${driverInfo?.first_name} 
-              }`,
+              `,
               email: driverInfo?.email,
               status: driverInfo?.status,
+              phoneNumber: driverInfo?.phone_numbers,
             }
           : null,
         button: "Ambulance",
@@ -358,6 +368,7 @@ const Maps = (props) => {
         zoom={10}
         initialCenter={position}
         disableDefaultUI
+        center={newposition}
       >
         {ambulanceData.map((c, index) => (
           <Marker

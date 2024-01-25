@@ -17,6 +17,7 @@ import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Select as AntSelect } from "antd";
 import { Spin } from "antd";
+import AmbulanceViewModal from "../../AmbulanceViewModal";
 
 const { Option } = AntSelect;
 const AmbulanceFiles = () => {
@@ -104,8 +105,8 @@ const AmbulanceFiles = () => {
     setOptions(null);
     setSelectedAmbulance(ambulance);
     setLocationAddress({
-      latitude: ambulance?.parking_latitude,
-      longitude: ambulance?.parking_longitude,
+      latitude: ambulance?.gps_latitude,
+      longitude: ambulance?.gps_latitude,
       address: "",
     });
     if (ambulance?.equipments.length === 0) {
@@ -711,104 +712,11 @@ const AmbulanceFiles = () => {
           )}
         </div>
       </div>
-      {viewOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden  mb-5 ">
-            <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden z-10">
-              <BsArrowRightCircle
-                width={9}
-                className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                onClick={() => setViewOpen(false)}
-              />
-              <h3 className="text-xl font-semibold">
-                Ambulance Details{" "}
-                <span className="text-lime-600">
-                  {selectedAmbulance?.status}
-                </span>
-              </h3>
-            </div>
-            <div>
-              <div className="flex flex-row justify-between p-5">
-                <p>
-                  {" "}
-                  <span className="font-semibold">Make:</span>{" "}
-                  {selectedAmbulance?.make}
-                </p>
-                <p>
-                  <span className="font-semibold">Model:</span>{" "}
-                  {selectedAmbulance?.model}
-                </p>
-                <p>
-                  <span className="font-semibold">Plate#:</span>{" "}
-                  {selectedAmbulance?.plate_no}
-                </p>
-              </div>
-              <div className="px-5">
-                <p className="text-lg text-right font-semibold">
-                  Driver Details
-                </p>
-                {selectedAmbulance?.driver ? (
-                  <div>
-                    <p className="text-base text-right">
-                      {selectedAmbulance?.driver?.first_name}
-                    </p>
-                  </div>
-                ) : (
-                  <div>
-                    <p className="text-base text-right">
-                      No Driver Assigned Yet
-                    </p>
-                  </div>
-                )}
-                <div className=" mt-2">
-                  <p className="text-lg text-right font-semibold">
-                    Driver Phone No.
-                  </p>
-                  {selectedAmbulance?.driver?.phone_numbers.map(
-                    (phone_numbers) => (
-                      <p
-                        key={phone_numbers.id}
-                        className="text-base text-right"
-                      >
-                        {phone_numbers.number}
-                      </p>
-                    )
-                  )}
-                </div>
-                {/* Add other details as needed */}
-              </div>
-              <div className="px-5 mt-3 mb-2">
-                <p className="text-lg text-right font-semibold">
-                  Equipment Details
-                </p>
-                {selectedAmbulance?.equipments?.map((equipment) => (
-                  <p key={equipment.id} className="text-base text-right">
-                    {equipment.name}
-                  </p>
-                ))}
-              </div>
-              <div className="h-80 z-50 relative">
-                <Map
-                  google={window.google}
-                  zoom={10}
-                  style={{ width: "100%", height: "100%" }}
-                  initialCenter={{
-                    lat: parseFloat(selectedAmbulance?.gps_latitude),
-                    lng: parseFloat(selectedAmbulance?.gps_longitude),
-                  }}
-                >
-                  <Marker
-                    position={{
-                      lat: parseFloat(selectedAmbulance?.gps_latitude),
-                      lng: parseFloat(selectedAmbulance?.gps_longitude),
-                    }}
-                  />
-                </Map>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <AmbulanceViewModal
+        viewOpen={viewOpen}
+        setViewOpen={setViewOpen}
+        selectedAmbulance={selectedAmbulance}
+      />
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
           <div className=" top-5 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
