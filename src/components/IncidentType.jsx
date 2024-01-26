@@ -372,7 +372,7 @@ export default function IncidentType() {
         </div>
       )}
       <Modal
-        title="Are you sure to delete this Role?"
+        title="Are you sure to delete this Incident Type?"
         open={deleteModal}
         onOk={deleteIncidentType}
         onCancel={handleCancel}

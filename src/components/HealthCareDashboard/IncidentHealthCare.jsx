@@ -649,7 +649,7 @@ export default function IncidentHealthCare({}) {
                               </div>
                               <div className="px-1.5 py-[3px] bg-fuchsia-500 bg-opacity-75 rounded-[20px] justify-center items-center gap-[5px] flex">
                                 <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
-                                  أنثى
+                                  أنثى {incident?.gender_type?.name}
                                 </div>
                               </div>
                             </div>
@@ -773,14 +773,13 @@ export default function IncidentHealthCare({}) {
                       </div>
                       <div className="grow shrink basis-0 self-stretch p-[15px] justify-end items-center gap-2.5 flex">
                         <div className="grow shrink basis-0 flex-col justify-start items-end gap-[5px] inline-flex">
-                          <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
+                          <div className="self-stretch justify-end items-center gap-[5px]">
                             <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
-                              {incident?.latitude}- {incident?.longitude}
-                            </div>
-                            <div className="w-6 h-6 px-1 py-[2.50px] justify-center items-center flex">
-                              <div className="w-4 h-[19px] relative">
-                                <MapPinIcon />
-                              </div>
+                              {incident?.latitude}- {incident?.longitude} -{" "}
+                              {incident?.ambulance?.facility?.address}
+                            </div>{" "}
+                            <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                              {incident?.ambulance?.facility?.name}
                             </div>
                           </div>
                           <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
@@ -789,6 +788,11 @@ export default function IncidentHealthCare({}) {
                           <div className="w-[316px] h-[42px] text-right text-black text-opacity-50 text-xs font-normal font-['Inter']">
                             {incident?.description}{" "}
                           </div>
+                        </div>
+                      </div>{" "}
+                      <div className="w-6 h-6 justify-center items-center flex">
+                        <div className="w-4 h-[19px] mb-14 relative">
+                          <MapPinIcon />
                         </div>
                       </div>
                       <div className="w-[292px] self-stretch p-[15px] justify-end items-center gap-2.5 flex">
@@ -802,8 +806,10 @@ export default function IncidentHealthCare({}) {
                                 {incident?.incident_type?.name}
                               </div>
                             </div>
-                            <div className="px-1.5 py-[3px] bg-fuchsia-500 bg-opacity-75 rounded-[20px] justify-center items-center gap-[5px] flex">
-                              <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']"></div>
+                            <div className="px-1.5 py-[3px] bg-fuchsia-400 bg-opacity-75 rounded-[20px] justify-center items-center gap-[5px] flex">
+                              <div className="text-right text-white  text-xs font-normal font-['Inter']">
+                                {incident?.gender?.name}
+                              </div>
                             </div>
                           </div>
                           <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
@@ -813,9 +819,24 @@ export default function IncidentHealthCare({}) {
                               )
                             )}
                           </div>
-                          <div className="h-5 px-[15px] py-2.5 bg-red-600 rounded-lg justify-center items-center gap-2.5 inline-flex">
-                            <div className="text-white text-xs font-semibold font-['Inter']">
-                              {incident?.incident_type?.name}
+                          <div
+                            className="h-5 px-[15px] py-2.5 rounded-lg justify-center items-center gap-2.5 inline-flex"
+                            style={{
+                              backgroundColor:
+                                incident?.emergency_type?.name === "Critical"
+                                  ? "red"
+                                  : incident?.emergency_type?.name ===
+                                    "Moderate"
+                                  ? "yellow"
+                                  : incident?.emergency_type?.name === "Mild"
+                                  ? "green"
+                                  : "black",
+                            }}
+                          >
+                            <div
+                              className={`text-white text-xs font-semibold font-['Inter']`}
+                            >
+                              {incident?.emergency_type?.name}
                             </div>
                           </div>
                           <div className="text-black text-xs font-semibold font-inter">

@@ -197,6 +197,10 @@ export default function IncidentVIewModal(props) {
             google={window.google}
             zoom={10}
             style={{ width: "100%", height: "100%" }}
+            center={{
+              lat: parseFloat(showData?.latitude),
+              lng: parseFloat(showData?.longitude),
+            }}
             initialCenter={{
               lat: parseFloat(showData?.latitude),
               lng: parseFloat(showData?.longitude),

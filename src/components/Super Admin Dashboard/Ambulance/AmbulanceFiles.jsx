@@ -7,7 +7,12 @@ import {
 } from "@heroicons/react/24/outline";
 import { Pagination } from "antd";
 
-import { BsArrowRightCircle, BsEye, BsSearch } from "react-icons/bs";
+import {
+  BsArrowRightCircle,
+  BsEye,
+  BsSearch,
+  BsEyeSlash,
+} from "react-icons/bs";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -18,6 +23,7 @@ import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Select as AntSelect } from "antd";
 import { Spin } from "antd";
 import AmbulanceViewModal from "../../AmbulanceViewModal";
+import { Modal } from "antd";
 
 const { Option } = AntSelect;
 const AmbulanceFiles = () => {
@@ -32,6 +38,7 @@ const AmbulanceFiles = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [myData, setMyData] = useState([]);
+  const [showPassword, setShowPassword] = useState(false); // Track password visibility
 
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [updateFormOpen, setUpdateFormOpen] = useState(false);
@@ -56,6 +63,7 @@ const AmbulanceFiles = () => {
     setOpen(true);
     console.log("value:");
   };
+
   const handleChange = (value) => {
     setOptions(value);
     console.log("value:", value);
@@ -163,7 +171,9 @@ const AmbulanceFiles = () => {
       console.log(e);
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   useEffect(() => {
     fetchAmbulanceData(currentPage);
   }, [submitDone, currentPage]);
@@ -537,6 +547,7 @@ const AmbulanceFiles = () => {
 
     return `inline-flex items-center rounded-full ${backgroundColor} px-2 py-1 text-xs font-medium ${textColor}`;
   };
+
   return (
     <div
       className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
@@ -717,6 +728,7 @@ const AmbulanceFiles = () => {
         setViewOpen={setViewOpen}
         selectedAmbulance={selectedAmbulance}
       />
+
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
           <div className=" top-5 -left-[16rem] mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
@@ -731,34 +743,18 @@ const AmbulanceFiles = () => {
               />
               <h3 className="text-xl font-semibold">Create New Ambulance</h3>
             </div>
-            <form className="p-5" onSubmit={CreateAmbulance.handleSubmit}>
+            <form
+              className="p-5"
+              onSubmit={CreateAmbulance.handleSubmit}
+              autoComplete="off"
+            >
               <div className="flex flex-row justify-between gap-4 mb-4">
                 <div className="flex flex-col space-y-2 w-full">
-                  {/* Equipment field */}
                   <div>
-                    <label className="block  text-sm font-medium leading-6 text-gray-900 text-right">
+                    <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
                       Equipment
                     </label>
                     <div className="mt-[7px]">
-                      {/* <AntSelect
-                        value={options}
-                        placeholder="Select Equipments"
-                        onChange={(value) => handleChange(value)}
-                        options={myData}
-                        mode="multiple"
-                        allowClear
-                        // showArrow
-                        showSearch
-                        optionFilterProp="children"
-                        className="w-full"
-                      >
-                        {/* Render options */}
-                      {/* {myData.map((option) => (
-                          <Option key={option.value} value={option.value}>
-                            {option.label}
-                          </Option>
-                        ))} */}
-                      {/* </AntSelect> */}
                       <Select
                         value={options}
                         placeholder="Select"
@@ -767,7 +763,7 @@ const AmbulanceFiles = () => {
                         isMultiple={true}
                         isClearable={true}
                         primaryColor={"blue"}
-                        className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
                     </div>
                   </div>
@@ -786,11 +782,11 @@ const AmbulanceFiles = () => {
                         onChange={CreateAmbulance.handleChange}
                         value={CreateAmbulance.values.persons_supported}
                         placeholder="Persons Supported"
-                        className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
                       <div
-                        className="absolute inset-x-0  bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                         aria-hidden="true"
                       />
                     </div>
@@ -830,7 +826,6 @@ const AmbulanceFiles = () => {
                     <div className="relative mt-2">
                       <input
                         onClick={HandelOpenMap}
-                        // onChange={CreateAmbulance.handleChange}
                         value={locationAddress?.address}
                         type="text"
                         name="addresss"
@@ -865,7 +860,7 @@ const AmbulanceFiles = () => {
                         placeholder="Enter Plate No"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
-                        autoComplete="off"
+                        autoComplete="nope"
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -914,6 +909,7 @@ const AmbulanceFiles = () => {
                         placeholder="Enter Model"
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        autoComplete="nope"
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -929,34 +925,8 @@ const AmbulanceFiles = () => {
               <h3 className="text-xl font-semibold text-right">
                 Ambulance Credentials
               </h3>
-
-              <div className="flex flex-row gap-10 justify-between">
-                <div>
-                  <label
-                    htmlFor="plate_no"
-                    className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                  >
-                    Plate No
-                  </label>
-                  <div className="relative mt-2">
-                    <input
-                      type="text"
-                      name="plate_no"
-                      id="plate_no"
-                      onChange={CreateAmbulance.handleChange}
-                      value={CreateAmbulance.values.plate_no}
-                      placeholder="Enter Plate No"
-                      className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                      required
-                      autoComplete="off"
-                    />
-                    <div
-                      className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </div>
-                <div>
+              <div className="flex justify-end mt-1">
+                <div className="justify-end">
                   <label
                     htmlFor="password"
                     className="block text-sm font-medium leading-6 text-gray-900 text-right"
@@ -965,9 +935,9 @@ const AmbulanceFiles = () => {
                   </label>
                   <div className="relative mt-2">
                     <input
-                      type="password"
                       name="password"
-                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
                       onChange={CreateAmbulance.handleChange}
                       value={CreateAmbulance.values.password}
                       placeholder="Password"
@@ -978,6 +948,13 @@ const AmbulanceFiles = () => {
                       className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                       aria-hidden="true"
                     />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="relative -top-7 left-1 cursor-pointer z-10"
+                    >
+                      {showPassword ? <BsEyeSlash /> : <BsEye />}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1002,6 +979,7 @@ const AmbulanceFiles = () => {
           </div>
         </div>
       )}
+
       {updateFormOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
           <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
@@ -1134,7 +1112,6 @@ const AmbulanceFiles = () => {
                         className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         placeholder=" Choose On Map"
                         required
-                        readOnly
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -1209,6 +1186,7 @@ const AmbulanceFiles = () => {
                         placeholder="Enter Model"
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        autoComplete="off"
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -1234,6 +1212,7 @@ const AmbulanceFiles = () => {
                         placeholder="Password"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        autoComplete="off"
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"

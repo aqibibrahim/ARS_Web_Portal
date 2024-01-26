@@ -8,9 +8,9 @@ import { BsEye } from "react-icons/bs";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { BsArrowRightCircle, BsSearch } from "react-icons/bs";
 
-export default function Gender() {
+export default function Reasons() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [allGenders, setAllGenders] = useState([""]);
+  const [allReasons, setAllReasons] = useState([""]);
   const [viewOpen, setViewOpen] = useState(false);
   const [editData, setEditData] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -19,41 +19,46 @@ export default function Gender() {
   const [deleteIncidentID, setDeleteIncidentID] = useState("");
   const [deleteModal, setDeleteModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState({
-    GenderName: "",
+    reason: "",
+    editreason: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
-    GenderName: "",
-    editGenderName: "",
+    reason: "",
+    editreason: "",
   });
 
-  // const validateForm = () => {
-  //   const errors = {};
-  //   let isValid = true;
+  const validateForm = () => {
+    const errors = {};
+    let isValid = true;
+    if (!state.reason) {
+      errors.reason = "Reason Name is required";
+      isValid = false;
+    } else if (!state.editreason) {
+      errors.editreason = "Reason Name is required"; // <-- Updated line
+      isValid = false;
+    }
+    setValidationErrors(errors);
 
-  //   if (!state.GenderName) {
-  //     errors.GenderName = "Gender Name is required";
-  //     isValid = false;
-  //   } else if (!state.editGenderName) {
-  //     errors.GenderName = "Gender Name is required";
-  //     isValid = false;
-  //   }
-  //   setValidationErrors(errors);
+    return isValid;
+  };
 
-  //   return isValid;
-  // };
   const resetValidationErrors = () => {
     setValidationErrors({
-      IncidentTypeName: "",
-      editIncidentType: "",
+      reason: "",
+      editreason: "",
     });
   };
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.value });
-    // setEditIncidentType(event.target.value);
-    // setValidationErrors({ ...validationErrors, [event.target.name]: "" });
+    setValidationErrors({
+      ...validationErrors,
+      [event.target.name]:
+        event.target.value.trim() === "" ? `Reason Name is required` : "",
+    });
   };
-  const createNewGenderClick = () => {
+
+  const createNewReasonClick = () => {
     setIsModalOpen(true);
   };
   const handleCancel = () => {
@@ -61,7 +66,7 @@ export default function Gender() {
     setDeleteModal(false);
   };
   useEffect(() => {
-    const getGenders = async () => {
+    const getReasons = async () => {
       try {
         var token = localStorage.getItem("token");
         const headers = {
@@ -69,18 +74,17 @@ export default function Gender() {
           Authorization: `Bearer ${token}`,
         };
 
-        const response = await axios.get(`${Vars.domain}/genders`, {
+        const response = await axios.get(`${Vars.domain}/reasons`, {
           headers,
         });
-
         if (response.status === 200 || response.status === 201) {
-          setAllGenders(response?.data?.data);
+          setAllReasons(response?.data?.data);
         }
       } catch (error) {
         console.error("Error getting role:", error);
       }
     };
-    getGenders();
+    getReasons();
   }, [isModalOpen, editOpen, deleteModal]);
 
   const handleView = (data) => {
@@ -90,14 +94,14 @@ export default function Gender() {
   const handleEdit = (data) => {
     setEditOpen(true);
     setState({
-      editGenderName: data?.name,
+      editreason: data?.reason,
     });
     setEditIncidentID(data?.id);
   };
-  const createNewGender = async () => {
-    // if (!validateForm()) {
-    //   return;
-    // }
+  const createNewReason = async () => {
+    if (!validateForm()) {
+      return;
+    }
 
     setIsLoading(true);
 
@@ -108,16 +112,16 @@ export default function Gender() {
         Authorization: `Bearer ${token}`,
       };
       const data = {
-        name: state?.GenderName,
+        reason: state?.reason,
       };
 
-      const response = await axios.post(`${Vars.domain}/genders`, data, {
+      const response = await axios.post(`${Vars.domain}/reasons`, data, {
         headers,
       });
       if (response.status === 200 || response.status === 201) {
-        toast.success("Gender Created Successfully");
+        toast.success("Reason Created Successfully");
         setIsLoading(false);
-        setState({ GenderName: "" });
+        setState({ reason: "" });
         setIsModalOpen(false);
       }
     } catch (error) {
@@ -128,7 +132,11 @@ export default function Gender() {
     setIsLoading(false);
   };
 
-  const editGender = async () => {
+  const editReason = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -138,18 +146,18 @@ export default function Gender() {
         Authorization: `Bearer ${token}`,
       };
       const data = {
-        name: state.editGenderName, // Use state.editGenderName instead of editIncidentType
+        reason: state.editreason, // Use state.editreason instead of editIncidentType
       };
 
       const response = await axios.patch(
-        `${Vars.domain}/genders/${editIncidentID}`,
+        `${Vars.domain}/reasons/${editIncidentID}`,
         data,
         {
           headers,
         }
       );
       if (response.status === 200 || response.status === 201) {
-        toast.success("Gender Updated Successfully");
+        toast.success("Reason Updated Successfully");
         setIsLoading(false);
         setEditIncidentID("");
         setEditOpen(false);
@@ -162,7 +170,7 @@ export default function Gender() {
     setIsLoading(false);
   };
 
-  // const editGender = async () => {
+  // const editReason = async () => {
   //   if (!validateForm()) {
   //     return;
   //   }
@@ -201,7 +209,7 @@ export default function Gender() {
   //   setIsLoading(false);
   // };
 
-  const deleteGender = async () => {
+  const deleteReason = async () => {
     setIsLoading(true);
 
     try {
@@ -212,13 +220,13 @@ export default function Gender() {
       };
 
       const response = await axios.delete(
-        `${Vars.domain}/genders/${deleteIncidentID}`,
+        `${Vars.domain}/reasons/${deleteIncidentID}`,
         {
           headers,
         }
       );
       if (response.status === 204 || response.status === 201) {
-        toast.success("Gender Deleted Successfuly");
+        toast.success("Reason Deleted Successfuly");
         setIsLoading(false);
         setDeleteIncidentID("");
         setDeleteModal(false);
@@ -244,7 +252,7 @@ export default function Gender() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">Create New Gender</h3>
+              <h3 className="text-xl font-semibold">Create New Reason</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -254,15 +262,15 @@ export default function Gender() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Gender Name:
+                      Reason Name:
                     </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
-                        name="GenderName"
+                        name="reason"
                         onChange={handleChange}
-                        value={state?.GenderName}
-                        placeholder="Name of Gender"
+                        value={state?.reason}
+                        placeholder="Name of Reason"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -272,9 +280,9 @@ export default function Gender() {
                       />
                     </div>
                   </div>{" "}
-                  {validationErrors.GenderName && (
+                  {validationErrors.reason && (
                     <p className="text-red-500 text-sm text-right">
-                      {validationErrors.GenderName}
+                      {validationErrors.reason}
                     </p>
                   )}
                 </div>
@@ -291,7 +299,7 @@ export default function Gender() {
                   </button>
                 ) : (
                   <button
-                    onClick={createNewGender}
+                    onClick={createNewReason}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
                     Create
@@ -312,7 +320,7 @@ export default function Gender() {
                 onClick={() => setViewOpen(false)}
               />
               <h3 className="text-xl font-semibold">
-                Gender Details
+                Reason Details
                 {/* <span className="text-lime-600 ml-2">{editData?.status}</span> */}
               </h3>
             </div>
@@ -347,7 +355,7 @@ export default function Gender() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">Edit Gender Name</h3>
+              <h3 className="text-xl font-semibold">Edit Reason Name</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -362,10 +370,10 @@ export default function Gender() {
                     <div className="relative mt-2">
                       <input
                         type="text"
-                        name="editGenderName"
+                        name="editreason"
                         onChange={handleChange}
-                        value={state?.editGenderName}
-                        placeholder="Name of Incident Type"
+                        value={state?.editreason}
+                        placeholder="Name of Reason"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -375,9 +383,9 @@ export default function Gender() {
                       />
                     </div>
                   </div>{" "}
-                  {validationErrors.IncidentTypeName && (
+                  {validationErrors.editreason && (
                     <p className="text-red-500 text-sm text-right">
-                      {validationErrors.IncidentTypeName}
+                      {validationErrors.editreason}
                     </p>
                   )}
                 </div>
@@ -394,7 +402,7 @@ export default function Gender() {
                   </button>
                 ) : (
                   <button
-                    onClick={editGender}
+                    onClick={editReason}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
                     Update
@@ -406,9 +414,9 @@ export default function Gender() {
         </div>
       )}
       <Modal
-        title="Are you sure to delete this Gender?"
+        title="Are you sure to delete this Reason?"
         open={deleteModal}
-        onOk={deleteGender}
+        onOk={deleteReason}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
@@ -422,16 +430,16 @@ export default function Gender() {
         {" "}
         <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold m-2">Gender</h1>
+            <h1 className="text-xl font-semibold m-2">Reason</h1>
             <div>
               <button
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
                 type="button"
                 onClick={() => {
-                  createNewGenderClick();
+                  createNewReasonClick();
                 }}
               >
-                + Create New Gender
+                + Create New Reason
               </button>
             </div>
           </div>
@@ -464,12 +472,12 @@ export default function Gender() {
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Gender
+                  Reason
                 </th>
               </tr>
             </thead>
             <tbody>
-              {allGenders?.map((data, index) => (
+              {allReasons?.map((data, index) => (
                 <tr key={index} className="hover:bg-white">
                   <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                     <span className="flex gap-5">
@@ -501,7 +509,7 @@ export default function Gender() {
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-md">
-                    <span className="">{/* {data?.status} */}</span>
+                    {/* <span className="">{data?.reason}</span> */}
                   </td>{" "}
                   <td className="whitespace-nowrap px-3 py-4 text-md">
                     <span className="">{/* {data?.status} */}</span>
@@ -510,7 +518,7 @@ export default function Gender() {
                     <span className="">{/* {data?.status} */}</span>
                   </td>{" "}
                   <td className="whitespace-nowrap px-3 py-4 text-md">
-                    {data?.name}
+                    {data?.reason}
                   </td>
                 </tr>
               ))}

@@ -410,7 +410,7 @@ const DepartmentsFiles = () => {
                               className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
                               onClick={() => {
                                 setDelete(true);
-                                setDeleteID(item?.id);
+                                setDeleteID(data?.id);
                               }}
                             >
                               <BiMessageAltX />
