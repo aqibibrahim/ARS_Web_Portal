@@ -28,20 +28,20 @@ export default function Reasons() {
     editreason: "",
   });
 
-  const validateForm = () => {
-    const errors = {};
-    let isValid = true;
-    if (!state.reason) {
-      errors.reason = "Reason Name is required";
-      isValid = false;
-    } else if (!state.editreason) {
-      errors.editreason = "Reason Name is required"; // <-- Updated line
-      isValid = false;
-    }
-    setValidationErrors(errors);
+  // const validateForm = () => {
+  //   const errors = {};
+  //   let isValid = true;
+  //   if (!state.reason) {
+  //     errors.reason = "Reason Name is required";
+  //     isValid = false;
+  //   } else if (!state.editreason) {
+  //     errors.editreason = "Reason Name is required"; // <-- Updated line
+  //     isValid = false;
+  //   }
+  //   setValidationErrors(errors);
 
-    return isValid;
-  };
+  //   return isValid;
+  // };
 
   const resetValidationErrors = () => {
     setValidationErrors({
@@ -99,9 +99,9 @@ export default function Reasons() {
     setEditIncidentID(data?.id);
   };
   const createNewReason = async () => {
-    if (!validateForm()) {
-      return;
-    }
+    // if (!validateForm()) {
+    //   return;
+    // }
 
     setIsLoading(true);
 
@@ -133,9 +133,9 @@ export default function Reasons() {
   };
 
   const editReason = async () => {
-    if (!validateForm()) {
-      return;
-    }
+    // if (!validateForm()) {
+    //   return;
+    // }
 
     setIsLoading(true);
 

@@ -295,7 +295,52 @@ const AmbulanceFiles = () => {
 
     enableReinitialize: true,
   });
+  useEffect(() => {
+    const getAllMakes = async () => {
+      try {
+        var token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
 
+        const response = await axios.get(`${Vars.domain}/vehicle-make`, {
+          headers,
+        });
+        if (response.status === 200 || response.status === 201) {
+          setAllMakes(response?.data?.data);
+          setMyData(
+            response.data?.data?.map((variant) => ({
+              label: variant.name,
+              value: variant.id,
+            })))
+          debugger
+        }
+      } catch (error) {
+        console.error("Error getting role:", error);
+      }
+    };
+    const getAllModels = async () => {
+      try {
+        var token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+
+        const response = await axios.get(`${Vars.domain}/vehicle-models`, {
+          headers,
+        });
+        if (response.status === 200 || response.status === 201) {
+          setAllModels(response?.data?.data);
+        }
+      } catch (error) {
+        console.error("Error getting role:", error);
+      }
+    };
+    getAllMakes();
+    getAllModels();
+  }, [isModalOpen]);
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
     lat: 33.7519137,
@@ -678,10 +723,10 @@ const AmbulanceFiles = () => {
                         {ambulance?.regions[0]?.name}
                       </td> */}
                       <td className="whitespace-nowrap px-3 py-4 text-xs">
-                        {ambulance.model}
+                        {ambulance.model?.name}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-xs">
-                        {ambulance.make}
+                        {ambulance?.make?.name}
                       </td>
                       {/* <td className="whitespace-nowrap px-3 py-4 text-md">
                       {ambulance?.contact_nos?.map((phone) => (
@@ -876,7 +921,7 @@ const AmbulanceFiles = () => {
                       Make
                     </label>
                     <div className="relative mt-2">
-                      <input
+                      {/* <input
                         type="text"
                         name="make"
                         id="make"
@@ -885,6 +930,17 @@ const AmbulanceFiles = () => {
                         placeholder="Enter Make"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                      /> */}
+                      <Select
+                        value={selectedOption}
+                        placeholder="Select Vehicle Make"
+                        onChange={handleSelect}
+                        options={myData}
+                        // formatOptionLabel={formatOptionLabel}
+                        isMultiple={false}
+                        isClearable={true}
+                        primaryColor={"blue"}
+                        className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -900,7 +956,7 @@ const AmbulanceFiles = () => {
                       Model
                     </label>
                     <div className="relative mt-2">
-                      <input
+                      {/* <input
                         type="text"
                         name="model"
                         id="model"
@@ -910,6 +966,17 @@ const AmbulanceFiles = () => {
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         autoComplete="nope"
+                      /> */}
+                      <Select
+                        value={selectedOption}
+                        placeholder="Select Vehicle Make"
+                        onChange={handleSelect}
+                        options={myData}
+                        // formatOptionLabel={formatOptionLabel}
+                        isMultiple={false}
+                        isClearable={true}
+                        primaryColor={"blue"}
+                        className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -1100,11 +1167,11 @@ const AmbulanceFiles = () => {
                           locationAddress?.address
                             ? locationAddress?.address
                             : [
-                                "latitude " +
-                                  locationAddress?.latitude +
-                                  " longitude " +
-                                  locationAddress?.longitude,
-                              ]
+                              "latitude " +
+                              locationAddress?.latitude +
+                              " longitude " +
+                              locationAddress?.longitude,
+                            ]
                         }
                         type="text"
                         name="addresss"
