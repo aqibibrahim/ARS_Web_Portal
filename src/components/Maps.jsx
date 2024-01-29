@@ -529,12 +529,12 @@ const Maps = (props) => {
           onClose={() => setHealthCareInfo({ showingInfoWindow: false })}
         >
           <div
-            className="m-auto  w-72  bg-opacity-10 backdrop-blur-lg bg-white/80 "
+            className="m-auto     p-2  overflow-auto "
             style={{
               fontFamily: "Inter, sans-serif",
             }}
           >
-            <div className="backdrop-blur-lg bg-white/80 ">
+            <div className="backdrop-blur-lg  ">
               {" "}
               <div className="mb-5 text-right  ml-auto  ">
                 <span className="mr-2 text-md bg-green-500 p-1 rounded-xl text-white">
@@ -544,76 +544,76 @@ const Maps = (props) => {
                   {healthCareInfo?.selectedPlace?.name}
                 </span>
               </div>
-              <div className="mb-2 flex gap-y-2 flex-col text-right">
-                {/* <p className="text-lg text-gray-900 text-left font-medium">
+              <div className="bg-white m-auto rounded-xl p-2">
+                <div className="mb-2 flex gap-y-2 flex-col text-right">
+                  {/* <p className="text-lg text-gray-900 text-left font-medium">
                 {healthCareInfo?.selectedPlace?.status}
               </p> */}
-                <div>
-                  {healthCareInfo?.selectedPlace?.phoneNumbers?.length > 0 ? (
-                    <div>
-                      <p className="text-base font-semibold mb-1 text-gray-900   text-right">
-                        Phone Number<i className="bi bi-shield-check"></i>
-                      </p>
-                      {healthCareInfo?.selectedPlace?.phoneNumbers.map(
-                        (phoneNumber) => (
-                          <p
-                            key={phoneNumber.id}
-                            className="text-sm text-gray-500  text-right font-semibold "
-                          >
-                            +{phoneNumber.number}
+                  <div>
+                    {healthCareInfo?.selectedPlace?.phoneNumbers?.length > 0 ? (
+                      <div>
+                        <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                          Phone Number<i className="bi bi-shield-check"></i>
+                        </p>
+                        {healthCareInfo?.selectedPlace?.phoneNumbers.map(
+                          (phoneNumber) => (
+                            <p
+                              key={phoneNumber.id}
+                              className="text-sm text-gray-500  text-right font-semibold "
+                            >
+                              +{phoneNumber.number}
+                            </p>
+                          )
+                        )}
+                      </div>
+                    ) : (
+                      <p>NO Data Found</p>
+                    )}
+                  </div>
+                </div>
+                <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                  {healthCareInfo?.selectedPlace?.departments?.length}{" "}
+                  {healthCareInfo?.selectedPlace?.departments?.length === 1
+                    ? "Department "
+                    : "Departments "}
+                  Available
+                  <i className="bi bi-shield-check"></i>
+                </p>
+                <div className="justify-end flex-wrap flex ">
+                  {healthCareInfo?.selectedPlace?.departments?.length > 0 ? (
+                    healthCareInfo?.selectedPlace?.departments?.map(
+                      (departments) => (
+                        <p key={departments.id}>
+                          <p className="text-sm text-right inline-block font-semibold text-white bg-blue-400 px-2 m-1 rounded-xl">
+                            {departments.name}
                           </p>
-                        )
-                      )}
-                    </div>
+                        </p>
+                      )
+                    )
                   ) : (
-                    <p>NO Data Found</p>
+                    <p className="text-md text-left">No Data Found</p>
                   )}
                 </div>
-              </div>
-            </div>
-
-            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
-              {healthCareInfo?.selectedPlace?.departments?.length}{" "}
-              {healthCareInfo?.selectedPlace?.departments?.length === 1
-                ? "Department "
-                : "Departments "}
-              Available
-              <i className="bi bi-shield-check"></i>
-            </p>
-            <div className="justify-end flex-wrap flex ">
-              {healthCareInfo?.selectedPlace?.departments?.length > 0 ? (
-                healthCareInfo?.selectedPlace?.departments?.map(
-                  (departments) => (
-                    <p key={departments.id}>
-                      <p className="text-sm text-right inline-block font-semibold text-white bg-blue-400 px-2 m-1 rounded-xl">
-                        {departments.name}
-                      </p>
-                    </p>
-                  )
-                )
-              ) : (
-                <p className="text-md text-left">No Data Found</p>
-              )}
-            </div>
-            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
-              Focal Persons <i className="bi bi-shield-check"></i>
-            </p>
-
-            <div>
-              {healthCareInfo?.selectedPlace?.focalPersons?.length > 0 ? (
-                healthCareInfo?.selectedPlace?.focalPersons?.map(
-                  (focalPerson) => (
-                    <p
-                      key={focalPerson.id}
-                      className="text-sm text-gray-500  text-right font-semibold "
-                    >
-                      {focalPerson.first_name} {focalPerson.last_name}
-                    </p>
-                  )
-                )
-              ) : (
-                <p>No Data Found</p>
-              )}
+                <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                  Focal Persons <i className="bi bi-shield-check"></i>
+                </p>
+                <div>
+                  {healthCareInfo?.selectedPlace?.focalPersons?.length > 0 ? (
+                    healthCareInfo?.selectedPlace?.focalPersons?.map(
+                      (focalPerson) => (
+                        <p
+                          key={focalPerson.id}
+                          className="text-sm text-gray-500  text-right font-semibold "
+                        >
+                          {focalPerson.first_name} {focalPerson.last_name}
+                        </p>
+                      )
+                    )
+                  ) : (
+                    <p>No Data Found</p>
+                  )}
+                </div>
+              </div>{" "}
             </div>
           </div>
           {/* </div> */}
@@ -629,7 +629,7 @@ const Maps = (props) => {
           onClose={() => setRegionInfo({ showingInfoWindow: false })}
         >
           <div
-            className="m-auto  w-96  bg-opacity-10 backdrop-blur-lg bg-white/80 "
+            className="m-auto     p-2  overflow-auto "
             style={{
               fontFamily: "Inter, sans-serif",
             }}
@@ -642,61 +642,63 @@ const Maps = (props) => {
                 {regionInfo?.selectedPlace?.name}
               </span>
             </div>
-            <div className="mt-2">
-              {" "}
-              <p className="text-base font-semibold mb-1 text-gray-900   text-right">
-                Phone Number<i className="bi bi-shield-check"></i>
-              </p>
-              {regionInfo?.selectedPlace?.phoneNumber?.map((phoneNumber) => (
-                <p
-                  key={phoneNumber.id}
-                  className="text-sm text-gray-500  text-right font-semibold "
-                >
-                  +{phoneNumber.number}
+            <div className="bg-white rounded-xl p-2">
+              <div className="mt-2">
+                {" "}
+                <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                  Phone Number<i className="bi bi-shield-check"></i>
                 </p>
-              ))}
-            </div>
-            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
-              Address<i className="bi bi-shield-check"></i>
-            </p>
-            <p className="text-sm text-gray-500  text-right font-semibold ">
-              {regionInfo?.selectedPlace?.address}
-            </p>
-            {/* <div className="mb-2 flex gap-y-2 flex-col">
+                {regionInfo?.selectedPlace?.phoneNumber?.map((phoneNumber) => (
+                  <p
+                    key={phoneNumber.id}
+                    className="text-sm text-gray-500  text-right font-semibold "
+                  >
+                    +{phoneNumber.number}
+                  </p>
+                ))}
+              </div>
+              <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                Address<i className="bi bi-shield-check"></i>
+              </p>
+              <p className="text-sm text-gray-500  text-right font-semibold ">
+                {regionInfo?.selectedPlace?.address}
+              </p>
+              {/* <div className="mb-2 flex gap-y-2 flex-col">
               <p className="text-lg text-gray-900 text-right font-medium">
                 {" "}
                 {regionInfo?.selectedPlace?.status}
               </p>
             </div> */}
-            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
-              No. of Ambulances: <i className="bi bi-shield-check"></i>
-            </p>
-            <p className="text-right">
-              {regionInfo?.selectedPlace?.ambulances?.length}
-            </p>
+              <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                No. of Ambulances: <i className="bi bi-shield-check"></i>
+              </p>
+              <p className="text-right">
+                {regionInfo?.selectedPlace?.ambulances?.length}
+              </p>
 
-            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
-              Ambulance Details<i className="bi bi-shield-check"></i>
-            </p>
-            <p className="text-base text-right">
-              {regionInfo?.selectedPlace?.ambulances?.map((ambulance) => (
-                <p key={ambulance.id} className="text-right mb-4">
-                  <span
-                    className={`mr-2 text-md 
+              <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                Ambulance Details<i className="bi bi-shield-check"></i>
+              </p>
+              <p className="text-base text-right">
+                {regionInfo?.selectedPlace?.ambulances?.map((ambulance) => (
+                  <p key={ambulance.id} className="text-right mb-4">
+                    <span
+                      className={`mr-2 text-md 
                       ${getStatusStyle(
                         ambulance.status
                       )} p-1 rounded-xl text-white`}
-                  >
-                    {ambulance?.status}
-                  </span>
-                  {ambulance?.make +
-                    " " +
-                    ambulance?.model +
-                    " " +
-                    ambulance?.plate_no}
-                </p>
-              ))}
-            </p>
+                    >
+                      {ambulance?.status}
+                    </span>
+                    {ambulance?.make +
+                      " " +
+                      ambulance?.model +
+                      " " +
+                      ambulance?.plate_no}
+                  </p>
+                ))}
+              </p>
+            </div>
           </div>
         </InfoWindow>
       </Map>

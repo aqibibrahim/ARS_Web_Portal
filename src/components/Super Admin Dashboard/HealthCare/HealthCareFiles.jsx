@@ -205,6 +205,8 @@ const HealthCareFiles = () => {
   }, []);
   const handleModalClose = () => {
     setIsUpdateDepartment(false);
+    setSelectedDepartment(null);
+    setSelectedHealthCare(null);
   };
 
   useEffect(() => {
@@ -417,7 +419,8 @@ const HealthCareFiles = () => {
     onSubmit: (values) => {
       setLoadingMessage(true);
       const JSON = {
-        department_id: selectedDepartment?.map((item) => item?.value),
+        departments: selectedDepartment?.map((item) => item?.value),
+        facility_id: selectedHealthCare,
         // total_beds: values.total_beds,
         // occupied_beds_men: values.occupied_beds_men,
         // occupied_beds_women: values.occupied_beds_women,
@@ -428,20 +431,36 @@ const HealthCareFiles = () => {
       const createequipment = async () => {
         console.log(JSON);
         try {
-          await axios
-            .post(`${window.$BackEndUrl}/facility-department/add`, JSON, config)
-            .then((res) => {
-              console.log(res);
-              toast.success("Department added successfully!");
-              setIsModalOpen(false);
-              setLoadingMessage(false);
-              setSubmitDone(!submitDone);
-              setIsUpdateDepartment(false);
-            });
-        } catch (e) {
-          setLoadingMessage(false);
-          toast.error(`${e?.response?.data?.data?.name[0]}`);
-          console.log(e);
+          const response = await axios.post(
+            `${window.$BackEndUrl}/facility-department/add`,
+            JSON,
+            config
+          );
+
+          // Check if the status code is 200 or 201
+          if (response.status === 200 || response.status === 201) {
+            console.log(response);
+            toast.success("Department added successfully!");
+            setIsModalOpen(false);
+            setLoadingMessage(false);
+            setSubmitDone(!submitDone);
+            setIsUpdateDepartment(false);
+            setSelectedDepartment(null);
+            setSelectedHealthCare(null);
+          } else {
+            // Handle other status codes if needed
+            console.error("Unexpected status code:", response.status);
+            toast.error("Failed to add department");
+          }
+        } catch (error) {
+          // Handle network errors or other exceptions
+          console.error("Post request error:", error);
+
+          // Extract the specific error message from the response if available
+          const errorMessage =
+            error?.response?.data?.data?.name?.[0] ||
+            "Failed to add department";
+          toast.error(errorMessage);
         }
       };
 
