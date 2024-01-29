@@ -435,7 +435,7 @@ const Maps = (props) => {
           }}
         >
           <div
-            className="m-auto  w-72 bg-white  "
+            className="m-auto     p-2  overflow-auto "
             style={{ fontFamily: "Inter, sans-serif" }}
           >
             {/* <div className="pb-4 ">
@@ -449,7 +449,8 @@ const Maps = (props) => {
             </div> */}
 
             {/* Heading div */}
-            <div className="mb-5 text-right  ml-auto bg-white bg-opacity-90 ">
+
+            <div className="mb-5 text-right   ml-auto ">
               <span
                 className={`text-sm ${getStatusStyle(
                   ambulanceInfo?.selectedPlace?.status
@@ -458,60 +459,63 @@ const Maps = (props) => {
                 {ambulanceInfo?.selectedPlace?.status}
               </span>
               <span className="text-lg font-bold mb-2 font-Inter ml-2">
-                {ambulanceInfo?.selectedPlace?.model +
+                {ambulanceInfo?.selectedPlace?.model?.name +
                   " " +
-                  ambulanceInfo?.selectedPlace?.make}{" "}
+                  ambulanceInfo?.selectedPlace?.model?.make?.name}{" "}
               </span>
               <p className="text-md font-bold mb-2 font-Inter ml-2">
                 {ambulanceInfo?.selectedPlace?.plate_no}{" "}
               </p>{" "}
             </div>
-
-            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
-              Equipments
-            </p>
-            <div className="justify-end flex-wrap flex ">
-              {ambulanceInfo?.selectedPlace?.equipments?.length > 0 ? (
-                ambulanceInfo?.selectedPlace?.equipments?.map((equipment) => (
-                  <p key={equipment.id} className="text-base text-right">
-                    <p className="text-sm text-right inline-block font-semibold text-white bg-blue-400 px-2 m-1 rounded-xl">
-                      {equipment.name}
+            <div className=" bg-white  rounded-xl p-1 m-auto overflow-auto ">
+              <p className="text-base font-semibold mb-1 text-gray-900    text-right">
+                Equipments
+              </p>
+              <div className="justify-end flex-wrap flex bg-white ">
+                {ambulanceInfo?.selectedPlace?.equipments?.length > 0 ? (
+                  ambulanceInfo?.selectedPlace?.equipments?.map((equipment) => (
+                    <p key={equipment.id} className="text-base text-right">
+                      <p className="text-sm text-right inline-block font-semibold text-white bg-blue-400 px-2 m-1 rounded-xl">
+                        {equipment.name}
+                      </p>
                     </p>
+                  ))
+                ) : (
+                  <p className="text-md text-right">No Data Found</p>
+                )}
+              </div>
+              {renderAmbulanceEquipment(ambulanceInfo?.selectedPlace?.id)}
+              <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                Driver Information
+              </p>
+
+              {ambulanceInfo?.selectedPlace?.driver?.status !== undefined &&
+              ambulanceInfo?.selectedPlace?.driver !== null ? (
+                <div className="mb-2 text-right  gap-y-2">
+                  <span className=" text-sm bg-green-500 px-2 rounded-xl mr-1 text-white">
+                    {ambulanceInfo?.selectedPlace?.driver?.status}
+                  </span>
+                  <span className="text-sm text-gray-500  text-right font-semibold ">
+                    {ambulanceInfo?.selectedPlace?.driver?.name}
+                  </span>
+
+                  {ambulanceInfo?.selectedPlace?.driver?.phoneNumber?.map(
+                    (phoneNumber) => (
+                      <p className="text-sm text-gray-500  text-right font-semibold ">
+                        +{phoneNumber?.number}
+                      </p>
+                    )
+                  )}
+                  <p className="text-sm text-gray-500  text-right font-semibold ">
+                    {ambulanceInfo?.selectedPlace?.driver?.email}
                   </p>
-                ))
+                </div>
               ) : (
-                <p className="text-md text-right">No Data Found</p>
+                <div className="text-base text-right">
+                  No Driver Assigned yet
+                </div>
               )}
             </div>
-            {renderAmbulanceEquipment(ambulanceInfo?.selectedPlace?.id)}
-            <p className="text-base font-semibold mb-1 text-gray-900   text-right">
-              Driver Information
-            </p>
-
-            {ambulanceInfo?.selectedPlace?.driver?.status !== undefined &&
-            ambulanceInfo?.selectedPlace?.driver !== null ? (
-              <div className="mb-2 text-right  gap-y-2">
-                <span className=" text-sm bg-green-500 px-2 rounded-xl mr-1 text-white">
-                  {ambulanceInfo?.selectedPlace?.driver?.status}
-                </span>
-                <span className="text-sm text-gray-500  text-right font-semibold ">
-                  {ambulanceInfo?.selectedPlace?.driver?.name}
-                </span>
-
-                {ambulanceInfo?.selectedPlace?.driver?.phoneNumber?.map(
-                  (phoneNumber) => (
-                    <p className="text-sm text-gray-500  text-right font-semibold ">
-                      +{phoneNumber?.number}
-                    </p>
-                  )
-                )}
-                <p className="text-sm text-gray-500  text-right font-semibold ">
-                  {ambulanceInfo?.selectedPlace?.driver?.email}
-                </p>
-              </div>
-            ) : (
-              <div className="text-base text-right">No Driver Assigned yet</div>
-            )}
           </div>
         </InfoWindow>
 

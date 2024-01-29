@@ -100,7 +100,6 @@ const EditHealthCare = ({ openModal, datatt }) => {
   const createAssignAmbulance = async () => {
     const JSON = {
       facility_id: selectedFacilityOption.id,
-
       // longitude: getlatitude.lat,
       // incident_type_id:selectedOption.value,
       // description:values.description,
@@ -109,23 +108,33 @@ const EditHealthCare = ({ openModal, datatt }) => {
       // informer_address:"test ",
       // type:selectedOption.label,
     };
+
     console.log(JSON);
     console.log(selectedFacilityOption, "dsdsds");
     try {
-      await axios
-        .patch(`${Vars.domain}/ambulances/${ambulanceID}`, JSON, config)
-        .then((res) => {
-          console.log(res);
-          toast.success("Healthcare Assigned Successfuly");
-          setBtnDisbale(true);
-          setOpen(false);
-          // openModal(false);
-        });
-    } catch (e) {
-      // setLoadingMessage(false);
-      toast.error("failed");
-      console.log(e);
+      const response = await axios.patch(
+        `${Vars.domain}/ambulances/${ambulanceID}`,
+        JSON,
+        config
+      );
+
+      // Check if the status code is 200 or 201
+      if (response.status === 200 || response.status === 201) {
+        console.log(response);
+        toast.success("Healthcare Assigned Successfully");
+        setBtnDisbale(true);
+        setOpen(false);
+      } else {
+        // Handle other status codes if needed
+        console.error("Unexpected status code:", response.status);
+        toast.error("Failed to assign healthcare");
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error("Patch request error:", error);
+      toast.error("Failed to assign healthcare");
     }
+
     console.log(ambulanceID, "aaambID");
   };
   const activeIndex = (index) => {

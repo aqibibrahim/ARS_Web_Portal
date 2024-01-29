@@ -10,8 +10,37 @@
   .custom-scroll-style::-webkit-scrollbar-thumb {
     background-color:#60a5fa;
     border-radius: 4px;
+  }.backdrop-blur-sm {
+    backdrop-filter: blur(4px);
   }
+  
   
   .custom-scroll-style::-webkit-scrollbar-track {
     background-color: #f5f5f5;
   }
+
+  .gm-style .gm-style-iw-d {
+    background-color: transparent !important;
+overflow: hidden !important;
+    overflow-y: visible !important;
+    max-height: 237px !important;
+  }
+/* Add background blur to the content of the InfoWindow */
+.gm-style-iw .gm-style-iw-c {
+  background-color: transparent !important;
+  backdrop-filter: blur(5px); /* Adjust the blur amount as needed */
+}
+
+/* Add background blur to the entire InfoWindow */
+.gm-style .gm-style-iw-c {
+  background-color: transparent !important;
+  backdrop-filter: blur(5px); /* Adjust the blur amount as needed */
+  
+}
+
+/* If needed, apply background blur to the InfoWindow overlay */
+.gm-style-moc {
+  background: transparent;
+  backdrop-filter: blur(5px); /* Adjust the blur amount as needed */
+  width: 100%;
+}

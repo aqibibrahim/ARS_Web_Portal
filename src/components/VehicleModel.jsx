@@ -91,7 +91,6 @@ export default function VehicleModal() {
               value: variant.id,
             }))
           );
-          debugger;
         }
       } catch (error) {
         console.error("Error getting role:", error);
@@ -124,7 +123,6 @@ export default function VehicleModal() {
     setEditData(data);
   };
   const handleEdit = (data) => {
-    debugger;
     setEditOpen(true);
     setState({
       editVehicleModel: data?.name,
@@ -149,7 +147,6 @@ export default function VehicleModal() {
         name: state?.vehicleModel,
         make_id: selectedOption?.value,
       };
-      debugger;
       const response = await axios.post(`${Vars.domain}/vehicle-models`, data, {
         headers,
       });
@@ -188,7 +185,6 @@ export default function VehicleModal() {
         name: state?.editVehicleModel,
         make_id: selectedOption?.value,
       };
-      debugger;
       const response = await axios.patch(
         `${Vars.domain}/vehicle-models/${editIncidentID}`,
         data,
