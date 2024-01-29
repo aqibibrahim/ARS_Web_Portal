@@ -8,9 +8,11 @@ import { BsEye } from "react-icons/bs";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { BsArrowRightCircle, BsSearch } from "react-icons/bs";
 
-export default function Reasons() {
+export default function VehicleMake() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [allReasons, setAllReasons] = useState([""]);
+  const [allMakes, setAllMakes] = useState([""]);
+  const [allModels, setAllModels] = useState([""]);
+
   const [viewOpen, setViewOpen] = useState(false);
   const [editData, setEditData] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -19,34 +21,34 @@ export default function Reasons() {
   const [deleteIncidentID, setDeleteIncidentID] = useState("");
   const [deleteModal, setDeleteModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState({
-    reason: "",
-    editreason: "",
+    vehicleMake: "",
+    editVehicleMake: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
-    reason: "",
-    editreason: "",
+    vehicleMake: "",
+    editVehicleMake: "",
   });
 
   // const validateForm = () => {
-  //   const errors = {};
-  //   let isValid = true;
-  //   if (!state.reason) {
-  //     errors.reason = "Reason Name is required";
-  //     isValid = false;
-  //   } else if (!state.editreason) {
-  //     errors.editreason = "Reason Name is required"; // <-- Updated line
-  //     isValid = false;
-  //   }
-  //   setValidationErrors(errors);
+  //     const errors = {};
+  //     let isValid = true;
+  //     if (!state.vehicleMake) {
+  //         errors.vehicleMake = "Vehicle Make is required";
+  //         isValid = false;
+  //     } else if (!state.editVehicleMake) {
+  //         errors.editVehicleMake = "Vehicle Make is required";
+  //         isValid = false;
+  //     }
+  //     setValidationErrors(errors);
 
-  //   return isValid;
+  //     return isValid;
   // };
 
   const resetValidationErrors = () => {
     setValidationErrors({
-      reason: "",
-      editreason: "",
+      vehicleMake: "",
+      editVehicleMake: "",
     });
   };
   const handleChange = (event) => {
@@ -54,11 +56,11 @@ export default function Reasons() {
     setValidationErrors({
       ...validationErrors,
       [event.target.name]:
-        event.target.value.trim() === "" ? `Reason Name is required` : "",
+        event.target.value.trim() === "" ? `Vehicle Make is required` : "",
     });
   };
 
-  const createNewReasonClick = () => {
+  const AddNewVehicleMake = () => {
     setIsModalOpen(true);
   };
   const handleCancel = () => {
@@ -66,7 +68,7 @@ export default function Reasons() {
     setDeleteModal(false);
   };
   useEffect(() => {
-    const getReasons = async () => {
+    const getAllMakes = async () => {
       try {
         var token = localStorage.getItem("token");
         const headers = {
@@ -74,17 +76,17 @@ export default function Reasons() {
           Authorization: `Bearer ${token}`,
         };
 
-        const response = await axios.get(`${Vars.domain}/reasons`, {
+        const response = await axios.get(`${Vars.domain}/vehicle-make`, {
           headers,
         });
         if (response.status === 200 || response.status === 201) {
-          setAllReasons(response?.data?.data);
+          setAllMakes(response?.data?.data);
         }
       } catch (error) {
         console.error("Error getting role:", error);
       }
     };
-    getReasons();
+    getAllMakes();
   }, [isModalOpen, editOpen, deleteModal]);
 
   const handleView = (data) => {
@@ -94,13 +96,13 @@ export default function Reasons() {
   const handleEdit = (data) => {
     setEditOpen(true);
     setState({
-      editreason: data?.reason,
+      editVehicleMake: data?.name,
     });
     setEditIncidentID(data?.id);
   };
-  const createNewReason = async () => {
+  const createNewVehicleMake = async () => {
     // if (!validateForm()) {
-    //   return;
+    //     return;
     // }
 
     setIsLoading(true);
@@ -112,16 +114,16 @@ export default function Reasons() {
         Authorization: `Bearer ${token}`,
       };
       const data = {
-        reason: state?.reason,
+        name: state?.vehicleMake,
       };
 
-      const response = await axios.post(`${Vars.domain}/reasons`, data, {
+      const response = await axios.post(`${Vars.domain}/vehicle-make`, data, {
         headers,
       });
       if (response.status === 200 || response.status === 201) {
-        toast.success("Reason Created Successfully");
+        toast.success("Vehicle Make Added Successfully");
         setIsLoading(false);
-        setState({ reason: "" });
+        setState({ vehicleMake: "" });
         setIsModalOpen(false);
       }
     } catch (error) {
@@ -132,9 +134,9 @@ export default function Reasons() {
     setIsLoading(false);
   };
 
-  const editReason = async () => {
+  const editVehcileMake = async () => {
     // if (!validateForm()) {
-    //   return;
+    //     return;
     // }
 
     setIsLoading(true);
@@ -146,18 +148,18 @@ export default function Reasons() {
         Authorization: `Bearer ${token}`,
       };
       const data = {
-        reason: state.editreason, // Use state.editreason instead of editIncidentType
+        name: state.editVehicleMake, // Use state.editreason instead of editIncidentType
       };
 
       const response = await axios.patch(
-        `${Vars.domain}/reasons/${editIncidentID}`,
+        `${Vars.domain}/vehicle-make/${editIncidentID}`,
         data,
         {
           headers,
         }
       );
       if (response.status === 200 || response.status === 201) {
-        toast.success("Reason Updated Successfully");
+        toast.success("Vehicle Make Updated Successfully");
         setIsLoading(false);
         setEditIncidentID("");
         setEditOpen(false);
@@ -170,46 +172,7 @@ export default function Reasons() {
     setIsLoading(false);
   };
 
-  // const editReason = async () => {
-  //   if (!validateForm()) {
-  //     return;
-  //   }
-
-  //   setIsLoading(true);
-
-  //   try {
-  //     var token = localStorage.getItem("token");
-  //     const headers = {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     };
-  //     const data = {
-  //       name: editIncidentType,
-  //     };
-
-  //     const response = await axios.patch(
-  //       `${Vars.domain}/genders/${editIncidentID}`,
-  //       data,
-  //       {
-  //         headers,
-  //       }
-  //     );
-  //     if (response.status === 200 || response.status === 201) {
-  //       toast.success("Gender Updated Successfully");
-  //       setIsLoading(false);
-  //       setEditIncidentType("");
-  //       setEditIncidentID("");
-  //       setEditOpen(false);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating Incident Type:", error);
-  //     toast.error(error?.response?.data?.message);
-  //   }
-
-  //   setIsLoading(false);
-  // };
-
-  const deleteReason = async () => {
+  const deleteVehicleMake = async () => {
     setIsLoading(true);
 
     try {
@@ -220,19 +183,19 @@ export default function Reasons() {
       };
 
       const response = await axios.delete(
-        `${Vars.domain}/reasons/${deleteIncidentID}`,
+        `${Vars.domain}/vehicle-make/${deleteIncidentID}`,
         {
           headers,
         }
       );
       if (response.status === 204 || response.status === 201) {
-        toast.success("Reason Deleted Successfuly");
+        toast.success("Vehicle Make Deleted Successfuly");
         setIsLoading(false);
         setDeleteIncidentID("");
         setDeleteModal(false);
       }
     } catch (error) {
-      console.error("Error deleting Incident Type:", error);
+      console.error("Error deleting Vehicle Make :", error);
       toast.error(error?.response?.data?.message);
     }
     setIsLoading(false);
@@ -252,7 +215,7 @@ export default function Reasons() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">Create New Reason</h3>
+              <h3 className="text-xl font-semibold">Create Vehicle Make</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -262,15 +225,15 @@ export default function Reasons() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Reason Name:
+                      Vehicle Make:
                     </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
-                        name="reason"
+                        name="vehicleMake"
                         onChange={handleChange}
-                        value={state?.reason}
-                        placeholder="Name of Reason"
+                        value={state?.vehicleMake}
+                        placeholder="Vehicle Make"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -280,9 +243,9 @@ export default function Reasons() {
                       />
                     </div>
                   </div>{" "}
-                  {validationErrors.reason && (
+                  {validationErrors.vehicleMake && (
                     <p className="text-red-500 text-sm text-right">
-                      {validationErrors.reason}
+                      {validationErrors.vehicleMake}
                     </p>
                   )}
                 </div>
@@ -299,10 +262,10 @@ export default function Reasons() {
                   </button>
                 ) : (
                   <button
-                    onClick={createNewReason}
+                    onClick={createNewVehicleMake}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Create
+                    Add
                   </button>
                 )}
               </div>
@@ -320,7 +283,7 @@ export default function Reasons() {
                 onClick={() => setViewOpen(false)}
               />
               <h3 className="text-xl font-semibold">
-                Reason Details
+                Vehicle Make Details
                 {/* <span className="text-lime-600 ml-2">{editData?.status}</span> */}
               </h3>
             </div>
@@ -328,7 +291,8 @@ export default function Reasons() {
               <div className="flex flex-row justify-end p-5">
                 <p>
                   {" "}
-                  <span className="font-semibold">Name:</span> {editData?.name}
+                  <span className="font-semibold">Vehicle Make:</span>{" "}
+                  {editData?.name}
                 </p>
                 {/* <p>
                   <span className="font-semibold">Model:</span>{" "}
@@ -355,7 +319,7 @@ export default function Reasons() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">Edit Reason Name</h3>
+              <h3 className="text-xl font-semibold">Edit Vehicle Make</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -365,15 +329,15 @@ export default function Reasons() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Name:
+                      Vehicle Make:
                     </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
-                        name="editreason"
+                        name="editVehicleMake"
                         onChange={handleChange}
-                        value={state?.editreason}
-                        placeholder="Name of Reason"
+                        value={state?.editVehicleMake}
+                        placeholder="Name of Vehicle Make"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -383,9 +347,9 @@ export default function Reasons() {
                       />
                     </div>
                   </div>{" "}
-                  {validationErrors.editreason && (
+                  {validationErrors.editVehicleMake && (
                     <p className="text-red-500 text-sm text-right">
-                      {validationErrors.editreason}
+                      {validationErrors.editVehicleMake}
                     </p>
                   )}
                 </div>
@@ -402,7 +366,7 @@ export default function Reasons() {
                   </button>
                 ) : (
                   <button
-                    onClick={editReason}
+                    onClick={editVehcileMake}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
                     Update
@@ -414,9 +378,9 @@ export default function Reasons() {
         </div>
       )}
       <Modal
-        title="Are you sure to delete this Reason?"
+        title="Are you sure to delete this Vehicle Make?"
         open={deleteModal}
-        onOk={deleteReason}
+        onOk={deleteVehicleMake}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
@@ -430,16 +394,16 @@ export default function Reasons() {
         {" "}
         <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold m-2">Reason</h1>
+            <h1 className="text-xl font-semibold m-2">Vehicle Make</h1>
             <div>
               <button
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
                 type="button"
                 onClick={() => {
-                  createNewReasonClick();
+                  AddNewVehicleMake();
                 }}
               >
-                + Create New Reason
+                + Add New Vehicle Make
               </button>
             </div>
           </div>
@@ -472,12 +436,12 @@ export default function Reasons() {
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Reason
+                  Vehicle Make
                 </th>
               </tr>
             </thead>
             <tbody>
-              {allReasons?.map((data, index) => (
+              {allMakes?.map((data, index) => (
                 <tr key={index} className="hover:bg-white">
                   <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                     <span className="flex gap-5">
@@ -518,7 +482,7 @@ export default function Reasons() {
                     <span className="">{/* {data?.status} */}</span>
                   </td>{" "}
                   <td className="whitespace-nowrap px-3 py-4 text-md">
-                    {data?.reason}
+                    {data?.name}
                   </td>
                 </tr>
               ))}

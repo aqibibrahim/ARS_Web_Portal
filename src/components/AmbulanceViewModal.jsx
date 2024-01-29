@@ -67,11 +67,11 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
               <p>
                 {" "}
                 <span className="font-semibold">Make:</span>{" "}
-                {ambulanceData?.make}
+                {ambulanceData?.model?.make?.name}
               </p>
               <p>
                 <span className="font-semibold">Model:</span>{" "}
-                {ambulanceData?.model}
+                {ambulanceData?.model?.name}
               </p>
               <p>
                 <span className="font-semibold">Plate#:</span>{" "}
