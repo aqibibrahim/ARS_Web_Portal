@@ -155,7 +155,8 @@ const EditHealthCare = ({ openModal, datatt }) => {
             className="flex mt-4 m-5 flex-col hover:bg-gray-100 cursor-pointer justify-end gap-1 border border-gray-400 p-1 rounded-md mb-2 text-gray-800"
           >
             <p className="text-right">
-              Model: {ambulance?.make} {ambulance?.model} {ambulance?.plate_no}
+              Model: {ambulance?.model?.make?.name} {ambulance?.model?.name}{" "}
+              {ambulance?.plate_no}
             </p>
             <p className="text-right">Id No:{ambulance?.id_no}</p>
             <p className="text-right">

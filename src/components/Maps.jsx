@@ -435,7 +435,7 @@ const Maps = (props) => {
           }}
         >
           <div
-            className="m-auto     p-2  overflow-auto "
+            className="m-auto     p-2  overflow-auto w-72 "
             style={{ fontFamily: "Inter, sans-serif" }}
           >
             {/* <div className="pb-4 ">
@@ -450,7 +450,7 @@ const Maps = (props) => {
 
             {/* Heading div */}
 
-            <div className="mb-5 text-right   ml-auto ">
+            <div className="mb-5 text-right  mx-5">
               <span
                 className={`text-sm ${getStatusStyle(
                   ambulanceInfo?.selectedPlace?.status
@@ -467,7 +467,7 @@ const Maps = (props) => {
                 {ambulanceInfo?.selectedPlace?.plate_no}{" "}
               </p>{" "}
             </div>
-            <div className=" bg-white  rounded-xl p-1 m-auto overflow-auto ">
+            <div className=" bg-white  rounded-xl p-2  overflow-auto mr-2">
               <p className="text-base font-semibold mb-1 text-gray-900    text-right">
                 Equipments
               </p>
@@ -529,7 +529,7 @@ const Maps = (props) => {
           onClose={() => setHealthCareInfo({ showingInfoWindow: false })}
         >
           <div
-            className="m-auto     p-2  overflow-auto "
+            className="m-auto     p-2  overflow-auto w-72 "
             style={{
               fontFamily: "Inter, sans-serif",
             }}
@@ -629,12 +629,12 @@ const Maps = (props) => {
           onClose={() => setRegionInfo({ showingInfoWindow: false })}
         >
           <div
-            className="m-auto     p-2  overflow-auto "
+            className="m-auto     p-2  overflow-auto w-72 "
             style={{
               fontFamily: "Inter, sans-serif",
             }}
           >
-            <div className="text-right ">
+            <div className="text-right mb-2">
               <span className="mr-2 text-md bg-green-500 p-1 rounded-xl text-white">
                 {regionInfo?.selectedPlace?.status}
               </span>

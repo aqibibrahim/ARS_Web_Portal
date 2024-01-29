@@ -102,7 +102,11 @@ const AmbulanceForm = ({
             setMyData(
               response.data?.data?.map((variant) => ({
                 label:
-                  variant.make + " " + variant.model + " " + variant?.plate_no,
+                  variant.model?.make?.name +
+                  " " +
+                  variant.model?.name +
+                  " " +
+                  variant?.plate_no,
                 value: variant.id,
                 persons_supported: variant.persons_supported,
                 id_no: variant.id_no,

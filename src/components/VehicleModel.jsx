@@ -263,7 +263,7 @@ export default function VehicleModal() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Vehicle Model:
+                      Vehicle Model
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -281,6 +281,12 @@ export default function VehicleModal() {
                       />
                     </div>{" "}
                     <div className="flex flex-col space-y-2 w-full mt-4">
+                      <label
+                        htmlFor="persons_supported"
+                        className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                      >
+                        Vehicle Make
+                      </label>
                       <Select
                         value={selectedOption}
                         placeholder="Select Vehicle Make"
@@ -402,6 +408,12 @@ export default function VehicleModal() {
                       />
                     </div>
                     <div className="flex flex-col space-y-2 w-full mt-4">
+                      <label
+                        htmlFor="persons_supported"
+                        className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                      >
+                        Vehicle Make
+                      </label>
                       <Select
                         value={selectedOption}
                         placeholder="Select Vehicle Make"
