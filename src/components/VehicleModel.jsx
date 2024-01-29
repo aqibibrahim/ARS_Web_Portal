@@ -127,7 +127,10 @@ export default function VehicleModal() {
     setState({
       editVehicleModel: data?.name,
     });
-    setSelectedOption(data?.make?.id);
+    setSelectedOption({
+      label: data?.make?.name,
+      value: data?.make?.id,
+    });
     setEditIncidentID(data?.id);
   };
   const createNewVehicleModel = async () => {

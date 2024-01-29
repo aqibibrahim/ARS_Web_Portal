@@ -80,9 +80,9 @@ const RegionFiles = () => {
             setMyData(
               response.data?.data?.map((variant) => ({
                 label:
-                  variant?.make +
+                  variant?.model?.make?.name +
                   " " +
-                  variant?.model +
+                  variant?.model?.name +
                   " " +
                   variant?.plate_no,
                 value: variant.id,

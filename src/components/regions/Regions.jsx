@@ -24,15 +24,6 @@ export default function Regions() {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const myData = [
-    { label: "Books", value: "Books" },
-    { label: "Movies, Music & Games", value: "Movies, Music & Games" },
-    { label: "Electronics & Computers", value: "Electronics & Computers" },
-    { label: "Home, Garden & Tools", value: "Home, Garden & Tools" },
-    { label: "Health & Beauty", value: "Health & Beauty" },
-    { label: "Toys, Kids & Baby", value: "Toys, Kids & Baby" },
-    { label: "Clothing & Jewelry", value: "Clothing & Jewelry" },
-  ];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updateFormOpen, setUpdateFormOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

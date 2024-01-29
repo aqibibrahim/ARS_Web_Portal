@@ -74,23 +74,6 @@ export default function IncidentVIewModal(props) {
           </p>
         </div>
         <div>
-          {/* <div className=" text-right p-5">
-          <p>
-            {" "}
-            <span className="font-semibold text-right">
-              Phone No:{" "}
-            </span>{" "}
-            {selectedIncident?.informer?.phone_numbers[0]?.number}
-          </p> */}
-          {/* <p>
-            <span className="font-semibold">Model:</span>{" "}
-            {selectedAmbulance?.model}
-          </p>
-          <p>
-            <span className="font-semibold">Plate#:</span>{" "}
-            {selectedAmbulance?.plate_no}
-          </p> */}
-          {/* </div> */}
           <div className="px-5">
             <p className="text-lg text-right font-semibold">
               Ambulance Details
@@ -109,11 +92,11 @@ export default function IncidentVIewModal(props) {
                       <p>
                         {" "}
                         <span className="font-semibold">Make: </span>{" "}
-                        {ambulance?.make}
+                        {ambulance?.model?.make?.name}
                       </p>
                       <p>
                         <span className="font-semibold">Model:</span>{" "}
-                        {ambulance?.model}
+                        {ambulance?.model?.name}
                       </p>
                       <p>
                         <span className="font-semibold">Plate#:</span>{" "}
