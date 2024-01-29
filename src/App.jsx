@@ -1,30 +1,57 @@
-import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate, BrowserRouter } from 'react-router-dom'
-import Maps from './components/Maps'
-import SideBar from './components/SIdebar'
-import TopBar from './components/Topbar'
-import IncidentList from './components/IncidentList'
-import AmbulanceList from './components/ambulances/AmbulanceList'
-import HealthcareList from './components/healthcare/HealthcareList'
-import Regions from './components/regions/Regions'
-import Login from './components/Login'
-import Equipment from './components/Equipment'
-import Departments from './components/Departments'
-import Home from './components/HealthCareDashboard/HealthcareHome'
-import HealthCareDepartments from './components/HealthCareDashboard/Departments'
-import Dashboard from './Dashboard'
-import { AmbulanceProvider } from './components/AmbulanceContext'
+import React, { useState, useEffect, useRef } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./components/Login";
+import Dashboard from "./Dashboard";
+import { AmbulanceProvider } from "./components/AmbulanceContext";
+
 function App() {
-	return (
-		<BrowserRouter>
-			<AmbulanceProvider>
-				<Routes>
-					<Route path="/login" element={<Login />} />
-					<Route path="/*" element={<Dashboard />} />
-				</Routes>
-			</AmbulanceProvider>
-		</BrowserRouter>
-	)
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isAuthenticatedRef = useRef(isAuthenticated);
+
+  useEffect(() => {
+    console.log("App token", localStorage.getItem("token"));
+  }, []);
+  const updateAuthenticationStatus = (status) => {
+    setIsAuthenticated(status);
+  };
+  //   useEffect(() => {
+  //     isAuthenticatedRef.current = isAuthenticated;
+  //   }, [isAuthenticated]);
+
+  const AuthRoute = ({ children }) => {
+    if (!isAuthenticated) {
+      return <Navigate to="/login" />;
+    }
+    return children;
+  };
+
+  return (
+    <Router>
+      <AmbulanceProvider>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <Login updateAuthenticationStatus={updateAuthenticationStatus} />
+            }
+          />
+          <Route
+            path="/*"
+            element={
+              <AuthRoute>
+                <Dashboard />
+              </AuthRoute>
+            }
+          />
+        </Routes>
+      </AmbulanceProvider>
+    </Router>
+  );
 }
 
-export default App
+export default App;

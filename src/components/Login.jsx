@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import StyledInput from "./StyledInput";
 import { Toaster, toast } from "sonner";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
-const Login = () => {
+const Login = ({ updateAuthenticationStatus }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // Track password visibility
@@ -47,6 +47,8 @@ const Login = () => {
         } else if (data.data.user.role.name == "Call Center Operator") {
           navigate("/");
         }
+        updateAuthenticationStatus(true);
+
         window.dispatchEvent(new Event("login-success"));
       } else if (data.code == 400) {
         toast.error(data.message);
