@@ -8,6 +8,28 @@ const Login = ({ updateAuthenticationStatus }) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // Track password visibility
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("admin");
+
+  const handleTabClick = (tabName) => {
+    setActiveTab(tabName);
+  };
+  const Tab = ({ selected, title, onClick }) => {
+    return (
+      <button
+        className={`px-[62.5px]  py-2 transition-colors duration-150 ${
+          selected
+            ? "bg-blue-500 text-white"
+            : "bg-white  hover:bg-gray-200  text-black"
+        } focus:outline-none`}
+        onClick={onClick}
+        style={{
+          backgroundColor: selected ? "#3182ce !important" : "#fff !important",
+        }}
+      >
+        {title}
+      </button>
+    );
+  };
   const navigate = useNavigate();
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -60,13 +82,45 @@ const Login = ({ updateAuthenticationStatus }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
+    <div className="flex flex-col justify-center items-center h-screen bg-gray-200">
       <Toaster richColors />
-      <h1 className="text-5xl p-10 text-gray-700">Please Login to Continue.</h1>
+      <div className="flex mb-3 ">
+        {" "}
+        <Tab
+          selected={activeTab === "admin"}
+          title="Admin"
+          onClick={() => handleTabClick("admin")}
+          className={`${
+            activeTab === "admin"
+              ? "bg-blue-500 text-white"
+              : "bg-white text-blue-500 hover:bg-gray-200"
+          }`}
+        />{" "}
+        <Tab
+          selected={activeTab === "healthcare"}
+          title="HealthCare"
+          onClick={() => handleTabClick("healthcare")}
+          className={`${
+            activeTab === "healthcare"
+              ? "bg-blue-500 text-white"
+              : "bg-white text-blue-500 hover:bg-gray-200"
+          }`}
+        />{" "}
+      </div>
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-96"
       >
+        {activeTab === "admin" && (
+          <div className="flex justify-center m-auto font-semibold">
+            Admin Login
+          </div>
+        )}
+        {activeTab === "healthcare" && (
+          <div className="flex justify-center m-auto font-semibold">
+            HealthCare Login
+          </div>
+        )}
         <div className="mb-4">
           <StyledInput
             label={"Email"}
@@ -97,7 +151,7 @@ const Login = ({ updateAuthenticationStatus }) => {
           </button>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-center">
           {loading ? (
             <div
               className="text-primary-100 bg-white rounded-md border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
