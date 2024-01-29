@@ -361,6 +361,7 @@ export default function IncidentList({}) {
                   setAmbulanceData(res?.data?.data);
                   setAssignAmbulance(false);
                   setAssignedAmbulance([]);
+                  setSelectedOption({});
                 } else {
                   // Handle non-success status codes
                   console.error("Request failed with status:", res.status);

@@ -24,6 +24,7 @@ import { Select as AntSelect } from "antd";
 import { Spin } from "antd";
 import AmbulanceViewModal from "../../AmbulanceViewModal";
 import { Modal } from "antd";
+import { Vars } from "../../../helpers/helpers";
 
 const { Option } = AntSelect;
 const AmbulanceFiles = () => {
@@ -37,9 +38,17 @@ const AmbulanceFiles = () => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [myMakeData, setMyMakeData] = useState([]);
+  const [myModelData, setMyModelData] = useState([]);
   const [myData, setMyData] = useState([]);
-  const [showPassword, setShowPassword] = useState(false); // Track password visibility
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [allMakes, setAllMakes] = useState([""]);
+  const [allModels, setAllModels] = useState([""]);
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const [selectedMakeOption, setSelectedMakeOption] = useState(null);
+  const [selectedModelOption, setSelectedModelOption] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [updateFormOpen, setUpdateFormOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
@@ -108,6 +117,7 @@ const AmbulanceFiles = () => {
     fetchequipmentsData();
   }, []);
   const handleEditClick = (ambulance) => {
+    debugger;
     setLongitude(null);
     setLatitude(null);
     setOptions(null);
@@ -117,6 +127,13 @@ const AmbulanceFiles = () => {
       longitude: ambulance?.gps_latitude,
       address: "",
     });
+    // setSelectedMakeOption([
+    //   { label: ambulance?.model?.name, value: ambulance?.model?.id },
+    // ]);
+    setSelectedModelOption([
+      { label: ambulance?.model?.name, value: ambulance?.model?.id },
+    ]);
+
     if (ambulance?.equipments.length === 0) {
       setEditOptions(null);
     } else {
@@ -194,8 +211,8 @@ const AmbulanceFiles = () => {
     onSubmit: (values) => {
       const JSON = {
         plate_no: values.plate_no,
-        make: values.make,
-        model: values.model,
+        // make_id: selectedMakeOption?.value,
+        model_id: selectedModelOption?.value,
         gps_no: values.gps_no,
         persons_supported: values.persons_supported,
         password: values.password,
@@ -205,6 +222,7 @@ const AmbulanceFiles = () => {
         parking_longitude: locationAddress?.longitude,
         equipments: options?.map((item) => item?.value),
       };
+      debugger;
       const createAmbulance = async () => {
         setLoadingMessage(true);
         console.log(JSON);
@@ -224,6 +242,8 @@ const AmbulanceFiles = () => {
             setLocationAddress("");
             setEditOptions(null);
             setIsModalOpen(false);
+            setSelectedMakeOption("");
+            setSelectedModelOption("");
           } else {
             toast.error("Failed to create ambulance");
             setLoadingMessage(false);
@@ -255,7 +275,7 @@ const AmbulanceFiles = () => {
     onSubmit: (values) => {
       const JSON = {
         plate_no: values.plate_no,
-        make: values.make,
+        // make: values.make,
         model: values.model,
         gps_no: values.gps_no,
         persons_supported: values?.persons_supported,
@@ -309,12 +329,13 @@ const AmbulanceFiles = () => {
         });
         if (response.status === 200 || response.status === 201) {
           setAllMakes(response?.data?.data);
-          setMyData(
+          setMyMakeData(
             response.data?.data?.map((variant) => ({
               label: variant.name,
               value: variant.id,
-            })))
-          debugger
+            }))
+          );
+          debugger;
         }
       } catch (error) {
         console.error("Error getting role:", error);
@@ -333,6 +354,12 @@ const AmbulanceFiles = () => {
         });
         if (response.status === 200 || response.status === 201) {
           setAllModels(response?.data?.data);
+          setMyModelData(
+            response.data?.data?.map((variant) => ({
+              label: variant.name,
+              value: variant.id,
+            }))
+          );
         }
       } catch (error) {
         console.error("Error getting role:", error);
@@ -473,76 +500,7 @@ const AmbulanceFiles = () => {
       setUncontrolledAddress(address);
     });
   };
-  // const handlePlaceChange = () => {
-  //   const map = new window.google.maps.Map(document.getElementById("map"), {
-  //     center: {
-  //       lat: locationAddress?.latitude,
-  //       lng: locationAddress?.longitude,
-  //     },
-  //     zoom: 3,
-  //   });
 
-  //   const card = document.getElementById("pac-card");
-  //   map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-  //   const center = {
-  //     lat: locationAddress?.latitude,
-  //     lng: locationAddress?.longitude,
-  //   };
-  //   const defaultBounds = {
-  //     north: center.lat + 0.1,
-  //     south: center.lat - 0.1,
-  //     east: center.lng + 0.1,
-  //     west: center.lng - 0.1,
-  //   };
-
-  //   const input = document.getElementById("address");
-  //   const options = {
-  //     bounds: defaultBounds,
-  //     componentRestrictions: { country: null }, // Set the country to Pakistan
-  //     fields: [
-  //       "address_components",
-  //       "geometry",
-  //       "icon",
-  //       "name",
-  //       "formatted_address",
-  //     ],
-  //     strictBounds: false,
-  //   };
-
-  //   const autocomplete = new window.google.maps.places.Autocomplete(
-  //     input,
-  //     options
-  //   );
-  //   const southwest = { lat: 23.6345, lng: 60.8724 };
-  //   const northeast = { lat: 37.0841, lng: 77.8375 };
-  //   const newBounds = new window.google.maps.LatLngBounds(southwest, northeast);
-  //   autocomplete.setBounds(newBounds);
-
-  //   autocomplete.addListener("place_changed", () => {
-  //     const place = autocomplete.getPlace();
-  //     let address = "";
-  //     let postalCode = "";
-
-  //     if (place.address_components) {
-  //       address = place.formatted_address;
-
-  //       const postalCodeComponent = place.address_components.find((component) =>
-  //         component.types.includes("postal_code")
-  //       );
-
-  //       postalCode = postalCodeComponent ? postalCodeComponent.short_name : "";
-  //     }
-
-  //     console.log("Formatted Address:", address);
-  //     console.log("Postal Code:", postalCode);
-
-  //     // The rest of your code...
-  //     const latitude = place.geometry.location.lat();
-  //     const longitude = place.geometry.location.lng();
-  //     sendDataToParent(latitude, longitude, address, postalCode);
-  //   });
-  // };
   const AmbulanceDelete = useFormik({
     initialValues: {},
     onSubmit: async () => {
@@ -592,7 +550,15 @@ const AmbulanceFiles = () => {
 
     return `inline-flex items-center rounded-full ${backgroundColor} px-2 py-1 text-xs font-medium ${textColor}`;
   };
-
+  const handleMakeSelect = (selectedOptions) => {
+    debugger;
+    setSelectedMakeOption(selectedOptions);
+    console.log(selectedOptions);
+  };
+  const handleModelSelect = (selectedOptions) => {
+    setSelectedModelOption(selectedOptions);
+    console.log(selectedOptions);
+  };
   return (
     <div
       className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
@@ -612,13 +578,7 @@ const AmbulanceFiles = () => {
               placeholder="Search Ambulances..."
             />
           </div>
-          {/* <button
-            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
-            type="button"
-            onClick={() => navigate("/equipment")}
-          >
-            Equipment
-          </button> */}
+
           <button
             className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
             type="button"
@@ -726,7 +686,7 @@ const AmbulanceFiles = () => {
                         {ambulance.model?.name}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-xs">
-                        {ambulance?.make?.name}
+                        {ambulance?.model?.make?.name}
                       </td>
                       {/* <td className="whitespace-nowrap px-3 py-4 text-md">
                       {ambulance?.contact_nos?.map((phone) => (
@@ -836,30 +796,6 @@ const AmbulanceFiles = () => {
                       />
                     </div>
                   </div>
-                  <div>
-                    <label
-                      htmlFor="gps_no"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      GPS No
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        type="number"
-                        name="gps_no"
-                        id="gps_no"
-                        onChange={CreateAmbulance.handleChange}
-                        value={CreateAmbulance.values.gps_no}
-                        placeholder="GPS No"
-                        className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
 
                   <div>
                     <label
@@ -913,41 +849,7 @@ const AmbulanceFiles = () => {
                       />
                     </div>
                   </div>
-                  <div>
-                    <label
-                      htmlFor="make"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Make
-                    </label>
-                    <div className="relative mt-2">
-                      {/* <input
-                        type="text"
-                        name="make"
-                        id="make"
-                        onChange={CreateAmbulance.handleChange}
-                        value={CreateAmbulance.values.make}
-                        placeholder="Enter Make"
-                        className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      /> */}
-                      <Select
-                        value={selectedOption}
-                        placeholder="Select Vehicle Make"
-                        onChange={handleSelect}
-                        options={myData}
-                        // formatOptionLabel={formatOptionLabel}
-                        isMultiple={false}
-                        isClearable={true}
-                        primaryColor={"blue"}
-                        className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
+
                   <div>
                     <label
                       htmlFor="model"
@@ -968,15 +870,39 @@ const AmbulanceFiles = () => {
                         autoComplete="nope"
                       /> */}
                       <Select
-                        value={selectedOption}
-                        placeholder="Select Vehicle Make"
-                        onChange={handleSelect}
-                        options={myData}
+                        value={selectedModelOption}
+                        placeholder="Select Vehicle Model"
+                        onChange={handleModelSelect}
+                        options={myModelData}
                         // formatOptionLabel={formatOptionLabel}
                         isMultiple={false}
                         isClearable={true}
                         primaryColor={"blue"}
                         className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                      />
+                      <div
+                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="gps_no"
+                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      GPS No
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        type="number"
+                        name="gps_no"
+                        id="gps_no"
+                        onChange={CreateAmbulance.handleChange}
+                        value={CreateAmbulance.values.gps_no}
+                        placeholder="GPS No"
+                        className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -1167,11 +1093,11 @@ const AmbulanceFiles = () => {
                           locationAddress?.address
                             ? locationAddress?.address
                             : [
-                              "latitude " +
-                              locationAddress?.latitude +
-                              " longitude " +
-                              locationAddress?.longitude,
-                            ]
+                                "latitude " +
+                                  locationAddress?.latitude +
+                                  " longitude " +
+                                  locationAddress?.longitude,
+                              ]
                         }
                         type="text"
                         name="addresss"
@@ -1212,30 +1138,7 @@ const AmbulanceFiles = () => {
                       />
                     </div>
                   </div>
-                  <div>
-                    <label
-                      htmlFor="make"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Make
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        type="text"
-                        name="make"
-                        id="make"
-                        onChange={EditAmbulance.handleChange}
-                        value={EditAmbulance.values.make}
-                        placeholder="Enter Make"
-                        className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
+
                   <div>
                     <label
                       htmlFor="model"
@@ -1244,7 +1147,7 @@ const AmbulanceFiles = () => {
                       Model
                     </label>
                     <div className="relative mt-2">
-                      <input
+                      {/* <input
                         type="text"
                         name="model"
                         id="model"
@@ -1254,6 +1157,17 @@ const AmbulanceFiles = () => {
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         autoComplete="off"
+                      /> */}
+                      <Select
+                        value={selectedModelOption}
+                        placeholder="Select Vehicle Model"
+                        onChange={handleModelSelect}
+                        options={myModelData}
+                        // formatOptionLabel={formatOptionLabel}
+                        isMultiple={false}
+                        isClearable={true}
+                        primaryColor={"blue"}
+                        className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
