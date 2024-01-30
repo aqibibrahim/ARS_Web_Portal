@@ -741,15 +741,26 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="mt-[7px]">
                       <Select
-                        value={options}
+                        value={options} // Assuming options is the selected value, not the options list
                         placeholder="Select"
                         onChange={(e) => handleChange(e)}
                         options={myData}
                         isMultiple={true}
                         isClearable={true}
                         primaryColor={"blue"}
-                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        className={`peer w-full px-2 flex justify-end bg-offWhiteCustom-100 py-2 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right ${
+                          options
+                            ? "border-green-500 border"
+                            : "border-red-500 border"
+                        }`}
                       />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          options ? "hidden" : ""
+                        }`}
+                      >
+                        Please Select Equipments.
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -760,7 +771,7 @@ const AmbulanceFiles = () => {
                       Persons Supported
                     </label>
                     <div className="relative mt-2">
-                      <input
+                      {/* <input
                         type="number"
                         name="persons_supported"
                         id="persons_supported"
@@ -769,11 +780,26 @@ const AmbulanceFiles = () => {
                         placeholder="Persons Supported"
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                      /> */}
+                      <input
+                        className={`appearance-none block w-full bg-gray-200 text-right text-gray-700 border text-sm border-gray-200 rounded py-2.5 px-4 leading-4 focus:outline-none focus:bg-white`}
+                        type="number"
+                        name="persons_supported"
+                        id="persons_supported"
+                        onChange={CreateAmbulance.handleChange}
+                        value={CreateAmbulance.values.persons_supported}
+                        placeholder="Persons Supported"
+                        required
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          CreateAmbulance?.values?.persons_supported
+                            ? "hidden"
+                            : ""
+                        }`}
+                      >
+                        Please fill out this field.
+                      </p>
                     </div>
                   </div>
 
@@ -796,10 +822,13 @@ const AmbulanceFiles = () => {
                         required
                         readOnly
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          locationAddress?.address ? "hidden" : ""
+                        }`}
+                      >
+                        Please Select Address
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -812,7 +841,7 @@ const AmbulanceFiles = () => {
                       Plate No
                     </label>
                     <div className="relative mt-2">
-                      <input
+                      {/* <input
                         type="text"
                         name="plate_no"
                         id="plate_no"
@@ -822,11 +851,25 @@ const AmbulanceFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         autoComplete="nope"
+                      /> */}
+                      <input
+                        className={`appearance-none block w-full  bg-gray-200 text-right text-gray-700 border text-sm border-gray-200 rounded py-2.5 px-4 leading-4 focus:outline-none focus:bg-white `}
+                        type="text"
+                        name="plate_no"
+                        id="plate_no"
+                        onChange={CreateAmbulance.handleChange}
+                        value={CreateAmbulance.values.plate_no}
+                        placeholder="Enter Plate No"
+                        required
+                        autoComplete="nope"
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          CreateAmbulance.values.plate_no.trim() ? "hidden" : ""
+                        }`}
+                      >
+                        Please fill out this field.
+                      </p>
                     </div>
                   </div>
 
@@ -849,10 +892,13 @@ const AmbulanceFiles = () => {
                         primaryColor={"blue"}
                         className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          selectedModelOption ? "hidden" : ""
+                        }`}
+                      >
+                        Please Select Model Option
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -873,10 +919,13 @@ const AmbulanceFiles = () => {
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          CreateAmbulance.values.gps_no ? "hidden" : ""
+                        }`}
+                      >
+                        Please fill out this field.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -903,20 +952,30 @@ const AmbulanceFiles = () => {
                       onChange={CreateAmbulance.handleChange}
                       value={CreateAmbulance.values.password}
                       placeholder="Password"
-                      className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                      className="peer block w-full px-3 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       required
-                    />
-                    <div
-                      className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                      aria-hidden="true"
+                      disabled={
+                        CreateAmbulance.values.password.length === 6
+                          ? true
+                          : false
+                      }
                     />
                     <button
                       type="button"
                       onClick={togglePasswordVisibility}
-                      className="relative -top-7 left-1 cursor-pointer z-10"
+                      className="absolute top-5 -translate-y-1/2 cursor-pointer "
                     >
                       {showPassword ? <BsEyeSlash /> : <BsEye />}
                     </button>
+                    <p
+                      className={`text-red-500 text-xs italic mt-1 ${
+                        CreateAmbulance.values.password.length === 6
+                          ? "hidden"
+                          : ""
+                      }`}
+                    >
+                      Please digit six digit password
+                    </p>
                   </div>
                 </div>
               </div>
