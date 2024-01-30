@@ -22,8 +22,8 @@
   .gm-style .gm-style-iw-d {
     background-color: transparent !important;
 overflow: hidden !important;
-    overflow-y: visible !important;
-    max-height: 237px !important;
+    overflow-y: hidden !important;
+    max-height: fit-content !important;
   }
 /* Add background blur to the content of the InfoWindow */
 .gm-style-iw .gm-style-iw-c {

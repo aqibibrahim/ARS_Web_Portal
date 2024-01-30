@@ -435,8 +435,8 @@ const Maps = (props) => {
           }}
         >
           <div
-            className="m-auto     p-2  overflow-auto w-72 "
-            style={{ fontFamily: "Inter, sans-serif" }}
+            className="m-auto p-2 overflow-hidden w-72 max-h-fit"
+            style={{ fontFamily: "Inter, sans-serif", overflow: "hidden" }}
           >
             {/* <div className="pb-4 ">
               <h2 className="text-base text-right font-bold mb-2">
@@ -450,7 +450,7 @@ const Maps = (props) => {
 
             {/* Heading div */}
 
-            <div className="mb-5 text-right  mx-5">
+            <div className="mb-5 text-right  mx-5 ">
               <span
                 className={`text-sm ${getStatusStyle(
                   ambulanceInfo?.selectedPlace?.status
@@ -467,7 +467,7 @@ const Maps = (props) => {
                 {ambulanceInfo?.selectedPlace?.plate_no}{" "}
               </p>{" "}
             </div>
-            <div className=" bg-white  rounded-xl p-2  overflow-auto mr-2">
+            <div className=" bg-white  rounded-xl p-2  overflow-hidden mr-2">
               <p className="text-base font-semibold mb-1 text-gray-900    text-right">
                 Equipments
               </p>
@@ -529,7 +529,7 @@ const Maps = (props) => {
           onClose={() => setHealthCareInfo({ showingInfoWindow: false })}
         >
           <div
-            className="m-auto     p-2  overflow-auto w-72 "
+            className="m-auto     p-2  overflow-hidden w-72 "
             style={{
               fontFamily: "Inter, sans-serif",
             }}
