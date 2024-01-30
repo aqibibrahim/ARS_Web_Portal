@@ -289,16 +289,24 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
           await axios
             .post(`${Vars.domain}/incidents`, JSON, config)
             .then((res) => {
-              console.log(res);
-              setSubmitDone(!submitDone);
-              setLoadingMessage(false);
-              toast.success("Created Successfuly");
-              handleIncidentNext(res?.data?.data?.id);
-              setLocationAddress({});
+              if (res.status === 200 || res.status === 201) {
+                toast.success("Created Successfully");
+                console.log(res);
+                setSubmitDone(!submitDone);
+                setLoadingMessage(false);
+                handleIncidentNext(res?.data?.data?.id);
+                setLocationAddress({});
+              } else {
+                toast.error(
+                  "Failed to create incident. Unexpected status code: " +
+                    res.status
+                );
+                console.log("Unexpected status code:", res.status);
+              }
             });
         } catch (e) {
           setLoadingMessage(false);
-          toast.error("failed");
+          toast.error("Failed to create incident. Please try again.");
           console.log(e);
         }
       };

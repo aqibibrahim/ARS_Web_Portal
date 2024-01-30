@@ -44,46 +44,77 @@ const AmbulanceForm = ({
     initialValues: {
       ambulances: "",
     },
-    onSubmit: (values) => {
-      // setLoadingMessage(true);
+    onSubmit: async (values) => {
+      if (!selectedOption || selectedOption.length === 0) {
+        toast.error("Please select an ambulance before submitting.");
+        return;
+      }
+
       const JSON = {
-        // ambulance_id:[selectedOption[0].value],
         ambulances: selectedOption?.map((item) => item.value),
-
-        // longitude: getlatitude.lat,
-        // incident_type_id:selectedOption.value,
-        // description:values.description,
-        // informer_name:values.informer_name,
-        // informer_phone_numbers:[values.informer_phone_numbers],
-        // informer_address:"test ",
-        // type:selectedOption.label,
-      };
-      console.log(JSON);
-      const createAssignAmbulance = async () => {
-        try {
-          await axios
-            .patch(`${Vars.domain}/incidents/${getid}`, JSON, config)
-            .then((res) => {
-              console.log(res);
-              // setSubmitDone(!submitDone);
-              // setLoadingMessage(false);
-              toast.success("Ambulance Assign Successfuly");
-              setTimeout(() => {
-                handleAmbulanceNext(getid);
-              }, 500);
-            });
-        } catch (e) {
-          // setLoadingMessage(false);
-          toast.error("failed");
-          console.log(e);
-        }
       };
 
-      createAssignAmbulance();
+      try {
+        await axios
+          .patch(`${Vars.domain}/incidents/${getid}`, JSON, config)
+          .then((res) => {
+            console.log(res);
+            toast.success("Ambulance Assigned Successfully");
+            setTimeout(() => {
+              handleAmbulanceNext(getid);
+            }, 500);
+          });
+      } catch (e) {
+        toast.error("Failed to assign ambulance.");
+        console.log(e);
+      }
     },
-
     enableReinitialize: true,
   });
+  // const assignAmbulance = useFormik({
+  //   initialValues: {
+  //     ambulances: "",
+  //   },
+  //   onSubmit: (values) => {
+  //     // setLoadingMessage(true);
+  //     const JSON = {
+  //       // ambulance_id:[selectedOption[0].value],
+  //       ambulances: selectedOption?.map((item) => item.value),
+
+  //       // longitude: getlatitude.lat,
+  //       // incident_type_id:selectedOption.value,
+  //       // description:values.description,
+  //       // informer_name:values.informer_name,
+  //       // informer_phone_numbers:[values.informer_phone_numbers],
+  //       // informer_address:"test ",
+  //       // type:selectedOption.label,
+  //     };
+  //     console.log(JSON);
+  //     const createAssignAmbulance = async () => {
+  //       try {
+  //         await axios
+  //           .patch(`${Vars.domain}/incidents/${getid}`, JSON, config)
+  //           .then((res) => {
+  //             console.log(res);
+  //             // setSubmitDone(!submitDone);
+  //             // setLoadingMessage(false);
+  //             toast.success("Ambulance Assigned Successfuly");
+  //             setTimeout(() => {
+  //               handleAmbulanceNext(getid);
+  //             }, 500);
+  //           });
+  //       } catch (e) {
+  //         // setLoadingMessage(false);
+  //         toast.error("failed");
+  //         console.log(e);
+  //       }
+  //     };
+
+  //     createAssignAmbulance();
+  //   },
+
+  //   enableReinitialize: true,
+  // });
 
   const [menuIsOpen, setMenuIsOpen] = useState([]);
 
