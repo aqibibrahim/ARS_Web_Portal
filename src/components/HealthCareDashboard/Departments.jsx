@@ -25,32 +25,32 @@ export default function HealthCareDepartments() {
 		headers: { Authorization: `Bearer ${token}` },
 	}
 	const [departments, setDepartments] = useState([])
-	const [loading, setLoading] = useState(true)
+	const [loading, setLoading] = useState(false)
 	const [submitDone, setSubmitDone] = useState(false)
 	const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
 	const [loadingMessage, setLoadingMessage] = useState(false)
 	const [editingDepartment, setEditingDepartment] = useState(null)
 	const [menuIsOpen, setMenuIsOpen] = useState({})
 	const [facilityID, setFacilityID] = useState('')
-	useEffect(() => {
-		const fetchDepartments = async () => {
-			try {
-				await axios
-					.get(`https://ars.disruptwave.com/api/view-department`, {
-						headers: headers,
-					})
-					.then((response) => {
-						setDepartments(response.data.data)
-						setLoading(false)
-						console.log(response?.data?.data)
-					})
-			} catch (e) {
-				toast.error('An error occurred while fetching equipment')
-				console.log(e)
-			}
-		}
-		fetchDepartments()
-	}, [submitDone])
+	// useEffect(() => {
+	// 	const fetchDepartments = async () => {
+	// 		try {
+	// 			await axios
+	// 				.get(`https://ars.disruptwave.com/api/view-department`, {
+	// 					headers: headers,
+	// 				})
+	// 				.then((response) => {
+	// 					setDepartments(response.data.data)
+	// 					setLoading(false)
+	// 					console.log(response?.data?.data)
+	// 				})
+	// 		} catch (e) {
+	// 			toast.error('An error occurred while fetching equipment')
+	// 			console.log(e)
+	// 		}
+	// 	}
+	// 	fetchDepartments()
+	// }, [submitDone])
 	useEffect(() => {
 		const fetchHealthCareData = async () => {
 			try {
@@ -60,6 +60,7 @@ export default function HealthCareDepartments() {
 					})
 					.then((response) => {
 						console.log(response)
+						setDepartments(response?.data?.data?.departments)
 
 						setMenuIsOpen(response?.data?.data)
 						setFacilityID(response?.data?.data?.id)
@@ -69,7 +70,7 @@ export default function HealthCareDepartments() {
 			}
 		}
 		fetchHealthCareData()
-	}, [])
+	}, [submitDone])
 	const updatedepartment = useFormik({
 		initialValues: {
 			facility_id: facilityID,
