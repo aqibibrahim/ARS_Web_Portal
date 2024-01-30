@@ -208,7 +208,14 @@ const HealthCareFiles = () => {
     setSelectedDepartment(null);
     setSelectedHealthCare(null);
   };
-
+  const toastErrorMessages = (errors) => {
+    Object.keys(errors).forEach((field) => {
+      const messages = errors[field];
+      messages.forEach((message) => {
+        toast.error(`${field}: ${message}`);
+      });
+    });
+  };
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -276,7 +283,7 @@ const HealthCareFiles = () => {
               setIsModalOpen(false);
             });
         } catch (e) {
-          toast.error("failed");
+          toastErrorMessages(e.response.data.data);
           console.log(e);
           setLoadingMessage(false);
         }
@@ -530,70 +537,7 @@ const HealthCareFiles = () => {
       setUncontrolledAddress(address);
     });
   };
-  // const handlePlaceChange = () => {
-  //   const map = new window.google.maps.Map(document.getElementById("map"), {
-  //     center: { lat: 50.064192, lng: -130.605469 },
-  //     zoom: 3,
-  //   });
 
-  //   const card = document.getElementById("pac-card");
-  //   map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-  //   const center = { lat: 50.064192, lng: -130.605469 };
-  //   const defaultBounds = {
-  //     north: center.lat + 0.1,
-  //     south: center.lat - 0.1,
-  //     east: center.lng + 0.1,
-  //     west: center.lng - 0.1,
-  //   };
-
-  //   const input = document.getElementById("address");
-  //   const options = {
-  //     bounds: defaultBounds,
-  //     componentRestrictions: { country: null }, // Set the country to Pakistan
-  //     fields: [
-  //       "address_components",
-  //       "geometry",
-  //       "icon",
-  //       "name",
-  //       "formatted_address",
-  //     ],
-  //     strictBounds: false,
-  //   };
-
-  //   const autocomplete = new window.google.maps.places.Autocomplete(
-  //     input,
-  //     options
-  //   );
-  //   const southwest = { lat: 23.6345, lng: 60.8724 };
-  //   const northeast = { lat: 37.0841, lng: 77.8375 };
-  //   const newBounds = new window.google.maps.LatLngBounds(southwest, northeast);
-  //   autocomplete.setBounds(newBounds);
-
-  //   autocomplete.addListener("place_changed", () => {
-  //     const place = autocomplete.getPlace();
-  //     let address = "";
-  //     let postalCode = "";
-
-  //     if (place.address_components) {
-  //       address = place.formatted_address;
-
-  //       const postalCodeComponent = place.address_components.find((component) =>
-  //         component.types.includes("postal_code")
-  //       );
-
-  //       postalCode = postalCodeComponent ? postalCodeComponent.short_name : "";
-  //     }
-
-  //     console.log("Formatted Address:", address);
-  //     console.log("Postal Code:", postalCode);
-
-  //     // The rest of your code...
-  //     const latitude = place.geometry.location.lat();
-  //     const longitude = place.geometry.location.lng();
-  //     sendDataToParent(latitude, longitude, address, postalCode);
-  //   });
-  // };
   const AmbulanceDelete = useFormik({
     initialValues: {},
     onSubmit: async () => {
@@ -620,6 +564,18 @@ const HealthCareFiles = () => {
     setSelectedHealthCare(healthcare?.id);
     setIsUpdateDepartment(true);
   };
+
+  const isSubmitDisabled = () => {
+    const { focal_persons, departments, name, email } = CreateHealtCare.values;
+    return (
+      !optionsFocalPerson ||
+      !phoneNumbers?.length > 0 ||
+      name?.trim() === "" ||
+      !locationAddress?.address ||
+      !email
+    );
+  };
+
   return (
     <div
       className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
@@ -1133,7 +1089,10 @@ const HealthCareFiles = () => {
               <BsArrowRightCircle
                 width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => {
+                  setIsModalOpen(false);
+                  CreateHealtCare.resetForm();
+                }}
               />
               <h3 className="text-xl font-semibold">Create HealthCare</h3>
             </div>
@@ -1186,10 +1145,13 @@ const HealthCareFiles = () => {
 															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
 															{...(phoneNumbers ? { required: false } : { required: true })}
 														/> */}
-                          <div
-                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                            aria-hidden="true"
-                          />
+                          <p
+                            className={`text-red-500 text-xs italic mt-1 ${
+                              phoneNumbers.length > 0 ? "hidden" : ""
+                            }`}
+                          >
+                            Please press + to add Phone Number
+                          </p>
                         </div>
                         <div>
                           {newPhoneNumber ? (
@@ -1250,10 +1212,13 @@ const HealthCareFiles = () => {
                         required
                         readOnly
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          locationAddress?.address ? "hidden" : ""
+                        }`}
+                      >
+                        Please select HealthCare Location
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1276,10 +1241,13 @@ const HealthCareFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          CreateHealtCare.values.name ? "hidden" : ""
+                        }`}
+                      >
+                        Please enter Healthcare name
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -1300,10 +1268,15 @@ const HealthCareFiles = () => {
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          CreateHealtCare.values.email.includes("@" && ".com")
+                            ? "hidden"
+                            : ""
+                        }`}
+                      >
+                        Please enter valid email
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -1329,10 +1302,13 @@ const HealthCareFiles = () => {
                         className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
 
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          optionsFocalPerson?.length > 0 ? "hidden" : ""
+                        }`}
+                      >
+                        Please Select Focal Person
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1401,10 +1377,15 @@ const HealthCareFiles = () => {
                   </button>
                 ) : (
                   <button
+                    disabled={isSubmitDisabled()}
                     type="submit"
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 ${
+                      isSubmitDisabled()
+                        ? "opacity-50"
+                        : " hover:bg-white hover:text-primary-100  hover:border-primary-100"
+                    } `}
                   >
-                    Save
+                    Create
                   </button>
                 )}
               </div>

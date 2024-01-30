@@ -450,7 +450,7 @@ const Maps = (props) => {
 
             {/* Heading div */}
 
-            <div className="mb-5 text-right  mx-5 ">
+            <div className="mb-5 text-right  ">
               <span
                 className={`text-sm ${getStatusStyle(
                   ambulanceInfo?.selectedPlace?.status
@@ -467,7 +467,7 @@ const Maps = (props) => {
                 {ambulanceInfo?.selectedPlace?.plate_no}{" "}
               </p>{" "}
             </div>
-            <div className=" bg-white  rounded-xl p-2  overflow-hidden mr-2">
+            <div className=" bg-white  rounded-xl p-2  overflow-hidden mr-1">
               <p className="text-base font-semibold mb-1 text-gray-900    text-right">
                 Equipments
               </p>

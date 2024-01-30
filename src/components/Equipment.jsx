@@ -156,6 +156,12 @@ export default function Equipment() {
     },
     enableReinitialize: true,
   });
+  const isSubmitDisabled = () => {
+    const { name } = CreateEquipment.values;
+
+    return !name;
+  };
+
   return (
     <>
       <div
@@ -205,10 +211,13 @@ export default function Equipment() {
                           className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                         />
-                        <div
-                          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                          aria-hidden="true"
-                        />
+                        <p
+                          className={`text-red-500 text-xs italic mt-1 ${
+                            CreateEquipment.values.name ? "hidden" : ""
+                          }`}
+                        >
+                          Please enter Equipment Name
+                        </p>
                       </div>
                     </div>
                     {loadingMessage ? (
@@ -220,10 +229,15 @@ export default function Equipment() {
                       </button>
                     ) : (
                       <button
+                        disabled={isSubmitDisabled()}
                         type="submit"
-                        className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
+                        className={`text-white bg-primary-100 rounded-md border-2 border-primary-100 aa py-2 px-5 transition-all duration-300 ${
+                          isSubmitDisabled()
+                            ? "opacity-50"
+                            : "hover:bg-white hover:text-primary-100 hover:border-primary-100"
+                        }  mt-2`}
                       >
-                        submit
+                        Create
                       </button>
                     )}
                   </form>
