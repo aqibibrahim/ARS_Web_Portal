@@ -830,6 +830,7 @@ const HealthCareFiles = () => {
 							/>
 							<h3 className="text-xl font-semibold">Create HealthCare</h3>
 						</div>
+
 						<form className="p-5" onSubmit={CreateHealtCare.handleSubmit}>
 							<div className="flex flex-row justify-between gap-4 mb-4">
 								<div className="flex flex-col space-y-2 w-full">
@@ -838,7 +839,7 @@ const HealthCareFiles = () => {
 											htmlFor="phone_numbers"
 											className="block text-sm font-medium leading-6 text-gray-900 text-right"
 										>
-											Phone Number
+											Phone Number*
 										</label>
 
 										<div className="w-full   ">
@@ -891,7 +892,7 @@ const HealthCareFiles = () => {
 											htmlFor="addresss"
 											className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
 										>
-											Address
+											Address*
 										</label>
 										<div className="relative mt-2">
 											<input
@@ -915,7 +916,7 @@ const HealthCareFiles = () => {
 								<div className="flex flex-col space-y-2 w-full">
 									<div>
 										<label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900 text-right">
-											HealthCare Name
+											HealthCare Name*
 										</label>
 										<div className="relative mt-2">
 											<input
@@ -935,7 +936,7 @@ const HealthCareFiles = () => {
 									</div>
 									<div>
 										<label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 text-right">
-											Email
+											Email*
 										</label>
 										<div className="relative mt-2">
 											<input
@@ -962,7 +963,7 @@ const HealthCareFiles = () => {
 											htmlFor="focal_persons"
 											className="block text-sm font-medium leading-6 text-gray-900 text-right"
 										>
-											Focal Persons
+											Focal Persons*
 										</label>
 										<div className="relative mt-2">
 											<Select
