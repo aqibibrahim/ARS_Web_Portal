@@ -12,6 +12,7 @@ import {
   BsEye,
   BsSearch,
   BsEyeSlash,
+  BsShieldCheck,
 } from "react-icons/bs";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -69,6 +70,11 @@ const AmbulanceFiles = () => {
   const [editOptions, setEditOptions] = useState(null);
   const [isSaveDisabled, setSaveDisabled] = useState(true);
   const [state, setState] = useState({ password: "" });
+  const [pinModal, setPinModal] = useState(false);
+  const [updatePinState, setupdatePinState] = useState({
+    newPin: "",
+  });
+  const [updatePINId, setUpdatePINId] = useState("");
 
   const handlePasswordChange = (event) => {
     const inputValue = event.target.value;
@@ -578,7 +584,59 @@ const AmbulanceFiles = () => {
       !selectedModelOption
     );
   };
+  const handleUpdatePin = (data) => {
+    setPinModal(true);
+    setUpdatePINId(data?.id);
+  };
+  const handleNewPin = async () => {
+    try {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
 
+      const data = {
+        newPassword: updatePinState.newPin,
+      };
+
+      const response = await axios.patch(
+        `${Vars.domain}/ambulances/update-password/${updatePINId}`,
+        data,
+        {
+          headers,
+        }
+      );
+
+      console.log(response, "res");
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Ambulance Password Updated Successfully");
+        resetPinState();
+        setUpdatePINId("");
+        setupdatePinState({ newPin: "" });
+        setPinModal(false);
+      }
+    } catch (error) {
+      setPinModal(false);
+      // toast.error(error?.response?.data?.message);
+    }
+  };
+  const handlePinChange = (event) => {
+    const inputValue = event.target.value;
+    const maxLength = 6;
+
+    if (inputValue.length > maxLength) {
+      event.target.value = inputValue.slice(0, maxLength);
+    }
+    setupdatePinState({
+      ...updatePinState,
+      [event.target.name]: event.target.value,
+    });
+  };
+  const handleCancel = () => {
+    setPinModal(false);
+    setupdatePinState({ newPin: "" });
+  };
   return (
     <div
       className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
@@ -696,6 +754,12 @@ const AmbulanceFiles = () => {
                           >
                             <BsEye />
                             <span className="sr-only">, {ambulance.name}</span>
+                          </button>
+                          <button
+                            onClick={() => handleUpdatePin(ambulance)}
+                            className="text-green-400 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                          >
+                            <BsShieldCheck />
                           </button>
                         </span>
                       </td>
@@ -1235,60 +1299,6 @@ const AmbulanceFiles = () => {
                       </p>
                     </div>
                   </div>
-                  <div>
-                    <label
-                      htmlFor="password"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Password
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        autoComplete="new-password"
-                        onChange={handleEditPasswordChange}
-                        value={EditAmbulance.values.password}
-                        placeholder="Password"
-                        className="peer block w-full px-3 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-
-                      <button
-                        type="button"
-                        onClick={togglePasswordVisibility}
-                        className="absolute top-5 -translate-y-1/2 cursor-pointer"
-                      >
-                        {showPassword ? <BsEyeSlash /> : <BsEye />}
-                      </button>
-
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          EditAmbulance?.values?.password?.length === 6
-                            ? "hidden"
-                            : ""
-                        }`}
-                      >
-                        Please enter a six-digit password
-                      </p>
-                    </div>
-                    {/* <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        onChange={EditAmbulance.handleChange}
-                        value={EditAmbulance.values.password}
-                        placeholder="Password"
-                        className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                        autoComplete="off"
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div> */}
-                  </div>
                 </div>
               </div>
               <div className="text-left mt-10">
@@ -1313,6 +1323,49 @@ const AmbulanceFiles = () => {
           </div>
         </div>
       )}
+      <Modal
+        title="Update Ambulance Password"
+        open={pinModal}
+        onOk={handleNewPin}
+        onCancel={handleCancel}
+        closable={false}
+        okButtonProps={{
+          style: { backgroundColor: "green" },
+        }}
+        okText="Update"
+      >
+        <div className="flex flex-col space-y-2 w-full">
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium leading-6  text-gray-900 text-right"
+            >
+              New Password
+            </label>
+            <div className="relative mt-2">
+              <input
+                onChange={handlePinChange}
+                value={updatePinState.newPin}
+                name="newPin"
+                type="number"
+                placeholder="Enter New Password"
+                className={`peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right 
+                }`}
+                required
+              />
+              {/* {validationErrors.newPin && (
+                <span className="text-red-500 text-xs mt-1">
+                  {validationErrors.newPin}
+                </span>
+              )} */}
+              <div
+                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        </div>
+      </Modal>
       <Transition.Root show={isDelete} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={setDelete}>
           <Transition.Child
