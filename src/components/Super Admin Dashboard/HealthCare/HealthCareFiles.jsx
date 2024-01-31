@@ -443,7 +443,6 @@ const HealthCareFiles = () => {
             JSON,
             config
           );
-
           // Check if the status code is 200 or 201
           if (response.status === 200 || response.status === 201) {
             console.log(response);
@@ -462,11 +461,8 @@ const HealthCareFiles = () => {
         } catch (error) {
           // Handle network errors or other exceptions
           console.error("Post request error:", error);
-
-          // Extract the specific error message from the response if available
-          const errorMessage =
-            error?.response?.data?.data?.name?.[0] ||
-            "Failed to add department";
+          const errorMessage = error?.response?.data?.message;
+          setLoadingMessage(false);
           toast.error(errorMessage);
         }
       };
@@ -1145,13 +1141,6 @@ const HealthCareFiles = () => {
 															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
 															{...(phoneNumbers ? { required: false } : { required: true })}
 														/> */}
-                          <p
-                            className={`text-red-500 text-xs italic mt-1 ${
-                              phoneNumbers.length > 0 ? "hidden" : ""
-                            }`}
-                          >
-                            Please press + to add Phone Number
-                          </p>
                         </div>
                         <div>
                           {newPhoneNumber ? (
@@ -1212,13 +1201,6 @@ const HealthCareFiles = () => {
                         required
                         readOnly
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          locationAddress?.address ? "hidden" : ""
-                        }`}
-                      >
-                        Please select HealthCare Location
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -1241,13 +1223,6 @@ const HealthCareFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          CreateHealtCare.values.name ? "hidden" : ""
-                        }`}
-                      >
-                        Please enter Healthcare name
-                      </p>
                     </div>
                   </div>
                   <div>
@@ -1268,15 +1243,6 @@ const HealthCareFiles = () => {
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          CreateHealtCare.values.email.includes("@" && ".com")
-                            ? "hidden"
-                            : ""
-                        }`}
-                      >
-                        Please enter valid email
-                      </p>
                     </div>
                   </div>
                   <div>
@@ -1301,14 +1267,6 @@ const HealthCareFiles = () => {
                         isSearchable={true}
                         className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
-
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          optionsFocalPerson?.length > 0 ? "hidden" : ""
-                        }`}
-                      >
-                        Please Select Focal Person
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -1377,13 +1335,9 @@ const HealthCareFiles = () => {
                   </button>
                 ) : (
                   <button
-                    disabled={isSubmitDisabled()}
                     type="submit"
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 ${
-                      isSubmitDisabled()
-                        ? "opacity-50"
-                        : " hover:bg-white hover:text-primary-100  hover:border-primary-100"
-                    } `}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 
+                      `}
                   >
                     Create
                   </button>

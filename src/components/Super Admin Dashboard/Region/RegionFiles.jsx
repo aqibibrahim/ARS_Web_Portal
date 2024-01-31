@@ -690,13 +690,6 @@ const RegionFiles = () => {
                       optionFilterProp="label"
                       className="w-full mt-2"
                     />
-                    <p
-                      className={`text-red-500 text-xs italic mt-1 ${
-                        options?.length > 0 ? "hidden" : ""
-                      }`}
-                    >
-                      Please Select Ambulance
-                    </p>
                   </div>
                   {/* <div>
                     <label
@@ -743,13 +736,6 @@ const RegionFiles = () => {
                         required
                         readOnly
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          locationAddress?.address ? "hidden" : ""
-                        }`}
-                      >
-                        Please Select Region Location
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -772,13 +758,6 @@ const RegionFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          CreateRegion.values.name ? "hidden" : ""
-                        }`}
-                      >
-                        Please Select Region Name
-                      </p>
                     </div>
                   </div>
                   <div>
@@ -807,14 +786,6 @@ const RegionFiles = () => {
                             id="phone_numbers"
                             className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           />
-
-                          <p
-                            className={`text-red-500 text-xs italic mt-1 ${
-                              phoneNumbers.length > 0 ? "hidden" : ""
-                            }`}
-                          >
-                            Please press + to add Phone Number
-                          </p>
                         </div>
                         <div>
                           {newPhoneNumber ? (
@@ -830,11 +801,6 @@ const RegionFiles = () => {
                           )}
                         </div>
                       </div>
-                      {validationErrors.phoneNumbers && (
-                        <p className="text-red-500 text-sm">
-                          {validationErrors.phoneNumbers}
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -874,13 +840,8 @@ const RegionFiles = () => {
                   </button>
                 ) : (
                   <button
-                    disabled={isSubmitDisabled()}
                     type="submit"
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300 ${
-                      isSubmitDisabled()
-                        ? "opacity-50 "
-                        : "hover:bg-white hover:border-primary-100 hover:text-primary-100 "
-                    }  `}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300  `}
                   >
                     Create
                   </button>

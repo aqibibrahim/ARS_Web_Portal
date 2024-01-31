@@ -275,13 +275,6 @@ export default function EmergencyType() {
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 text-right ${
-                          state?.EmergencyType ? "hidden" : ""
-                        }`}
-                      >
-                        Please Enter Emergency Type Name
-                      </p>
                     </div>
                   </div>{" "}
                 </div>
@@ -298,13 +291,8 @@ export default function EmergencyType() {
                   </button>
                 ) : (
                   <button
-                    disabled={isSubmitDisabled()}
                     onClick={createNewGender}
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300 ${
-                      isSubmitDisabled()
-                        ? "opacity-50"
-                        : "hover:bg-white hover:text-primary-100 hover:border-primary-100 "
-                    }  `}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300  `}
                   >
                     Create
                   </button>

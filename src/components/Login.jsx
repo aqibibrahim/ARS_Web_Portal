@@ -85,7 +85,6 @@ const Login = ({ updateAuthenticationStatus }) => {
     <div className="flex flex-col justify-center items-center h-screen bg-gray-200">
       <Toaster richColors />
       <div className="flex mb-3 ">
-        {" "}
         <Tab
           selected={activeTab === "admin"}
           title="Admin"
@@ -95,7 +94,7 @@ const Login = ({ updateAuthenticationStatus }) => {
               ? "bg-blue-500 text-white"
               : "bg-white text-blue-500 hover:bg-gray-200"
           }`}
-        />{" "}
+        />
         <Tab
           selected={activeTab === "healthcare"}
           title="HealthCare"
@@ -105,7 +104,7 @@ const Login = ({ updateAuthenticationStatus }) => {
               ? "bg-blue-500 text-white"
               : "bg-white text-blue-500 hover:bg-gray-200"
           }`}
-        />{" "}
+        />
       </div>
       <form
         onSubmit={handleSubmit}

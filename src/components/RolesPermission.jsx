@@ -704,7 +704,6 @@ export default function RolesPermission() {
                         backgroundColor: "green",
                         borderColor: "green",
                       },
-                      disabled: isSubmitRoleDisabled(), // Move the disabled property outside of style
                     }}
                     okText={"Save"}
                   >
@@ -726,13 +725,6 @@ export default function RolesPermission() {
                           className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                         />
-                        <p
-                          className={`text-red-500 text-xs italic mt-1 ${
-                            roleName ? "hidden" : ""
-                          }`}
-                        >
-                          Please Enter New Role
-                        </p>
                       </div>
                     </div>
                   </Modal>{" "}
@@ -959,8 +951,6 @@ export default function RolesPermission() {
                     closable={false}
                     maskClosable={false}
                     okButtonProps={{
-                      disabled: isSubmitDisabled(),
-
                       style: { backgroundColor: "green", borderColor: "green" },
                     }}
                     okText={editFlag ? "Save " : "Create"}
@@ -986,13 +976,6 @@ export default function RolesPermission() {
                                 className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
                               />
-                              <p
-                                className={`text-red-500 text-xs italic mt-1 ${
-                                  state?.last_name ? "hidden" : ""
-                                }`}
-                              >
-                                Please Enter Last Name
-                              </p>
                             </div>
                           </div>
                           <div>
@@ -1013,13 +996,6 @@ export default function RolesPermission() {
                                 className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
                               />
-                              <p
-                                className={`text-red-500 text-xs italic mt-1 ${
-                                  state?.designation ? "hidden" : ""
-                                }`}
-                              >
-                                Please Enter Desigination
-                              </p>
                             </div>
                           </div>
                           <div>
@@ -1051,14 +1027,6 @@ export default function RolesPermission() {
                                   </option>
                                 ))}
                               </select>
-
-                              <p
-                                className={`text-red-500 text-xs italic mt-1 ${
-                                  state?.role ? "hidden" : ""
-                                }`}
-                              >
-                                Please Select Role
-                              </p>
                             </div>
                           </div>
                           <div>
@@ -1094,14 +1062,6 @@ export default function RolesPermission() {
                                       ? { required: false }
                                       : { required: true })}
                                   />
-
-                                  <p
-                                    className={`text-red-500 text-xs italic mt-1 ${
-                                      phoneNumbers?.length > 0 ? "hidden" : ""
-                                    }`}
-                                  >
-                                    Please Add phone No. by pressing +
-                                  </p>
                                 </div>
                                 <div>
                                   {newPhoneNumber ? (
@@ -1142,13 +1102,6 @@ export default function RolesPermission() {
                                 className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
                               />
-                              <p
-                                className={`text-red-500 text-xs italic mt-1 ${
-                                  state?.first_name ? "hidden" : ""
-                                }`}
-                              >
-                                Please Add First Name
-                              </p>
                             </div>
                           </div>
                           <div>
@@ -1194,14 +1147,6 @@ export default function RolesPermission() {
                               >
                                 {showPassword ? <BsEyeSlash /> : <BsEye />}
                               </button>
-
-                              <p
-                                className={`text-red-500 text-xs italic mt-1 ${
-                                  state?.password?.length === 6 ? "hidden" : ""
-                                }`}
-                              >
-                                Please enter a six-digit password
-                              </p>
                             </div>
                           </div>
                           <div>
@@ -1220,15 +1165,6 @@ export default function RolesPermission() {
                                 required
                                 value={state?.email}
                               />
-                              <p
-                                className={`text-red-500 text-xs italic mt-1 ${
-                                  state?.email.includes("@" && ".com")
-                                    ? "hidden"
-                                    : ""
-                                }`}
-                              >
-                                Please add valid email
-                              </p>
                             </div>
                           </div>
                         </div>
