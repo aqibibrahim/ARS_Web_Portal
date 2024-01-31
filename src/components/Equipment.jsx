@@ -211,13 +211,6 @@ export default function Equipment() {
                           className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                         />
-                        <p
-                          className={`text-red-500 text-xs italic mt-1 ${
-                            CreateEquipment.values.name ? "hidden" : ""
-                          }`}
-                        >
-                          Please enter Equipment Name
-                        </p>
                       </div>
                     </div>
                     {loadingMessage ? (
@@ -229,13 +222,8 @@ export default function Equipment() {
                       </button>
                     ) : (
                       <button
-                        disabled={isSubmitDisabled()}
                         type="submit"
-                        className={`text-white bg-primary-100 rounded-md border-2 border-primary-100 aa py-2 px-5 transition-all duration-300 ${
-                          isSubmitDisabled()
-                            ? "opacity-50"
-                            : "hover:bg-white hover:text-primary-100 hover:border-primary-100"
-                        }  mt-2`}
+                        className={`text-white bg-primary-100 rounded-md border-2 border-primary-100 aa py-2 px-5 transition-all duration-300  mt-2`}
                       >
                         Create
                       </button>

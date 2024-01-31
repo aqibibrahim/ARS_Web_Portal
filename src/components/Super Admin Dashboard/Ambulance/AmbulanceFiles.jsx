@@ -858,13 +858,6 @@ const AmbulanceFiles = () => {
                             : "border-red-500 border"
                         }`}
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          options ? "hidden" : ""
-                        }`}
-                      >
-                        Please Select Equipments.
-                      </p>
                     </div>
                   </div>
                   <div>
@@ -895,15 +888,6 @@ const AmbulanceFiles = () => {
                         placeholder="Persons Supported"
                         required
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          CreateAmbulance?.values?.persons_supported
-                            ? "hidden"
-                            : ""
-                        }`}
-                      >
-                        Please fill out this field.
-                      </p>
                     </div>
                   </div>
 
@@ -926,13 +910,6 @@ const AmbulanceFiles = () => {
                         required
                         readOnly
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          locationAddress?.address ? "hidden" : ""
-                        }`}
-                      >
-                        Please Select Address
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -967,13 +944,6 @@ const AmbulanceFiles = () => {
                         required
                         autoComplete="nope"
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          CreateAmbulance.values.plate_no.trim() ? "hidden" : ""
-                        }`}
-                      >
-                        Please fill out this field.
-                      </p>
                     </div>
                   </div>
 
@@ -996,13 +966,6 @@ const AmbulanceFiles = () => {
                         primaryColor={"blue"}
                         className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          selectedModelOption ? "hidden" : ""
-                        }`}
-                      >
-                        Please Select Model Option
-                      </p>
                     </div>
                   </div>
                   <div>
@@ -1023,13 +986,6 @@ const AmbulanceFiles = () => {
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          CreateAmbulance.values.gps_no ? "hidden" : ""
-                        }`}
-                      >
-                        Please fill out this field.
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -1067,16 +1023,6 @@ const AmbulanceFiles = () => {
                     >
                       {showPassword ? <BsEyeSlash /> : <BsEye />}
                     </button>
-
-                    <p
-                      className={`text-red-500 text-xs italic mt-1 ${
-                        CreateAmbulance.values.password.length === 6
-                          ? "hidden"
-                          : ""
-                      }`}
-                    >
-                      Please enter a six-digit password
-                    </p>
                   </div>
                 </div>
               </div>
@@ -1091,12 +1037,8 @@ const AmbulanceFiles = () => {
                 ) : (
                   <button
                     type="submit"
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 ${
-                      isSubmitDisabled()
-                        ? "opacity-50"
-                        : "hover:bg-white hover:text-primary-100 hover:border-primary-100"
-                    }`}
-                    disabled={isSubmitDisabled()}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 
+                     `}
                   >
                     Save Ambulance
                   </button>
@@ -1136,13 +1078,6 @@ const AmbulanceFiles = () => {
                       primaryColor={"blue"}
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
-                    <p
-                      className={`text-red-500 text-xs italic mt-1 ${
-                        editOptions ? "hidden" : ""
-                      }`}
-                    >
-                      Please Select Equipments.
-                    </p>
                   </div>
 
                   <div>
@@ -1163,13 +1098,6 @@ const AmbulanceFiles = () => {
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          EditAmbulance.values.persons_supported ? "hidden" : ""
-                        }`}
-                      >
-                        Please fill out this field.
-                      </p>
                     </div>
                   </div>
 
@@ -1201,15 +1129,6 @@ const AmbulanceFiles = () => {
                         placeholder=" Choose On Map"
                         required
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          locationAddress?.address || locationAddress?.latitude
-                            ? "hidden"
-                            : ""
-                        }`}
-                      >
-                        Please fill out this field.
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -1232,15 +1151,6 @@ const AmbulanceFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          EditAmbulance?.values?.plate_no?.trim()
-                            ? "hidden"
-                            : ""
-                        }`}
-                      >
-                        Please fill out this field.
-                      </p>
                     </div>
                   </div>
 
@@ -1263,13 +1173,6 @@ const AmbulanceFiles = () => {
                         primaryColor={"blue"}
                         className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          selectedModelOption ? "hidden" : ""
-                        }`}
-                      >
-                        Please Select Model
-                      </p>
                     </div>
                   </div>
                   <div>
@@ -1290,13 +1193,6 @@ const AmbulanceFiles = () => {
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <p
-                        className={`text-red-500 text-xs italic mt-1 ${
-                          EditAmbulance.values.gps_no ? "hidden" : ""
-                        }`}
-                      >
-                        Please fill out this field.
-                      </p>
                     </div>
                   </div>
                 </div>

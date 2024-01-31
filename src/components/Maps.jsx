@@ -7,15 +7,21 @@ import Regions from "../assets/Regions.png";
 import { PlusCircleIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { useAmbulanceContext } from "./AmbulanceContext";
 import "../index.css";
-
+import { useLocation } from "react-router-dom";
+import { CreateIncidentSidebar } from "./CreateIncidentSidebar";
+import Sidebar from "./SIdebar";
 const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
 
 const Maps = (props) => {
+  const location = useLocation();
+  const incidentId = location?.state?.incidentData;
+  const [openSidebar, setOpenSidebar] = useState(false);
+
+  console.log(incidentId, "incidentID");
+
   const { selectedAmbulanceId, resetState } = useAmbulanceContext();
   console.log("Selected Ambulance ID in Other Component:", selectedAmbulanceId);
-  // const { resetState } = useAmbulanceContext();
-  // resetState();
-  // const { ControlPosition } = props.google.map;
+
   console.log(props);
   var token = localStorage.getItem("token");
   const headers = {
@@ -435,22 +441,10 @@ const Maps = (props) => {
           }}
         >
           <div
-            className="m-auto p-2 overflow-hidden w-72 max-h-fit"
+            className="m-auto overflow-hidden w-72 max-h-fit"
             style={{ fontFamily: "Inter, sans-serif", overflow: "hidden" }}
           >
-            {/* <div className="pb-4 ">
-              <h2 className="text-base text-right font-bold mb-2">
-                {ambulanceInfo?.selectedPlace?.model +
-                  " " +
-                  ambulanceInfo?.selectedPlace?.make +
-                  " - " +
-                  ambulanceInfo?.selectedPlace?.plate_no}
-              </h2>
-            </div> */}
-
-            {/* Heading div */}
-
-            <div className="mb-5 text-right  ">
+            <div className="mb-5 mt-5 text-right  pr-4">
               <span
                 className={`text-sm ${getStatusStyle(
                   ambulanceInfo?.selectedPlace?.status
@@ -467,11 +461,11 @@ const Maps = (props) => {
                 {ambulanceInfo?.selectedPlace?.plate_no}{" "}
               </p>{" "}
             </div>
-            <div className=" bg-white  rounded-xl p-2  overflow-hidden mr-1">
-              <p className="text-base font-semibold mb-1 text-gray-900    text-right">
+            <div className=" bg-white  overflow-hidden pt-1 pb-6">
+              <p className="text-base font-semibold mb-1 text-gray-900    text-right pr-4">
                 Equipments
               </p>
-              <div className="justify-end flex-wrap flex bg-white ">
+              <div className="justify-end flex-wrap flex bg-white pr-4">
                 {ambulanceInfo?.selectedPlace?.equipments?.length > 0 ? (
                   ambulanceInfo?.selectedPlace?.equipments?.map((equipment) => (
                     <p key={equipment.id} className="text-base text-right">
@@ -481,37 +475,37 @@ const Maps = (props) => {
                     </p>
                   ))
                 ) : (
-                  <p className="text-md text-right">No Data Found</p>
+                  <p className="text-md text-right pr-4">No Data Found</p>
                 )}
               </div>
               {renderAmbulanceEquipment(ambulanceInfo?.selectedPlace?.id)}
-              <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+              <p className="text-base font-semibold mb-1 text-gray-900   text-right pr-4">
                 Driver Information
               </p>
 
               {ambulanceInfo?.selectedPlace?.driver?.status !== undefined &&
               ambulanceInfo?.selectedPlace?.driver !== null ? (
-                <div className="mb-2 text-right  gap-y-2">
-                  <span className=" text-sm bg-green-500 px-2 rounded-xl mr-1 text-white">
+                <div className="mb-2 text-right  gap-y-2 px-1.5">
+                  <span className=" text-sm bg-green-500 px-2 rounded-xl mr-1 text-white pr-4">
                     {ambulanceInfo?.selectedPlace?.driver?.status}
                   </span>
-                  <span className="text-sm text-gray-500  text-right font-semibold ">
+                  <span className="text-sm text-gray-500  text-right font-semibold pr-4">
                     {ambulanceInfo?.selectedPlace?.driver?.name}
                   </span>
 
                   {ambulanceInfo?.selectedPlace?.driver?.phoneNumber?.map(
                     (phoneNumber) => (
-                      <p className="text-sm text-gray-500  text-right font-semibold ">
+                      <p className="text-sm text-gray-500  text-right font-semibold pr-4">
                         +{phoneNumber?.number}
                       </p>
                     )
                   )}
-                  <p className="text-sm text-gray-500  text-right font-semibold ">
+                  <p className="text-sm text-gray-500  text-right font-semibold pr-4">
                     {ambulanceInfo?.selectedPlace?.driver?.email}
                   </p>
                 </div>
               ) : (
-                <div className="text-base text-right">
+                <div className="text-base text-right pr-4">
                   No Driver Assigned yet
                 </div>
               )}
@@ -529,14 +523,14 @@ const Maps = (props) => {
           onClose={() => setHealthCareInfo({ showingInfoWindow: false })}
         >
           <div
-            className="m-auto     p-2  overflow-hidden w-72 "
+            className="m-auto     overflow-hidden w-72 "
             style={{
               fontFamily: "Inter, sans-serif",
             }}
           >
             <div className="backdrop-blur-lg  ">
               {" "}
-              <div className="mb-5 text-right  ml-auto  ">
+              <div className="mb-5 mt-5 text-right  pr-4">
                 <span className="mr-2 text-md bg-green-500 p-1 rounded-xl text-white">
                   {healthCareInfo?.selectedPlace?.status}
                 </span>
@@ -544,7 +538,7 @@ const Maps = (props) => {
                   {healthCareInfo?.selectedPlace?.name}
                 </span>
               </div>
-              <div className="bg-white m-auto rounded-xl p-2">
+              <div className=" bg-white  overflow-hidden pt-1 pb-6">
                 <div className="mb-2 flex gap-y-2 flex-col text-right">
                   {/* <p className="text-lg text-gray-900 text-left font-medium">
                 {healthCareInfo?.selectedPlace?.status}
@@ -552,14 +546,14 @@ const Maps = (props) => {
                   <div>
                     {healthCareInfo?.selectedPlace?.phoneNumbers?.length > 0 ? (
                       <div>
-                        <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                        <p className="text-base font-semibold mb-1 text-gray-900   text-right  pr-4">
                           Phone Number<i className="bi bi-shield-check"></i>
                         </p>
                         {healthCareInfo?.selectedPlace?.phoneNumbers.map(
                           (phoneNumber) => (
                             <p
                               key={phoneNumber.id}
-                              className="text-sm text-gray-500  text-right font-semibold "
+                              className="text-sm text-gray-500  text-right font-semibold  pr-4 "
                             >
                               +{phoneNumber.number}
                             </p>
@@ -571,7 +565,7 @@ const Maps = (props) => {
                     )}
                   </div>
                 </div>
-                <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                <p className="text-base font-semibold mb-1 text-gray-900   text-right  pr-4">
                   {healthCareInfo?.selectedPlace?.departments?.length}{" "}
                   {healthCareInfo?.selectedPlace?.departments?.length === 1
                     ? "Department "
@@ -579,7 +573,7 @@ const Maps = (props) => {
                   Available
                   <i className="bi bi-shield-check"></i>
                 </p>
-                <div className="justify-end flex-wrap flex ">
+                <div className="justify-end flex-wrap flex  pr-4">
                   {healthCareInfo?.selectedPlace?.departments?.length > 0 ? (
                     healthCareInfo?.selectedPlace?.departments?.map(
                       (departments) => (
@@ -594,7 +588,7 @@ const Maps = (props) => {
                     <p className="text-md text-left">No Data Found</p>
                   )}
                 </div>
-                <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                <p className="text-base font-semibold mb-1 text-gray-900   pr-4  text-right">
                   Focal Persons <i className="bi bi-shield-check"></i>
                 </p>
                 <div>
@@ -603,7 +597,7 @@ const Maps = (props) => {
                       (focalPerson) => (
                         <p
                           key={focalPerson.id}
-                          className="text-sm text-gray-500  text-right font-semibold "
+                          className="text-sm text-gray-500  text-right font-semibold  pr-4 "
                         >
                           {focalPerson.first_name} {focalPerson.last_name}
                         </p>
@@ -629,12 +623,12 @@ const Maps = (props) => {
           onClose={() => setRegionInfo({ showingInfoWindow: false })}
         >
           <div
-            className="m-auto     p-2  overflow-auto w-72 "
+            className="m-auto   overflow-auto w-72 "
             style={{
               fontFamily: "Inter, sans-serif",
             }}
           >
-            <div className="text-right mb-2">
+            <div className="mb-5 mt-5 text-right  pr-4">
               <span className="mr-2 text-md bg-green-500 p-1 rounded-xl text-white">
                 {regionInfo?.selectedPlace?.status}
               </span>
@@ -642,25 +636,25 @@ const Maps = (props) => {
                 {regionInfo?.selectedPlace?.name}
               </span>
             </div>
-            <div className="bg-white rounded-xl p-2">
+            <div className=" bg-white  overflow-hidden pt-1 pb-6">
               <div className="mt-2">
                 {" "}
-                <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+                <p className="text-base font-semibold mb-1 text-gray-900 pr-4  text-right">
                   Phone Number<i className="bi bi-shield-check"></i>
                 </p>
                 {regionInfo?.selectedPlace?.phoneNumber?.map((phoneNumber) => (
                   <p
                     key={phoneNumber.id}
-                    className="text-sm text-gray-500  text-right font-semibold "
+                    className="text-sm text-gray-500  text-right font-semibold pr-4 "
                   >
                     +{phoneNumber.number}
                   </p>
                 ))}
               </div>
-              <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+              <p className="text-base font-semibold mb-1 text-gray-900 pr-4  text-right">
                 Address<i className="bi bi-shield-check"></i>
               </p>
-              <p className="text-sm text-gray-500  text-right font-semibold ">
+              <p className="text-sm text-gray-500  text-right font-semibold pr-4 flex-wrap flex pl-2">
                 {regionInfo?.selectedPlace?.address}
               </p>
               {/* <div className="mb-2 flex gap-y-2 flex-col">
@@ -669,19 +663,19 @@ const Maps = (props) => {
                 {regionInfo?.selectedPlace?.status}
               </p>
             </div> */}
-              <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+              <p className="text-base font-semibold mb-1 text-gray-900 pr-4  text-right ">
                 No. of Ambulances: <i className="bi bi-shield-check"></i>
               </p>
-              <p className="text-right">
+              <p className="text-right pr-4">
                 {regionInfo?.selectedPlace?.ambulances?.length}
               </p>
 
-              <p className="text-base font-semibold mb-1 text-gray-900   text-right">
+              <p className="text-base font-semibold mb-1 text-gray-900 pr-4  text-right">
                 Ambulance Details<i className="bi bi-shield-check"></i>
               </p>
               <p className="text-base text-right">
                 {regionInfo?.selectedPlace?.ambulances?.map((ambulance) => (
-                  <p key={ambulance.id} className="text-right mb-4">
+                  <p key={ambulance.id} className="text-right mb-4 pr-4">
                     <span
                       className={`mr-2 text-md 
                       ${getStatusStyle(

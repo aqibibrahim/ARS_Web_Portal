@@ -11,12 +11,15 @@
     background-color:#60a5fa;
     border-radius: 4px;
   }.backdrop-blur-sm {
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(5px);
   }
   
   
   .custom-scroll-style::-webkit-scrollbar-track {
     background-color: #f5f5f5;
+  }
+  .gm-style-iw gm-style-iw-c{
+    padding-top: 20px;
   }
 
   .gm-style .gm-style-iw-d {
@@ -26,21 +29,16 @@ overflow: hidden !important;
     max-height: fit-content !important;
   }
 /* Add background blur to the content of the InfoWindow */
-.gm-style-iw .gm-style-iw-c {
-  background-color: transparent !important;
-  backdrop-filter: blur(5px); /* Adjust the blur amount as needed */
-}
+/* .gm-style-iw .gm-style-iw-c {
+  background-color: red !important;
+  backdrop-filter: blur(30px);
+} */
 
 /* Add background blur to the entire InfoWindow */
 .gm-style .gm-style-iw-c {
   background-color: transparent !important;
-  backdrop-filter: blur(5px); /* Adjust the blur amount as needed */
-  
+  backdrop-filter: blur(20px); 
 }
 
 /* If needed, apply background blur to the InfoWindow overlay */
-.gm-style-moc {
-  background: transparent;
-  backdrop-filter: blur(5px); /* Adjust the blur amount as needed */
-  width: 100%;
-}
+

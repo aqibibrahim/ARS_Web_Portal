@@ -759,9 +759,9 @@ export default function IncidentHealthCare({}) {
                               {/* {incident?.ambulances?.map((ambulance, index) => ( */}
                               <>
                                 {/* <span key={index}> */}
-                                {incident?.ambulance?.make +
+                                {incident?.ambulance?.model?.make?.name +
                                   " " +
-                                  incident?.ambulance?.model +
+                                  incident?.ambulance?.model?.name +
                                   " " +
                                   incident?.ambulance?.plate_no}
                                 <p>{incident?.ambulance?.driver?.first_name}</p>
