@@ -94,12 +94,14 @@ export default function HealthCareDepartments() {
 			}
 			const UpdateEquipment = async () => {
 				try {
-					await axios.patch(`https://ars.disruptwave.com/api/facility-department/update/`, JSON, config).then((res) => {
-						setSubmitDone(!submitDone)
-						setIsUpdateModalOpen(false)
-						setLoadingMessage(false)
-						toast.success('Department updated successfully!')
-					})
+					await axios
+						.patch(`https://ars.disruptwave.com/api/update-healthcare-department/`, JSON, config)
+						.then((res) => {
+							setSubmitDone(!submitDone)
+							setIsUpdateModalOpen(false)
+							setLoadingMessage(false)
+							toast.success('Department updated successfully!')
+						})
 				} catch (e) {
 					toast.error('failed')
 					setLoadingMessage(false)
