@@ -111,7 +111,13 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
           />
         );
       case "HealthCare":
-        return <HealthCareForm onClick={handelclose} datatt={ambulanceData} />;
+        return (
+          <HealthCareForm
+            onClick={handelclose}
+            datatt={ambulanceData}
+            // setOpen={setOpen}
+          />
+        );
       default:
         return null;
     }
@@ -306,7 +312,20 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
             });
         } catch (e) {
           setLoadingMessage(false);
-          toast.error("Failed to create incident. Please try again.");
+          {
+            e?.response?.data?.data?.informer_name &&
+            e.response.data.data.informer_name.length > 0
+              ? toast.error(e.response.data.data.informer_name[0])
+              : null;
+          }
+
+          {
+            e?.response?.data?.data?.description &&
+            e.response.data.data.description.length > 0
+              ? toast.error(e.response.data.data.description[0])
+              : null;
+          }
+
           console.log(e);
         }
       };
@@ -450,7 +469,27 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
       setUncontrolledAddress(address);
     });
   };
-
+  const isSubmitDisabled = () => {
+    const {
+      description,
+      gps_no,
+      number_of_persons,
+      informer_name,
+      plate_no,
+      persons_supported,
+      informer_phone_numbers,
+    } = createIncident.values;
+    return (
+      !informer_phone_numbers ||
+      !number_of_persons ||
+      !description ||
+      !informer_name ||
+      !locationAddress?.address ||
+      !selectedOption ||
+      !selectedGender ||
+      !selectedEmergencyOption
+    );
+  };
   return (
     <>
       <Toaster position="bottom-right" richColors />
@@ -484,10 +523,13 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                 placeholder="Choose On Map"
                 required
               />
-              <div
-                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                aria-hidden="true"
-              />
+              <p
+                className={`text-red-500 text-xs italic mt-1 ${
+                  createIncident.values.informer_address ? "hidden" : ""
+                }`}
+              >
+                Please Select Incident Location
+              </p>
             </div>
           </div>
         </div>
@@ -510,10 +552,13 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                 placeholder="Enter Informer Name"
                 required
               />
-              <div
-                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                aria-hidden="true"
-              />
+              <p
+                className={`text-red-500 text-xs italic mt-1 ${
+                  createIncident.values.informer_name ? "hidden" : ""
+                }`}
+              >
+                Please Enter Informer Name
+              </p>
             </div>
           </div>
         </div>
@@ -539,10 +584,13 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                 required
               />
 
-              <div
-                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                aria-hidden="true"
-              />
+              <p
+                className={`text-red-500 text-xs italic mt-1 ${
+                  createIncident.values.informer_phone_numbers ? "hidden" : ""
+                }`}
+              >
+                Please Enter Informer Phone Number
+              </p>
             </div>
           </div>
         </div>{" "}
@@ -565,10 +613,13 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                 placeholder="Enter Number of Person"
                 required
               />
-              <div
-                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                aria-hidden="true"
-              />
+              <p
+                className={`text-red-500 text-xs italic mt-1 ${
+                  createIncident.values.number_of_persons ? "hidden" : ""
+                }`}
+              >
+                Please Enter Number of Person
+              </p>
             </div>
           </div>
         </div>
@@ -647,6 +698,13 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
               </>
             )}
           </Listbox>
+          <p
+            className={`text-red-500 text-xs italic mt-1 ${
+              selectedOption?.value ? "hidden" : ""
+            }`}
+          >
+            Please Select Incident Type
+          </p>
         </div>
         <div className="mb-5">
           <Listbox
@@ -726,6 +784,13 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
               </>
             )}
           </Listbox>
+          <p
+            className={`text-red-500 text-xs italic mt-1 ${
+              selectedEmergencyOption?.value ? "hidden" : ""
+            }`}
+          >
+            Please Select Emergency Type
+          </p>
         </div>
         <div className="mb-5">
           <Listbox value={selectedGender} onChange={setSelectedGender}>
@@ -802,6 +867,13 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
               </>
             )}
           </Listbox>
+          <p
+            className={`text-red-500 text-xs italic mt-1 ${
+              selectedGender?.value ? "hidden" : ""
+            }`}
+          >
+            Please Select Gender
+          </p>
         </div>
         <div className="mb-5">
           <div>
@@ -821,12 +893,25 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
                 value={createIncident.values.description}
                 placeholder="Description"
               />
+              <p
+                className={`text-red-500 text-xs italic mt-1 ${
+                  createIncident.values.description ? "hidden" : ""
+                }`}
+              >
+                Please Enter Desription of Incident
+              </p>
             </div>
           </div>
         </div>
         <button
-          className="text-primary-100 bg-white rounded-md border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white mb-5"
+          className={`text-primary-100 bg-white rounded-md border-2 mb-5 border-primary-100 py-2 px-5 transition-all duration-300 
+          ${
+            isSubmitDisabled()
+              ? "opacity-50"
+              : "hover:bg-primary-100 hover:text-white mb-5"
+          } `}
           type="submit"
+          disabled={isSubmitDisabled()}
         >
           Next
         </button>

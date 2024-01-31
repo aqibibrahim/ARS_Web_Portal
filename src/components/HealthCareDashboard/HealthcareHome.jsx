@@ -6,7 +6,7 @@ import axios from "axios";
 const Tab = ({ selected, title, onClick }) => {
   return (
     <button
-      className={`px-4 py-2 transition-colors duration-150 ${
+      className={`px-4 py-2 transition-colors duration-150  ${
         selected ? "bg-white" : "bg-transparent text-gray-700"
       } focus:outline-none`}
       onClick={onClick}

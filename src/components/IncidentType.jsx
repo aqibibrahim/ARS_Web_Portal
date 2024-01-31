@@ -193,6 +193,9 @@ export default function IncidentType() {
     }
     setIsLoading(false);
   };
+  const isSubmitDisabled = () => {
+    return !state?.IncidentTypeName;
+  };
   return (
     <>
       <Toaster position="bottom-right" richColors />
@@ -206,6 +209,7 @@ export default function IncidentType() {
                 onClick={() => {
                   setIsModalOpen(false);
                   resetValidationErrors();
+                  setState({ IncidentTypeName: "" });
                 }}
               />
               <h3 className="text-xl font-semibold">
@@ -232,17 +236,15 @@ export default function IncidentType() {
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <div
-                        className="absolute inset-x-0  bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 text-right ${
+                          state?.IncidentTypeName ? "hidden" : ""
+                        }`}
+                      >
+                        Please Enter Incident Type Name
+                      </p>
                     </div>
                   </div>{" "}
-                  {validationErrors.IncidentTypeName && (
-                    <p className="text-red-500 text-sm text-right">
-                      {validationErrors.IncidentTypeName}
-                    </p>
-                  )}
                 </div>
               </div>
               {/* <FiDivideCircle /> */}
@@ -257,8 +259,13 @@ export default function IncidentType() {
                   </button>
                 ) : (
                   <button
+                    disabled={isSubmitDisabled()}
                     onClick={createNewIncidentType}
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300 ${
+                      isSubmitDisabled()
+                        ? "opacity-50"
+                        : " hover:bg-white hover:text-primary-100 hover:border-primary-100"
+                    } `}
                   >
                     Create
                   </button>
