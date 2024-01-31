@@ -443,6 +443,7 @@ const HealthCareFiles = () => {
             JSON,
             config
           );
+
           // Check if the status code is 200 or 201
           if (response.status === 200 || response.status === 201) {
             console.log(response);
@@ -461,8 +462,11 @@ const HealthCareFiles = () => {
         } catch (error) {
           // Handle network errors or other exceptions
           console.error("Post request error:", error);
-          const errorMessage = error?.response?.data?.message;
-          setLoadingMessage(false);
+
+          // Extract the specific error message from the response if available
+          const errorMessage =
+            error?.response?.data?.data?.name?.[0] ||
+            "Failed to add department";
           toast.error(errorMessage);
         }
       };
@@ -563,6 +567,7 @@ const HealthCareFiles = () => {
 
   const isSubmitDisabled = () => {
     const { focal_persons, departments, name, email } = CreateHealtCare.values;
+    debugger;
     return (
       !optionsFocalPerson ||
       !phoneNumbers?.length > 0 ||
@@ -1087,7 +1092,6 @@ const HealthCareFiles = () => {
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                 onClick={() => {
                   setIsModalOpen(false);
-                  CreateHealtCare.resetForm();
                 }}
               />
               <h3 className="text-xl font-semibold">Create HealthCare</h3>
@@ -1336,8 +1340,7 @@ const HealthCareFiles = () => {
                 ) : (
                   <button
                     type="submit"
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 
-                      `}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 `}
                   >
                     Create
                   </button>

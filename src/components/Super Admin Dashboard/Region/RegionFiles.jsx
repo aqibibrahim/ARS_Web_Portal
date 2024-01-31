@@ -383,70 +383,7 @@ const RegionFiles = () => {
       setUncontrolledAddress(address);
     });
   };
-  // const handlePlaceChange = () => {
-  //   const map = new window.google.maps.Map(document.getElementById("map"), {
-  //     center: { lat: 50.064192, lng: -130.605469 },
-  //     zoom: 3,
-  //   });
 
-  //   const card = document.getElementById("pac-card");
-  //   map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-  //   const center = { lat: 50.064192, lng: -130.605469 };
-  //   const defaultBounds = {
-  //     north: center.lat + 0.1,
-  //     south: center.lat - 0.1,
-  //     east: center.lng + 0.1,
-  //     west: center.lng - 0.1,
-  //   };
-
-  //   const input = document.getElementById("address");
-  //   const options = {
-  //     bounds: defaultBounds,
-  //     componentRestrictions: { country: null }, // Set the country to Pakistan
-  //     fields: [
-  //       "address_components",
-  //       "geometry",
-  //       "icon",
-  //       "name",
-  //       "formatted_address",
-  //     ],
-  //     strictBounds: false,
-  //   };
-
-  //   const autocomplete = new window.google.maps.places.Autocomplete(
-  //     input,
-  //     options
-  //   );
-  //   const southwest = { lat: 23.6345, lng: 60.8724 };
-  //   const northeast = { lat: 37.0841, lng: 77.8375 };
-  //   const newBounds = new window.google.maps.LatLngBounds(southwest, northeast);
-  //   autocomplete.setBounds(newBounds);
-
-  //   autocomplete.addListener("place_changed", () => {
-  //     const place = autocomplete.getPlace();
-  //     let address = "";
-  //     let postalCode = "";
-
-  //     if (place.address_components) {
-  //       address = place.formatted_address;
-
-  //       const postalCodeComponent = place.address_components.find((component) =>
-  //         component.types.includes("postal_code")
-  //       );
-
-  //       postalCode = postalCodeComponent ? postalCodeComponent.short_name : "";
-  //     }
-
-  //     console.log("Formatted Address:", address);
-  //     console.log("Postal Code:", postalCode);
-
-  //     // The rest of your code...
-  //     const latitude = place.geometry.location.lat();
-  //     const longitude = place.geometry.location.lng();
-  //     sendDataToParent(latitude, longitude, address, postalCode);
-  //   });
-  // };
   const handleAddPhoneNumber = () => {
     if (newPhoneNumber.trim() !== "") {
       setPhoneNumbers([...phoneNumbers, newPhoneNumber]);
@@ -485,30 +422,7 @@ const RegionFiles = () => {
       !locationAddress?.address
     );
   };
-  // const getStatusStyle = (status) => {
-  //   let backgroundColor, textColor;
 
-  //   switch (status) {
-  //     case "Available":
-  //       backgroundColor = "bg-green-400";
-  //       textColor = "text-white";
-  //       break;
-  //     case "Dispatched":
-  //       backgroundColor = "bg-blue-400";
-  //       textColor = "text-white";
-  //       break;
-  //     case "Inactive":
-  //       backgroundColor = "bg-red-400";
-  //       textColor = "text-white";
-  //       break;
-  //     default:
-  //       backgroundColor = "bg-yellow-400";
-  //       textColor = "text-white";
-  //       break;
-  //   }
-
-  //   return `inline-flex items-center rounded-full ${backgroundColor} px-2 py-1 text-xs font-medium ${textColor}`;
-  // };
   return (
     <div
       className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
@@ -677,7 +591,7 @@ const RegionFiles = () => {
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
                     <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                      Assigned Ambulances
+                      Assigned Ambulances*
                     </label>
 
                     <AntSelect
@@ -949,54 +863,29 @@ const RegionFiles = () => {
                             newPhoneNumber ? "w-11/12" : "w-full"
                           }`}
                         >
-                          {/* <InputMask
-															mask="00218 99 9999999"
-															maskChar=""
-															placeholder="00218 XX XXXXXXX"
-															onChange={(e) => setNewPhoneNumber(e.target.value)}
-															value={newPhoneNumber}
-															type="tel"
-															name="phone_numbers"
-															id="phone_numbers"
-															className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-															required
-														/> */}
                           <InputMask
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                console.log("e.key", e.key);
+                                e.preventDefault();
+                                handleAddPhoneNumber();
+                              }
+                            }}
                             value={newPhoneNumber}
                             type="tel"
                             name="phone_numbers"
                             id="phone_numbers"
                             className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           />
-                          {/* <input
-															type="number"
-															onChange={(e) => setNewPhoneNumber(e.target.value)}
-															value={newPhoneNumber}
-															placeholder="Enter Phone Number"
-															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-															{...(phoneNumbers ? { required: false } : { required: true })}
-														/> */}
+
                           <div
                             className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                             aria-hidden="true"
                           />
-                        </div>
-                        <div>
-                          {newPhoneNumber ? (
-                            <button
-                              type="button"
-                              onClick={handleAddPhoneNumber}
-                              className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
-                            >
-                              +
-                            </button>
-                          ) : (
-                            ""
-                          )}
                         </div>
                       </div>
                       {validationErrors.phoneNumbers && (
@@ -1008,30 +897,24 @@ const RegionFiles = () => {
                   </div>
                 </div>
               </div>{" "}
-              {phoneNumbers?.length > 0 ? (
-                <div
-                  className={`grid grid-cols-2 gap-2 ${
-                    phoneNumbers.length > 0 ? "bg-gray-100" : ""
-                  } p-4`}
-                >
-                  {phoneNumbers?.map((phoneNumber, index) => (
+              {phoneNumbers.length > 0 && (
+                <div className="flex flex-wrap mt-2">
+                  {phoneNumbers.map((phoneNumber, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
+                      className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2"
                     >
-                      <div className="flex text-sm">{phoneNumber}</div>
+                      <span className="mr-1 text-xs">{phoneNumber}</span>
                       <button
                         type="button"
                         onClick={() => handleRemovePhoneNumber(index)}
-                        className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
+                        className="text-red-500 hover:text-red-700"
                       >
-                        -
+                        <span className="text-xs">X</span>
                       </button>
                     </div>
                   ))}
                 </div>
-              ) : (
-                ""
               )}
               <div className="text-left mt-10">
                 {loadingMessage ? (
