@@ -42,3 +42,6 @@ overflow: hidden !important;
 
 /* If needed, apply background blur to the InfoWindow overlay */
 
+.gm-style .gm-style-iw-c{
+  padding: 0px !important;
+}
