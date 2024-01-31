@@ -137,6 +137,7 @@ const RegionFiles = () => {
 
     setUpdateFormOpen(true);
   };
+
   useEffect(() => {
     const fetchRegionsData = async () => {
       try {
@@ -155,6 +156,13 @@ const RegionFiles = () => {
     };
     fetchRegionsData();
   }, [submitDone]);
+  const toastErrorMessages = (data) => {
+    Object.entries(data).forEach(([field, messages]) => {
+      messages.forEach((message) => {
+        toast.error(`${field}: ${message}`);
+      });
+    });
+  };
 
   const CreateRegion = useFormik({
     initialValues: {
@@ -191,7 +199,7 @@ const RegionFiles = () => {
         } catch (e) {
           setLoadingMessage(false);
           if (e.response?.data?.code === 400) {
-            toast.error(e.response.data.data.name[0]);
+            toastErrorMessages(e?.response?.data?.data);
             setLoadingMessage(false);
           } else {
             toast.error("failed");
@@ -467,6 +475,16 @@ const RegionFiles = () => {
     },
     enableReinitialize: true,
   });
+
+  const isSubmitDisabled = () => {
+    const { name } = CreateRegion.values;
+    return (
+      !options?.length > 0 ||
+      !phoneNumbers?.length > 0 ||
+      name?.trim() === "" ||
+      !locationAddress?.address
+    );
+  };
   // const getStatusStyle = (status) => {
   //   let backgroundColor, textColor;
 
@@ -665,13 +683,20 @@ const RegionFiles = () => {
                     <AntSelect
                       mode="multiple"
                       value={options}
-                      placeholder="Select"
+                      placeholder="Select Ambulance"
                       onChange={(value) => handleChange(value)}
                       options={myData}
                       showSearch
                       optionFilterProp="label"
                       className="w-full mt-2"
                     />
+                    <p
+                      className={`text-red-500 text-xs italic mt-1 ${
+                        options?.length > 0 ? "hidden" : ""
+                      }`}
+                    >
+                      Please Select Ambulance
+                    </p>
                   </div>
                   {/* <div>
                     <label
@@ -718,10 +743,13 @@ const RegionFiles = () => {
                         required
                         readOnly
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          locationAddress?.address ? "hidden" : ""
+                        }`}
+                      >
+                        Please Select Region Location
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -744,10 +772,13 @@ const RegionFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          CreateRegion.values.name ? "hidden" : ""
+                        }`}
+                      >
+                        Please Select Region Name
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -777,10 +808,13 @@ const RegionFiles = () => {
                             className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           />
 
-                          <div
-                            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                            aria-hidden="true"
-                          />
+                          <p
+                            className={`text-red-500 text-xs italic mt-1 ${
+                              phoneNumbers.length > 0 ? "hidden" : ""
+                            }`}
+                          >
+                            Please press + to add Phone Number
+                          </p>
                         </div>
                         <div>
                           {newPhoneNumber ? (
@@ -840,10 +874,15 @@ const RegionFiles = () => {
                   </button>
                 ) : (
                   <button
+                    disabled={isSubmitDisabled()}
                     type="submit"
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300 ${
+                      isSubmitDisabled()
+                        ? "opacity-50 "
+                        : "hover:bg-white hover:border-primary-100 hover:text-primary-100 "
+                    }  `}
                   >
-                    Save
+                    Create
                   </button>
                 )}
               </div>

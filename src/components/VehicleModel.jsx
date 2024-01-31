@@ -133,6 +133,14 @@ export default function VehicleModal() {
     });
     setEditIncidentID(data?.id);
   };
+  const toastErrorMessages = (errors) => {
+    Object.keys(errors).forEach((field) => {
+      const messages = errors[field];
+      messages.forEach((message) => {
+        toast.error(`${field}: ${message}`);
+      });
+    });
+  };
   const createNewVehicleModel = async () => {
     // if (!validateForm()) {
     //     return;
@@ -162,7 +170,7 @@ export default function VehicleModal() {
       }
     } catch (error) {
       console.error("Error creating role:", error);
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.name[0]);
     }
 
     setIsLoading(false);
@@ -237,13 +245,17 @@ export default function VehicleModal() {
     }
     setIsLoading(false);
   };
+  const isSubmitDisabled = () => {
+    return !state?.vehicleModel || !selectedOption > 0;
+  };
+
   return (
     <>
       <Toaster position="bottom-right" richColors />
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
-            <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
+          <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white   mb-5">
+            <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 ">
               <BsArrowRightCircle
                 width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
@@ -275,10 +287,13 @@ export default function VehicleModal() {
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <div
-                        className="absolute inset-x-0  bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 text-right ${
+                          state?.vehicleModel ? "hidden" : ""
+                        }`}
+                      >
+                        Please Enter Vehicle Model
+                      </p>
                     </div>{" "}
                     <div className="flex flex-col space-y-2 w-full mt-4">
                       <label
@@ -292,19 +307,22 @@ export default function VehicleModal() {
                         placeholder="Select Vehicle Make"
                         onChange={handleSelect}
                         options={myData}
-                        // formatOptionLabel={formatOptionLabel}
-                        isMultiple={false}
+                        isMulti={false} // Updated from isMultiple
                         isClearable={true}
                         primaryColor={"blue"}
-                        className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        className="peer w-full  px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        menuPlacement="auto" // Set menuPlacement to 'auto'
                       />
+
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 text-right ${
+                          selectedOption ? "hidden" : ""
+                        }`}
+                      >
+                        Please Select Vehicle
+                      </p>
                     </div>
                   </div>{" "}
-                  {validationErrors.vehicleModel && (
-                    <p className="text-red-500 text-sm text-right">
-                      {validationErrors.vehicleModel}
-                    </p>
-                  )}
                 </div>
               </div>
               {/* <FiDivideCircle /> */}
@@ -319,8 +337,13 @@ export default function VehicleModal() {
                   </button>
                 ) : (
                   <button
+                    disabled={isSubmitDisabled()}
                     onClick={createNewVehicleModel}
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300 ${
+                      isSubmitDisabled()
+                        ? "opacity-50"
+                        : "hover:bg-white hover:text-primary-100 hover:border-primary-100"
+                    } `}
                   >
                     Add
                   </button>

@@ -108,6 +108,9 @@ export default function IncidentList({}) {
   const [completedIncidentDetails, setCompletedIncidentDetails] = useState([]);
   const [completedIncidents, setCompletedIncidents] = useState([]);
   const [completedIncidentsView, setCompletedIncidentsView] = useState(false);
+
+  const [deleteFormOpen, setDeleteFormOpen] = useState();
+  const [selectedDeleteIncident, setSelectedDeleteIncident] = useState();
   const handleAssignAmbulanceAndhealthCare = (data) => {
     if (data === "Assign Ambulance") {
       setAssignAmbulance(true);
@@ -119,8 +122,8 @@ export default function IncidentList({}) {
     }
   };
   const handleCancel = () => {
-    setDeleteModal(false);
-    setDeleteID("");
+    setDeleteFormOpen(false);
+    setSelectedDeleteIncident("");
   };
   const handleEditClick = (incident) => {
     setSelectedIncident(incident);
@@ -128,6 +131,37 @@ export default function IncidentList({}) {
     setAssignAmbulance(true);
     fetchAmbulanceData(incident);
     fetchSingleIncident();
+  };
+  const handleDeleteClick = (incident) => {
+    setSelectedDeleteIncident(incident?.id);
+    setDeleteFormOpen(true);
+  };
+  const handleDelete = async () => {
+    try {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axios.delete(
+        `${Vars.domain}/incidents/${selectedDeleteIncident}`,
+        {
+          headers,
+        }
+      );
+      console.log(response, "res");
+      if (
+        response.status === 200 ||
+        response.status === 201 ||
+        response.status === 204
+      ) {
+        toast.success("Incident Deleted Successfuly");
+        setDeleteFormOpen(false);
+        setSelectedDeleteIncident("");
+      }
+    } catch (error) {
+      setDeleteFormOpen(false);
+    }
   };
   // Get All Incidents
   const fetchincidentData = async (page = 1, status) => {
@@ -184,10 +218,10 @@ export default function IncidentList({}) {
       currentPage,
       activeTab === "active" ? "active" : "Complete"
     );
-  }, [deleteModal, currentPage, activeTab]);
+  }, [deleteModal, currentPage, activeTab, deleteFormOpen]);
   useEffect(() => {
     fetchCompleteincidentData();
-  }, [activeTab, currentCompletedPage]);
+  }, [activeTab, currentCompletedPage, deleteFormOpen]);
   // Healtcare Facility Get
   useEffect(() => {
     const fetchHealthCareData = async () => {
@@ -601,6 +635,14 @@ export default function IncidentList({}) {
                       <tr key={incident?.id} className="hover:bg-gray-100">
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                           <span className="flex items-center justify-center gap-5">
+                            {/* <button
+                              onClick={() => {
+                                handleDeleteClick(incident);
+                              }}
+                              className="text-red-500 hover:text-indigo-900 border-2 rounded-lg border-red-500 py-1 px-2"
+                            >
+                              <BiMessageAltX />
+                            </button>{" "} */}
                             <button
                               onClick={() => {
                                 handleEditClick(incident);
@@ -813,7 +855,17 @@ export default function IncidentList({}) {
           setViewOpen={setViewOpen}
           showData={showData}
         />
-
+        <Modal
+          title="Are you sure to delete this Incident?"
+          open={deleteFormOpen}
+          onOk={handleDelete}
+          onCancel={handleCancel}
+          closable={false}
+          okButtonProps={{
+            style: { backgroundColor: "red" },
+          }}
+          okText="Delete"
+        ></Modal>
         {updateFormOpen && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
             <div className="relative top-1  mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">

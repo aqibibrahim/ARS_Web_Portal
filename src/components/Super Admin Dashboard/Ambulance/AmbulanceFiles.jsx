@@ -67,6 +67,29 @@ const AmbulanceFiles = () => {
   const [locationAddress, setLocationAddress] = useState({});
   const [open, setOpen] = useState(false);
   const [editOptions, setEditOptions] = useState(null);
+  const [isSaveDisabled, setSaveDisabled] = useState(true);
+  const [state, setState] = useState({ password: "" });
+
+  const handlePasswordChange = (event) => {
+    const inputValue = event.target.value;
+    const maxLength = 6;
+
+    if (inputValue.length > maxLength) {
+      event.target.value = inputValue.slice(0, maxLength);
+    }
+
+    CreateAmbulance.setFieldValue("password", event.target.value);
+  };
+  const handleEditPasswordChange = (event) => {
+    const inputValue = event.target.value;
+    const maxLength = 6;
+
+    if (inputValue.length > maxLength) {
+      event.target.value = inputValue.slice(0, maxLength);
+    }
+
+    EditAmbulance.setFieldValue("password", event.target.value);
+  };
   const navigate = useNavigate();
   const HandelOpenMap = () => {
     setOpen(true);
@@ -175,6 +198,7 @@ const AmbulanceFiles = () => {
   useEffect(() => {
     fetchAmbulanceData(currentPage);
   }, [submitDone, currentPage]);
+
   const CreateAmbulance = useFormik({
     initialValues: {
       plate_no: "",
@@ -539,6 +563,22 @@ const AmbulanceFiles = () => {
     setSelectedModelOption(selectedOptions);
     console.log(selectedOptions);
   };
+
+  const isSubmitDisabled = () => {
+    const { password, gps_no, plate_no, persons_supported } =
+      CreateAmbulance.values;
+
+    return (
+      password.length !== 6 ||
+      !gps_no ||
+      plate_no.trim() === "" ||
+      !locationAddress?.address ||
+      !persons_supported ||
+      !options ||
+      !selectedModelOption
+    );
+  };
+
   return (
     <div
       className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
@@ -949,24 +989,21 @@ const AmbulanceFiles = () => {
                       name="password"
                       type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
-                      onChange={CreateAmbulance.handleChange}
+                      onChange={handlePasswordChange}
                       value={CreateAmbulance.values.password}
                       placeholder="Password"
                       className="peer block w-full px-3 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       required
-                      disabled={
-                        CreateAmbulance.values.password.length === 6
-                          ? true
-                          : false
-                      }
                     />
+
                     <button
                       type="button"
                       onClick={togglePasswordVisibility}
-                      className="absolute top-5 -translate-y-1/2 cursor-pointer "
+                      className="absolute top-5 -translate-y-1/2 cursor-pointer"
                     >
                       {showPassword ? <BsEyeSlash /> : <BsEye />}
                     </button>
+
                     <p
                       className={`text-red-500 text-xs italic mt-1 ${
                         CreateAmbulance.values.password.length === 6
@@ -974,7 +1011,7 @@ const AmbulanceFiles = () => {
                           : ""
                       }`}
                     >
-                      Please digit six digit password
+                      Please enter a six-digit password
                     </p>
                   </div>
                 </div>
@@ -990,7 +1027,12 @@ const AmbulanceFiles = () => {
                 ) : (
                   <button
                     type="submit"
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 ${
+                      isSubmitDisabled()
+                        ? "opacity-50"
+                        : "hover:bg-white hover:text-primary-100 hover:border-primary-100"
+                    }`}
+                    disabled={isSubmitDisabled()}
                   >
                     Save Ambulance
                   </button>
@@ -1030,6 +1072,13 @@ const AmbulanceFiles = () => {
                       primaryColor={"blue"}
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
+                    <p
+                      className={`text-red-500 text-xs italic mt-1 ${
+                        editOptions ? "hidden" : ""
+                      }`}
+                    >
+                      Please Select Equipments.
+                    </p>
                   </div>
 
                   <div>
@@ -1050,10 +1099,13 @@ const AmbulanceFiles = () => {
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <div
-                        className="absolute inset-x-0  bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          EditAmbulance.values.persons_supported ? "hidden" : ""
+                        }`}
+                      >
+                        Please fill out this field.
+                      </p>
                     </div>
                   </div>
 
@@ -1085,10 +1137,15 @@ const AmbulanceFiles = () => {
                         placeholder=" Choose On Map"
                         required
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          locationAddress?.address || locationAddress?.latitude
+                            ? "hidden"
+                            : ""
+                        }`}
+                      >
+                        Please fill out this field.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1111,10 +1168,15 @@ const AmbulanceFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          EditAmbulance?.values?.plate_no?.trim()
+                            ? "hidden"
+                            : ""
+                        }`}
+                      >
+                        Please fill out this field.
+                      </p>
                     </div>
                   </div>
 
@@ -1137,10 +1199,13 @@ const AmbulanceFiles = () => {
                         primaryColor={"blue"}
                         className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          selectedModelOption ? "hidden" : ""
+                        }`}
+                      >
+                        Please Select Model
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -1161,10 +1226,13 @@ const AmbulanceFiles = () => {
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          EditAmbulance.values.gps_no ? "hidden" : ""
+                        }`}
+                      >
+                        Please fill out this field.
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -1176,6 +1244,35 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="new-password"
+                        onChange={handleEditPasswordChange}
+                        value={EditAmbulance.values.password}
+                        placeholder="Password"
+                        className="peer block w-full px-3 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                      />
+
+                      <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute top-5 -translate-y-1/2 cursor-pointer"
+                      >
+                        {showPassword ? <BsEyeSlash /> : <BsEye />}
+                      </button>
+
+                      <p
+                        className={`text-red-500 text-xs italic mt-1 ${
+                          EditAmbulance?.values?.password?.length === 6
+                            ? "hidden"
+                            : ""
+                        }`}
+                      >
+                        Please enter a six-digit password
+                      </p>
+                    </div>
+                    {/* <input
                         type="password"
                         name="password"
                         id="password"
@@ -1190,7 +1287,7 @@ const AmbulanceFiles = () => {
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                         aria-hidden="true"
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -1205,7 +1302,8 @@ const AmbulanceFiles = () => {
                 ) : (
                   <button
                     type="submit"
-                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100`}
+                    // disabled={isEditSubmitDisabled()}
+                    className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  hover:border-primary-100 "`}
                   >
                     Update Ambulance
                   </button>

@@ -149,9 +149,9 @@ const HealthCareForm = ({ onClick, datatt }) => {
           >
             <p className="text-right">
               Model:
-              {ambulance?.make +
+              {ambulance?.model?.make?.name +
                 " " +
-                ambulance?.model +
+                ambulance?.model?.name +
                 " " +
                 ambulance?.plate_no}
             </p>

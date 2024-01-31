@@ -546,7 +546,7 @@ export default function IncidentHealthCare({}) {
                         <div className="grow shrink basis-0 self-stretch p-[15px] bg-white bg-opacity-50 justify-end items-center gap-[15px] flex">
                           <div className="grow shrink basis-0 h-[35px] justify-start items-end gap-3.5 flex">
                             <div className=" rounded-lg justify-center items-center gap-2.5 flex">
-                              <button
+                              {/* <button
                                 className={`text-white text-xs font-semibold font-inter`}
                               >
                                 {incident?.ambulances?.map(
@@ -561,37 +561,55 @@ export default function IncidentHealthCare({}) {
                                     </span>
                                   )
                                 )}
-                              </button>
+                              </button> */}
                             </div>
                           </div>
                           <div className="grow shrink basis-0 flex-col justify-center items-end gap-[3px] inline-flex">
-                            <div className="self-stretch h-[88px] flex-col justify-start items-end gap-[5px] flex">
+                            <div className="self-stretch flex-col justify-start items-end gap-[5px] flex">
                               <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter'] rtl">
-                                اسم السائق -{" "}
-                                {incident?.ambulances?.map(
+                                اسم السائق{" "}
+                                {/* {incident?.ambulances?.map(
                                   (ambulance, index) => (
                                     <span key={index}>
                                       {ambulance?.driver?.first_name}
                                     </span>
                                   )
-                                )}
+                                )} */}
                               </div>
                               <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
                                 {incident?.ambulances?.map(
                                   (ambulance, index) => (
                                     <>
                                       {" "}
-                                      <span key={index}>
-                                        {ambulance?.driver?.first_name}
-                                      </span>
-                                      <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
-                                        <div
+                                      <p key={index} className="m-1">
+                                        {ambulance?.driver?.first_name}{" "}
+                                        <span
                                           className={`grow shrink basis-0 ml-2 text-right  ${getStatusStyle(
                                             ambulance?.driver?.status
                                           )} text-xs font-normal font-['Inter']`}
                                         >
+                                          {" "}
                                           {ambulance?.driver?.status}
-                                        </div>
+                                        </span>
+                                      </p>
+                                      <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
+                                        <div></div>
+                                        <span
+                                          className={`grow shrink basis-0 ml-2 text-right  ${getStatusStyle(
+                                            ambulance?.status
+                                          )} text-xs font-normal font-['Inter']`}
+                                        >
+                                          {" "}
+                                          {ambulance?.status}
+                                        </span>{" "}
+                                        <p
+                                          key={index}
+                                          className="flex flex-nowrap w-40 text-right "
+                                        >
+                                          {ambulance?.model?.make?.name}-{" "}
+                                          {ambulance?.model?.name} -{" "}
+                                          {ambulance?.plate_no}
+                                        </p>
                                       </div>
                                     </>
                                   )
@@ -599,16 +617,24 @@ export default function IncidentHealthCare({}) {
                               </div>
 
                               <div className="  items-center ">
-                                <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                                {/* <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
                                   {incident?.ambulances?.map(
                                     (ambulance, index) => (
-                                      <span key={index}>
-                                        {ambulance?.make}- {ambulance?.model} -{" "}
-                                        {ambulance?.plate_no}
-                                      </span>
+                                      <>
+                                        {" "}
+                                        <span key={index}>
+                                          {ambulance?.model?.make?.name}-{" "}
+                                          {ambulance?.model?.name} -{" "}
+                                          {ambulance?.plate_no}
+                                        </span>
+                                        <span>
+                                          {" "}
+                                          {ambulance?.driver?.status}
+                                        </span>
+                                      </>
                                     )
                                   )}
-                                </div>
+                                </div> */}
                                 <div className="w-6 h-6 px-0.5 pt-[5px] pb-1 justify-center items-center flex">
                                   <div className="w-5 h-[15px] relative flex-col justify-start items-start flex" />
                                 </div>
@@ -649,7 +675,7 @@ export default function IncidentHealthCare({}) {
                               </div>
                               <div className="px-1.5 py-[3px] bg-fuchsia-500 bg-opacity-75 rounded-[20px] justify-center items-center gap-[5px] flex">
                                 <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
-                                  أنثى {incident?.gender_type?.name}
+                                  {incident?.gender?.name}
                                 </div>
                               </div>
                             </div>
@@ -662,7 +688,7 @@ export default function IncidentHealthCare({}) {
                             </div>
                             <div className="h-5 px-[15px] py-2.5 bg-red-600 rounded-lg justify-center items-center gap-2.5 inline-flex">
                               <div className="text-white text-xs font-semibold font-['Inter']">
-                                {incident?.type}{" "}
+                                {incident?.emergency_type?.name}{" "}
                               </div>
                             </div>
                             <div className="text-black text-xs font-semibold font-inter">
@@ -733,11 +759,11 @@ export default function IncidentHealthCare({}) {
                               {/* {incident?.ambulances?.map((ambulance, index) => ( */}
                               <>
                                 {/* <span key={index}> */}
-                                {incident?.ambulance.make +
+                                {incident?.ambulance?.make +
                                   " " +
-                                  incident?.ambulance.model +
+                                  incident?.ambulance?.model +
                                   " " +
-                                  incident?.ambulance.plate_no}
+                                  incident?.ambulance?.plate_no}
                                 <p>{incident?.ambulance?.driver?.first_name}</p>
                                 {/* </span> */}
                                 <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
