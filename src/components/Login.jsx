@@ -139,8 +139,8 @@ const Login = ({ updateAuthenticationStatus }) => {
               Sign In
             </button>
           )}
-          <p className="mx-3">Or</p>
-          <p>Login  <a  className="text-primary-100" href="/HealthcareLogin">Healthcare</a></p>    
+          {/* <p className="mx-3">Or</p>
+          <p>Login  <a  className="text-primary-100" href="/HealthcareLogin">Healthcare</a></p>     */}
              </div>
       </form>
     </div>
