@@ -37,6 +37,9 @@ const AmbulanceForm = ({
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
   const [showAssignAmbulance, setShowAssignAmbulance] = useState([]);
   const [assignedAmbulance, setAssignedAmbulance] = useState([]);
+  const [initiallyAssignedAmbulance, setInitiallyAssignedAmbulance] = useState(
+    []
+  );
 
   const [driver, setDriver] = useState("");
   const { selectedAmbulanceId, setAmbulanceId, resetState } =
@@ -54,11 +57,13 @@ const AmbulanceForm = ({
       //   return;
       // }
       const JSON = {
-        // ambulances: selectedOption?.map((item) => item.value),
-        ambulances: assignedAmbulance,
+        ambulances:
+          assignedAmbulance.length > 0
+            ? assignedAmbulance
+            : initiallyAssignedAmbulance,
       };
-      const id = localStorage.getItem("IncidentID");
 
+      const id = localStorage.getItem("IncidentID");
       try {
         await axios
           .patch(`${Vars.domain}/incidents/${getid}`, JSON, config)
@@ -167,7 +172,6 @@ const AmbulanceForm = ({
   useEffect(() => {
     const fetchsingleincidentsData = async () => {
       const id = localStorage.getItem("IncidentID");
-
       try {
         await axios
           .get(`https://ars.disruptwave.com/api/incidents/${id}`, {
@@ -178,7 +182,7 @@ const AmbulanceForm = ({
               response?.data?.data?.ambulances?.map(
                 (ambulance) => ambulance.id
               ) || [];
-            setAssignedAmbulance(initialSelectedAmbulanceIds);
+            setInitiallyAssignedAmbulance(initialSelectedAmbulanceIds);
             setShowAssignAmbulance(response?.data?.data?.ambulances);
             // setSelectedOption(response?.data?.data?.ambulances);
             console.log("fetchsingleData", response?.data?.data);
@@ -216,17 +220,51 @@ const AmbulanceForm = ({
 
   //   console.log(selectedOptions);
   // };
+  // const handleChange = (selectedOptions) => {
+  //   console.log("Selected Options:", selectedOptions);
+  //   // Ensure selectedOptions is not null or undefined
+  //   setSelectedOption(selectedOptions);
+
+  //   const updatedIds = selectedOptions?.map((option) => option?.value) || [];
+  //   console.log("Updated Ids:", updatedIds);
+
+  //   setAssignedAmbulance([...assignedAmbulance, ...updatedIds]);
+  //   console.log("Assigned Ambulance:", assignedAmbulance);
+  // };
   const handleChange = (selectedOptions) => {
     console.log("Selected Options:", selectedOptions);
-    // Ensure selectedOptions is not null or undefined
-    const updatedIds = selectedOptions?.map((option) => option?.value) || [];
-    console.log("Updated Ids:", updatedIds);
 
+    // Ensure selectedOptions is not null or undefined
     setSelectedOption(selectedOptions);
 
-    setAssignedAmbulance([...assignedAmbulance, ...updatedIds]);
+    // Extract unique ids from selectedOptions
+    const updatedIds = [
+      ...new Set(selectedOptions?.map((option) => option?.value) || []),
+    ];
+    console.log("Updated Ids:", updatedIds);
+
+    // Update assignedAmbulance state
+    setAssignedAmbulance((prevAssignedAmbulance) => {
+      // Filter out unchecked ids
+      const updatedAmbulance = prevAssignedAmbulance.filter((id) =>
+        updatedIds.includes(id)
+      );
+
+      // Add newly checked ids, ensuring initiallyAssignedAmbulance is always present
+      const newAssignedAmbulance = [
+        ...new Set([
+          ...initiallyAssignedAmbulance,
+          ...updatedAmbulance,
+          ...updatedIds,
+        ]),
+      ];
+
+      return newAssignedAmbulance;
+    });
+
     console.log("Assigned Ambulance:", assignedAmbulance);
   };
+
   // const handleViewOnMap = (selectedAmbulance) => () => {
   //   // Prevent the click event from propagating to the parent elements
   //   // setSelectedAmbulance(selectedAmbulance);
@@ -321,12 +359,18 @@ const AmbulanceForm = ({
           />
         </div>
         <div className="flex  bottom-10 absolute">
-          <button
-            className="text-primary-100 flex  bg-white rounded-md border-2 border-primary-100 mr-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
-            type="submit"
-          >
-            Next
-          </button>
+          {initiallyAssignedAmbulance.length > 0 ||
+          assignAmbulance.length > 0 ||
+          selectedOption ? (
+            <button
+              className="text-primary-100 flex  bg-white rounded-md border-2 border-primary-100 mr-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
+              type="submit"
+            >
+              Next
+            </button>
+          ) : (
+            ""
+          )}
         </div>
       </form>
     </>

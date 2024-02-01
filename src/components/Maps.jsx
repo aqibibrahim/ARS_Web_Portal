@@ -19,8 +19,13 @@ const Maps = (props) => {
 
   console.log(incidentId, "incidentID");
 
-  const { selectedAmbulanceId, resetState, selectedFacilityId } =
-    useAmbulanceContext();
+  const {
+    selectedAmbulanceId,
+    resetState,
+    selectedFacilityId,
+    setSelectedAmbulanceId,
+    setSelectedFacilityId,
+  } = useAmbulanceContext();
   console.log("Selected Ambulance ID in Other Component:", selectedAmbulanceId);
   console.log("Selected Ambulance ID in Other Component:", selectedFacilityId);
   console.log(props);
@@ -557,7 +562,10 @@ const Maps = (props) => {
             lat: Number(healthCareInfo?.selectedPlace?.latitude),
             lng: Number(healthCareInfo?.selectedPlace?.longitude),
           }}
-          onClose={() => setHealthCareInfo({ showingInfoWindow: false })}
+          onClose={() => {
+            resetState();
+            setHealthCareInfo({ showingInfoWindow: false });
+          }}
         >
           <div
             className="m-auto     overflow-hidden w-72 "
