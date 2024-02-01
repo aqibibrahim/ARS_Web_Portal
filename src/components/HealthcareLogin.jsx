@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import StyledInput from "./StyledInput";
 import { Toaster, toast } from "sonner";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
-const Login = ({ updateAuthenticationStatus }) => {
+const HealthcareLogin = ({ updateAuthenticationStatus }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // Track password visibility
@@ -84,15 +84,12 @@ const Login = ({ updateAuthenticationStatus }) => {
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-200">
       <Toaster richColors />
-      <div className="mb-5 font-bold text-lg">Call Center Manager</div>
-
-      
+      <div className="mb-5 font-bold text-lg">Health Care Manager</div>
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-96"
       >
         
-       
         <div className="mb-4">
           <StyledInput
             label={"Email"}
@@ -139,12 +136,12 @@ const Login = ({ updateAuthenticationStatus }) => {
               Sign In
             </button>
           )}
-          {/* <p className="mx-3">Or</p>
-          <p>Login  <a  className="text-primary-100" href="/HealthcareLogin">Healthcare</a></p>     */}
-             </div>
+         {/* <p className="mx-3">Or</p>
+          <p>Login  <a  className="text-primary-100" href="/login">Admin</a></p>           */}
+           </div>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default HealthcareLogin;
