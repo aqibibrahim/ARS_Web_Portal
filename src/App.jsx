@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './components/Login'
+import HealthcareLogin from './components/HealthcareLogin'
 import Dashboard from './Dashboard'
 import { AmbulanceProvider } from './components/AmbulanceContext'
 
@@ -38,6 +39,8 @@ function App() {
 			<AmbulanceProvider>
 				<Routes>
 					<Route path="/login" element={<Login updateAuthenticationStatus={updateAuthenticationStatus} />} />
+					<Route path="/HealthcareLogin" element={<HealthcareLogin updateAuthenticationStatus={updateAuthenticationStatus} />} />
+					
 					<Route
 						path="/*"
 						element={
