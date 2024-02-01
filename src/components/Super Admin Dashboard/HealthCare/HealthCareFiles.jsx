@@ -428,12 +428,7 @@ const HealthCareFiles = () => {
       const JSON = {
         departments: selectedDepartment?.map((item) => item?.value),
         facility_id: selectedHealthCare,
-        // total_beds: values.total_beds,
-        // occupied_beds_men: values.occupied_beds_men,
-        // occupied_beds_women: values.occupied_beds_women,
-        // unoccupied_beds_men: values.unoccupied_beds_men,
-        // unoccupied_beds_women: values.unoccupied_beds_women,
-        // facility_id: selectedHealthCare,
+        
       };
       const createequipment = async () => {
         console.log(JSON);
@@ -456,18 +451,17 @@ const HealthCareFiles = () => {
             setSelectedHealthCare(null);
           } else {
             // Handle other status codes if needed
-            console.error("Unexpected status code:", response.status);
-            toast.error("Failed to add department");
+            toast.error(response.message);
+            setLoadingMessage(false);
+
           }
         } catch (error) {
           // Handle network errors or other exceptions
           console.error("Post request error:", error);
+          setLoadingMessage(false);
 
-          // Extract the specific error message from the response if available
-          const errorMessage =
-            error?.response?.data?.data?.name?.[0] ||
-            "Failed to add department";
-          toast.error(errorMessage);
+         
+          toast.error(error?.response?.data?.message);
         }
       };
 
@@ -787,83 +781,7 @@ const HealthCareFiles = () => {
             </div>
             <form onSubmit={CreateDepartments.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
-                {/* <div className="flex flex-col space-y-2 w-full">
-                  <div>
-                    <label
-                      htmlFor="occupied_beds_women"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Occupied Beds Women
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="occupied_beds_women"
-                        name="occupied_beds_women"
-                        type="number"
-                        min={0}
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.occupied_beds_women}
-                        placeholder="Occupied Beds Women"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>{" "}
-                  <div>
-                    <label
-                      htmlFor="unoccupied_beds_men"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Unoccupied Beds Men
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="unoccupied_beds_men"
-                        name="unoccupied_beds_men"
-                        type="number"
-                        min={0}
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.unoccupied_beds_men}
-                        placeholder="Unoccupied Beds Men"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>{" "}
-                  <div>
-                    <label
-                      htmlFor="unoccupied_beds_women"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Unoccupied Beds women
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="unoccupied_beds_women"
-                        name="unoccupied_beds_women"
-                        type="number"
-                        min={0}
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.unoccupied_beds_women}
-                        placeholder="Unoccupied Beds women"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
-                </div> */}
+                
 
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
@@ -880,105 +798,9 @@ const HealthCareFiles = () => {
                       primaryColor={"blue"}
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
-                    {/* <select
-                      value={selectedDepartment}
-                      onChange={(e) => handleDepartmentChange(e.target.value)}
-                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                    >
-                      <option value="" disabled>
-                        Select Department
-                      </option>
-                      {myData.map((details, index) => (
-                        <option key={index} value={details?.value}>
-                          {details?.label}
-                        </option>
-                      ))}
-                    </select> */}
-                    {/* <Select
-                      value={options}
-                      placeholder="Select"
-                      onChange={(e) => handleChange(e)}
-                      options={myData}
-                      isMultiple={false}
-                      isClearable={true}
-                      primaryColor={"blue"}
-                      isSearchable={true} // Add this line to enable search
-                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                    /> */}
+                    
                   </div>{" "}
-                  {/* <div>
-                    <label
-                      htmlFor="occupied_beds_men"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Occupied Beds Men
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="occupied_beds_men"
-                        name="occupied_beds_men"
-                        type="number"
-                        min={0}
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.occupied_beds_men}
-                        placeholder="Occupied Beds Men"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div> */}
-                  {/* <div>
-                    <label
-                      htmlFor="name"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Department Name
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="name"
-                        name="name"
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.name}
-                        placeholder="Department Name"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div> */}
-                  {/* <div>
-                    <label
-                      htmlFor="total_beds"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Total Beds
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="total_beds"
-                        name="total_beds"
-                        min={0}
-                        type="number"
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.total_beds}
-                        placeholder="Total Beds"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div> */}
+                 
                 </div>
               </div>
               <div className="flex justify-start">
