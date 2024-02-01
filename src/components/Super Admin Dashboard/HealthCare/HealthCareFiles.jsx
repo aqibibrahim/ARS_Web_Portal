@@ -1114,77 +1114,49 @@ const HealthCareFiles = () => {
                             newPhoneNumber ? "w-11/12" : "w-full"
                           }`}
                         >
-                          {/* <InputMask
-															mask="00218 99 9999999"
-															maskChar=""
-															placeholder="00218 XX XXXXXXX"
-															onChange={(e) => setNewPhoneNumber(e.target.value)}
-															value={newPhoneNumber}
-															type="tel"
-															name="phone_numbers"
-															id="phone_numbers"
-															className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-															required
-														/> */}
+                          
                           <InputMask
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                console.log('e.key', e.key)
+                                e.preventDefault()
+                                handleAddPhoneNumber()
+                              }
+                            }}
                             value={newPhoneNumber}
                             type="tel"
                             name="phone_numbers"
                             id="phone_numbers"
                             className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           />
-                          {/* <input
-															type="number"
-															onChange={(e) => setNewPhoneNumber(e.target.value)}
-															value={newPhoneNumber}
-															placeholder="Enter Phone Number"
-															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-															{...(phoneNumbers ? { required: false } : { required: true })}
-														/> */}
+                          
                         </div>
-                        <div>
-                          {newPhoneNumber ? (
-                            <button
-                              type="button"
-                              onClick={handleAddPhoneNumber}
-                              className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
-                            >
-                              +
-                            </button>
-                          ) : (
-                            ""
-                          )}
-                        </div>
+                        
                       </div>
-                      {/* {validationErrors.phoneNumbers && (
-                        <p className="text-red-500 text-sm">
-                          {validationErrors.phoneNumbers}
-                        </p>
-                      )} */}
+                      {phoneNumbers.length > 0 && (
+									<div className="flex flex-wrap mt-2">
+										{phoneNumbers.map((phoneNumber, index) => (
+											<div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
+												<span className="mr-1 text-xs">{phoneNumber}</span>
+												<button
+													type="button"
+													onClick={() => handleRemovePhoneNumber(index)}
+													className="text-red-500 hover:text-red-700"
+												>
+													<span className="text-xs">X</span>
+												</button>
+											</div>
+										))}
+									</div>
+								)}
                     </div>
                   </div>
 
-                  {/* <div>
-                    <label className="block text-sm font-medium leading-6 text-gray-900 text-right mb-2">
-                      Departments
-                    </label>
-
-                    <Select
-                      value={options}
-                      placeholder="Select"
-                      onChange={(e) => handleChange(e)}
-                      options={myData}
-                      isMultiple={true}
-                      isClearable={true}
-                      primaryColor={"blue"}
-                      isSearchable={true} // Add this line to enable search
-                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                    />
-                  </div> */}
+                  
                   <div>
                     <label
                       htmlFor="addresss"
@@ -1275,31 +1247,7 @@ const HealthCareFiles = () => {
                   </div>
                 </div>
               </div>
-              {phoneNumbers.length > 0 ? (
-                <div
-                  className={`grid grid-cols-2 gap-2 ${
-                    phoneNumbers.length > 0 ? "bg-gray-100" : ""
-                  } p-4`}
-                >
-                  {phoneNumbers.map((phoneNumber, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
-                    >
-                      <div className="flex text-sm">{phoneNumber}</div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemovePhoneNumber(index)}
-                        className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
-                      >
-                        -
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                ""
-              )}
+              
               <ul
                 role="list"
                 className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
@@ -1379,76 +1327,53 @@ const HealthCareFiles = () => {
                             newPhoneNumber ? "w-11/12" : "w-full"
                           }`}
                         >
-                          {/* <InputMask
-															mask="00218 99 9999999"
-															maskChar=""
-															placeholder="00218 XX XXXXXXX"
-															onChange={(e) => setNewPhoneNumber(e.target.value)}
-															value={newPhoneNumber}
-															type="tel"
-															name="phone_numbers"
-															id="phone_numbers"
-															className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-															required
-														/> */}
+                          
                           <InputMask
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                console.log('e.key', e.key)
+                                e.preventDefault()
+                                handleAddPhoneNumber()
+                              }
+                            }}
                             value={newPhoneNumber}
                             type="tel"
                             name="phone_numbers"
                             id="phone_numbers"
                             className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           />
-                          {/* <input
-															type="number"
-															onChange={(e) => setNewPhoneNumber(e.target.value)}
-															value={newPhoneNumber}
-															placeholder="Enter Phone Number"
-															className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-															{...(phoneNumbers ? { required: false } : { required: true })}
-														/> */}
+                          
                           <div
                             className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                             aria-hidden="true"
                           />
                         </div>
-                        <div>
-                          {newPhoneNumber ? (
-                            <button
-                              type="button"
-                              onClick={handleAddPhoneNumber}
-                              className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
-                            >
-                              +
-                            </button>
-                          ) : (
-                            ""
-                          )}
-                        </div>
+                        
                       </div>
+                      {phoneNumbers.length > 0 && (
+									<div className="flex flex-wrap mt-2">
+										{phoneNumbers.map((phoneNumber, index) => (
+											<div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
+												<span className="mr-1 text-xs">{phoneNumber}</span>
+												<button
+													type="button"
+													onClick={() => handleRemovePhoneNumber(index)}
+													className="text-red-500 hover:text-red-700"
+												>
+													<span className="text-xs">X</span>
+												</button>
+											</div>
+										))}
+									</div>
+								)}
                     </div>
                   </div>
 
-                  {/* <div>
-                    <label className="block text-sm font-medium leading-6 mb-2 text-gray-900 text-right">
-                      Departments
-                    </label>
-
-                    <Select
-                      value={options}
-                      placeholder="Select"
-                      onChange={(e) => handleChange(e)}
-                      options={myData}
-                      isMultiple={true}
-                      isClearable={true}
-                      primaryColor={"blue"}
-                      isSearchable={true} // Add this line to enable search
-                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                    />
-                  </div> */}
+                  
                   <div>
                     <label
                       htmlFor="addresss"
@@ -1552,31 +1477,7 @@ const HealthCareFiles = () => {
                   </div>
                 </div>
               </div>
-              {phoneNumbers?.length > 0 ? (
-                <div
-                  className={`grid grid-cols-2 gap-2 ${
-                    phoneNumbers.length > 0 ? "bg-gray-100" : ""
-                  } p-4`}
-                >
-                  {phoneNumbers?.map((phoneNumber, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
-                    >
-                      <div className="flex text-sm">{phoneNumber}</div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemovePhoneNumber(index)}
-                        className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
-                      >
-                        -
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                ""
-              )}
+              
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button

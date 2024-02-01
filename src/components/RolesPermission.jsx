@@ -1053,6 +1053,13 @@ export default function RolesPermission() {
                                     onChange={(e) =>
                                       setNewPhoneNumber(e.target.value)
                                     }
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') {
+                                        console.log('e.key', e.key)
+                                        e.preventDefault()
+                                        handleAddPhoneNumber()
+                                      }
+                                    }}
                                     value={newPhoneNumber}
                                     type="tel"
                                     name="phone_numbers"
@@ -1063,21 +1070,24 @@ export default function RolesPermission() {
                                       : { required: true })}
                                   />
                                 </div>
-                                <div>
-                                  {newPhoneNumber ? (
-                                    <button
-                                      type="button"
-                                      onClick={handleAddPhoneNumber}
-                                      className="flex bg-gray-300 p-1 ml-5 mt-2 text-2xl rounded-md hover:bg-gray-400"
-                                    >
-                                      +
-                                    </button>
-                                  ) : (
-                                    ""
-                                  )}
-                                </div>
+                                
                               </div>
-
+                              {phoneNumbers.length > 0 && (
+									<div className="flex flex-wrap mt-2">
+										{phoneNumbers.map((phoneNumber, index) => (
+											<div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
+												<span className="mr-1 text-xs">{phoneNumber}</span>
+												<button
+													type="button"
+													onClick={() => handleRemovePhoneNumber(index)}
+													className="text-red-500 hover:text-red-700 text-xs"
+												>
+													X
+												</button>
+											</div>
+										))}
+									</div>
+								)}
                               {/* </div> */}
                             </div>
                           </div>
@@ -1169,33 +1179,7 @@ export default function RolesPermission() {
                           </div>
                         </div>
                       </div>
-                      {phoneNumbers?.length > 0 ? (
-                        <div
-                          className={`grid grid-cols-2 gap-2 ${
-                            phoneNumbers?.length > 0 ? "bg-gray-100" : ""
-                          } p-4`}
-                        >
-                          {phoneNumbers.map((phoneNumber, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center justify-between text-lg bg-white p-2 rounded-md"
-                            >
-                              <div className="flex text-sm">
-                                {phoneNumber?.number || phoneNumber}
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => handleRemovePhoneNumber(index)}
-                                className="bg-red-300 p-2 text-2xl rounded-md hover:bg-red-400"
-                              >
-                                -
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        ""
-                      )}
+                      
                     </div>
                   </Modal>
                   {/* Delete Role Modal */}
