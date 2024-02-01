@@ -20,10 +20,10 @@ const AmbulanceForm = ({
   handleAmbulanceNext,
   showIncidentSummary,
   getid,
+  editData,
   // onViewOnMap,
 }) => {
   var token = localStorage.getItem("token");
-
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -35,9 +35,13 @@ const AmbulanceForm = ({
   const [selectedAmbulances, setSelectedAmbulances] = useState([]);
   const [selectedRegionOption, setSelectedRegionOption] = useState({});
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
+  const [showAssignAmbulance, setShowAssignAmbulance] = useState([]);
+  const [assignedAmbulance, setAssignedAmbulance] = useState([]);
+
   const [driver, setDriver] = useState("");
   const { selectedAmbulanceId, setAmbulanceId, resetState } =
     useAmbulanceContext();
+  const incidentEditID = localStorage.getItem("IncidentID");
   // setAmbulanceId(null);
   console.log(selectedAmbulanceId, "selected");
   const assignAmbulance = useFormik({
@@ -45,14 +49,15 @@ const AmbulanceForm = ({
       ambulances: "",
     },
     onSubmit: async (values) => {
-      if (!selectedOption || selectedOption.length === 0) {
-        toast.error("Please select an ambulance before submitting.");
-        return;
-      }
-
+      // if (!selectedOption || selectedOption.length === 0) {
+      //   toast.error("Please select an ambulance before submitting.");
+      //   return;
+      // }
       const JSON = {
-        ambulances: selectedOption?.map((item) => item.value),
+        // ambulances: selectedOption?.map((item) => item.value),
+        ambulances: assignedAmbulance,
       };
+      const id = localStorage.getItem("IncidentID");
 
       try {
         await axios
@@ -121,6 +126,7 @@ const AmbulanceForm = ({
   const [myData, setMyData] = useState([]);
   useEffect(() => {
     const fetchIncidentsData = async () => {
+      const id = localStorage.getItem("IncidentID");
       try {
         await axios
           .get(
@@ -159,6 +165,31 @@ const AmbulanceForm = ({
     fetchIncidentsData();
   }, []);
   useEffect(() => {
+    const fetchsingleincidentsData = async () => {
+      const id = localStorage.getItem("IncidentID");
+
+      try {
+        await axios
+          .get(`https://ars.disruptwave.com/api/incidents/${id}`, {
+            headers: headers,
+          })
+          .then((response) => {
+            const initialSelectedAmbulanceIds =
+              response?.data?.data?.ambulances?.map(
+                (ambulance) => ambulance.id
+              ) || [];
+            setAssignedAmbulance(initialSelectedAmbulanceIds);
+            setShowAssignAmbulance(response?.data?.data?.ambulances);
+            // setSelectedOption(response?.data?.data?.ambulances);
+            console.log("fetchsingleData", response?.data?.data);
+          });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchsingleincidentsData();
+  }, []);
+  useEffect(() => {
     const fetchRegionData = async () => {
       try {
         await axios
@@ -180,12 +211,22 @@ const AmbulanceForm = ({
     fetchRegionData();
   }, []);
 
+  // const handleChange = (selectedOptions) => {
+  //   setSelectedOption(selectedOptions);
+
+  //   console.log(selectedOptions);
+  // };
   const handleChange = (selectedOptions) => {
+    console.log("Selected Options:", selectedOptions);
+    // Ensure selectedOptions is not null or undefined
+    const updatedIds = selectedOptions?.map((option) => option?.value) || [];
+    console.log("Updated Ids:", updatedIds);
+
     setSelectedOption(selectedOptions);
 
-    console.log(selectedOptions);
+    setAssignedAmbulance([...assignedAmbulance, ...updatedIds]);
+    console.log("Assigned Ambulance:", assignedAmbulance);
   };
-
   // const handleViewOnMap = (selectedAmbulance) => () => {
   //   // Prevent the click event from propagating to the parent elements
   //   // setSelectedAmbulance(selectedAmbulance);
@@ -231,6 +272,40 @@ const AmbulanceForm = ({
   return (
     <>
       <Toaster position="bottom-right" richColors />
+      {showAssignAmbulance?.length > 0 ? (
+        <div className="px-5">
+          <p className="text-base text-right font-semibold">
+            Selected Ambulance Details
+          </p>
+          {showAssignAmbulance?.map((ambulance, index) => (
+            <div
+              className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2"
+              key={ambulance.id}
+            >
+              <div className="flex justify-between gap-12  ">
+                <p className="bg-blue-200 p-2 rounded-full w-8 h-8 justify-center text-center flex flex-grow">
+                  {index + 1}
+                </p>
+                <p>
+                  {" "}
+                  <span className="font-semibold">Make: </span>{" "}
+                  {ambulance.model?.make?.name}
+                </p>
+                <p>
+                  <span className="font-semibold">Model:</span>{" "}
+                  {ambulance?.model?.name}
+                </p>
+                <p>
+                  <span className="font-semibold">Plate#:</span>{" "}
+                  {ambulance?.plate_no}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        ""
+      )}
       <form onSubmit={assignAmbulance.handleSubmit}>
         <div className="mb-5 mt-2 flex">
           <Select

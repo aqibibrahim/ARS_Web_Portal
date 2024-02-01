@@ -19,9 +19,10 @@ const Maps = (props) => {
 
   console.log(incidentId, "incidentID");
 
-  const { selectedAmbulanceId, resetState } = useAmbulanceContext();
+  const { selectedAmbulanceId, resetState, selectedFacilityId } =
+    useAmbulanceContext();
   console.log("Selected Ambulance ID in Other Component:", selectedAmbulanceId);
-
+  console.log("Selected Ambulance ID in Other Component:", selectedFacilityId);
   console.log(props);
   var token = localStorage.getItem("token");
   const headers = {
@@ -95,7 +96,6 @@ const Maps = (props) => {
           })
           .then((response) => {
             setHealthCareData(response.data?.data);
-            console.log(">>>>>>>>", response?.data?.data);
           });
       } catch (e) {
         console.log(e);
@@ -103,6 +103,26 @@ const Maps = (props) => {
     };
     fetchHealthCareData();
   }, []);
+  useEffect(() => {
+    const fetchSingleHealthCareData = async () => {
+      try {
+        await axios
+          .get(
+            `https://ars.disruptwave.com/api/facilities/${selectedFacilityId}`,
+            {
+              headers: headers,
+            }
+          )
+          .then((response) => {
+            // setHealthCareData(response.data?.data);
+            selectedHealthCareView(response.data?.data);
+          });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchSingleHealthCareData();
+  }, [selectedFacilityId]);
   useEffect(() => {
     const fetchRegionData = async () => {
       try {
@@ -207,6 +227,23 @@ const Maps = (props) => {
     // Close other info windows
     setHealthCareInfo({ showingInfoWindow: false });
     setRegionInfo({ showingInfoWindow: false });
+  };
+
+  const selectedHealthCareView = (data, marker) => {
+    setHealthCareInfo({
+      selectedPlace: {
+        name: data?.name,
+        status: data?.status,
+        phoneNumbers: data?.phone_numbers || [], // Add phoneNumbers to the selectedPlace
+        focalPersons: data?.focal_persons || [],
+        departments: data?.departments || [],
+        latitude: data?.latitude,
+        longitude: data?.longitude,
+        button: "HealthCare",
+      },
+      activeMarker: marker,
+      showingInfoWindow: true,
+    });
   };
   const onAmbulanceMarkerClick = async (props, marker) => {
     try {
@@ -393,7 +430,7 @@ const Maps = (props) => {
             onClick={() => onAmbulanceMarkerClick(c)}
           />
         ))}
-        {healthCareData.map((healthCare, index) => (
+        {healthCareData?.map((healthCare, index) => (
           <Marker
             key={healthCare?.id}
             className={"map"}

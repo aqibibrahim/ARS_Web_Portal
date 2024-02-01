@@ -17,6 +17,8 @@ import { Fragment } from "react";
 import { Dialog } from "@headlessui/react";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import "../App.css";
+import { useAmbulanceContext } from "./AmbulanceContext";
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -42,11 +44,15 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
   const [isAssignedAmbulancesVisible, setIsAssignedAmbulancesVisible] =
     useState(false);
   const [incidentData, setIncidentData] = useState({});
+
+  const [incidentEditData, setIncidentEditData] = useState({});
+
   const [ambulanceData, setAmbulanceData] = useState({});
   const [selectedOption, setSelectedOption] = useState("");
   const [incidentType, setIncidentType] = useState([]);
   const [myData, setMyData] = useState([]);
-
+  const { selectedIncidentId, setSelectedIncidentId, resetIncidentState } =
+    useAmbulanceContext();
   useEffect(() => {
     const getIncidentTypes = async () => {
       try {
@@ -76,12 +82,47 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
 
     getIncidentTypes();
   }, []);
-
+  useEffect(() => {
+    const fetchSingleIncident = async () => {
+      const id = localStorage.getItem("IncidentID");
+      try {
+        await axios
+          .get(`https://ars.disruptwave.com/api/incidents/${id}`, {
+            headers: headers,
+          })
+          .then((response) => {
+            setIncidentEditData(response?.data?.data);
+            console.log(incidentData, "mai hon data");
+            // setAssignedAmbulance(response?.data?.data?.ambulances);
+            // setMyData(
+            // 	response.data?.data?.map((variant) => ({
+            // 		label: variant.model,
+            // 		value: variant.id,
+            // 		persons_supported: variant.persons_supported,
+            // 		make: variant.make,
+            // 		plate_no: variant.plate_no,
+            // 		id_no: variant.id_no,
+            // 	}))
+            // )
+            // setIsLoading(false);
+            console.log(response?.data?.data);
+          });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchSingleIncident();
+  }, []);
   const handleShowIncidentSummary = () => {
     setIsAssignedAmbulancesVisible(true);
   };
   const handleIncidentNext = (formData) => {
     setIncidentData(formData);
+
+    setActiveTab("Ambulance");
+  };
+  const handleIncidentNextEdit = () => {
+    setIncidentData(incidentData);
 
     setActiveTab("Ambulance");
   };
@@ -97,17 +138,25 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
     selectmap();
   };
   const renderFormForTab = () => {
+    let editId = localStorage.getItem("IncidentID");
     switch (activeTab) {
       case "Incident":
         return (
-          <Header getlatitude={data} handleIncidentNext={handleIncidentNext} />
+          <Header
+            getlatitude={data}
+            handleIncidentNext={handleIncidentNext}
+            resetIncidentState={resetIncidentState}
+            setSelectedIncidentId={setSelectedIncidentId}
+            handleIncidentNextEdit={handleIncidentNextEdit}
+          />
         );
       case "Ambulance":
         return (
           <AmbulanceForm
             handleAmbulanceNext={handleAmbulanceNext}
-            getid={incidentData}
+            getid={editId !== null ? editId : incidentData}
             showIncidentSummary={handleShowIncidentSummary}
+            editData={incidentEditData}
           />
         );
       case "HealthCare":
@@ -115,7 +164,7 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
           <HealthCareForm
             onClick={handelclose}
             datatt={ambulanceData}
-            // setOpen={setOpen}
+            onClose={onClose}
           />
         );
       default:
@@ -159,8 +208,15 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
     </>
   );
 };
-const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
+const Header = ({
+  handleIncidentNext,
+  getlatitude,
+  getmap,
+  handleIncidentNextEdit,
+}) => {
   var token = localStorage.getItem("token");
+  const { selectedIncidentId, setSelectedIncidentId, resetIncidentState } =
+    useAmbulanceContext();
   const [myData, setMyData] = useState([]);
 
   const headers = {
@@ -258,13 +314,44 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
   const [selectedGender, setSelectedGender] = useState({});
   const [gender, setGender] = useState([]);
   const [emergencyType, setEmergencyType] = useState([]);
+  const [incidentData, setIncidentData] = useState([]);
 
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [locationAddress, setLocationAddress] = useState({});
   const [submitDone, setSubmitDone] = useState(false);
   // const [latitude, setLatitude] = useState(null);
   // const [longitude, setLongitude] = useState(null);
-
+  useEffect(() => {
+    const fetchSingleIncident = async () => {
+      const id = localStorage.getItem("IncidentID");
+      try {
+        await axios
+          .get(`https://ars.disruptwave.com/api/incidents/${id}`, {
+            headers: headers,
+          })
+          .then((response) => {
+            setIncidentData(response?.data?.data);
+            console.log(incidentData, "mai hon data");
+            // setAssignedAmbulance(response?.data?.data?.ambulances);
+            // setMyData(
+            // 	response.data?.data?.map((variant) => ({
+            // 		label: variant.model,
+            // 		value: variant.id,
+            // 		persons_supported: variant.persons_supported,
+            // 		make: variant.make,
+            // 		plate_no: variant.plate_no,
+            // 		id_no: variant.id_no,
+            // 	}))
+            // )
+            // setIsLoading(false);
+            console.log(response?.data?.data);
+          });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchSingleIncident();
+  }, []);
   const createIncident = useFormik({
     initialValues: {
       ambulances: "",
@@ -493,432 +580,800 @@ const Header = ({ handleIncidentNext, getlatitude, getmap }) => {
   return (
     <>
       <Toaster position="bottom-right" richColors />
-      <form onSubmit={createIncident.handleSubmit}>
-        <div className="mb-5 mt-2">
-          <div>
-            <label
-              htmlFor="informer_address"
-              className=" text-sm  font-sm leading-6 text-gray-900 text-right"
-            >
-              <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className=" text-sm  leading-6 text-gray-900 text-right w-full flex justify-end pr-2 "
+      {selectedIncidentId ? (
+        <div>
+          <div className="mb-5 mt-2">
+            <div>
+              <label
+                htmlFor="informer_address"
+                className=" text-sm  font-sm leading-6 text-gray-900 text-right"
               >
-                Choose Incident Location
-              </button>
-            </label>
-            <div className="relative mt-2">
-              <input
-                onClick={() => setOpen(true)}
-                // onChange={(e) => {
-                //   createIncident.handleChange(e);
-                //   console.log(createIncident.values.informer_address);
-                // }}
-                value={createIncident.values.informer_address}
-                type="text"
-                name="informer_address"
-                id="informer_address"
-                className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                placeholder="Choose On Map"
-                required
-              />
-              <p
-                className={`text-red-500 text-xs italic mt-1 ${
-                  createIncident.values.informer_address ? "hidden" : ""
-                }`}
-              >
-                Please Select Incident Location
-              </p>
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  className=" text-sm  leading-6 text-gray-900 text-right w-full flex justify-end pr-2 "
+                >
+                  Choose Incident Location
+                </button>
+              </label>
+              <div className="relative mt-2">
+                <input
+                  // onClick={() => {
+                  //   setOpen(true);
+                  // }}
+                  // onChange={(e) => {
+                  //   createIncident.handleChange(e);
+                  //   console.log(createIncident.values.informer_address);
+                  // }}
+                  value={incidentData?.informer?.address}
+                  type="text"
+                  name="informer_address"
+                  id="informer_address"
+                  className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                  placeholder="Choose On Map"
+                  readOnly
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="mb-5 mt-2">
-          <div>
-            <label
-              htmlFor="informer_name"
-              className="block text-sm font-sm leading-6 text-gray-900 text-right placeholder:text-sm mr-2"
-            >
-              Informer Name
-            </label>
-            <div className="relative mt-2">
-              <input
-                onChange={createIncident.handleChange}
-                value={createIncident.values.informer_name}
-                type="text"
-                name="informer_name"
-                id="informer_name"
-                className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                placeholder="Enter Informer Name"
-                required
-              />
-              <p
-                className={`text-red-500 text-xs italic mt-1 ${
-                  createIncident.values.informer_name ? "hidden" : ""
-                }`}
+          <div className="mb-5 mt-2">
+            <div>
+              <label
+                htmlFor="informer_name"
+                className="block text-sm font-sm leading-6 text-gray-900 text-right placeholder:text-sm mr-2"
               >
-                Please Enter Informer Name
-              </p>
+                Informer Name
+              </label>
+              <div className="relative mt-2">
+                <input
+                  onChange={createIncident.handleChange}
+                  value={incidentData?.informer?.name}
+                  type="text"
+                  name="informer_name"
+                  id="informer_name"
+                  className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                  placeholder="Enter Informer Name"
+                  readOnly
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="mb-5">
-          <div>
+          <div className="mb-5">
+            <div>
+              <label
+                htmlFor="informer_phone_numbers"
+                className="block text-sm mr-2 leading-6 text-gray-900 text-right"
+              >
+                Contact Number
+              </label>
+              <div className="relative mt-2">
+                <InputMask
+                  mask="00218 99 9999999"
+                  maskChar=""
+                  placeholder="00218 XX XXXXXXX"
+                  // onChange={createIncident.handleChange}
+                  value={incidentData?.informer?.phone_numbers[0]?.number}
+                  type="tel"
+                  name="informer_phone_numbers"
+                  id="informer_phone_numbers"
+                  className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                  readOnly
+                />
+              </div>
+            </div>
+          </div>{" "}
+          <div className="mb-5">
+            <div>
+              <label
+                htmlFor="informer_phone_numbers"
+                className="block text-sm mr-2 leading-6 text-gray-900 text-right"
+              >
+                No. of Person
+              </label>
+              <div className="relative mt-2">
+                <input
+                  // onChange={createIncident.handleChange}
+                  value={incidentData?.number_of_persons}
+                  type="text"
+                  name="number_of_persons"
+                  id="number_of_persons"
+                  className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                  placeholder="Enter Number of Person"
+                  readOnly
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mb-5">
+            {/* <Listbox value={incidentData?.incident_type?.name}>
+              {({ open }) => (
+                <>
+                  <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
+                    Select Incident type
+                  </Listbox.Label>
+                  <div className="relative mt-2">
+                    <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
+                      <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
+                        <ChevronUpDownIcon
+                          className="h-5 w-5 text-gray-400 transform rotate-180"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span className="block truncate">
+                        {selectedOption.label}
+                      </span>
+                    </Listbox.Button>
+
+                    <Transition
+                      show={open}
+                      as={React.Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {myData.map((option) => (
+                          <Listbox.Option
+                            key={option.label}
+                            className={({ active }) =>
+                              classNames(
+                                active
+                                  ? "bg-primary-100 text-white"
+                                  : "text-gray-900",
+                                "relative cursor-default select-none py-2 pl-8 pr-4 text-right"
+                              )
+                            }
+                            value={option}
+                          >
+                            {({ selected, active }) => (
+                              <>
+                                <span
+                                  className={classNames(
+                                    selected ? "font-semibold" : "font-normal",
+                                    "block truncate"
+                                  )}
+                                >
+                                  {option.label}
+                                </span>
+
+                                {selected ? (
+                                  <span
+                                    className={classNames(
+                                      active
+                                        ? "text-white"
+                                        : "text-primary-100",
+                                      "absolute inset-y-0 left-0 flex items-center pl-1.5"
+                                    )}
+                                  >
+                                    <CheckIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </>
+              )}
+            </Listbox> */}
             <label
               htmlFor="informer_phone_numbers"
               className="block text-sm mr-2 leading-6 text-gray-900 text-right"
             >
-              Contact Number
+              Incident Type
             </label>
-            <div className="relative mt-2">
-              <InputMask
-                mask="00218 99 9999999"
-                maskChar=""
-                placeholder="00218 XX XXXXXXX"
-                onChange={createIncident.handleChange}
-                value={createIncident.values.informer_phone_numbers}
-                type="tel"
-                name="informer_phone_numbers"
-                id="informer_phone_numbers"
-                className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                required
-              />
-
-              <p
-                className={`text-red-500 text-xs italic mt-1 ${
-                  createIncident.values.informer_phone_numbers ? "hidden" : ""
-                }`}
-              >
-                Please Enter Informer Phone Number
-              </p>
-            </div>
+            <input
+              // onChange={createIncident.handleChange}
+              value={incidentData?.incident_type?.name}
+              type="text"
+              name="number_of_persons"
+              id="number_of_persons"
+              className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+              placeholder="Enter Number of Person"
+              readOnly
+            />
           </div>
-        </div>{" "}
-        <div className="mb-5">
-          <div>
+          <div className="mb-5">
+            {/* <Listbox value={incidentData?.incident_type?.name}>
+              {({ open }) => (
+                <>
+                  <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
+                    Select Incident type
+                  </Listbox.Label>
+                  <div className="relative mt-2">
+                    <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
+                      <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
+                        <ChevronUpDownIcon
+                          className="h-5 w-5 text-gray-400 transform rotate-180"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span className="block truncate">
+                        {selectedOption.label}
+                      </span>
+                    </Listbox.Button>
+
+                    <Transition
+                      show={open}
+                      as={React.Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {myData.map((option) => (
+                          <Listbox.Option
+                            key={option.label}
+                            className={({ active }) =>
+                              classNames(
+                                active
+                                  ? "bg-primary-100 text-white"
+                                  : "text-gray-900",
+                                "relative cursor-default select-none py-2 pl-8 pr-4 text-right"
+                              )
+                            }
+                            value={option}
+                          >
+                            {({ selected, active }) => (
+                              <>
+                                <span
+                                  className={classNames(
+                                    selected ? "font-semibold" : "font-normal",
+                                    "block truncate"
+                                  )}
+                                >
+                                  {option.label}
+                                </span>
+
+                                {selected ? (
+                                  <span
+                                    className={classNames(
+                                      active
+                                        ? "text-white"
+                                        : "text-primary-100",
+                                      "absolute inset-y-0 left-0 flex items-center pl-1.5"
+                                    )}
+                                  >
+                                    <CheckIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </>
+              )}
+            </Listbox> */}
             <label
               htmlFor="informer_phone_numbers"
               className="block text-sm mr-2 leading-6 text-gray-900 text-right"
             >
-              No. of Person
+              Emergency Type
             </label>
-            <div className="relative mt-2">
-              <input
-                onChange={createIncident.handleChange}
-                value={createIncident.values.number_of_persons}
-                type="text"
-                name="number_of_persons"
-                id="number_of_persons"
-                className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                placeholder="Enter Number of Person"
-                required
-              />
-              <p
-                className={`text-red-500 text-xs italic mt-1 ${
-                  createIncident.values.number_of_persons ? "hidden" : ""
-                }`}
-              >
-                Please Enter Number of Person
-              </p>
-            </div>
+            <input
+              // onChange={createIncident.handleChange}
+              value={incidentData?.emergency_type?.name}
+              type="text"
+              name="number_of_persons"
+              id="number_of_persons"
+              className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+              placeholder="Enter Number of Person"
+              readOnly
+            />
           </div>
-        </div>
-        <div className="mb-5">
-          <Listbox value={selectedOption} onChange={setSelectedOption}>
-            {({ open }) => (
-              <>
-                <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
-                  Select Incident type
-                </Listbox.Label>
-                <div className="relative mt-2">
-                  <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
-                    <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
-                      <ChevronUpDownIcon
-                        className="h-5 w-5 text-gray-400 transform rotate-180"
-                        aria-hidden="true"
-                      />
-                    </span>
-                    <span className="block truncate">
-                      {selectedOption.label}
-                    </span>
-                  </Listbox.Button>
+          <div className="mb-5">
+            {/* <Listbox value={incidentData?.incident_type?.name}>
+              {({ open }) => (
+                <>
+                  <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
+                    Select Incident type
+                  </Listbox.Label>
+                  <div className="relative mt-2">
+                    <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
+                      <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
+                        <ChevronUpDownIcon
+                          className="h-5 w-5 text-gray-400 transform rotate-180"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span className="block truncate">
+                        {selectedOption.label}
+                      </span>
+                    </Listbox.Button>
 
-                  <Transition
-                    show={open}
-                    as={React.Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {myData.map((option) => (
-                        <Listbox.Option
-                          key={option.label}
-                          className={({ active }) =>
-                            classNames(
-                              active
-                                ? "bg-primary-100 text-white"
-                                : "text-gray-900",
-                              "relative cursor-default select-none py-2 pl-8 pr-4 text-right"
-                            )
-                          }
-                          value={option}
-                        >
-                          {({ selected, active }) => (
-                            <>
-                              <span
-                                className={classNames(
-                                  selected ? "font-semibold" : "font-normal",
-                                  "block truncate"
-                                )}
-                              >
-                                {option.label}
-                              </span>
-
-                              {selected ? (
+                    <Transition
+                      show={open}
+                      as={React.Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {myData.map((option) => (
+                          <Listbox.Option
+                            key={option.label}
+                            className={({ active }) =>
+                              classNames(
+                                active
+                                  ? "bg-primary-100 text-white"
+                                  : "text-gray-900",
+                                "relative cursor-default select-none py-2 pl-8 pr-4 text-right"
+                              )
+                            }
+                            value={option}
+                          >
+                            {({ selected, active }) => (
+                              <>
                                 <span
                                   className={classNames(
-                                    active ? "text-white" : "text-primary-100",
-                                    "absolute inset-y-0 left-0 flex items-center pl-1.5"
+                                    selected ? "font-semibold" : "font-normal",
+                                    "block truncate"
                                   )}
                                 >
-                                  <CheckIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
+                                  {option.label}
                                 </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </>
-            )}
-          </Listbox>
-          <p
-            className={`text-red-500 text-xs italic mt-1 ${
-              selectedOption?.value ? "hidden" : ""
-            }`}
-          >
-            Please Select Incident Type
-          </p>
-        </div>
-        <div className="mb-5">
-          <Listbox
-            value={selectedEmergencyOption}
-            onChange={setSelectedEmergencyOption}
-          >
-            {({ open }) => (
-              <>
-                <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
-                  Select Emergency type
-                </Listbox.Label>
-                <div className="relative mt-2">
-                  <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
-                    <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
-                      <ChevronUpDownIcon
-                        className="h-5 w-5 text-gray-400 transform rotate-180"
-                        aria-hidden="true"
-                      />
-                    </span>
-                    <span className="block truncate">
-                      {selectedEmergencyOption.label}
-                    </span>
-                  </Listbox.Button>
 
-                  <Transition
-                    show={open}
-                    as={React.Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {emergencyType.map((option) => (
-                        <Listbox.Option
-                          key={option.label}
-                          className={({ active }) =>
-                            classNames(
-                              active
-                                ? "bg-primary-100 text-white"
-                                : "text-gray-900",
-                              "relative cursor-default select-none py-2 pl-8 pr-4 text-right"
-                            )
-                          }
-                          value={option}
-                        >
-                          {({ selected, active }) => (
-                            <>
-                              <span
-                                className={classNames(
-                                  selected ? "font-semibold" : "font-normal",
-                                  "block truncate"
-                                )}
-                              >
-                                {option.label}
-                              </span>
-
-                              {selected ? (
-                                <span
-                                  className={classNames(
-                                    active ? "text-white" : "text-primary-100",
-                                    "absolute inset-y-0 left-0 flex items-center pl-1.5"
-                                  )}
-                                >
-                                  <CheckIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </>
-            )}
-          </Listbox>
-          <p
-            className={`text-red-500 text-xs italic mt-1 ${
-              selectedEmergencyOption?.value ? "hidden" : ""
-            }`}
-          >
-            Please Select Emergency Type
-          </p>
-        </div>
-        <div className="mb-5">
-          <Listbox value={selectedGender} onChange={setSelectedGender}>
-            {({ open }) => (
-              <>
-                <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
-                  Select Gender
-                </Listbox.Label>
-                <div className="relative mt-2">
-                  <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
-                    <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
-                      <ChevronUpDownIcon
-                        className="h-5 w-5 text-gray-400 transform rotate-180"
-                        aria-hidden="true"
-                      />
-                    </span>
-                    <span className="block truncate">
-                      {selectedGender.label}
-                    </span>
-                  </Listbox.Button>
-
-                  <Transition
-                    show={open}
-                    as={React.Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {gender.map((option) => (
-                        <Listbox.Option
-                          key={option.label}
-                          className={({ active }) =>
-                            classNames(
-                              active
-                                ? "bg-primary-100 text-white"
-                                : "text-gray-900",
-                              "relative cursor-default select-none py-2 pl-8 pr-4 text-right"
-                            )
-                          }
-                          value={option}
-                        >
-                          {({ selected, active }) => (
-                            <>
-                              <span
-                                className={classNames(
-                                  selected ? "font-semibold" : "font-normal",
-                                  "block truncate"
-                                )}
-                              >
-                                {option.label}
-                              </span>
-
-                              {selected ? (
-                                <span
-                                  className={classNames(
-                                    active ? "text-white" : "text-primary-100",
-                                    "absolute inset-y-0 left-0 flex items-center pl-1.5"
-                                  )}
-                                >
-                                  <CheckIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </>
-            )}
-          </Listbox>
-          <p
-            className={`text-red-500 text-xs italic mt-1 ${
-              selectedGender?.value ? "hidden" : ""
-            }`}
-          >
-            Please Select Gender
-          </p>
-        </div>
-        <div className="mb-5">
-          <div>
+                                {selected ? (
+                                  <span
+                                    className={classNames(
+                                      active
+                                        ? "text-white"
+                                        : "text-primary-100",
+                                      "absolute inset-y-0 left-0 flex items-center pl-1.5"
+                                    )}
+                                  >
+                                    <CheckIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </>
+              )}
+            </Listbox> */}
             <label
-              htmlFor="description"
-              className="block text-sm mr-2 font-medium leading-6 text-gray-900 text-right"
+              htmlFor="informer_phone_numbers"
+              className="block text-sm mr-2 leading-6 text-gray-900 text-right"
             >
-              Description
+              Gender
             </label>
-            <div className="mt-2">
-              <textarea
-                rows={4}
-                name="description"
-                id="description"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 bg-offWhiteCustom-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-100 sm:text-sm sm:leading-6 text-right"
-                onChange={createIncident.handleChange}
-                value={createIncident.values.description}
-                placeholder="Description"
-              />
-              <p
-                className={`text-red-500 text-xs italic mt-1 ${
-                  createIncident.values.description ? "hidden" : ""
-                }`}
+            <input
+              // onChange={createIncident.handleChange}
+              value={incidentData?.gender?.name}
+              type="text"
+              name="number_of_persons"
+              id="number_of_persons"
+              className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+              placeholder="Enter Number of Person"
+              readOnly
+            />
+          </div>
+          <div className="mb-5">
+            <div>
+              <label
+                htmlFor="description"
+                className="block text-sm mr-2 font-medium leading-6 text-gray-900 text-right"
               >
-                Please Enter Desription of Incident
-              </p>
+                Description
+              </label>
+              <div className="mt-2">
+                <textarea
+                  rows={4}
+                  name="description"
+                  id="description"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 bg-offWhiteCustom-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-100 sm:text-sm sm:leading-6 text-right"
+                  // onChange={createIncident.handleChange}
+                  value={incidentData?.description}
+                  placeholder="Description"
+                  readOnly
+                />
+              </div>
             </div>
           </div>
+          <button
+            className={`text-primary-100 hover:bg-primary-100 hover:text-white  bg-white rounded-md border-2 mb-5 border-primary-100 py-2 px-5 transition-all duration-300 
+          `}
+            type="button"
+            onClick={handleIncidentNextEdit}
+          >
+            Next
+          </button>
         </div>
-        <button
-          className={`text-primary-100 bg-white rounded-md border-2 mb-5 border-primary-100 py-2 px-5 transition-all duration-300 
-          ${
-            isSubmitDisabled()
-              ? "opacity-50"
-              : "hover:bg-primary-100 hover:text-white mb-5"
-          } `}
-          type="submit"
-          disabled={isSubmitDisabled()}
-        >
-          Next
-        </button>
-      </form>
+      ) : (
+        <form onSubmit={createIncident.handleSubmit}>
+          <div className="mb-5 mt-2">
+            <div>
+              <label
+                htmlFor="informer_address"
+                className=" text-sm  font-sm leading-6 text-gray-900 text-right"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  className=" text-sm  leading-6 text-gray-900 text-right w-full flex justify-end pr-2 "
+                >
+                  Choose Incident Location
+                </button>
+              </label>
+              <div className="relative mt-2">
+                <input
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                  // onChange={(e) => {
+                  //   createIncident.handleChange(e);
+                  //   console.log(createIncident.values.informer_address);
+                  // }}
+                  value={createIncident.values.informer_address}
+                  type="text"
+                  name="informer_address"
+                  id="informer_address"
+                  className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                  placeholder="Choose On Map"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mb-5 mt-2">
+            <div>
+              <label
+                htmlFor="informer_name"
+                className="block text-sm font-sm leading-6 text-gray-900 text-right placeholder:text-sm mr-2"
+              >
+                Informer Name
+              </label>
+              <div className="relative mt-2">
+                <input
+                  onChange={createIncident.handleChange}
+                  value={createIncident.values.informer_name}
+                  type="text"
+                  name="informer_name"
+                  id="informer_name"
+                  className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                  placeholder="Enter Informer Name"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mb-5">
+            <div>
+              <label
+                htmlFor="informer_phone_numbers"
+                className="block text-sm mr-2 leading-6 text-gray-900 text-right"
+              >
+                Contact Number
+              </label>
+              <div className="relative mt-2">
+                <InputMask
+                  mask="00218 99 9999999"
+                  maskChar=""
+                  placeholder="00218 XX XXXXXXX"
+                  onChange={createIncident.handleChange}
+                  value={createIncident.values.informer_phone_numbers}
+                  type="tel"
+                  name="informer_phone_numbers"
+                  id="informer_phone_numbers"
+                  className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                  required
+                />
+              </div>
+            </div>
+          </div>{" "}
+          <div className="mb-5">
+            <div>
+              <label
+                htmlFor="informer_phone_numbers"
+                className="block text-sm mr-2 leading-6 text-gray-900 text-right"
+              >
+                No. of Person
+              </label>
+              <div className="relative mt-2">
+                <input
+                  onChange={createIncident.handleChange}
+                  value={createIncident.values.number_of_persons}
+                  type="text"
+                  name="number_of_persons"
+                  id="number_of_persons"
+                  className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                  placeholder="Enter Number of Person"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mb-5">
+            <Listbox value={selectedOption} onChange={setSelectedOption}>
+              {({ open }) => (
+                <>
+                  <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
+                    Select Incident type
+                  </Listbox.Label>
+                  <div className="relative mt-2">
+                    <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
+                      <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
+                        <ChevronUpDownIcon
+                          className="h-5 w-5 text-gray-400 transform rotate-180"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span className="block truncate">
+                        {selectedOption.label}
+                      </span>
+                    </Listbox.Button>
 
+                    <Transition
+                      show={open}
+                      as={React.Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {myData.map((option) => (
+                          <Listbox.Option
+                            key={option.label}
+                            className={({ active }) =>
+                              classNames(
+                                active
+                                  ? "bg-primary-100 text-white"
+                                  : "text-gray-900",
+                                "relative cursor-default select-none py-2 pl-8 pr-4 text-right"
+                              )
+                            }
+                            value={option}
+                          >
+                            {({ selected, active }) => (
+                              <>
+                                <span
+                                  className={classNames(
+                                    selected ? "font-semibold" : "font-normal",
+                                    "block truncate"
+                                  )}
+                                >
+                                  {option.label}
+                                </span>
+
+                                {selected ? (
+                                  <span
+                                    className={classNames(
+                                      active
+                                        ? "text-white"
+                                        : "text-primary-100",
+                                      "absolute inset-y-0 left-0 flex items-center pl-1.5"
+                                    )}
+                                  >
+                                    <CheckIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </>
+              )}
+            </Listbox>
+          </div>
+          <div className="mb-5">
+            <Listbox
+              value={selectedEmergencyOption}
+              onChange={setSelectedEmergencyOption}
+            >
+              {({ open }) => (
+                <>
+                  <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
+                    Select Emergency type
+                  </Listbox.Label>
+                  <div className="relative mt-2">
+                    <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
+                      <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
+                        <ChevronUpDownIcon
+                          className="h-5 w-5 text-gray-400 transform rotate-180"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span className="block truncate">
+                        {selectedEmergencyOption.label}
+                      </span>
+                    </Listbox.Button>
+
+                    <Transition
+                      show={open}
+                      as={React.Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {emergencyType.map((option) => (
+                          <Listbox.Option
+                            key={option.label}
+                            className={({ active }) =>
+                              classNames(
+                                active
+                                  ? "bg-primary-100 text-white"
+                                  : "text-gray-900",
+                                "relative cursor-default select-none py-2 pl-8 pr-4 text-right"
+                              )
+                            }
+                            value={option}
+                          >
+                            {({ selected, active }) => (
+                              <>
+                                <span
+                                  className={classNames(
+                                    selected ? "font-semibold" : "font-normal",
+                                    "block truncate"
+                                  )}
+                                >
+                                  {option.label}
+                                </span>
+
+                                {selected ? (
+                                  <span
+                                    className={classNames(
+                                      active
+                                        ? "text-white"
+                                        : "text-primary-100",
+                                      "absolute inset-y-0 left-0 flex items-center pl-1.5"
+                                    )}
+                                  >
+                                    <CheckIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </>
+              )}
+            </Listbox>
+          </div>
+          <div className="mb-5">
+            <Listbox value={selectedGender} onChange={setSelectedGender}>
+              {({ open }) => (
+                <>
+                  <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
+                    Select Gender
+                  </Listbox.Label>
+                  <div className="relative mt-2">
+                    <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
+                      <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
+                        <ChevronUpDownIcon
+                          className="h-5 w-5 text-gray-400 transform rotate-180"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span className="block truncate">
+                        {selectedGender.label}
+                      </span>
+                    </Listbox.Button>
+
+                    <Transition
+                      show={open}
+                      as={React.Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {gender.map((option) => (
+                          <Listbox.Option
+                            key={option.label}
+                            className={({ active }) =>
+                              classNames(
+                                active
+                                  ? "bg-primary-100 text-white"
+                                  : "text-gray-900",
+                                "relative cursor-default select-none py-2 pl-8 pr-4 text-right"
+                              )
+                            }
+                            value={option}
+                          >
+                            {({ selected, active }) => (
+                              <>
+                                <span
+                                  className={classNames(
+                                    selected ? "font-semibold" : "font-normal",
+                                    "block truncate"
+                                  )}
+                                >
+                                  {option.label}
+                                </span>
+
+                                {selected ? (
+                                  <span
+                                    className={classNames(
+                                      active
+                                        ? "text-white"
+                                        : "text-primary-100",
+                                      "absolute inset-y-0 left-0 flex items-center pl-1.5"
+                                    )}
+                                  >
+                                    <CheckIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </>
+              )}
+            </Listbox>
+          </div>
+          <div className="mb-5">
+            <div>
+              <label
+                htmlFor="description"
+                className="block text-sm mr-2 font-medium leading-6 text-gray-900 text-right"
+              >
+                Description
+              </label>
+              <div className="mt-2">
+                <textarea
+                  rows={4}
+                  name="description"
+                  id="description"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 bg-offWhiteCustom-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-100 sm:text-sm sm:leading-6 text-right"
+                  onChange={createIncident.handleChange}
+                  value={createIncident.values.description}
+                  placeholder="Description"
+                />
+              </div>
+            </div>
+          </div>
+          <button
+            className={`text-primary-100 bg-white rounded-md border-2 mb-5 border-primary-100 py-2 px-5 transition-all duration-300 
+        `}
+            type="submit"
+          >
+            Next
+          </button>
+        </form>
+      )}
       <Transition.Root show={open} as={Fragment}>
-        <Dialog onClose={() => setOpen(false)}>
+        <Dialog
+          onClose={() => {
+            setOpen(false);
+          }}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

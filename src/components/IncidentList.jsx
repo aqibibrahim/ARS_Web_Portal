@@ -21,6 +21,7 @@ import EditHealthCare from "./EditHealthCareForm";
 import { Spin } from "antd";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import IncidentVIewModal from "./IncidentVIewModal";
+import { useAmbulanceContext } from "./AmbulanceContext";
 
 const Tab = ({ selected, title, onClick }) => {
   return (
@@ -40,6 +41,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function IncidentList({}) {
+  const { setSelectedIncidentId, selectedIncidentId } = useAmbulanceContext();
+
   var token = localStorage.getItem("token");
   const headers = {
     "Content-Type": "application/json",
@@ -85,7 +88,6 @@ export default function IncidentList({}) {
   const [assignAmbulans, setAssignAmbulance] = useState(false);
   const [isDeleteID, setDeleteID] = useState(null);
   const [isDelete, setDelete] = useState(false);
-  const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState(null);
   const [menuIsOpen, setMenuIsOpen] = useState([]);
   const [viewOpen, setViewOpen] = useState(false);
@@ -111,6 +113,8 @@ export default function IncidentList({}) {
 
   const [deleteFormOpen, setDeleteFormOpen] = useState();
   const [selectedDeleteIncident, setSelectedDeleteIncident] = useState();
+  const navigate = useNavigate();
+
   const handleAssignAmbulanceAndhealthCare = (data) => {
     if (data === "Assign Ambulance") {
       setAssignAmbulance(true);
@@ -126,11 +130,14 @@ export default function IncidentList({}) {
     setSelectedDeleteIncident("");
   };
   const handleEditClick = (incident) => {
-    setSelectedIncident(incident);
-    setUpdateFormOpen(true);
-    setAssignAmbulance(true);
-    fetchAmbulanceData(incident);
-    fetchSingleIncident();
+    // setSelectedIncident(incident);
+    // setUpdateFormOpen(true);
+    // setAssignAmbulance(true);
+    // fetchAmbulanceData(incident);
+    // fetchSingleIncident();
+    setSelectedIncidentId(true);
+    navigate("/", { state: { incidentData: incident?.id } });
+    localStorage.setItem("IncidentID", incident?.id);
   };
   const handleDeleteClick = (incident) => {
     setSelectedDeleteIncident(incident?.id);

@@ -260,10 +260,9 @@ const AmbulanceFiles = () => {
             setIsModalOpen(false);
           }
         } catch (error) {
-          toast.error("Failed to create ambulance");
+          toast.error(error?.response?.data?.data?.plate_no[0]);
           console.log(error);
           setLoadingMessage(false);
-          setIsModalOpen(false);
         }
       };
       createAmbulance();
