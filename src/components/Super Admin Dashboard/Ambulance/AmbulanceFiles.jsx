@@ -363,10 +363,11 @@ const AmbulanceFiles = () => {
           headers,
         });
         if (response.status === 200 || response.status === 201) {
+          console.log("Response models",response?.data?.data);
           setAllModels(response?.data?.data);
           setMyModelData(
             response.data?.data?.map((variant) => ({
-              label: variant.name,
+              label:variant.make.name+ '-' +variant.name ,
               value: variant.id,
             }))
           );
@@ -868,16 +869,7 @@ const AmbulanceFiles = () => {
                       Persons Supported
                     </label>
                     <div className="relative mt-2">
-                      {/* <input
-                        type="number"
-                        name="persons_supported"
-                        id="persons_supported"
-                        onChange={CreateAmbulance.handleChange}
-                        value={CreateAmbulance.values.persons_supported}
-                        placeholder="Persons Supported"
-                        className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      /> */}
+                     
                       <input
                         className={`appearance-none block w-full bg-gray-200 text-right text-gray-700 border text-sm border-gray-200 rounded py-2.5 px-4 leading-4 focus:outline-none focus:bg-white`}
                         type="number"
@@ -922,17 +914,7 @@ const AmbulanceFiles = () => {
                       Plate No
                     </label>
                     <div className="relative mt-2">
-                      {/* <input
-                        type="text"
-                        name="plate_no"
-                        id="plate_no"
-                        onChange={CreateAmbulance.handleChange}
-                        value={CreateAmbulance.values.plate_no}
-                        placeholder="Enter Plate No"
-                        className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                        autoComplete="nope"
-                      /> */}
+                     
                       <input
                         className={`appearance-none block w-full  bg-gray-200 text-right text-gray-700 border text-sm border-gray-200 rounded py-2.5 px-4 leading-4 focus:outline-none focus:bg-white `}
                         type="text"
