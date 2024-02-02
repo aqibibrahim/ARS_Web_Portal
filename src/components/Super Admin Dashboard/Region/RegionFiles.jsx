@@ -589,22 +589,6 @@ const RegionFiles = () => {
             <form className="p-5" onSubmit={CreateRegion.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
                 <div className="flex flex-col space-y-2 w-full">
-                  <div>
-                    <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                      Assigned Ambulances*
-                    </label>
-
-                    <AntSelect
-                      mode="multiple"
-                      value={options}
-                      placeholder="Select Ambulance"
-                      onChange={(value) => handleChange(value)}
-                      options={myData}
-                      showSearch
-                      optionFilterProp="label"
-                      className="w-full mt-2"
-                    />
-                  </div>
                   {/* <div>
                     <label
                       htmlFor="ambulances"
@@ -639,6 +623,7 @@ const RegionFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={1}
                         onClick={() => setOpen(true)}
                         onChange={CreateRegion.handleChange}
                         value={locationAddress?.address}
@@ -648,7 +633,29 @@ const RegionFiles = () => {
                         className="peer mt-3 block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         placeholder=" Choose On Map"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="2"]').focus();
+                          }
+                        }}
                         readOnly
+                      />
+                    </div>
+                    <div className="relative mt-2">
+                      <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
+                        Assigned Ambulances*
+                      </label>
+
+                      <AntSelect
+                        mode="multiple"
+                        value={options}
+                        placeholder="Select Ambulance"
+                        onChange={(value) => handleChange(value)}
+                        options={myData}
+                        showSearch
+                        optionFilterProp="label"
+                        className="w-full mt-2"
                       />
                     </div>
                   </div>
@@ -663,6 +670,7 @@ const RegionFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={0}
                         type="text"
                         name="name"
                         id="name"
@@ -671,6 +679,12 @@ const RegionFiles = () => {
                         placeholder="Type Region Name"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="1"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -684,12 +698,9 @@ const RegionFiles = () => {
 
                     <div className="w-full  mb-6 ">
                       <div className="flex w-full ">
-                        <div
-                          className={`relative mt-2 ${
-                            newPhoneNumber ? "w-11/12" : "w-full"
-                          }`}
-                        >
+                        <div className="relative mt-2 w-full">
                           <InputMask
+                            tabIndex={2}
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
                             placeholder="00218 XX XXXXXXX"
@@ -768,6 +779,39 @@ const RegionFiles = () => {
               <div className="flex flex-row justify-between gap-4 mb-4">
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
+                    <label
+                      htmlFor="addresss"
+                      className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Address
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        tabIndex={1}
+                        onClick={() => setOpen(true)}
+                        onChange={EditRegion.handleChange}
+                        value={EditRegion.values.address}
+                        type="text"
+                        name="addresss"
+                        id="addresss"
+                        className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        placeholder=" Choose On Map"
+                        required
+                        readOnly
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="2"]').focus();
+                          }
+                        }}
+                      />
+                      <div
+                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                  <div>
                     <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
                       Assigned Ambulances
                     </label>
@@ -783,33 +827,6 @@ const RegionFiles = () => {
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
                   </div>
-
-                  <div>
-                    <label
-                      htmlFor="addresss"
-                      className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Address
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        onClick={() => setOpen(true)}
-                        onChange={EditRegion.handleChange}
-                        value={EditRegion.values.address}
-                        type="text"
-                        name="addresss"
-                        id="addresss"
-                        className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        placeholder=" Choose On Map"
-                        required
-                        readOnly
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
                 </div>
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
@@ -821,6 +838,7 @@ const RegionFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={0}
                         type="text"
                         name="name"
                         id="name"
@@ -829,6 +847,12 @@ const RegionFiles = () => {
                         placeholder="Type Region Name"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="1"]').focus();
+                          }
+                        }}
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -846,12 +870,9 @@ const RegionFiles = () => {
 
                     <div className="w-full  mb-6 ">
                       <div className="flex w-full ">
-                        <div
-                          className={`relative mt-2 ${
-                            newPhoneNumber ? "w-11/12" : "w-full"
-                          }`}
-                        >
+                        <div className="relative mt-2  w-full">
                           <InputMask
+                            tabIndex={2}
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
                             placeholder="00218 XX XXXXXXX"
@@ -881,7 +902,7 @@ const RegionFiles = () => {
                 </div>
               </div>{" "}
               {phoneNumbers.length > 0 && (
-                <div className="flex flex-wrap mt-2">
+                <div className="flex flex-wrap mt-2 justify-end">
                   {phoneNumbers.map((phoneNumber, index) => (
                     <div
                       key={index}
@@ -893,7 +914,7 @@ const RegionFiles = () => {
                         onClick={() => handleRemovePhoneNumber(index)}
                         className="text-red-500 hover:text-red-700"
                       >
-                        <span className="text-xs">X</span>
+                        <span className="text-xs hover:cursor-pointer">X</span>
                       </button>
                     </div>
                   ))}

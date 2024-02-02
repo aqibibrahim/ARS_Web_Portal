@@ -287,11 +287,7 @@ const ModalComponent = (props) => {
                               ""
                             )}
                           </div> */}
-                          <div
-                            className={`relative right-0 mt-2 ${
-                              newPhoneNumber ? " w-11/12" : "w-full"
-                            }`}
-                          >
+                          <div className="relative mt-2 w-full">
                             <InputMask
                               tabIndex={3}
                               mask="00218 99 9999999" // Define your desired mask here
@@ -406,7 +402,7 @@ const ModalComponent = (props) => {
                   </div>
                 </div>
                 {phoneNumbers.length > 0 && (
-                  <div className="flex flex-wrap mt-2">
+                  <div className="flex flex-wrap mt-2 justify-end">
                     {phoneNumbers.map((phoneNumber, index) => (
                       <div
                         key={index}

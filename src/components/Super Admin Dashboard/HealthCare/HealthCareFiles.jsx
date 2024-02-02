@@ -983,11 +983,7 @@ const HealthCareFiles = () => {
 
                     <div className="w-full">
                       <div className="flex w-full ">
-                        <div
-                          className={`relative mt-2 ${
-                            newPhoneNumber ? "w-11/12" : "w-full"
-                          }`}
-                        >
+                        <div className="relative mt-2 w-full">
                           <InputMask
                             tabIndex={1}
                             mask="00218 99 9999999" // Define your desired mask here
@@ -1244,11 +1240,7 @@ const HealthCareFiles = () => {
 
                     <div className="w-full  mb-6 ">
                       <div className="flex w-full ">
-                        <div
-                          className={`relative mt-2 ${
-                            newPhoneNumber ? "w-11/12" : "w-full"
-                          }`}
-                        >
+                        <div className="relative mt-2 w-full">
                           <InputMask
                             tabIndex={1}
                             mask="00218 99 9999999" // Define your desired mask here
