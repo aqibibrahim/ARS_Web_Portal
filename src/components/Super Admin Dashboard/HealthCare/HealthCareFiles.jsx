@@ -1161,7 +1161,7 @@ const HealthCareFiles = () => {
         </div>
       )}
       {updateFormOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div className=" inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
           <div className="relative top-1 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
@@ -1345,18 +1345,13 @@ const HealthCareFiles = () => {
                       <Select
                         value={updateFocalPerson}
                         placeholder="Select"
-                        options={updateFocalOpetion}
+                        options={updateFocalOption}
                         onChange={(e) => handleOnChange(e)}
                         isMultiple={true}
                         isClearable={true}
                         primaryColor={"blue"}
-                        isSearchable={true} // Add this line to enable search
-                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                      />
-
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
+                        isSearchable={true}
+                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right z-50"
                       />
                     </div>
                   </div>
