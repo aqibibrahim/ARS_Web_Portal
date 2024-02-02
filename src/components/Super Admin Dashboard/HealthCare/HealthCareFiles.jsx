@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -20,12 +20,14 @@ import { Toaster, toast } from "sonner";
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
-import Select from "react-tailwindcss-select";
+import { Select } from "antd";
+
 import InputMask from "react-input-mask";
 import { Pagination, Spin } from "antd";
 
 const HealthCareFiles = () => {
   var token = localStorage.getItem("token");
+  const phoneNumberRef = useRef(null);
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -73,8 +75,9 @@ const HealthCareFiles = () => {
     console.log("value:", value);
   };
   const handleChangeFocalPerson = (value) => {
+    console.log(">>", value);
+
     setOptionsFocalPerson(value);
-    console.log(">>", optionsFocalPerson);
     setCardFocalPersons(
       value?.map((item2) => {
         const user = allUsers.find((item1) => item1.id === item2.value);
@@ -414,13 +417,7 @@ const HealthCareFiles = () => {
   };
   const CreateDepartments = useFormik({
     initialValues: {
-      // incident_types: "",
-      // total_beds: "",
-      // occupied_beds_men: "",
-      // occupied_beds_women: "",
-      // unoccupied_beds_men: "",
-      // unoccupied_beds_women: "",
-      // department_id: "",
+
     },
 
     onSubmit: (values) => {
@@ -428,7 +425,7 @@ const HealthCareFiles = () => {
       const JSON = {
         departments: selectedDepartment?.map((item) => item?.value),
         facility_id: selectedHealthCare,
-        
+
       };
       const createequipment = async () => {
         console.log(JSON);
@@ -460,7 +457,7 @@ const HealthCareFiles = () => {
           console.error("Post request error:", error);
           setLoadingMessage(false);
 
-         
+
           toast.error(error?.response?.data?.message);
         }
       };
@@ -781,7 +778,7 @@ const HealthCareFiles = () => {
             </div>
             <form onSubmit={CreateDepartments.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
-                
+
 
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
@@ -798,9 +795,9 @@ const HealthCareFiles = () => {
                       primaryColor={"blue"}
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
-                    
+
                   </div>{" "}
-                 
+
                 </div>
               </div>
               <div className="flex justify-start">
@@ -919,9 +916,9 @@ const HealthCareFiles = () => {
               <h3 className="text-xl font-semibold">Create HealthCare</h3>
             </div>
             <form className="p-5" onSubmit={CreateHealtCare.handleSubmit}>
-              <div className="flex flex-row justify-between gap-4 mb-4">
-                <div className="flex flex-col space-y-2 w-full">
-                  <div>
+              <div className="flex flex-col justify-between gap-4 mb-4">
+                <div className="flex flex-row gap-10">
+                  <div className="w-full">
                     <label
                       htmlFor="phone_numbers"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
@@ -929,24 +926,26 @@ const HealthCareFiles = () => {
                       Phone Number
                     </label>
 
-                    <div className="w-full   ">
+                    <div className="w-full">
                       <div className="flex w-full ">
                         <div
-                          className={`relative mt-2 ${
-                            newPhoneNumber ? "w-11/12" : "w-full"
-                          }`}
+                          className={`relative mt-2 ${newPhoneNumber ? "w-11/12" : "w-full"
+                            }`}
                         >
-                          
+
                           <InputMask
+                            tabIndex={1}
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
                             onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                console.log('e.key', e.key)
-                                e.preventDefault()
-                                handleAddPhoneNumber()
+                              if (e.key === 'Tab') {
+                                e.preventDefault();
+                                document.querySelector('[tabIndex="2"]').focus();
+                              } else if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleAddPhoneNumber();
                               }
                             }}
                             value={newPhoneNumber}
@@ -955,31 +954,61 @@ const HealthCareFiles = () => {
                             id="phone_numbers"
                             className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           />
-                          
+
                         </div>
-                        
+
                       </div>
                       {phoneNumbers.length > 0 && (
-									<div className="flex flex-wrap mt-2">
-										{phoneNumbers.map((phoneNumber, index) => (
-											<div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
-												<span className="mr-1 text-xs">{phoneNumber}</span>
-												<button
-													type="button"
-													onClick={() => handleRemovePhoneNumber(index)}
-													className="text-red-500 hover:text-red-700"
-												>
-													<span className="text-xs">X</span>
-												</button>
-											</div>
-										))}
-									</div>
-								)}
+                        <div className="flex flex-wrap mt-2">
+                          {phoneNumbers.map((phoneNumber, index) => (
+                            <div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
+                              <span className="mr-1 text-xs">{phoneNumber}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemovePhoneNumber(index)}
+                                className="text-red-500 hover:text-red-700"
+                              >
+                                <span className="text-xs">X</span>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="w-full">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      HealthCare Name
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        tabIndex={0}
+                        type="text"
+                        name="name"
+                        id="name"
+                        onChange={CreateHealtCare.handleChange}
+                        value={CreateHealtCare.values.name}
+                        placeholder="Enter Healthcare Name"
+                        className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="1"]').focus();
+                          }
+                        }}
+
+                      />
                     </div>
                   </div>
 
-                  
-                  <div>
+                </div>
+                <div className="flex flex-row gap-10">
+
+                  <div className="w-full">
                     <label
                       htmlFor="addresss"
                       className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
@@ -988,6 +1017,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={4}
                         onClick={() => setOpen(true)}
                         // onChange={CreateHealtCare.handleChange}
                         value={locationAddress?.address}
@@ -1001,29 +1031,7 @@ const HealthCareFiles = () => {
                       />
                     </div>
                   </div>
-                </div>
-                <div className="flex flex-col space-y-2 w-full">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      HealthCare Name
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        onChange={CreateHealtCare.handleChange}
-                        value={CreateHealtCare.values.name}
-                        placeholder="Enter Healthcare Name"
-                        className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div>
+                  <div className="w-full">
                     <label
                       htmlFor="email"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
@@ -1032,6 +1040,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={2}
                         type="email"
                         name="email"
                         id="email"
@@ -1040,65 +1049,92 @@ const HealthCareFiles = () => {
                         placeholder="Enter Email"
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="3"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>
-                  <div>
-                    <label
-                      htmlFor="focal_persons"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Focal Persons
-                    </label>
-                    <div className="relative mt-2">
-                      <Select
-                        value={optionsFocalPerson}
-                        placeholder="Select"
-                        onChange={(e) => handleChangeFocalPerson(e)}
-                        options={allUsers?.map((variant) => ({
-                          label: variant.first_name,
-                          value: variant.id,
-                        }))}
-                        isMultiple={true}
-                        isClearable={true}
-                        primaryColor={"blue"}
-                        isSearchable={true}
-                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                      />
-                    </div>
+
+
+                </div>
+
+
+              </div>
+              <div className="flex flex-row gap-10">
+                <div className="w-full">
+                  <label
+                    htmlFor="focal_persons"
+                    className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                  >
+                    Focal Persons
+                  </label>
+                  <div className="relative mt-2">
+                    <Select
+                      tabIndex={4}
+                      showSearch={true}
+                      mode="multiple"
+                      style={{ width: '100%' }}
+                      placeholder="Focal Persons"
+                      onChange={(e) => handleChangeFocalPerson(e)}
+
+                      options={allUsers?.map((variant) => ({
+                        label: variant.first_name,
+                        value: variant.id,
+                      }))}
+                     
+
+
+
+                      value={optionsFocalPerson}
+
+
+                     
+                    />
                   </div>
                 </div>
-              </div>
-              
-              <ul
-                role="list"
-                className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
-              >
-                {cardFocalPersons?.map((person) => (
-                  <li
-                    key={person.user.id}
-                    className="col-span-2 divide-y divide-gray-200 rounded-lg bg-white shadow"
+                <div className="w-full">
+                  <label
+                    htmlFor="focal_persons"
+                    className="block text-sm font-medium leading-6 text-gray-900 text-right"
                   >
-                    <div className="flex w-full items-center justify-between space-x-6 px-3 py-2">
-                      <div className="flex-1 truncate">
-                        <div className="flex items-center space-x-3">
-                          <h3 className="truncate text-sm font-medium text-gray-900">
-                            {person.user.first_name +
-                              " " +
-                              person.user.last_name}
-                          </h3>
-                          <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                            {person.user.designation}
-                          </span>
+                    Selected Persons
+                  </label>
+                  <ul
+                    role="list"
+                    className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+                  >
+                    {cardFocalPersons?.map((person) => (
+                      <li
+                        key={person.user.id}
+                        className="col-span-2 divide-y divide-gray-200 rounded-lg bg-white shadow"
+                      >
+                        <div className="flex w-full items-center justify-between space-x-6 px-3 py-2">
+                          <div className="flex-1 truncate">
+                            <div className="flex items-center space-x-3">
+                              <h3 className="truncate text-sm font-medium text-gray-900">
+                                {person.user.first_name +
+                                  " " +
+                                  person.user.last_name}
+                              </h3>
+                              <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                                {person.user.designation}
+                              </span>
+                            </div>
+                            <p className="mt-1 truncate text-sm text-gray-500">
+                              {person.user.email}
+                            </p>
+                          </div>
                         </div>
-                        <p className="mt-1 truncate text-sm text-gray-500">
-                          {person.user.email}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
@@ -1145,12 +1181,12 @@ const HealthCareFiles = () => {
                     <div className="w-full  mb-6 ">
                       <div className="flex w-full ">
                         <div
-                          className={`relative mt-2 ${
-                            newPhoneNumber ? "w-11/12" : "w-full"
-                          }`}
+                          className={`relative mt-2 ${newPhoneNumber ? "w-11/12" : "w-full"
+                            }`}
                         >
-                          
+
                           <InputMask
+                            tabIndex={1}
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
                             placeholder="00218 XX XXXXXXX"
@@ -1161,6 +1197,11 @@ const HealthCareFiles = () => {
                                 e.preventDefault()
                                 handleAddPhoneNumber()
                               }
+
+                              else if (e.key === 'Tab') {
+                                e.preventDefault();
+                                document.querySelector('[tabIndex="2"]').focus();
+                              }
                             }}
                             value={newPhoneNumber}
                             type="tel"
@@ -1168,34 +1209,34 @@ const HealthCareFiles = () => {
                             id="phone_numbers"
                             className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           />
-                          
+
                           <div
                             className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
                             aria-hidden="true"
                           />
                         </div>
-                        
+
                       </div>
                       {phoneNumbers.length > 0 && (
-									<div className="flex flex-wrap mt-2">
-										{phoneNumbers.map((phoneNumber, index) => (
-											<div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
-												<span className="mr-1 text-xs">{phoneNumber}</span>
-												<button
-													type="button"
-													onClick={() => handleRemovePhoneNumber(index)}
-													className="text-red-500 hover:text-red-700"
-												>
-													<span className="text-xs">X</span>
-												</button>
-											</div>
-										))}
-									</div>
-								)}
+                        <div className="flex flex-wrap mt-2">
+                          {phoneNumbers.map((phoneNumber, index) => (
+                            <div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
+                              <span className="mr-1 text-xs">{phoneNumber}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemovePhoneNumber(index)}
+                                className="text-red-500 hover:text-red-700"
+                              >
+                                <span className="text-xs">X</span>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  
+
                   <div>
                     <label
                       htmlFor="addresss"
@@ -1205,6 +1246,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={3}
                         onClick={() => setOpen(true)}
                         value={locationAddress?.address}
                         type="text"
@@ -1232,6 +1274,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={0}
                         type="text"
                         name="name"
                         id="name"
@@ -1240,6 +1283,12 @@ const HealthCareFiles = () => {
                         placeholder="Enter Name"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="1"]').focus();
+                          }
+                        }}
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -1256,6 +1305,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={2}
                         type="email"
                         name="email"
                         id="email"
@@ -1264,6 +1314,12 @@ const HealthCareFiles = () => {
                         placeholder="Enter Email"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="3"]').focus();
+                          }
+                        }}
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -1280,6 +1336,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <Select
+
                         value={updateFocalPerson}
                         placeholder="Select"
                         options={updateFocalOpetion}
@@ -1299,7 +1356,7 @@ const HealthCareFiles = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
