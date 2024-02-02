@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -18,16 +18,15 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
-import Select from "react-tailwindcss-select";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
-import { Select as AntSelect } from "antd";
+import { Select } from "antd";
 import { Spin } from "antd";
 import AmbulanceViewModal from "../../AmbulanceViewModal";
 import { Modal } from "antd";
 import { Vars } from "../../../helpers/helpers";
 
-const { Option } = AntSelect;
+// const { Option } = AntSelect;
 const AmbulanceFiles = () => {
   var token = localStorage.getItem("token");
   const headers = {
@@ -42,7 +41,7 @@ const AmbulanceFiles = () => {
   const [myMakeData, setMyMakeData] = useState([]);
   const [myModelData, setMyModelData] = useState([]);
   const [myData, setMyData] = useState([]);
-
+  const selectRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
   const [allMakes, setAllMakes] = useState([""]);
   const [allModels, setAllModels] = useState([""]);
@@ -203,7 +202,7 @@ const AmbulanceFiles = () => {
   };
   useEffect(() => {
     fetchAmbulanceData(currentPage);
-  }, [submitDone, currentPage]);
+  }, [submitDone, currentPage,isDelete]);
 
   const CreateAmbulance = useFormik({
     initialValues: {
@@ -220,10 +219,11 @@ const AmbulanceFiles = () => {
       equipments: "",
     },
     onSubmit: (values) => {
+      console.log("Equipement values",options);
       const JSON = {
         plate_no: values.plate_no,
         // make_id: selectedMakeOption?.value,
-        model_id: selectedModelOption?.value,
+        model_id: selectedModelOption,
         gps_no: values.gps_no,
         persons_supported: values.persons_supported,
         password: values.password,
@@ -231,7 +231,7 @@ const AmbulanceFiles = () => {
         gps_longitude: locationAddress?.longitude,
         parking_latitude: locationAddress?.latitude,
         parking_longitude: locationAddress?.longitude,
-        equipments: options?.map((item) => item?.value),
+        equipments: options?.map((item) => item),
       };
       const createAmbulance = async () => {
         setLoadingMessage(true);
@@ -282,10 +282,11 @@ const AmbulanceFiles = () => {
       parking_longitude: locationAddress?.longitude,
     },
     onSubmit: (values) => {
+      console.log("Edit values",selectedModelOption);
       const JSON = {
         plate_no: values.plate_no,
         // make: values.make,
-        model_id: selectedModelOption?.value,
+        model_id: selectedModelOption?.label ?selectedModelOption?.value:selectedModelOption,
         gps_no: values.gps_no,
         persons_supported: values?.persons_supported,
         password: values.password,
@@ -293,7 +294,7 @@ const AmbulanceFiles = () => {
         gps_longitude: locationAddress?.longitude,
         parking_latitude: locationAddress?.latitude,
         parking_longitude: locationAddress?.longitude,
-        equipments: editOptions?.map((item) => item?.value),
+        equipments: editOptions?.map((item) => item?.label ? item?.value:item),
       };
       const editAmbulance = async () => {
         setLoadingMessage(true);
@@ -362,10 +363,11 @@ const AmbulanceFiles = () => {
           headers,
         });
         if (response.status === 200 || response.status === 201) {
+          console.log("Response models",response?.data?.data);
           setAllModels(response?.data?.data);
           setMyModelData(
             response.data?.data?.map((variant) => ({
-              label: variant.name,
+              label:variant.make.name+ '-' +variant.name ,
               value: variant.id,
             }))
           );
@@ -519,9 +521,10 @@ const AmbulanceFiles = () => {
           config
         );
 
-        if (result.status === 200 || result.status === 201) {
-          toast.success("Deleted successfully");
+        if (result.status === 200 || result.status === 204) {
           setDelete(false);
+
+          toast.success("Deleted successfully");
           setSubmitDone(!submitDone);
         } else {
           // Handle other status codes if needed
@@ -843,20 +846,22 @@ const AmbulanceFiles = () => {
                       Equipment
                     </label>
                     <div className="mt-[7px]">
-                      <Select
-                        value={options} // Assuming options is the selected value, not the options list
-                        placeholder="Select"
-                        onChange={(e) => handleChange(e)}
-                        options={myData}
-                        isMultiple={true}
-                        isClearable={true}
-                        primaryColor={"blue"}
-                        className={`peer w-full px-2 flex justify-end bg-offWhiteCustom-100 py-2 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right ${
-                          options
-                            ? "border-green-500 border"
-                            : "border-red-500 border"
-                        }`}
-                      />
+                      
+                     <Select
+                     tabIndex={1}
+                     showSearch={true}
+                     mode="multiple"
+    style={{ width: '100%' }}
+    placeholder="Equipments"
+    onChange={(value) => handleChange(value)}
+    options={myData}
+    onKeyDown={(e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        document.querySelector('[tabIndex="2"]').focus();
+      }
+    }}
+  />
                     </div>
                   </div>
                   <div>
@@ -867,17 +872,9 @@ const AmbulanceFiles = () => {
                       Persons Supported
                     </label>
                     <div className="relative mt-2">
-                      {/* <input
-                        type="number"
-                        name="persons_supported"
-                        id="persons_supported"
-                        onChange={CreateAmbulance.handleChange}
-                        value={CreateAmbulance.values.persons_supported}
-                        placeholder="Persons Supported"
-                        className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      /> */}
+                     
                       <input
+                      tabIndex={3}
                         className={`appearance-none block w-full bg-gray-200 text-right text-gray-700 border text-sm border-gray-200 rounded py-2.5 px-4 leading-4 focus:outline-none focus:bg-white`}
                         type="number"
                         name="persons_supported"
@@ -886,6 +883,12 @@ const AmbulanceFiles = () => {
                         value={CreateAmbulance.values.persons_supported}
                         placeholder="Persons Supported"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="4"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -899,6 +902,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                      tabIndex={5}
                         onClick={HandelOpenMap}
                         value={locationAddress?.address}
                         type="text"
@@ -908,6 +912,12 @@ const AmbulanceFiles = () => {
                         placeholder=" Choose On Map"
                         required
                         readOnly
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="6"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -921,18 +931,9 @@ const AmbulanceFiles = () => {
                       Plate No
                     </label>
                     <div className="relative mt-2">
-                      {/* <input
-                        type="text"
-                        name="plate_no"
-                        id="plate_no"
-                        onChange={CreateAmbulance.handleChange}
-                        value={CreateAmbulance.values.plate_no}
-                        placeholder="Enter Plate No"
-                        className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                        autoComplete="nope"
-                      /> */}
+                     
                       <input
+                      tabIndex={0}
                         className={`appearance-none block w-full  bg-gray-200 text-right text-gray-700 border text-sm border-gray-200 rounded py-2.5 px-4 leading-4 focus:outline-none focus:bg-white `}
                         type="text"
                         name="plate_no"
@@ -942,6 +943,12 @@ const AmbulanceFiles = () => {
                         placeholder="Enter Plate No"
                         required
                         autoComplete="nope"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="1"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -954,16 +961,23 @@ const AmbulanceFiles = () => {
                       Model
                     </label>
                     <div className="relative mt-2">
+                   
                       <Select
-                        value={selectedModelOption}
-                        placeholder="Select Vehicle Model"
-                        onChange={handleModelSelect}
-                        options={myModelData}
-                        // formatOptionLabel={formatOptionLabel}
-                        isMultiple={false}
-                        isClearable={true}
-                        primaryColor={"blue"}
-                        className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                      tabIndex={2}
+                      value={selectedModelOption}
+                      placeholder="Select Vehicle Model"
+
+                      onChange={handleModelSelect}
+                      options={myModelData}
+                      showSearch
+                      optionFilterProp="label"
+                      className="w-full mt-2"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Tab') {
+                          e.preventDefault();
+                          document.querySelector('[tabIndex="3"]').focus();
+                        }
+                      }}
                       />
                     </div>
                   </div>
@@ -976,6 +990,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                      tabIndex={4}
                         type="number"
                         name="gps_no"
                         id="gps_no"
@@ -1005,6 +1020,7 @@ const AmbulanceFiles = () => {
                   </label>
                   <div className="relative mt-2">
                     <input
+                    tabIndex={6}
                       name="password"
                       type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
@@ -1068,14 +1084,23 @@ const AmbulanceFiles = () => {
                     </label>
 
                     <Select
+                    tabIndex={1}
+                    showSearch={true}
+   
+                    style={{ width: '100%' }}
+                    placeholder="Equipments"
+                    onChange={(e) => handleChangeEquiments(e)}
+                    options={myData}
+                    mode="multiple"
                       value={editOptions}
-                      placeholder="Select"
-                      onChange={(e) => handleChangeEquiments(e)}
-                      options={myData}
-                      isMultiple={true}
-                      isClearable={true}
-                      primaryColor={"blue"}
-                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                     
+                      allowClear={true}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Tab') {
+                          e.preventDefault();
+                          document.querySelector('[tabIndex="2"]').focus();
+                        }
+                      }}
                     />
                   </div>
 
@@ -1088,6 +1113,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                      tabIndex={3}
                         type="number"
                         name="persons_supported"
                         id="persons_supported"
@@ -1096,6 +1122,12 @@ const AmbulanceFiles = () => {
                         placeholder="Persons Supported"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="4"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -1109,6 +1141,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                      tabIndex={5}
                         onClick={HandelOpenMap}
                         onChange={EditAmbulance.handleChange}
                         value={
@@ -1141,6 +1174,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                      tabIndex={0}
                         type="text"
                         name="plate_no"
                         id="plate_no"
@@ -1149,6 +1183,12 @@ const AmbulanceFiles = () => {
                         placeholder="Enter Plate No"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="1"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -1162,15 +1202,22 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <Select
-                        value={selectedModelOption}
-                        placeholder="Select Vehicle Model"
-                        onChange={handleModelSelect}
-                        options={myModelData}
-                        // formatOptionLabel={formatOptionLabel}
-                        isMultiple={false}
-                        isClearable={true}
-                        primaryColor={"blue"}
-                        className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                      tabIndex={2}
+                      value={selectedModelOption}
+                      placeholder="Select Vehicle Model"
+
+                      onChange={handleModelSelect}
+                      options={myModelData}
+                      showSearch
+                      optionFilterProp="label"
+                      className="w-full mt-2"
+                        
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="3"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -1183,6 +1230,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                      tabIndex={4}
                         type="number"
                         name="gps_no"
                         id="gps_no"
@@ -1191,6 +1239,12 @@ const AmbulanceFiles = () => {
                         placeholder="GPS No"
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === 'Tab') {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="5"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>

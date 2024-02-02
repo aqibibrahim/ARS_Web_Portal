@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -26,6 +26,7 @@ import { Pagination, Spin } from "antd";
 
 const HealthCareFiles = () => {
   var token = localStorage.getItem("token");
+  const phoneNumberRef = useRef(null);
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -61,6 +62,7 @@ const HealthCareFiles = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isUpdateDepartment, setIsUpdateDepartment] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState([]);
+  const [updateFocalOption, setUpdateFocalOption] = useState([]);
 
   const itemsPerPage = 10; // You can adjust this based on your preference
   const [totalDepartments, setTotalDepartments] = useState(0);
@@ -74,7 +76,7 @@ const HealthCareFiles = () => {
   };
   const handleChangeFocalPerson = (value) => {
     setOptionsFocalPerson(value);
-    console.log(">>", optionsFocalPerson);
+
     setCardFocalPersons(
       value?.map((item2) => {
         const user = allUsers.find((item1) => item1.id === item2.value);
@@ -188,14 +190,18 @@ const HealthCareFiles = () => {
             headers: headers,
           })
           .then((response) => {
-            setAllUsers(response.data.data);
-            setUpdateFocalOpetion(
-              response.data?.data?.map((variant) => ({
-                label: variant.first_name,
-                value: variant.id,
+            const allUsers = response.data.data;
+            const healthcareManagers = allUsers.filter(
+              (user) => user.role.name === "Healthcare Manager"
+            );
+            console.log("Healthcare manager", healthcareManagers);
+            setAllUsers(healthcareManagers);
+            setUpdateFocalOption(
+              healthcareManagers.map((manager) => ({
+                label: manager.first_name,
+                value: manager.id,
               }))
             );
-            console.log("Usersss", response.data.data);
           });
       } catch (e) {
         console.log(e);
@@ -413,27 +419,13 @@ const HealthCareFiles = () => {
     console.log(newPosition);
   };
   const CreateDepartments = useFormik({
-    initialValues: {
-      // incident_types: "",
-      // total_beds: "",
-      // occupied_beds_men: "",
-      // occupied_beds_women: "",
-      // unoccupied_beds_men: "",
-      // unoccupied_beds_women: "",
-      // department_id: "",
-    },
+    initialValues: {},
 
     onSubmit: (values) => {
       setLoadingMessage(true);
       const JSON = {
         departments: selectedDepartment?.map((item) => item?.value),
         facility_id: selectedHealthCare,
-        // total_beds: values.total_beds,
-        // occupied_beds_men: values.occupied_beds_men,
-        // occupied_beds_women: values.occupied_beds_women,
-        // unoccupied_beds_men: values.unoccupied_beds_men,
-        // unoccupied_beds_women: values.unoccupied_beds_women,
-        // facility_id: selectedHealthCare,
       };
       const createequipment = async () => {
         console.log(JSON);
@@ -456,18 +448,15 @@ const HealthCareFiles = () => {
             setSelectedHealthCare(null);
           } else {
             // Handle other status codes if needed
-            console.error("Unexpected status code:", response.status);
-            toast.error("Failed to add department");
+            toast.error(response.message);
+            setLoadingMessage(false);
           }
         } catch (error) {
           // Handle network errors or other exceptions
           console.error("Post request error:", error);
+          setLoadingMessage(false);
 
-          // Extract the specific error message from the response if available
-          const errorMessage =
-            error?.response?.data?.data?.name?.[0] ||
-            "Failed to add department";
-          toast.error(errorMessage);
+          toast.error(error?.response?.data?.message);
         }
       };
 
@@ -639,7 +628,7 @@ const HealthCareFiles = () => {
                       scope="col"
                       className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                     >
-                      Status
+                      Departments
                     </th>
                     <th
                       scope="col"
@@ -741,9 +730,11 @@ const HealthCareFiles = () => {
                         {healthcare?.address}
                       </td>
                       <td className="px-3 py-4 text-xs">
-                        <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                          {healthcare?.status}
-                        </span>
+                        {healthcare?.departments.map((department) => (
+                          <span className="inline-flex mx-1 my-1 items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                            {department.name}
+                          </span>
+                        ))}
                       </td>
                       <td className="px-3 py-4 text-xs">{healthcare?.email}</td>
                       <td className="px-3 py-4 text-xs whitespace-nowrap leading-4 ">
@@ -786,84 +777,6 @@ const HealthCareFiles = () => {
             </div>
             <form onSubmit={CreateDepartments.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
-                {/* <div className="flex flex-col space-y-2 w-full">
-                  <div>
-                    <label
-                      htmlFor="occupied_beds_women"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Occupied Beds Women
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="occupied_beds_women"
-                        name="occupied_beds_women"
-                        type="number"
-                        min={0}
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.occupied_beds_women}
-                        placeholder="Occupied Beds Women"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>{" "}
-                  <div>
-                    <label
-                      htmlFor="unoccupied_beds_men"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Unoccupied Beds Men
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="unoccupied_beds_men"
-                        name="unoccupied_beds_men"
-                        type="number"
-                        min={0}
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.unoccupied_beds_men}
-                        placeholder="Unoccupied Beds Men"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>{" "}
-                  <div>
-                    <label
-                      htmlFor="unoccupied_beds_women"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Unoccupied Beds women
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="unoccupied_beds_women"
-                        name="unoccupied_beds_women"
-                        type="number"
-                        min={0}
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.unoccupied_beds_women}
-                        placeholder="Unoccupied Beds women"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
-                </div> */}
-
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
                     <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
@@ -879,105 +792,7 @@ const HealthCareFiles = () => {
                       primaryColor={"blue"}
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
-                    {/* <select
-                      value={selectedDepartment}
-                      onChange={(e) => handleDepartmentChange(e.target.value)}
-                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                    >
-                      <option value="" disabled>
-                        Select Department
-                      </option>
-                      {myData.map((details, index) => (
-                        <option key={index} value={details?.value}>
-                          {details?.label}
-                        </option>
-                      ))}
-                    </select> */}
-                    {/* <Select
-                      value={options}
-                      placeholder="Select"
-                      onChange={(e) => handleChange(e)}
-                      options={myData}
-                      isMultiple={false}
-                      isClearable={true}
-                      primaryColor={"blue"}
-                      isSearchable={true} // Add this line to enable search
-                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                    /> */}
                   </div>{" "}
-                  {/* <div>
-                    <label
-                      htmlFor="occupied_beds_men"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Occupied Beds Men
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="occupied_beds_men"
-                        name="occupied_beds_men"
-                        type="number"
-                        min={0}
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.occupied_beds_men}
-                        placeholder="Occupied Beds Men"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div> */}
-                  {/* <div>
-                    <label
-                      htmlFor="name"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Department Name
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="name"
-                        name="name"
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.name}
-                        placeholder="Department Name"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div> */}
-                  {/* <div>
-                    <label
-                      htmlFor="total_beds"
-                      className="block  text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Total Beds
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        id="total_beds"
-                        name="total_beds"
-                        min={0}
-                        type="number"
-                        onChange={CreateDepartments.handleChange}
-                        value={CreateDepartments.values.total_beds}
-                        placeholder="Total Beds"
-                        className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div> */}
                 </div>
               </div>
               <div className="flex justify-start">
@@ -1034,9 +849,48 @@ const HealthCareFiles = () => {
                 </p>
                 {selectedHealthCare?.departments.length > 0 ? (
                   selectedHealthCare?.departments?.map((departments) => (
-                    <p key={departments.id} className="text-base text-right">
-                      {departments.name}
-                    </p>
+                    <>
+                      <div className=" px-2 py-2">
+                        <p
+                          key={departments.id}
+                          className="text-base text-right font-semibold"
+                        >
+                          {departments.name}
+                        </p>
+                        <div className=" flex justify-around text-base text-right">
+                          <p className="text-xs">
+                            Total Beds:{" "}
+                            <span className="text-red-400">
+                              {departments.pivot.total_beds}
+                            </span>
+                          </p>
+                          <p className="text-xs">
+                            Occupied Beds (Men):{" "}
+                            <span className="text-red-400">
+                              {departments.pivot.occupied_beds_men}
+                            </span>
+                          </p>
+                          <p className="text-xs">
+                            Occupied Beds (Women):{" "}
+                            <span className="text-red-400">
+                              {departments.pivot.occupied_beds_women}
+                            </span>
+                          </p>
+                          <p className="text-xs">
+                            Unoccupied Beds (Men):{" "}
+                            <span className="text-red-400">
+                              {departments.pivot.unoccupied_beds_men}
+                            </span>
+                          </p>
+                          <p className="text-xs">
+                            Unoccupied Beds (Women):{" "}
+                            <span className="text-red-400">
+                              {departments.pivot.unoccupied_beds_women}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </>
                   ))
                 ) : (
                   <p className="text-right">No Data</p>
@@ -1096,9 +950,9 @@ const HealthCareFiles = () => {
               <h3 className="text-xl font-semibold">Create HealthCare</h3>
             </div>
             <form className="p-5" onSubmit={CreateHealtCare.handleSubmit}>
-              <div className="flex flex-row justify-between gap-4 mb-4">
-                <div className="flex flex-col space-y-2 w-full">
-                  <div>
+              <div className="flex flex-col justify-between gap-4 mb-4">
+                <div className="flex flex-row gap-10">
+                  <div className="w-full">
                     <label
                       htmlFor="phone_numbers"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
@@ -1106,7 +960,7 @@ const HealthCareFiles = () => {
                       Phone Number
                     </label>
 
-                    <div className="w-full   ">
+                    <div className="w-full">
                       <div className="flex w-full ">
                         <div
                           className={`relative mt-2 ${
@@ -1114,13 +968,18 @@ const HealthCareFiles = () => {
                           }`}
                         >
                           <InputMask
+                            tabIndex={1}
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
                             onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                console.log("e.key", e.key);
+                              if (e.key === "Tab") {
+                                e.preventDefault();
+                                document
+                                  .querySelector('[tabIndex="2"]')
+                                  .focus();
+                              } else if (e.key === "Enter") {
                                 e.preventDefault();
                                 handleAddPhoneNumber();
                               }
@@ -1156,8 +1015,36 @@ const HealthCareFiles = () => {
                       )}
                     </div>
                   </div>
-
-                  <div>
+                  <div className="w-full">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      HealthCare Name
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        tabIndex={0}
+                        type="text"
+                        name="name"
+                        id="name"
+                        onChange={CreateHealtCare.handleChange}
+                        value={CreateHealtCare.values.name}
+                        placeholder="Enter Healthcare Name"
+                        className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        required
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="1"]').focus();
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-row gap-10">
+                  <div className="w-full">
                     <label
                       htmlFor="addresss"
                       className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
@@ -1166,6 +1053,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={4}
                         onClick={() => setOpen(true)}
                         // onChange={CreateHealtCare.handleChange}
                         value={locationAddress?.address}
@@ -1179,29 +1067,7 @@ const HealthCareFiles = () => {
                       />
                     </div>
                   </div>
-                </div>
-                <div className="flex flex-col space-y-2 w-full">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      HealthCare Name
-                    </label>
-                    <div className="relative mt-2">
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        onChange={CreateHealtCare.handleChange}
-                        value={CreateHealtCare.values.name}
-                        placeholder="Enter Healthcare Name"
-                        className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div>
+                  <div className="w-full">
                     <label
                       htmlFor="email"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
@@ -1210,6 +1076,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={2}
                         type="email"
                         name="email"
                         id="email"
@@ -1218,65 +1085,99 @@ const HealthCareFiles = () => {
                         placeholder="Enter Email"
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="focal_persons"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Focal Persons
-                    </label>
-                    <div className="relative mt-2">
-                      <Select
-                        value={optionsFocalPerson}
-                        placeholder="Select"
-                        onChange={(e) => handleChangeFocalPerson(e)}
-                        options={allUsers?.map((variant) => ({
-                          label: variant.first_name,
-                          value: variant.id,
-                        }))}
-                        isMultiple={true}
-                        isClearable={true}
-                        primaryColor={"blue"}
-                        isSearchable={true}
-                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="3"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>
                 </div>
               </div>
-
-              <ul
-                role="list"
-                className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
-              >
-                {cardFocalPersons?.map((person) => (
-                  <li
-                    key={person.user.id}
-                    className="col-span-2 divide-y divide-gray-200 rounded-lg bg-white shadow"
+              <div className="flex flex-row justify-end ">
+                <div className="w-1/2">
+                  <label
+                    htmlFor="focal_persons"
+                    className="block text-sm font-medium leading-6 text-gray-900 text-right"
                   >
-                    <div className="flex w-full items-center justify-between space-x-6 px-3 py-2">
-                      <div className="flex-1 truncate">
-                        <div className="flex items-center space-x-3">
-                          <h3 className="truncate text-sm font-medium text-gray-900">
-                            {person.user.first_name +
-                              " " +
-                              person.user.last_name}
-                          </h3>
-                          <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                            {person.user.designation}
-                          </span>
+                    Focal Person
+                  </label>
+                  <div className="relative mt-2">
+                    {/* <Select
+                      tabIndex={4}
+                      showSearch={true}
+                      mode="multiple"
+                      style={{ width: "100%" }}
+                      placeholder="Focal Persons"
+                      onChange={(e) => handleChangeFocalPerson(e)}
+                      options={allUsers?.map((variant) => ({
+                        label: variant.first_name,
+                        value: variant.id,
+                      }))}
+                      value={optionsFocalPerson}
+                    /> */}
+                    <Select
+                      onChange={(e) => handleChangeFocalPerson(e)}
+                      options={updateFocalOption}
+                      value={optionsFocalPerson}
+                      placeholder="Select"
+                      isMultiple={true}
+                      isClearable={true}
+                      primaryColor={"blue"}
+                      isSearchable={true}
+                      className="  px-2  justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                    />
+                  </div>
+                </div>
+              </div>
+              {cardFocalPersons?.length > 0 ? (
+                <div className="w-full">
+                  <label
+                    htmlFor="focal_persons"
+                    className="block text-sm  mt-1 font-medium leading-6 text-gray-900 text-right"
+                  >
+                    Selected Focal Person
+                  </label>
+                  <ul
+                    role="list"
+                    className="grid  grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3   "
+                  >
+                    {cardFocalPersons?.map((person) => (
+                      <li
+                        key={person.user.id}
+                        className="col-span-2 divide-y divide-gray-200 rounded-lg bg-white shadow-lg justify-end"
+                      >
+                        <div className="flex w-full items-center justify-between space-x-6 px-3 py-2">
+                          <div className="flex-1 truncate">
+                            <div className="flex items-center space-x-3">
+                              <h3 className="truncate text-sm font-medium text-gray-900">
+                                {person?.user.first_name +
+                                  " " +
+                                  person.user.last_name}
+                              </h3>
+                              <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                                {person.user.designation}
+                              </span>
+                            </div>
+                            <p className="mt-1 truncate text-sm text-gray-500">
+                              {person.user.email}
+                            </p>{" "}
+                            <p className="mt-1 truncate text-sm text-gray-500">
+                              {person.user.phone_numbers.map((phone, index) => (
+                                <p key={index}>{phone?.number}</p>
+                              ))}
+                            </p>
+                          </div>
                         </div>
-                        <p className="mt-1 truncate text-sm text-gray-500">
-                          {person.user.email}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                ""
+              )}
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
@@ -1300,7 +1201,7 @@ const HealthCareFiles = () => {
       )}
       {updateFormOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-1 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+          <div className="relative mt-4 mx-auto  p-0 border w-2/4 shadow-lg rounded-md bg-white  h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -1328,6 +1229,7 @@ const HealthCareFiles = () => {
                           }`}
                         >
                           <InputMask
+                            tabIndex={1}
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
                             placeholder="00218 XX XXXXXXX"
@@ -1337,6 +1239,11 @@ const HealthCareFiles = () => {
                                 console.log("e.key", e.key);
                                 e.preventDefault();
                                 handleAddPhoneNumber();
+                              } else if (e.key === "Tab") {
+                                e.preventDefault();
+                                document
+                                  .querySelector('[tabIndex="2"]')
+                                  .focus();
                               }
                             }}
                             value={newPhoneNumber}
@@ -1385,6 +1292,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={3}
                         onClick={() => setOpen(true)}
                         value={locationAddress?.address}
                         type="text"
@@ -1412,6 +1320,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={0}
                         type="text"
                         name="name"
                         id="name"
@@ -1420,6 +1329,12 @@ const HealthCareFiles = () => {
                         placeholder="Enter Name"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="1"]').focus();
+                          }
+                        }}
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -1436,6 +1351,7 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        tabIndex={2}
                         type="email"
                         name="email"
                         id="email"
@@ -1444,6 +1360,12 @@ const HealthCareFiles = () => {
                         placeholder="Enter Email"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="3"]').focus();
+                          }
+                        }}
                       />
                       <div
                         className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
@@ -1462,18 +1384,13 @@ const HealthCareFiles = () => {
                       <Select
                         value={updateFocalPerson}
                         placeholder="Select"
-                        options={updateFocalOpetion}
+                        options={updateFocalOption}
                         onChange={(e) => handleOnChange(e)}
                         isMultiple={true}
                         isClearable={true}
                         primaryColor={"blue"}
-                        isSearchable={true} // Add this line to enable search
-                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                      />
-
-                      <div
-                        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                        aria-hidden="true"
+                        isSearchable={true}
+                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right z-50"
                       />
                     </div>
                   </div>
