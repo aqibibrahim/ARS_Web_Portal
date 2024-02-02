@@ -255,7 +255,7 @@ function HealthCareForm({ onClick, datatt, onClose }) {
         ))
       )}
 
-      <div className="flex  bottom-10 absolute">
+      <div className="flex mb-5">
         <button
           className="text-primary-100 flex  bg-white rounded-md border-2 border-primary-100 mr-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
           type="submit"

@@ -312,8 +312,8 @@ const HealthCareFiles = () => {
         name: values.name,
         email: values.email,
         phone_numbers: phoneNumbers,
-        latitude: selectedAmbulance?.latitude,
-        longitude: selectedAmbulance?.longitude,
+        latitude: locationAddress?.latitude,
+        longitude: locationAddress?.longitude,
         address: locationAddress?.address,
       };
       const updateHealtCare = async () => {
