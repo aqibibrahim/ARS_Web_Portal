@@ -117,7 +117,32 @@ function HealthCareForm({ onClick, datatt, onClose }) {
       [ambulance?.id]: selectedOption,
     }));
   };
-
+  const formatOptionLabel = ({ label, value, distance, duration, email }) => (
+    <>
+      {" "}
+      <div
+        className={`flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border  p-1 rounded-md mb-2 text-gray-800`}
+      >
+        <p className="text-right font-semibold">{label}</p>
+        <p className="text-right">{email}</p>
+        <p className="text-right text-green-500">
+          {distance} {duration}
+        </p>{" "}
+        <div className="flex justify-end">
+          <p
+            className="text-white bg-blue-400 p-1 w-28 flex justify-center justify-items-end hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border rounded-xl text-right focus:outline-none"
+            onClick={handleViewOnMap(value)}
+          >
+            View on Map
+          </p>
+        </div>
+      </div>{" "}
+    </>
+  );
+  const handleViewOnMap = (value) => (event) => {
+    event.stopPropagation(); // Prevent the click event from propagating to the parent elements
+    setSelectedFacilityId(value);
+  };
   return (
     <>
       <Toaster position="bottom-right" richColors />
@@ -163,6 +188,7 @@ function HealthCareForm({ onClick, datatt, onClose }) {
                   isMultiple={false}
                   isClearable={true}
                   primaryColor={"blue"}
+                  formatOptionLabel={formatOptionLabel}
                   className="peer w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                 />
 
