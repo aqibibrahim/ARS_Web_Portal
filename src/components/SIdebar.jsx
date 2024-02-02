@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAmbulanceContext } from "./AmbulanceContext";
 
 import MenuItem from "./MenuItem";
 import { CreateIncidentSidebar } from "./CreateIncidentSidebar";
@@ -26,25 +27,48 @@ import {
   UserCircleIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
-const SideBar = ({ parentData }) => {
+const SideBar = (props) => {
+  console.log(props, "props");
+  const { selectedIncidentId, setSelectedIncidentId, resetState } =
+    useAmbulanceContext();
+
+  // const [incidentID, setIncidentID] = useState();
+
+  // useEffect(() => {
+  //   localStorage.getItem("IncidentID");
+  //   console.log(localStorage.getItem("IncidentID"));
+  //   setIncidentID(localStorage.getItem("IncidentID"));
+  //   {
+  //     incidentID && setCreateIncidentOpen(true);
+  //   }
+  // });
   const [isCreateIncidentOpen, setCreateIncidentOpen] = useState(false);
   const [lookUpOpen, setLookUpOpen] = useState(true);
-
+  {
+    selectedIncidentId && !isCreateIncidentOpen
+      ? setCreateIncidentOpen(true)
+      : "";
+  }
   const navigate = useNavigate();
   const location = useLocation();
-
   const isActive = (path) => location.pathname === path;
 
   const handleCreateIncidentClick = () => {
     setCreateIncidentOpen(true);
     navigate("/");
   };
+
   const handleDriverClick = () => {
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
+
     navigate("/Driver");
   };
   const handleHomeClick = () => {
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
 
     navigate("/");
   };
@@ -52,65 +76,96 @@ const SideBar = ({ parentData }) => {
   const handleIncidentClick = () => {
     setCreateIncidentOpen(false);
     navigate("/incidents");
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
 
   const HandleAmbulanceClick = () => {
     setCreateIncidentOpen(false);
     navigate("/ambulances_files");
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
 
   const handleHealthCareClick = () => {
     navigate("/healthcares_files");
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
 
   const handleHealthCareHomeClick = () => {
     navigate("/HealthcareHome");
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
   const handleHealthCareDepartmentClick = () => {
     navigate("/DepartmetsHealthCare");
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
   const handleRolesPermissionClick = () => {
     navigate("/RolesPermission");
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
   const handleDepartmentClick = () => {
     navigate("/departments_files");
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
   const handleHealthCareIncidentsClick = () => {
     navigate("/IncidentHealthCare");
     setCreateIncidentOpen(false);
+    localStorage.removeItem("IncidentID");
+    setSelectedIncidentId(false);
   };
   const handleAdmiProfileClick = () => {
     navigate("/Admin-profile");
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
   const handleIncidentTypeClick = () => {
     navigate("/Incident-type");
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
   const handleRegionClick = () => {
     navigate("/regions_files");
+    setSelectedIncidentId(false);
+
     setCreateIncidentOpen(false);
+    localStorage.removeItem("IncidentID");
   };
   const handleMapping = () => {
     navigate("/Mapping");
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
   const handleLookup = () => {
     navigate("/Lookup");
     setCreateIncidentOpen(false);
+    setSelectedIncidentId(false);
+    localStorage.removeItem("IncidentID");
   };
   return (
     <div className=" right-0 z-50 lg:fixed lg:z-40 lg:flex lg:flex-col -mx-3  lg:justify-center ">
       <div className=" right-28 mr-2 mt-5 absolute  ">
         {isCreateIncidentOpen && (
           <CreateIncidentSidebar
-            onClose={() => setCreateIncidentOpen(false)}
-            data={parentData}
+            onClose={() => {
+              setCreateIncidentOpen(false);
+              setSelectedIncidentId(false);
+              localStorage.removeItem("IncidentID");
+            }}
+            data={props?.parentData}
           />
         )}
       </div>

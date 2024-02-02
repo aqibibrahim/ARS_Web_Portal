@@ -19,9 +19,15 @@ const Maps = (props) => {
 
   console.log(incidentId, "incidentID");
 
-  const { selectedAmbulanceId, resetState } = useAmbulanceContext();
+  const {
+    selectedAmbulanceId,
+    resetState,
+    selectedFacilityId,
+    setSelectedAmbulanceId,
+    setSelectedFacilityId,
+  } = useAmbulanceContext();
   console.log("Selected Ambulance ID in Other Component:", selectedAmbulanceId);
-
+  console.log("Selected Ambulance ID in Other Component:", selectedFacilityId);
   console.log(props);
   var token = localStorage.getItem("token");
   const headers = {
@@ -95,7 +101,6 @@ const Maps = (props) => {
           })
           .then((response) => {
             setHealthCareData(response.data?.data);
-            console.log(">>>>>>>>", response?.data?.data);
           });
       } catch (e) {
         console.log(e);
@@ -103,6 +108,26 @@ const Maps = (props) => {
     };
     fetchHealthCareData();
   }, []);
+  useEffect(() => {
+    const fetchSingleHealthCareData = async () => {
+      try {
+        await axios
+          .get(
+            `https://ars.disruptwave.com/api/facilities/${selectedFacilityId}`,
+            {
+              headers: headers,
+            }
+          )
+          .then((response) => {
+            // setHealthCareData(response.data?.data);
+            selectedHealthCareView(response.data?.data);
+          });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchSingleHealthCareData();
+  }, [selectedFacilityId]);
   useEffect(() => {
     const fetchRegionData = async () => {
       try {
@@ -207,6 +232,23 @@ const Maps = (props) => {
     // Close other info windows
     setHealthCareInfo({ showingInfoWindow: false });
     setRegionInfo({ showingInfoWindow: false });
+  };
+
+  const selectedHealthCareView = (data, marker) => {
+    setHealthCareInfo({
+      selectedPlace: {
+        name: data?.name,
+        status: data?.status,
+        phoneNumbers: data?.phone_numbers || [],
+        focalPersons: data?.focal_persons || [],
+        departments: data?.departments || [],
+        latitude: data?.latitude,
+        longitude: data?.longitude,
+        button: "HealthCare",
+      },
+      activeMarker: marker,
+      showingInfoWindow: true,
+    });
   };
   const onAmbulanceMarkerClick = async (props, marker) => {
     try {
@@ -393,7 +435,7 @@ const Maps = (props) => {
             onClick={() => onAmbulanceMarkerClick(c)}
           />
         ))}
-        {healthCareData.map((healthCare, index) => (
+        {healthCareData?.map((healthCare, index) => (
           <Marker
             key={healthCare?.id}
             className={"map"}
@@ -520,7 +562,10 @@ const Maps = (props) => {
             lat: Number(healthCareInfo?.selectedPlace?.latitude),
             lng: Number(healthCareInfo?.selectedPlace?.longitude),
           }}
-          onClose={() => setHealthCareInfo({ showingInfoWindow: false })}
+          onClose={() => {
+            resetState();
+            setHealthCareInfo({ showingInfoWindow: false });
+          }}
         >
           <div
             className="m-auto     overflow-hidden w-72 "
@@ -543,27 +588,7 @@ const Maps = (props) => {
                   {/* <p className="text-lg text-gray-900 text-left font-medium">
                 {healthCareInfo?.selectedPlace?.status}
               </p> */}
-                  <div>
-                    {healthCareInfo?.selectedPlace?.phoneNumbers?.length > 0 ? (
-                      <div>
-                        <p className="text-base font-semibold mb-1 text-gray-900   text-right  pr-4">
-                          Phone Number<i className="bi bi-shield-check"></i>
-                        </p>
-                        {healthCareInfo?.selectedPlace?.phoneNumbers.map(
-                          (phoneNumber) => (
-                            <p
-                              key={phoneNumber.id}
-                              className="text-sm text-gray-500  text-right font-semibold  pr-4 "
-                            >
-                              +{phoneNumber.number}
-                            </p>
-                          )
-                        )}
-                      </div>
-                    ) : (
-                      <p>NO Data Found</p>
-                    )}
-                  </div>
+                  <div></div>
                 </div>
                 <p className="text-base font-semibold mb-1 text-gray-900   text-right  pr-4">
                   {healthCareInfo?.selectedPlace?.departments?.length}{" "}
@@ -595,12 +620,25 @@ const Maps = (props) => {
                   {healthCareInfo?.selectedPlace?.focalPersons?.length > 0 ? (
                     healthCareInfo?.selectedPlace?.focalPersons?.map(
                       (focalPerson) => (
-                        <p
-                          key={focalPerson.id}
-                          className="text-sm text-gray-500  text-right font-semibold  pr-4 "
-                        >
-                          {focalPerson.first_name} {focalPerson.last_name}
-                        </p>
+                        <>
+                          <p
+                            key={focalPerson.id}
+                            className="text-sm text-gray-500  text-right font-semibold  pr-4 "
+                          >
+                            {focalPerson.first_name} {focalPerson.last_name}
+                          </p>
+                          <p>
+                            {" "}
+                            {focalPerson?.phone_numbers?.map((phone, index) => (
+                              <p
+                                key={index}
+                                className="text-sm text-gray-500  text-right font-semibold  pr-4 "
+                              >
+                                {phone?.number}
+                              </p>
+                            ))}
+                          </p>
+                        </>
                       )
                     )
                   ) : (
@@ -647,14 +685,14 @@ const Maps = (props) => {
                     key={phoneNumber.id}
                     className="text-sm text-gray-500  text-right font-semibold pr-4 "
                   >
-                    +{phoneNumber.number}
+                    {phoneNumber.number}
                   </p>
                 ))}
               </div>
               <p className="text-base font-semibold mb-1 text-gray-900 pr-4  text-right">
                 Address<i className="bi bi-shield-check"></i>
               </p>
-              <p className="text-sm text-gray-500  text-right font-semibold pr-4 flex-wrap flex pl-2">
+              <p className="text-sm text-gray-500 justify-end  text-right font-semibold pr-4 flex-wrap flex pl-2">
                 {regionInfo?.selectedPlace?.address}
               </p>
               {/* <div className="mb-2 flex gap-y-2 flex-col">

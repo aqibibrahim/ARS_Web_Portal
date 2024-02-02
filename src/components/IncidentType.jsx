@@ -155,6 +155,8 @@ export default function IncidentType() {
         setIsLoading(false);
         setEditIncidentType("");
         setEditIncidentID("");
+        setState({ editIncidentType: "" });
+
         setEditOpen(false);
       }
     } catch (error) {
@@ -457,14 +459,6 @@ export default function IncidentType() {
                           className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                         >
                           <BiEdit />
-                        </button>
-                        <button
-                          onClick={() => {
-                            handleView(data);
-                          }}
-                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                        >
-                          <BsEye />
                         </button>
                       </span>
                     </td>

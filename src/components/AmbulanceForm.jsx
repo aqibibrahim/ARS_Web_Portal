@@ -20,10 +20,10 @@ const AmbulanceForm = ({
   handleAmbulanceNext,
   showIncidentSummary,
   getid,
+  editData,
   // onViewOnMap,
 }) => {
   var token = localStorage.getItem("token");
-
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -35,9 +35,16 @@ const AmbulanceForm = ({
   const [selectedAmbulances, setSelectedAmbulances] = useState([]);
   const [selectedRegionOption, setSelectedRegionOption] = useState({});
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
+  const [showAssignAmbulance, setShowAssignAmbulance] = useState([]);
+  const [assignedAmbulance, setAssignedAmbulance] = useState([]);
+  const [initiallyAssignedAmbulance, setInitiallyAssignedAmbulance] = useState(
+    []
+  );
+
   const [driver, setDriver] = useState("");
   const { selectedAmbulanceId, setAmbulanceId, resetState } =
     useAmbulanceContext();
+  const incidentEditID = localStorage.getItem("IncidentID");
   // setAmbulanceId(null);
   console.log(selectedAmbulanceId, "selected");
   const assignAmbulance = useFormik({
@@ -45,15 +52,18 @@ const AmbulanceForm = ({
       ambulances: "",
     },
     onSubmit: async (values) => {
-      if (!selectedOption || selectedOption.length === 0) {
-        toast.error("Please select an ambulance before submitting.");
-        return;
-      }
-
+      // if (!selectedOption || selectedOption.length === 0) {
+      //   toast.error("Please select an ambulance before submitting.");
+      //   return;
+      // }
       const JSON = {
-        ambulances: selectedOption?.map((item) => item.value),
+        ambulances:
+          assignedAmbulance.length > 0
+            ? assignedAmbulance
+            : initiallyAssignedAmbulance,
       };
 
+      const id = localStorage.getItem("IncidentID");
       try {
         await axios
           .patch(`${Vars.domain}/incidents/${getid}`, JSON, config)
@@ -121,6 +131,7 @@ const AmbulanceForm = ({
   const [myData, setMyData] = useState([]);
   useEffect(() => {
     const fetchIncidentsData = async () => {
+      const id = localStorage.getItem("IncidentID");
       try {
         await axios
           .get(
@@ -159,6 +170,30 @@ const AmbulanceForm = ({
     fetchIncidentsData();
   }, []);
   useEffect(() => {
+    const fetchsingleincidentsData = async () => {
+      const id = localStorage.getItem("IncidentID");
+      try {
+        await axios
+          .get(`https://ars.disruptwave.com/api/incidents/${id}`, {
+            headers: headers,
+          })
+          .then((response) => {
+            const initialSelectedAmbulanceIds =
+              response?.data?.data?.ambulances?.map(
+                (ambulance) => ambulance.id
+              ) || [];
+            setInitiallyAssignedAmbulance(initialSelectedAmbulanceIds);
+            setShowAssignAmbulance(response?.data?.data?.ambulances);
+            // setSelectedOption(response?.data?.data?.ambulances);
+            console.log("fetchsingleData", response?.data?.data);
+          });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchsingleincidentsData();
+  }, []);
+  useEffect(() => {
     const fetchRegionData = async () => {
       try {
         await axios
@@ -180,10 +215,54 @@ const AmbulanceForm = ({
     fetchRegionData();
   }, []);
 
+  // const handleChange = (selectedOptions) => {
+  //   setSelectedOption(selectedOptions);
+
+  //   console.log(selectedOptions);
+  // };
+  // const handleChange = (selectedOptions) => {
+  //   console.log("Selected Options:", selectedOptions);
+  //   // Ensure selectedOptions is not null or undefined
+  //   setSelectedOption(selectedOptions);
+
+  //   const updatedIds = selectedOptions?.map((option) => option?.value) || [];
+  //   console.log("Updated Ids:", updatedIds);
+
+  //   setAssignedAmbulance([...assignedAmbulance, ...updatedIds]);
+  //   console.log("Assigned Ambulance:", assignedAmbulance);
+  // };
   const handleChange = (selectedOptions) => {
+    console.log("Selected Options:", selectedOptions);
+
+    // Ensure selectedOptions is not null or undefined
     setSelectedOption(selectedOptions);
 
-    console.log(selectedOptions);
+    // Extract unique ids from selectedOptions
+    const updatedIds = [
+      ...new Set(selectedOptions?.map((option) => option?.value) || []),
+    ];
+    console.log("Updated Ids:", updatedIds);
+
+    // Update assignedAmbulance state
+    setAssignedAmbulance((prevAssignedAmbulance) => {
+      // Filter out unchecked ids
+      const updatedAmbulance = prevAssignedAmbulance.filter((id) =>
+        updatedIds.includes(id)
+      );
+
+      // Add newly checked ids, ensuring initiallyAssignedAmbulance is always present
+      const newAssignedAmbulance = [
+        ...new Set([
+          ...initiallyAssignedAmbulance,
+          ...updatedAmbulance,
+          ...updatedIds,
+        ]),
+      ];
+
+      return newAssignedAmbulance;
+    });
+
+    console.log("Assigned Ambulance:", assignedAmbulance);
   };
 
   // const handleViewOnMap = (selectedAmbulance) => () => {
@@ -231,6 +310,40 @@ const AmbulanceForm = ({
   return (
     <>
       <Toaster position="bottom-right" richColors />
+      {showAssignAmbulance?.length > 0 ? (
+        <div className="px-5">
+          <p className="text-base text-right font-semibold">
+            Selected Ambulance Details
+          </p>
+          {showAssignAmbulance?.map((ambulance, index) => (
+            <div
+              className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2"
+              key={ambulance.id}
+            >
+              <div className="flex justify-between gap-12  ">
+                <p className="bg-blue-200 p-2 rounded-full w-8 h-8 justify-center text-center flex flex-grow">
+                  {index + 1}
+                </p>
+                <p>
+                  {" "}
+                  <span className="font-semibold">Make: </span>{" "}
+                  {ambulance.model?.make?.name}
+                </p>
+                <p>
+                  <span className="font-semibold">Model:</span>{" "}
+                  {ambulance?.model?.name}
+                </p>
+                <p>
+                  <span className="font-semibold">Plate#:</span>{" "}
+                  {ambulance?.plate_no}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        ""
+      )}
       <form onSubmit={assignAmbulance.handleSubmit}>
         <div className="mb-5 mt-2 flex">
           <Select
@@ -246,12 +359,18 @@ const AmbulanceForm = ({
           />
         </div>
         <div className="flex  bottom-10 absolute">
-          <button
-            className="text-primary-100 flex  bg-white rounded-md border-2 border-primary-100 mr-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
-            type="submit"
-          >
-            Next
-          </button>
+          {initiallyAssignedAmbulance.length > 0 ||
+          assignAmbulance.length > 0 ||
+          selectedOption ? (
+            <button
+              className="text-primary-100 flex  bg-white rounded-md border-2 border-primary-100 mr-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
+              type="submit"
+            >
+              Next
+            </button>
+          ) : (
+            ""
+          )}
         </div>
       </form>
     </>

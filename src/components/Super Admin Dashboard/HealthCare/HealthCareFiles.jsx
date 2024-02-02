@@ -318,8 +318,8 @@ const HealthCareFiles = () => {
         name: values.name,
         email: values.email,
         phone_numbers: phoneNumbers,
-        latitude: selectedAmbulance?.latitude,
-        longitude: selectedAmbulance?.longitude,
+        latitude: locationAddress?.latitude,
+        longitude: locationAddress?.longitude,
         address: locationAddress?.address,
       };
       const updateHealtCare = async () => {
@@ -347,7 +347,7 @@ const HealthCareFiles = () => {
           }
         } catch (e) {
           console.error(e);
-          toast.error("Update failed");
+          toast.error(e?.response?.data?.message);
           setLoadingMessage(false);
         }
       };
@@ -731,7 +731,7 @@ const HealthCareFiles = () => {
                       </td>
                       <td className="px-3 py-4 text-xs">
                         {healthcare?.departments.map((department) => (
-                          <span className="inline-flex mx-1 my-1 items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                          <span className="inline-flex mx-1 my-1 items-center rounded-lg bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                             {department.name}
                           </span>
                         ))}
@@ -778,7 +778,7 @@ const HealthCareFiles = () => {
             <form onSubmit={CreateDepartments.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
                 <div className="flex flex-col space-y-2 w-full">
-                  <div>
+                  {/* <div>
                     <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
                       Departments
                     </label>
@@ -792,7 +792,28 @@ const HealthCareFiles = () => {
                       primaryColor={"blue"}
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
-                  </div>{" "}
+                  </div>{" "} */}
+                  <div>
+                    <label
+                      htmlFor="focal_persons"
+                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    >
+                      Focal Persons
+                    </label>
+                    <div className="relative mt-2">
+                      <Select
+                        value={selectedDepartment}
+                        placeholder="Select Department"
+                        onChange={(e) => handleDepartmentChange(e)}
+                        options={myData}
+                        isMultiple={true}
+                        isClearable={true}
+                        primaryColor={"blue"}
+                        isSearchable={true}
+                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right z-50"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="flex justify-start">
