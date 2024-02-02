@@ -722,9 +722,9 @@ const Maps = (props) => {
                     >
                       {ambulance?.status}
                     </span>
-                    {ambulance?.make +
+                    {ambulance?.model?.make?.name +
                       " " +
-                      ambulance?.model +
+                      ambulance?.model?.name +
                       " " +
                       ambulance?.plate_no}
                   </p>
