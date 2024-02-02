@@ -849,9 +849,48 @@ const HealthCareFiles = () => {
                 </p>
                 {selectedHealthCare?.departments.length > 0 ? (
                   selectedHealthCare?.departments?.map((departments) => (
-                    <p key={departments.id} className="text-base text-right">
-                      {departments.name}
-                    </p>
+                    <>
+                      <div className=" px-2 py-2">
+                        <p
+                          key={departments.id}
+                          className="text-base text-right font-semibold"
+                        >
+                          {departments.name}
+                        </p>
+                        <div className=" flex justify-around text-base text-right">
+                          <p className="text-xs">
+                            Total Beds:{" "}
+                            <span className="text-red-400">
+                              {departments.pivot.total_beds}
+                            </span>
+                          </p>
+                          <p className="text-xs">
+                            Occupied Beds (Men):{" "}
+                            <span className="text-red-400">
+                              {departments.pivot.occupied_beds_men}
+                            </span>
+                          </p>
+                          <p className="text-xs">
+                            Occupied Beds (Women):{" "}
+                            <span className="text-red-400">
+                              {departments.pivot.occupied_beds_women}
+                            </span>
+                          </p>
+                          <p className="text-xs">
+                            Unoccupied Beds (Men):{" "}
+                            <span className="text-red-400">
+                              {departments.pivot.unoccupied_beds_men}
+                            </span>
+                          </p>
+                          <p className="text-xs">
+                            Unoccupied Beds (Women):{" "}
+                            <span className="text-red-400">
+                              {departments.pivot.unoccupied_beds_women}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </>
                   ))
                 ) : (
                   <p className="text-right">No Data</p>
