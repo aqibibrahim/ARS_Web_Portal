@@ -20,8 +20,7 @@ import { Toaster, toast } from "sonner";
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
-import { Select } from "antd";
-
+import Select from "react-tailwindcss-select";
 import InputMask from "react-input-mask";
 import { Pagination, Spin } from "antd";
 
@@ -63,6 +62,7 @@ const HealthCareFiles = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isUpdateDepartment, setIsUpdateDepartment] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState([]);
+  const [updateFocalOption, setUpdateFocalOption] = useState([]);
 
   const itemsPerPage = 10; // You can adjust this based on your preference
   const [totalDepartments, setTotalDepartments] = useState(0);
@@ -75,9 +75,8 @@ const HealthCareFiles = () => {
     console.log("value:", value);
   };
   const handleChangeFocalPerson = (value) => {
-    console.log(">>", value);
-
     setOptionsFocalPerson(value);
+
     setCardFocalPersons(
       value?.map((item2) => {
         const user = allUsers.find((item1) => item1.id === item2.value);
@@ -191,14 +190,18 @@ const HealthCareFiles = () => {
             headers: headers,
           })
           .then((response) => {
-            setAllUsers(response.data.data);
-            setUpdateFocalOpetion(
-              response.data?.data?.map((variant) => ({
-                label: variant.first_name,
-                value: variant.id,
+            const allUsers = response.data.data;
+            const healthcareManagers = allUsers.filter(
+              (user) => user.role.name === "Healthcare Manager"
+            );
+            console.log("Healthcare manager", healthcareManagers);
+            setAllUsers(healthcareManagers);
+            setUpdateFocalOption(
+              healthcareManagers.map((manager) => ({
+                label: manager.first_name,
+                value: manager.id,
               }))
             );
-            console.log("Usersss", response.data.data);
           });
       } catch (e) {
         console.log(e);
@@ -416,16 +419,13 @@ const HealthCareFiles = () => {
     console.log(newPosition);
   };
   const CreateDepartments = useFormik({
-    initialValues: {
-
-    },
+    initialValues: {},
 
     onSubmit: (values) => {
       setLoadingMessage(true);
       const JSON = {
         departments: selectedDepartment?.map((item) => item?.value),
         facility_id: selectedHealthCare,
-
       };
       const createequipment = async () => {
         console.log(JSON);
@@ -450,13 +450,11 @@ const HealthCareFiles = () => {
             // Handle other status codes if needed
             toast.error(response.message);
             setLoadingMessage(false);
-
           }
         } catch (error) {
           // Handle network errors or other exceptions
           console.error("Post request error:", error);
           setLoadingMessage(false);
-
 
           toast.error(error?.response?.data?.message);
         }
@@ -558,7 +556,6 @@ const HealthCareFiles = () => {
 
   const isSubmitDisabled = () => {
     const { focal_persons, departments, name, email } = CreateHealtCare.values;
-    debugger;
     return (
       !optionsFocalPerson ||
       !phoneNumbers?.length > 0 ||
@@ -631,7 +628,7 @@ const HealthCareFiles = () => {
                       scope="col"
                       className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                     >
-                      Status
+                      Departments
                     </th>
                     <th
                       scope="col"
@@ -733,9 +730,11 @@ const HealthCareFiles = () => {
                         {healthcare?.address}
                       </td>
                       <td className="px-3 py-4 text-xs">
-                        <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                          {healthcare?.status}
-                        </span>
+                        {healthcare?.departments.map((department) => (
+                          <span className="inline-flex mx-1 my-1 items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                            {department.name}
+                          </span>
+                        ))}
                       </td>
                       <td className="px-3 py-4 text-xs">{healthcare?.email}</td>
                       <td className="px-3 py-4 text-xs whitespace-nowrap leading-4 ">
@@ -778,8 +777,6 @@ const HealthCareFiles = () => {
             </div>
             <form onSubmit={CreateDepartments.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
-
-
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
                     <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
@@ -795,9 +792,7 @@ const HealthCareFiles = () => {
                       primaryColor={"blue"}
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
-
                   </div>{" "}
-
                 </div>
               </div>
               <div className="flex justify-start">
@@ -929,10 +924,10 @@ const HealthCareFiles = () => {
                     <div className="w-full">
                       <div className="flex w-full ">
                         <div
-                          className={`relative mt-2 ${newPhoneNumber ? "w-11/12" : "w-full"
-                            }`}
+                          className={`relative mt-2 ${
+                            newPhoneNumber ? "w-11/12" : "w-full"
+                          }`}
                         >
-
                           <InputMask
                             tabIndex={1}
                             mask="00218 99 9999999" // Define your desired mask here
@@ -940,10 +935,12 @@ const HealthCareFiles = () => {
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
                             onKeyDown={(e) => {
-                              if (e.key === 'Tab') {
+                              if (e.key === "Tab") {
                                 e.preventDefault();
-                                document.querySelector('[tabIndex="2"]').focus();
-                              } else if (e.key === 'Enter') {
+                                document
+                                  .querySelector('[tabIndex="2"]')
+                                  .focus();
+                              } else if (e.key === "Enter") {
                                 e.preventDefault();
                                 handleAddPhoneNumber();
                               }
@@ -954,15 +951,18 @@ const HealthCareFiles = () => {
                             id="phone_numbers"
                             className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           />
-
                         </div>
-
                       </div>
                       {phoneNumbers.length > 0 && (
                         <div className="flex flex-wrap mt-2">
                           {phoneNumbers.map((phoneNumber, index) => (
-                            <div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
-                              <span className="mr-1 text-xs">{phoneNumber}</span>
+                            <div
+                              key={index}
+                              className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2"
+                            >
+                              <span className="mr-1 text-xs">
+                                {phoneNumber}
+                              </span>
                               <button
                                 type="button"
                                 onClick={() => handleRemovePhoneNumber(index)}
@@ -995,19 +995,16 @@ const HealthCareFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="1"]').focus();
                           }
                         }}
-
                       />
                     </div>
                   </div>
-
                 </div>
                 <div className="flex flex-row gap-10">
-
                   <div className="w-full">
                     <label
                       htmlFor="addresss"
@@ -1050,7 +1047,7 @@ const HealthCareFiles = () => {
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="3"]').focus();
                           }
@@ -1058,65 +1055,66 @@ const HealthCareFiles = () => {
                       />
                     </div>
                   </div>
-
-
                 </div>
-
-
               </div>
-              <div className="flex flex-row gap-10">
-                <div className="w-full">
+              <div className="flex flex-row justify-end ">
+                <div className="w-1/2">
                   <label
                     htmlFor="focal_persons"
                     className="block text-sm font-medium leading-6 text-gray-900 text-right"
                   >
-                    Focal Persons
+                    Focal Person
                   </label>
                   <div className="relative mt-2">
-                    <Select
+                    {/* <Select
                       tabIndex={4}
                       showSearch={true}
                       mode="multiple"
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                       placeholder="Focal Persons"
                       onChange={(e) => handleChangeFocalPerson(e)}
-
                       options={allUsers?.map((variant) => ({
                         label: variant.first_name,
                         value: variant.id,
                       }))}
-                     
-
-
-
                       value={optionsFocalPerson}
-
-
-                     
+                    /> */}
+                    <Select
+                      onChange={(e) => handleChangeFocalPerson(e)}
+                      options={updateFocalOption}
+                      value={optionsFocalPerson}
+                      placeholder="Select"
+                      isMultiple={true}
+                      isClearable={true}
+                      primaryColor={"blue"}
+                      isSearchable={true}
+                      className="  px-2  justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
                   </div>
                 </div>
+              </div>
+              {cardFocalPersons?.length > 0 ? (
                 <div className="w-full">
                   <label
                     htmlFor="focal_persons"
-                    className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    className="block text-sm  mt-1 font-medium leading-6 text-gray-900 text-right"
                   >
-                    Selected Persons
+                    Selected Focal Person
                   </label>
                   <ul
                     role="list"
-                    className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+                    className="grid  grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3   "
                   >
                     {cardFocalPersons?.map((person) => (
                       <li
                         key={person.user.id}
-                        className="col-span-2 divide-y divide-gray-200 rounded-lg bg-white shadow"
+                        className="col-span-2 divide-y divide-gray-200 rounded-lg bg-white shadow-lg justify-end"
                       >
                         <div className="flex w-full items-center justify-between space-x-6 px-3 py-2">
                           <div className="flex-1 truncate">
                             <div className="flex items-center space-x-3">
                               <h3 className="truncate text-sm font-medium text-gray-900">
-                                {person.user.first_name +
+                                {person?.user.first_name +
                                   " " +
                                   person.user.last_name}
                               </h3>
@@ -1126,6 +1124,11 @@ const HealthCareFiles = () => {
                             </div>
                             <p className="mt-1 truncate text-sm text-gray-500">
                               {person.user.email}
+                            </p>{" "}
+                            <p className="mt-1 truncate text-sm text-gray-500">
+                              {person.user.phone_numbers.map((phone, index) => (
+                                <p key={index}>{phone?.number}</p>
+                              ))}
                             </p>
                           </div>
                         </div>
@@ -1133,8 +1136,9 @@ const HealthCareFiles = () => {
                     ))}
                   </ul>
                 </div>
-              </div>
-
+              ) : (
+                ""
+              )}
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
@@ -1181,10 +1185,10 @@ const HealthCareFiles = () => {
                     <div className="w-full  mb-6 ">
                       <div className="flex w-full ">
                         <div
-                          className={`relative mt-2 ${newPhoneNumber ? "w-11/12" : "w-full"
-                            }`}
+                          className={`relative mt-2 ${
+                            newPhoneNumber ? "w-11/12" : "w-full"
+                          }`}
                         >
-
                           <InputMask
                             tabIndex={1}
                             mask="00218 99 9999999" // Define your desired mask here
@@ -1192,15 +1196,15 @@ const HealthCareFiles = () => {
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
                             onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                console.log('e.key', e.key)
-                                e.preventDefault()
-                                handleAddPhoneNumber()
-                              }
-
-                              else if (e.key === 'Tab') {
+                              if (e.key === "Enter") {
+                                console.log("e.key", e.key);
                                 e.preventDefault();
-                                document.querySelector('[tabIndex="2"]').focus();
+                                handleAddPhoneNumber();
+                              } else if (e.key === "Tab") {
+                                e.preventDefault();
+                                document
+                                  .querySelector('[tabIndex="2"]')
+                                  .focus();
                               }
                             }}
                             value={newPhoneNumber}
@@ -1215,13 +1219,17 @@ const HealthCareFiles = () => {
                             aria-hidden="true"
                           />
                         </div>
-
                       </div>
                       {phoneNumbers.length > 0 && (
                         <div className="flex flex-wrap mt-2">
                           {phoneNumbers.map((phoneNumber, index) => (
-                            <div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
-                              <span className="mr-1 text-xs">{phoneNumber}</span>
+                            <div
+                              key={index}
+                              className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2"
+                            >
+                              <span className="mr-1 text-xs">
+                                {phoneNumber}
+                              </span>
                               <button
                                 type="button"
                                 onClick={() => handleRemovePhoneNumber(index)}
@@ -1235,7 +1243,6 @@ const HealthCareFiles = () => {
                       )}
                     </div>
                   </div>
-
 
                   <div>
                     <label
@@ -1284,7 +1291,7 @@ const HealthCareFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="1"]').focus();
                           }
@@ -1315,7 +1322,7 @@ const HealthCareFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="3"]').focus();
                           }
@@ -1336,7 +1343,6 @@ const HealthCareFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <Select
-
                         value={updateFocalPerson}
                         placeholder="Select"
                         options={updateFocalOpetion}
