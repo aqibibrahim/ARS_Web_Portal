@@ -47,7 +47,7 @@ export default function RolesPermission() {
     email: "",
     password: "",
     designation: "",
-    role: "",
+    role: null,
   });
   const [editUserData, setEditUserData] = useState({
     first_name: "",
@@ -56,7 +56,7 @@ export default function RolesPermission() {
     password: "",
     phone_numbers: [],
     designation: "",
-    role_id: 0,
+    role_id: "",
   });
 
   const [editName, setEditName] = useState("");
@@ -967,6 +967,7 @@ export default function RolesPermission() {
                             </label>
                             <div className="relative mt-2">
                               <input
+                                tabIndex={2}
                                 type="text"
                                 name="last_name"
                                 id="last_name"
@@ -975,6 +976,14 @@ export default function RolesPermission() {
                                 placeholder="Enter Last Name"
                                 className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
+                                onKeyDown={(e) => {
+                                  if (e.key === "Tab") {
+                                    e.preventDefault();
+                                    document
+                                      .querySelector('[tabIndex="3"]')
+                                      .focus();
+                                  }
+                                }}
                               />
                             </div>
                           </div>
@@ -987,6 +996,7 @@ export default function RolesPermission() {
                             </label>
                             <div className="relative mt-2">
                               <input
+                                tabIndex={4}
                                 type="text"
                                 name="designation"
                                 id="designation"
@@ -995,6 +1005,197 @@ export default function RolesPermission() {
                                 placeholder="Enter Designation"
                                 className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
+                                onKeyDown={(e) => {
+                                  if (e.key === "Tab") {
+                                    e.preventDefault();
+                                    document
+                                      .querySelector('[tabIndex="5"]')
+                                      .focus();
+                                  }
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label
+                              htmlFor="phone_numbers"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              Phone Number
+                            </label>
+
+                            <div className="w-full  mb-6 ">
+                              {/* <div className="flex w-full justify-center m-auto"> */}
+
+                              <div className="flex w-full ">
+                                <div
+                                  className={`relative mt-2 ${
+                                    newPhoneNumber ? "w-11/12" : "w-full"
+                                  }`}
+                                >
+                                  <InputMask
+                                    tabIndex={6}
+                                    mask="00218 99 9999999" // Define your desired mask here
+                                    maskChar=""
+                                    placeholder="00218 XX XXXXXXX"
+                                    onChange={(e) =>
+                                      setNewPhoneNumber(e.target.value)
+                                    }
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") {
+                                        console.log("e.key", e.key);
+                                        e.preventDefault();
+                                        handleAddPhoneNumber();
+                                      }
+                                    }}
+                                    value={newPhoneNumber}
+                                    type="tel"
+                                    name="phone_numbers"
+                                    id="phone_numbers"
+                                    className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                    {...(phoneNumbers
+                                      ? { required: false }
+                                      : { required: true })}
+                                  />
+                                </div>
+                              </div>
+                              {phoneNumbers.length > 0 && (
+                                <div className="flex flex-wrap mt-2">
+                                  {phoneNumbers.map((phoneNumber, index) => (
+                                    <div
+                                      key={index}
+                                      className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2"
+                                    >
+                                      <span className="mr-1 text-xs">
+                                        {phoneNumber}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleRemovePhoneNumber(index)
+                                        }
+                                        className="text-red-500 hover:text-red-700 text-xs"
+                                      >
+                                        X
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {/* </div> */}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col space-y-2 w-full">
+                          <div>
+                            <label
+                              htmlFor="name"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              First Name
+                            </label>
+                            <div className="relative mt-2">
+                              <input
+                                tabIndex={1}
+                                type="text"
+                                name="first_name"
+                                id="first_name"
+                                onChange={handleChange}
+                                value={state?.first_name}
+                                placeholder="Enter First Name"
+                                className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                required
+                                onKeyDown={(e) => {
+                                  if (e.key === "Tab") {
+                                    e.preventDefault();
+                                    document
+                                      .querySelector('[tabIndex="2"]')
+                                      .focus();
+                                  }
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="name"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              Password
+                            </label>
+                            <div className="relative mt-2">
+                              {/* <input
+                                type="text"
+                                name="password"
+                                id="password"
+                                onChange={handleChange}
+                                value={state?.password}
+                                placeholder="Enter Password"
+                                className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                required
+                              />
+                              <p
+                                className={`text-red-500 text-xs italic mt-1 ${
+                                  state?.password ? "hidden" : ""
+                                }`}
+                              >
+                                Please Add Password
+                              </p> */}
+                              <input
+                                tabIndex={3}
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                autoComplete="new-password"
+                                onChange={handlePasswordChange}
+                                value={state?.password}
+                                placeholder="Password"
+                                className="peer block w-full px-3 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                required
+                                onKeyDown={(e) => {
+                                  if (e.key === "Tab") {
+                                    e.preventDefault();
+                                    document
+                                      .querySelector('[tabIndex="4"]')
+                                      .focus();
+                                  }
+                                }}
+                              />
+
+                              <button
+                                type="button"
+                                onClick={togglePasswordVisibility}
+                                className="absolute top-5 -translate-y-1/2 cursor-pointer"
+                              >
+                                {showPassword ? <BsEyeSlash /> : <BsEye />}
+                              </button>
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="email"
+                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                            >
+                              Email
+                            </label>
+                            <div className="relative mt-2">
+                              <input
+                                tabIndex={5}
+                                name="email"
+                                onChange={handleChange}
+                                placeholder="Enter Email"
+                                className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                required
+                                value={state?.email}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Tab") {
+                                    e.preventDefault();
+                                    document
+                                      .querySelector('[tabIndex="6"]')
+                                      .focus();
+                                  }
+                                }}
                               />
                             </div>
                           </div>
@@ -1029,157 +1230,8 @@ export default function RolesPermission() {
                               </select>
                             </div>
                           </div>
-                          <div>
-                            <label
-                              htmlFor="phone_numbers"
-                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                            >
-                              Phone Number
-                            </label>
-
-                            <div className="w-full  mb-6 ">
-                              {/* <div className="flex w-full justify-center m-auto"> */}
-
-                              <div className="flex w-full ">
-                                <div
-                                  className={`relative mt-2 ${
-                                    newPhoneNumber ? "w-11/12" : "w-full"
-                                  }`}
-                                >
-                                  <InputMask
-                                    mask="00218 99 9999999" // Define your desired mask here
-                                    maskChar=""
-                                    placeholder="00218 XX XXXXXXX"
-                                    onChange={(e) =>
-                                      setNewPhoneNumber(e.target.value)
-                                    }
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') {
-                                        console.log('e.key', e.key)
-                                        e.preventDefault()
-                                        handleAddPhoneNumber()
-                                      }
-                                    }}
-                                    value={newPhoneNumber}
-                                    type="tel"
-                                    name="phone_numbers"
-                                    id="phone_numbers"
-                                    className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                                    {...(phoneNumbers
-                                      ? { required: false }
-                                      : { required: true })}
-                                  />
-                                </div>
-                                
-                              </div>
-                              {phoneNumbers.length > 0 && (
-									<div className="flex flex-wrap mt-2">
-										{phoneNumbers.map((phoneNumber, index) => (
-											<div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
-												<span className="mr-1 text-xs">{phoneNumber}</span>
-												<button
-													type="button"
-													onClick={() => handleRemovePhoneNumber(index)}
-													className="text-red-500 hover:text-red-700 text-xs"
-												>
-													X
-												</button>
-											</div>
-										))}
-									</div>
-								)}
-                              {/* </div> */}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col space-y-2 w-full">
-                          <div>
-                            <label
-                              htmlFor="name"
-                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                            >
-                              First Name
-                            </label>
-                            <div className="relative mt-2">
-                              <input
-                                type="text"
-                                name="first_name"
-                                id="first_name"
-                                onChange={handleChange}
-                                value={state?.first_name}
-                                placeholder="Enter First Name"
-                                className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                                required
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label
-                              htmlFor="name"
-                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                            >
-                              Password
-                            </label>
-                            <div className="relative mt-2">
-                              {/* <input
-                                type="text"
-                                name="password"
-                                id="password"
-                                onChange={handleChange}
-                                value={state?.password}
-                                placeholder="Enter Password"
-                                className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                                required
-                              />
-                              <p
-                                className={`text-red-500 text-xs italic mt-1 ${
-                                  state?.password ? "hidden" : ""
-                                }`}
-                              >
-                                Please Add Password
-                              </p> */}
-                              <input
-                                name="password"
-                                type={showPassword ? "text" : "password"}
-                                autoComplete="new-password"
-                                onChange={handlePasswordChange}
-                                value={state?.password}
-                                placeholder="Password"
-                                className="peer block w-full px-3 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                                required
-                              />
-
-                              <button
-                                type="button"
-                                onClick={togglePasswordVisibility}
-                                className="absolute top-5 -translate-y-1/2 cursor-pointer"
-                              >
-                                {showPassword ? <BsEyeSlash /> : <BsEye />}
-                              </button>
-                            </div>
-                          </div>
-                          <div>
-                            <label
-                              htmlFor="email"
-                              className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                            >
-                              Email
-                            </label>
-                            <div className="relative mt-2">
-                              <input
-                                name="email"
-                                onChange={handleChange}
-                                placeholder="Enter Email"
-                                className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                                required
-                                value={state?.email}
-                              />
-                            </div>
-                          </div>
                         </div>
                       </div>
-                      
                     </div>
                   </Modal>
                   {/* Delete Role Modal */}
