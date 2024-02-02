@@ -1066,6 +1066,37 @@ export default function IncidentList({}) {
                   <span>{completedIncidentDetails?.incident?.description}</span>{" "}
                 </p>
               </div>
+
+              <div className="p-5 text-right">
+                <p className="text-xl text-right font-bold">Created Details</p>
+                <p>
+                  <span className="font-semibold">Created By: </span>{" "}
+                  <span className="text-green-500">
+                    {completedIncidentDetails?.incident?.created_by?.first_name + " " + completedIncidentDetails?.incident?.created_by?.first_name}
+                  </span>
+                </p>
+                <p>
+                  {" "}
+                  <span className="font-semibold"> Email: </span>{" "}
+                  
+                   
+                  
+                    {completedIncidentDetails?.incident?.created_by?.email}
+                 
+                </p>{" "}
+                <p>
+                  {" "}
+                  <span className="font-semibold"> Created Time: </span>{" "}
+                  <span>
+                    {completedIncidentDetails?.incident?.created_at}
+                  </span>{" "}
+                </p>{" "}
+                <p>
+                  {" "}
+                  <span className="font-semibold"> Completed Time: </span>{" "}
+                  <span>{(completedIncidentDetails?.incident?.updated_at).toLocaleString()}</span>{" "}
+                </p>
+              </div>
               <div>
                 <div className="px-5">
                   <p className="text-lg text-right font-semibold">
