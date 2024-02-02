@@ -994,7 +994,7 @@ export default function IncidentList({}) {
         )}
         {completedIncidentsView && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-            <div className="mx-auto mt-10 p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
+            <div className="mx-auto mt-10 p-0 border w-[700px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
               <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
                 <BsArrowRightCircle
                   width={9}
@@ -1072,29 +1072,34 @@ export default function IncidentList({}) {
                 <p>
                   <span className="font-semibold">Created By: </span>{" "}
                   <span className="text-green-500">
-                    {completedIncidentDetails?.incident?.created_by?.first_name + " " + completedIncidentDetails?.incident?.created_by?.first_name}
+                    {completedIncidentDetails?.incident?.created_by
+                      ?.first_name +
+                      " " +
+                      completedIncidentDetails?.incident?.created_by?.last_name}
                   </span>
                 </p>
                 <p>
                   {" "}
                   <span className="font-semibold"> Email: </span>{" "}
-                  
-                   
-                  
-                    {completedIncidentDetails?.incident?.created_by?.email}
-                 
+                  {completedIncidentDetails?.incident?.created_by?.email}
                 </p>{" "}
                 <p>
                   {" "}
                   <span className="font-semibold"> Created Time: </span>{" "}
                   <span>
-                    {completedIncidentDetails?.incident?.created_at}
+                    {formatDateTime(
+                      completedIncidentDetails?.incident?.created_at
+                    )}
                   </span>{" "}
                 </p>{" "}
                 <p>
                   {" "}
                   <span className="font-semibold"> Completed Time: </span>{" "}
-                  <span>{(completedIncidentDetails?.incident?.updated_at).toLocaleString()}</span>{" "}
+                  <span>
+                    {formatDateTime(
+                      completedIncidentDetails?.incident?.updated_at
+                    )}
+                  </span>{" "}
                 </p>
               </div>
               <div>
@@ -1203,6 +1208,14 @@ export default function IncidentList({}) {
                         <p>
                           <span className="font-semibold">Email:</span>{" "}
                           {completedIncidentDetails.driver?.email}
+                        </p>
+                        <p>
+                          <span className="font-semibold">Phone Number:</span>{" "}
+                          {completedIncidentDetails.driver?.phone_numbers?.map(
+                            (phone) => {
+                              <p>{phone?.number}</p>;
+                            }
+                          )}
                         </p>
                       </div>
                     </div>

@@ -148,35 +148,81 @@ function HealthCareForm({ onClick, datatt, onClose }) {
       <Toaster position="bottom-right" richColors />
 
       {showAssignAmbulance.length === 0 ? (
-        <div className="flex mt-4 flex-col hover:bg-gray-100 cursor-pointer justify-end gap-1 border  border-gray-400 p-1 rounded-md mb-2 text-gray-800">
+        <div className="flex mt-4 flex-col  cursor-pointer justify-end gap-1 border  border-gray-400 p-1 rounded-md mb-2 text-gray-800">
           <p className="text-right">loading...</p>
         </div>
       ) : (
         showAssignAmbulance?.map((ambulance, index) => (
           <div
             key={ambulance?.id}
-            className="flex mt-4 flex-col hover:bg-gray-100 cursor-pointer justify-end gap-1 border border-gray-400 p-1 rounded-md mb-2 text-gray-800"
+            className="flex mt-4 flex-col   cursor-pointer justify-end gap-1 border border-gray-400 p-1 rounded-md mb-2 text-gray-800"
           >
-            <p className="text-right">
-              Model:
-              {ambulance?.model?.make?.name +
-                " " +
-                ambulance?.model?.name +
-                " " +
-                ambulance?.plate_no}
-            </p>
-            <p className="text-right">
-              Persons Supported:{ambulance?.persons_supported}
-            </p>
-            <p className="text-right">Id No:{ambulance?.id_no}</p>
-            <p className="text-right">
-              Driver: {ambulance?.driver?.first_name}
-            </p>
-            <p className="text-right">
-              Driver Email: {ambulance?.driver?.email}
-            </p>
-
-            <div key={ambulance?.id} className="text-right">
+            <div className="bg-blue-300 text-white p-3 rounded-lg mb-1">
+              <p className=" font-bold text-md">Ambulance Detail</p>
+              <p className="text-right">
+                Model:
+                {ambulance?.model?.make?.name +
+                  " " +
+                  ambulance?.model?.name +
+                  " " +
+                  ambulance?.plate_no}
+              </p>
+              <p className="text-right">
+                Persons Supported:{ambulance?.persons_supported}
+              </p>
+              <p className="text-right">Id No:{ambulance?.id_no}</p>
+              <p className="text-right">
+                Driver: {ambulance?.driver?.first_name}
+              </p>
+              <p className="text-right">
+                Driver Email: {ambulance?.driver?.email}
+              </p>
+            </div>
+            <div
+              key={ambulance?.id}
+              className="text-right bg-gray-100 text-black p-3 rounded-lg hover:bg-gray-200 "
+            >
+              {selectedFacilities[ambulance?.id] ? (
+                <div className="flex justify-around flex-col ">
+                  <p className=" font-bold text-md">Assigned Health Care</p>
+                  <p>
+                    <span>Facility Name: </span>
+                    {selectedFacilities[ambulance?.id]?.label}
+                  </p>
+                  <p>
+                    <span>Email: </span>
+                    {selectedFacilities[ambulance?.id]?.email}
+                  </p>
+                  <p>
+                    <span>Distance: </span>
+                    {selectedFacilities[ambulance?.id]?.distance +
+                      " " +
+                      selectedFacilities[ambulance?.id]?.duration}
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-2 flex justify-around flex-col ">
+                  <p className=" font-bold text-md text-left">
+                    Assigned Health Care
+                  </p>
+                  <p>
+                    <span>Facility Name: </span>
+                    {ambulance?.facility?.name}
+                  </p>
+                  <p>
+                    <span>Email: </span>
+                    {ambulance?.facility?.email}
+                  </p>
+                  <p>
+                    <span>Distance: </span>
+                    {ambulance?.distance_info?.from_incident_to_facility
+                      ?.rows[0]?.elements[0]?.distance?.text +
+                      " " +
+                      ambulance?.distance_info?.from_incident_to_facility
+                        ?.rows[0]?.elements[0]?.duration?.text}
+                  </p>
+                </div>
+              )}
               <div className="mb-5 mt-2 flex flex-col">
                 <Select
                   value={selectedFacilities[ambulance?.id]}
@@ -206,50 +252,6 @@ function HealthCareForm({ onClick, datatt, onClose }) {
                   )}
                 </div>
               </div>
-
-              {selectedFacilities[ambulance?.id] ? (
-                <div className="border-t-4 flex justify-around flex-col ">
-                  <p className="flex text-xl font-bold ">
-                    Assigned Health Care
-                  </p>
-                  <p>
-                    <span>Facility Name: </span>
-                    {selectedFacilities[ambulance?.id]?.label}
-                  </p>
-                  <p>
-                    <span>Email: </span>
-                    {selectedFacilities[ambulance?.id]?.email}
-                  </p>
-                  <p>
-                    <span>Distance: </span>
-                    {selectedFacilities[ambulance?.id]?.distance +
-                      " " +
-                      selectedFacilities[ambulance?.id]?.duration}
-                  </p>
-                </div>
-              ) : (
-                <div className="border-t-4 flex justify-around flex-col ">
-                  <p className="flex text-xl font-bold ">
-                    Assigned Health Care
-                  </p>
-                  <p>
-                    <span>Facility Name: </span>
-                    {ambulance?.facility?.name}
-                  </p>
-                  <p>
-                    <span>Email: </span>
-                    {ambulance?.facility?.email}
-                  </p>
-                  <p>
-                    <span>Distance: </span>
-                    {ambulance?.distance_info?.from_incident_to_facility
-                      ?.rows[0]?.elements[0]?.distance?.text +
-                      " " +
-                      ambulance?.distance_info?.from_incident_to_facility
-                        ?.rows[0]?.elements[0]?.duration?.text}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         ))

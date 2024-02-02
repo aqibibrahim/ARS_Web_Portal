@@ -127,8 +127,9 @@ export default function VehicleMake() {
         setIsModalOpen(false);
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Error creating role:", error);
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.data?.name[0]);
     }
 
     setIsLoading(false);
@@ -217,6 +218,7 @@ export default function VehicleMake() {
                 onClick={() => {
                   setIsModalOpen(false);
                   resetValidationErrors();
+                  setState({ vehicleMake: "" });
                 }}
               />
               <h3 className="text-xl font-semibold">Create Vehicle Make</h3>

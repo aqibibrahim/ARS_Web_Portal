@@ -12,6 +12,8 @@ import {
   BsSearch,
   BsEyeSlash,
 } from "react-icons/bs";
+import Select from "react-tailwindcss-select";
+
 const { TabPane } = Tabs;
 export default function RolesPermission() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,8 +49,10 @@ export default function RolesPermission() {
     email: "",
     password: "",
     designation: "",
-    role: null,
   });
+  const [roleID, setRoleID] = useState("");
+  const [editRoleID, setEditRoleID] = useState("");
+
   const [editUserData, setEditUserData] = useState({
     first_name: "",
     last_name: "",
@@ -56,7 +60,6 @@ export default function RolesPermission() {
     password: "",
     phone_numbers: [],
     designation: "",
-    role_id: "",
   });
 
   const [editName, setEditName] = useState("");
@@ -151,12 +154,12 @@ export default function RolesPermission() {
     }
   };
   const handleRoleChange = (e) => {
-    const selectedRoleId = e.target.value;
-
-    setState((prevState) => ({
-      ...prevState,
-      role: selectedRoleId,
-    }));
+    const selectedRoleId = e;
+    // setState((prevState) => ({
+    //   ...prevState,
+    //   role: selectedRoleId,
+    // }));
+    setRoleID(selectedRoleId);
   };
   const createNewUser = async () => {
     try {
@@ -173,7 +176,7 @@ export default function RolesPermission() {
         password: state?.password,
         phone_numbers: phoneNumbers,
         designation: state?.designation,
-        role_id: state?.role,
+        role_id: roleID?.value,
       };
       let response;
       if (editFlag) {
@@ -209,7 +212,7 @@ export default function RolesPermission() {
           email: "",
           password: "",
           designation: "",
-          role: 0,
+          role: "",
         });
       }
     } catch (error) {
@@ -234,7 +237,13 @@ export default function RolesPermission() {
         });
 
         if (response.status === 200 || response.status === 201) {
-          setAllRoles(response?.data?.data);
+          // setAllRoles(response?.data?.data);
+          setAllRoles(
+            response.data?.data?.map((variant) => ({
+              label: variant.name,
+              value: variant.id,
+            }))
+          );
           setIsLoading(false);
         }
       } catch (error) {
@@ -291,6 +300,7 @@ export default function RolesPermission() {
     setIsUserModalOpen(true);
     setEditUserModal(true);
     setEditFlag(true);
+    setRoleID({ label: data?.role?.name, value: data?.role?.id });
     setState({
       id: data?.id,
       first_name: data?.first_name || "",
@@ -298,7 +308,6 @@ export default function RolesPermission() {
       email: data?.email || "",
       password: "", // You may want to initialize this as empty or handle it differently
       designation: data?.designation || "",
-      role_id: data?.role_id || 0,
     });
     setPhoneNumbers(data.phone_numbers.map((phone) => phone.number) || []);
   };
@@ -328,13 +337,13 @@ export default function RolesPermission() {
     setPhoneNumbers([]);
     setEditFlag(false);
     setDeleteUserModal(false);
+    setRoleID("");
     setState({
       first_name: "",
       last_name: "",
       email: "",
       password: "",
       designation: "",
-      role: 0,
     });
   };
 
@@ -1207,27 +1216,15 @@ export default function RolesPermission() {
                               Roles
                             </label>
                             <div className="relative mt-2">
-                              <select
+                              <Select
                                 name="role"
                                 id="role"
                                 onChange={(e) => handleRoleChange(e)}
-                                value={state?.role}
+                                value={roleID}
+                                options={allRoles}
                                 className="peer block  w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
-                              >
-                                <option value="" disabled>
-                                  Select a Role
-                                </option>
-                                {allRoles.map((role) => (
-                                  <option
-                                    key={role.id}
-                                    value={role.id}
-                                    selected={role.id === state?.id}
-                                  >
-                                    {role.name}
-                                  </option>
-                                ))}
-                              </select>
+                              ></Select>
                             </div>
                           </div>
                         </div>

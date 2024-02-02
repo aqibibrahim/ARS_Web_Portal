@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -202,7 +202,7 @@ const AmbulanceFiles = () => {
   };
   useEffect(() => {
     fetchAmbulanceData(currentPage);
-  }, [submitDone, currentPage,isDelete]);
+  }, [submitDone, currentPage, isDelete]);
 
   const CreateAmbulance = useFormik({
     initialValues: {
@@ -219,7 +219,7 @@ const AmbulanceFiles = () => {
       equipments: "",
     },
     onSubmit: (values) => {
-      console.log("Equipement values",options);
+      console.log("Equipement values", options);
       const JSON = {
         plate_no: values.plate_no,
         // make_id: selectedMakeOption?.value,
@@ -282,11 +282,13 @@ const AmbulanceFiles = () => {
       parking_longitude: locationAddress?.longitude,
     },
     onSubmit: (values) => {
-      console.log("Edit values",selectedModelOption);
+      console.log("Edit values", selectedModelOption);
       const JSON = {
         plate_no: values.plate_no,
         // make: values.make,
-        model_id: selectedModelOption?.label ?selectedModelOption?.value:selectedModelOption,
+        model_id: selectedModelOption?.label
+          ? selectedModelOption?.value
+          : selectedModelOption,
         gps_no: values.gps_no,
         persons_supported: values?.persons_supported,
         password: values.password,
@@ -294,7 +296,9 @@ const AmbulanceFiles = () => {
         gps_longitude: locationAddress?.longitude,
         parking_latitude: locationAddress?.latitude,
         parking_longitude: locationAddress?.longitude,
-        equipments: editOptions?.map((item) => item?.label ? item?.value:item),
+        equipments: editOptions?.map((item) =>
+          item?.label ? item?.value : item
+        ),
       };
       const editAmbulance = async () => {
         setLoadingMessage(true);
@@ -363,11 +367,11 @@ const AmbulanceFiles = () => {
           headers,
         });
         if (response.status === 200 || response.status === 201) {
-          console.log("Response models",response?.data?.data);
+          console.log("Response models", response?.data?.data);
           setAllModels(response?.data?.data);
           setMyModelData(
             response.data?.data?.map((variant) => ({
-              label:variant.make.name+ '-' +variant.name ,
+              label: variant.make.name + "-" + variant.name,
               value: variant.id,
             }))
           );
@@ -846,22 +850,21 @@ const AmbulanceFiles = () => {
                       Equipment
                     </label>
                     <div className="mt-[7px]">
-                      
-                     <Select
-                     tabIndex={1}
-                     showSearch={true}
-                     mode="multiple"
-    style={{ width: '100%' }}
-    placeholder="Equipments"
-    onChange={(value) => handleChange(value)}
-    options={myData}
-    onKeyDown={(e) => {
-      if (e.key === 'Tab') {
-        e.preventDefault();
-        document.querySelector('[tabIndex="2"]').focus();
-      }
-    }}
-  />
+                      <Select
+                        tabIndex={1}
+                        showSearch={true}
+                        mode="multiple"
+                        style={{ width: "100%" }}
+                        placeholder="Equipments"
+                        onChange={(value) => handleChange(value)}
+                        options={myData}
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="2"]').focus();
+                          }
+                        }}
+                      />
                     </div>
                   </div>
                   <div>
@@ -872,9 +875,8 @@ const AmbulanceFiles = () => {
                       Persons Supported
                     </label>
                     <div className="relative mt-2">
-                     
                       <input
-                      tabIndex={3}
+                        tabIndex={3}
                         className={`appearance-none block w-full bg-gray-200 text-right text-gray-700 border text-sm border-gray-200 rounded py-2.5 px-4 leading-4 focus:outline-none focus:bg-white`}
                         type="number"
                         name="persons_supported"
@@ -884,7 +886,7 @@ const AmbulanceFiles = () => {
                         placeholder="Persons Supported"
                         required
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="4"]').focus();
                           }
@@ -902,7 +904,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
-                      tabIndex={5}
+                        tabIndex={5}
                         onClick={HandelOpenMap}
                         value={locationAddress?.address}
                         type="text"
@@ -913,7 +915,7 @@ const AmbulanceFiles = () => {
                         required
                         readOnly
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="6"]').focus();
                           }
@@ -931,9 +933,8 @@ const AmbulanceFiles = () => {
                       Plate No
                     </label>
                     <div className="relative mt-2">
-                     
                       <input
-                      tabIndex={0}
+                        tabIndex={0}
                         className={`appearance-none block w-full  bg-gray-200 text-right text-gray-700 border text-sm border-gray-200 rounded py-2.5 px-4 leading-4 focus:outline-none focus:bg-white `}
                         type="text"
                         name="plate_no"
@@ -944,7 +945,7 @@ const AmbulanceFiles = () => {
                         required
                         autoComplete="nope"
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="1"]').focus();
                           }
@@ -961,23 +962,21 @@ const AmbulanceFiles = () => {
                       Model
                     </label>
                     <div className="relative mt-2">
-                   
                       <Select
-                      tabIndex={2}
-                      value={selectedModelOption}
-                      placeholder="Select Vehicle Model"
-
-                      onChange={handleModelSelect}
-                      options={myModelData}
-                      showSearch
-                      optionFilterProp="label"
-                      className="w-full mt-2"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Tab') {
-                          e.preventDefault();
-                          document.querySelector('[tabIndex="3"]').focus();
-                        }
-                      }}
+                        tabIndex={2}
+                        value={selectedModelOption}
+                        placeholder="Select Vehicle Model"
+                        onChange={handleModelSelect}
+                        options={myModelData}
+                        showSearch
+                        optionFilterProp="label"
+                        className="w-full mt-2"
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="3"]').focus();
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -990,7 +989,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
-                      tabIndex={4}
+                        tabIndex={4}
                         type="number"
                         name="gps_no"
                         id="gps_no"
@@ -1020,7 +1019,7 @@ const AmbulanceFiles = () => {
                   </label>
                   <div className="relative mt-2">
                     <input
-                    tabIndex={6}
+                      tabIndex={6}
                       name="password"
                       type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
@@ -1084,19 +1083,17 @@ const AmbulanceFiles = () => {
                     </label>
 
                     <Select
-                    tabIndex={1}
-                    showSearch={true}
-   
-                    style={{ width: '100%' }}
-                    placeholder="Equipments"
-                    onChange={(e) => handleChangeEquiments(e)}
-                    options={myData}
-                    mode="multiple"
+                      tabIndex={1}
+                      showSearch={true}
+                      style={{ width: "100%" }}
+                      placeholder="Equipments"
+                      onChange={(e) => handleChangeEquiments(e)}
+                      options={myData}
+                      mode="multiple"
                       value={editOptions}
-                     
                       allowClear={true}
                       onKeyDown={(e) => {
-                        if (e.key === 'Tab') {
+                        if (e.key === "Tab") {
                           e.preventDefault();
                           document.querySelector('[tabIndex="2"]').focus();
                         }
@@ -1113,7 +1110,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
-                      tabIndex={3}
+                        tabIndex={3}
                         type="number"
                         name="persons_supported"
                         id="persons_supported"
@@ -1123,7 +1120,7 @@ const AmbulanceFiles = () => {
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="4"]').focus();
                           }
@@ -1141,7 +1138,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
-                      tabIndex={5}
+                        tabIndex={5}
                         onClick={HandelOpenMap}
                         onChange={EditAmbulance.handleChange}
                         value={
@@ -1174,7 +1171,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
-                      tabIndex={0}
+                        tabIndex={0}
                         type="text"
                         name="plate_no"
                         id="plate_no"
@@ -1184,7 +1181,7 @@ const AmbulanceFiles = () => {
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="1"]').focus();
                           }
@@ -1202,18 +1199,16 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <Select
-                      tabIndex={2}
-                      value={selectedModelOption}
-                      placeholder="Select Vehicle Model"
-
-                      onChange={handleModelSelect}
-                      options={myModelData}
-                      showSearch
-                      optionFilterProp="label"
-                      className="w-full mt-2"
-                        
+                        tabIndex={2}
+                        value={selectedModelOption}
+                        placeholder="Select Vehicle Model"
+                        onChange={handleModelSelect}
+                        options={myModelData}
+                        showSearch
+                        optionFilterProp="label"
+                        className="w-full mt-2"
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="3"]').focus();
                           }
@@ -1230,7 +1225,7 @@ const AmbulanceFiles = () => {
                     </label>
                     <div className="relative mt-2">
                       <input
-                      tabIndex={4}
+                        tabIndex={4}
                         type="number"
                         name="gps_no"
                         id="gps_no"
@@ -1240,7 +1235,7 @@ const AmbulanceFiles = () => {
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
-                          if (e.key === 'Tab') {
+                          if (e.key === "Tab") {
                             e.preventDefault();
                             document.querySelector('[tabIndex="5"]').focus();
                           }

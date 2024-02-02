@@ -239,7 +239,7 @@ const Maps = (props) => {
       selectedPlace: {
         name: data?.name,
         status: data?.status,
-        phoneNumbers: data?.phone_numbers || [], // Add phoneNumbers to the selectedPlace
+        phoneNumbers: data?.phone_numbers || [],
         focalPersons: data?.focal_persons || [],
         departments: data?.departments || [],
         latitude: data?.latitude,
@@ -588,27 +588,7 @@ const Maps = (props) => {
                   {/* <p className="text-lg text-gray-900 text-left font-medium">
                 {healthCareInfo?.selectedPlace?.status}
               </p> */}
-                  <div>
-                    {healthCareInfo?.selectedPlace?.phoneNumbers?.length > 0 ? (
-                      <div>
-                        <p className="text-base font-semibold mb-1 text-gray-900   text-right  pr-4">
-                          Phone Number<i className="bi bi-shield-check"></i>
-                        </p>
-                        {healthCareInfo?.selectedPlace?.phoneNumbers.map(
-                          (phoneNumber) => (
-                            <p
-                              key={phoneNumber.id}
-                              className="text-sm text-gray-500  text-right font-semibold  pr-4 "
-                            >
-                              +{phoneNumber.number}
-                            </p>
-                          )
-                        )}
-                      </div>
-                    ) : (
-                      <p>NO Data Found</p>
-                    )}
-                  </div>
+                  <div></div>
                 </div>
                 <p className="text-base font-semibold mb-1 text-gray-900   text-right  pr-4">
                   {healthCareInfo?.selectedPlace?.departments?.length}{" "}
@@ -640,12 +620,25 @@ const Maps = (props) => {
                   {healthCareInfo?.selectedPlace?.focalPersons?.length > 0 ? (
                     healthCareInfo?.selectedPlace?.focalPersons?.map(
                       (focalPerson) => (
-                        <p
-                          key={focalPerson.id}
-                          className="text-sm text-gray-500  text-right font-semibold  pr-4 "
-                        >
-                          {focalPerson.first_name} {focalPerson.last_name}
-                        </p>
+                        <>
+                          <p
+                            key={focalPerson.id}
+                            className="text-sm text-gray-500  text-right font-semibold  pr-4 "
+                          >
+                            {focalPerson.first_name} {focalPerson.last_name}
+                          </p>
+                          <p>
+                            {" "}
+                            {focalPerson?.phone_numbers?.map((phone, index) => (
+                              <p
+                                key={index}
+                                className="text-sm text-gray-500  text-right font-semibold  pr-4 "
+                              >
+                                {phone?.number}
+                              </p>
+                            ))}
+                          </p>
+                        </>
                       )
                     )
                   ) : (
@@ -692,14 +685,14 @@ const Maps = (props) => {
                     key={phoneNumber.id}
                     className="text-sm text-gray-500  text-right font-semibold pr-4 "
                   >
-                    +{phoneNumber.number}
+                    {phoneNumber.number}
                   </p>
                 ))}
               </div>
               <p className="text-base font-semibold mb-1 text-gray-900 pr-4  text-right">
                 Address<i className="bi bi-shield-check"></i>
               </p>
-              <p className="text-sm text-gray-500  text-right font-semibold pr-4 flex-wrap flex pl-2">
+              <p className="text-sm text-gray-500 justify-end  text-right font-semibold pr-4 flex-wrap flex pl-2">
                 {regionInfo?.selectedPlace?.address}
               </p>
               {/* <div className="mb-2 flex gap-y-2 flex-col">

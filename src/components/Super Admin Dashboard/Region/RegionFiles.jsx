@@ -122,12 +122,12 @@ const RegionFiles = () => {
     } else {
       setOptions(
         region?.ambulances?.map((variant) => ({
-          label: variant.model,
-          value: variant.id,
+          label: variant?.model?.make?.name + " " + variant?.model?.name,
+          value: variant?.id,
         }))
       );
     }
-    setPhoneNumbers(region?.phone_numbers.map((phone) => phone.number));
+    setPhoneNumbers(region?.phone_numbers?.map((phone) => phone.number));
     setSelectedAmbulance(region);
     setLocationAddress({
       latitude: region?.latitude,
@@ -695,10 +695,10 @@ const RegionFiles = () => {
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
                             onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                console.log('e.key', e.key)
-                                e.preventDefault()
-                                handleAddPhoneNumber()
+                              if (e.key === "Enter") {
+                                console.log("e.key", e.key);
+                                e.preventDefault();
+                                handleAddPhoneNumber();
                               }
                             }}
                             value={newPhoneNumber}
@@ -708,28 +708,30 @@ const RegionFiles = () => {
                             className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           />
                         </div>
-                        
                       </div>
                     </div>
                   </div>
                 </div>
               </div>{" "}
               {phoneNumbers.length > 0 && (
-									<div className="flex flex-wrap mt-2">
-										{phoneNumbers.map((phoneNumber, index) => (
-											<div key={index} className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2">
-												<span className="mr-1 text-xs">{phoneNumber}</span>
-												<button
-													type="button"
-													onClick={() => handleRemovePhoneNumber(index)}
-													className="text-red-500 hover:text-red-700"
-												>
-													<span className="text-xs">X</span>
-												</button>
-											</div>
-										))}
-									</div>
-								)}
+                <div className="flex flex-wrap mt-2">
+                  {phoneNumbers.map((phoneNumber, index) => (
+                    <div
+                      key={index}
+                      className="bg-gray-200 p-2 rounded-md flex items-center mr-2 mb-2"
+                    >
+                      <span className="mr-1 text-xs">{phoneNumber}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhoneNumber(index)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <span className="text-xs">X</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
@@ -874,11 +876,6 @@ const RegionFiles = () => {
                           />
                         </div>
                       </div>
-                      {validationErrors.phoneNumbers && (
-                        <p className="text-red-500 text-sm">
-                          {validationErrors.phoneNumbers}
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>
