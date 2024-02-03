@@ -161,6 +161,17 @@ export default function RolesPermission() {
     // }));
     setRoleID(selectedRoleId);
   };
+  const toastErrorMessages = (errors) => {
+    Object.keys(errors).forEach((field) => {
+      const messages = errors[field];
+      messages.forEach((message) => {
+        toast.error(
+          `${field.charAt(0).toUpperCase() + field.slice(1)}: ${message}`
+        );
+      });
+    });
+  };
+
   const createNewUser = async () => {
     try {
       var token = localStorage.getItem("token");
@@ -216,10 +227,10 @@ export default function RolesPermission() {
         });
       }
     } catch (error) {
-      console.error("Error creating/editing user:", error);
-      const errorMessage =
-        error.response?.data?.data?.email || "An error occurred";
-      toast.error(errorMessage);
+      toastErrorMessages(error.response.data.data);
+      // const errorMessage =
+      //   error.response?.data?.data?.email || "An error occurred";
+      // toast.error(errorMessage);
     }
   };
 
@@ -251,7 +262,7 @@ export default function RolesPermission() {
       }
     };
     GetRecords();
-  }, [isModalOpen, deleteModal]);
+  }, [isModalOpen, deleteModal, editModal]);
 
   useEffect(() => {
     const GetUsers = async () => {
@@ -604,7 +615,7 @@ export default function RolesPermission() {
                                   <span
                                     className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
                                     onClick={() => {
-                                      setDeleteID(data?.id);
+                                      setDeleteID(data?.value);
                                       setDeleteModal(true);
                                     }}
                                   >
@@ -612,7 +623,7 @@ export default function RolesPermission() {
                                   </span>
                                   <button
                                     onClick={() =>
-                                      handleEditClick(data?.name, data?.id)
+                                      handleEditClick(data?.label, data?.value)
                                     }
                                     className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                                   >
@@ -629,7 +640,7 @@ export default function RolesPermission() {
                                 </span>
                               </td>
                               <td className="whitespace-nowrap px-3 py-4 text-sm">
-                                {data?.name}
+                                {data?.label}
                               </td>
                             </tr>
                           ))}
@@ -643,18 +654,6 @@ export default function RolesPermission() {
                     title="Are you sure to delete this Role?"
                     open={deleteModal}
                     onOk={handleDelete}
-                    onCancel={handleCancel}
-                    closable={false}
-                    maskClosable={false}
-                    okButtonProps={{
-                      style: { backgroundColor: "red" },
-                    }}
-                    okText="Delete"
-                  ></Modal>
-                  <Modal
-                    title="Are you sure to delete this User?"
-                    open={deleteUserModal}
-                    onOk={handleDeleteUser}
                     onCancel={handleCancel}
                     closable={false}
                     maskClosable={false}
@@ -1245,6 +1244,18 @@ export default function RolesPermission() {
                     okText="Delete"
                   ></Modal>
                   {/* Edit Role Modal */}
+                  <Modal
+                    title="Are you sure to delete this User?"
+                    open={deleteUserModal}
+                    onOk={handleDeleteUser}
+                    onCancel={handleCancel}
+                    closable={false}
+                    maskClosable={false}
+                    okButtonProps={{
+                      style: { backgroundColor: "red" },
+                    }}
+                    okText="Delete"
+                  ></Modal>
                 </div>
               )}
             </div>
