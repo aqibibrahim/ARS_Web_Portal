@@ -152,7 +152,7 @@ const AmbulanceFiles = () => {
     setSelectedAmbulance(ambulance);
     setLocationAddress({
       latitude: ambulance?.gps_latitude,
-      longitude: ambulance?.gps_latitude,
+      longitude: ambulance?.gps_longitude,
       address: "",
     });
 
@@ -1141,16 +1141,12 @@ const AmbulanceFiles = () => {
                         tabIndex={5}
                         onClick={HandelOpenMap}
                         onChange={EditAmbulance.handleChange}
-                        value={
-                          locationAddress?.address
-                            ? locationAddress?.address
-                            : [
-                                "latitude " +
-                                  locationAddress?.latitude +
-                                  " longitude " +
-                                  locationAddress?.longitude,
-                              ]
-                        }
+                        value={[
+                          "latitude " +
+                            locationAddress?.latitude +
+                            " longitude " +
+                            locationAddress?.longitude,
+                        ]}
                         type="text"
                         name="addresss"
                         id="addresss"

@@ -61,7 +61,7 @@ const HealthCareFiles = () => {
   const [selectedHealthCare, setSelectedHealthCare] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isUpdateDepartment, setIsUpdateDepartment] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [updateFocalOption, setUpdateFocalOption] = useState([]);
 
   const itemsPerPage = 10; // You can adjust this based on your preference

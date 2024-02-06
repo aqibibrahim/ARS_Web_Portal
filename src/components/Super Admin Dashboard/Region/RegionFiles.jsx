@@ -624,6 +624,7 @@ const RegionFiles = () => {
                     <div className="relative mt-2">
                       <input
                         tabIndex={1}
+                        required
                         onClick={() => setOpen(true)}
                         onChange={CreateRegion.handleChange}
                         value={locationAddress?.address}
@@ -632,7 +633,6 @@ const RegionFiles = () => {
                         id="addresss"
                         className="peer mt-3 block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         placeholder=" Choose On Map"
-                        required
                         onKeyDown={(e) => {
                           if (e.key === "Tab") {
                             e.preventDefault();
@@ -700,6 +700,7 @@ const RegionFiles = () => {
                       <div className="flex w-full ">
                         <div className="relative mt-2 w-full">
                           <InputMask
+                            required
                             tabIndex={2}
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
