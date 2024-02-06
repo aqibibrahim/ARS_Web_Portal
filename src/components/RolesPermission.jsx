@@ -631,7 +631,7 @@ export default function RolesPermission() {
                                   </button>
                                   <button
                                     onClick={() =>
-                                      handlePermissionClick(data?.id)
+                                      handlePermissionClick(data?.value)
                                     }
                                     className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                                   >
