@@ -538,7 +538,7 @@ const Maps = (props) => {
                   {ambulanceInfo?.selectedPlace?.driver?.phoneNumber?.map(
                     (phoneNumber) => (
                       <p className="text-sm text-gray-500  text-right font-semibold pr-4">
-                        +{phoneNumber?.number}
+                        {phoneNumber?.number}
                       </p>
                     )
                   )}
