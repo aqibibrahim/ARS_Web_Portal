@@ -312,16 +312,16 @@ export default function DriverMain() {
           <div className="p-4 text-right  bg-gray-100 ">
             <h1 className="text-xl font-semibold">Drivers</h1>
           </div>
-          <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100  ">
+          <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100 justify-end  ">
             <div className="flex flex-row space-x-2 "></div>
-            <div className="flex flex-1 ml-4 items-center bg-gray-300 rounded-lg px-3 ">
+            {/* <div className="flex flex-1 ml-4 items-center bg-gray-300 rounded-lg px-3 ">
               <BsSearch width={9} height={9} />
               <input
                 className="bg-transparent border-0 focus:border-none w-full text-right placeholder:text-sm"
                 type="text"
                 placeholder="Search Driver..."
               />
-            </div>
+            </div> */}
 
             <button
               className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
@@ -510,9 +510,8 @@ export default function DriverMain() {
                 name="newPin"
                 type="number"
                 placeholder="Enter New PIN"
-                className={`peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right ${
-                  validationErrors.newPin ? "border-red-500" : ""
-                }`}
+                className={`peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right ${validationErrors.newPin ? "border-red-500" : ""
+                  }`}
                 required
               />
               {validationErrors.newPin && (

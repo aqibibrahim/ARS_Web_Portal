@@ -482,11 +482,10 @@ export default function RolesPermission() {
   const Tab = ({ selected, title, onClick }) => {
     return (
       <button
-        className={`px-4 py-2 transition-colors duration-150 ${
-          selected
-            ? "bg-blue-500 text-white"
-            : "bg-white text-black hover:bg-gray-200 "
-        } focus:outline-none`}
+        className={`px-4 py-2 transition-colors duration-150 ${selected
+          ? "bg-blue-500 text-white"
+          : "bg-white text-black hover:bg-gray-200 "
+          } focus:outline-none`}
         onClick={onClick}
       >
         {title}
@@ -540,25 +539,24 @@ export default function RolesPermission() {
                 Roles & Permissions
               </h1>
               <div className="flex justify-end mb-2">
-                <Tab
-                  selected={activeTab === "User"}
-                  title="Users"
-                  onClick={() => handleTabChange("User")}
-                  className={`${
-                    activeTab === "User"
-                      ? "bg-blue-500 text-white"
-                      : "bg-white text-blue-500"
-                  }`}
-                />{" "}
+
                 <Tab
                   selected={activeTab === "Role"}
                   title="Roles"
                   onClick={() => handleTabChange("Role")}
-                  className={`${
-                    activeTab === "Role"
-                      ? "bg-blue-500 text-white"
-                      : "bg-white text-blue-500"
-                  }`}
+                  className={`${activeTab === "Role"
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-blue-500"
+                    }`}
+                />{" "}
+                <Tab
+                  selected={activeTab === "User"}
+                  title="Users"
+                  onClick={() => handleTabChange("User")}
+                  className={`${activeTab === "User"
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-blue-500"
+                    }`}
                 />{" "}
               </div>
             </div>
@@ -1038,9 +1036,8 @@ export default function RolesPermission() {
 
                               <div className="flex w-full ">
                                 <div
-                                  className={`relative mt-2 ${
-                                    newPhoneNumber ? "w-11/12" : "w-full"
-                                  }`}
+                                  className={`relative mt-2 ${newPhoneNumber ? "w-11/12" : "w-full"
+                                    }`}
                                 >
                                   <InputMask
                                     tabIndex={6}

@@ -126,13 +126,12 @@ export default function IncidentVIewModal(props) {
                     </div>
                     <p>
                       <span
-                        className={`font-semibold p-2 rounded-full ${
-                          ambulance?.status === "Dispatched"
+                        className={`font-semibold p-2 rounded-full ${ambulance?.status === "Dispatched"
                             ? "bg-blue-400 text-white"
                             : ambulance?.status === "Enroute"
-                            ? "bg-orange-400 text-white"
-                            : ""
-                        }`}
+                              ? "bg-orange-400 text-white"
+                              : ""
+                          }`}
                       >
                         {ambulance?.status}
                       </span>{" "}

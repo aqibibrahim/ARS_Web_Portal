@@ -118,7 +118,7 @@ const RegionFiles = () => {
     setLongitude(null);
     setLatitude(null);
     if (region?.ambulances.length == 0) {
-      setOptions([]);
+      setOptions(null);
     } else {
       setOptions(
         region?.ambulances?.map((variant) => ({
@@ -432,16 +432,16 @@ const RegionFiles = () => {
         <div className="p-4 text-right  bg-gray-100 ">
           <h1 className="text-xl font-semibold">Regions</h1>
         </div>
-        <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100  ">
+        <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100 justify-end ">
           <div className="flex flex-row space-x-2"></div>
-          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
+          {/* <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
             <BsSearch width={9} height={9} />
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
               placeholder="Search Ambulances..."
             />
-          </div>
+          </div> */}
 
           <button
             className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
@@ -649,7 +649,7 @@ const RegionFiles = () => {
 
                       <AntSelect
                         mode="multiple"
-                        value={options}
+                        value={options || []} // Ensure value is an empty array if options are null
                         placeholder="Select Ambulance"
                         onChange={(value) => handleChange(value)}
                         options={myData}
