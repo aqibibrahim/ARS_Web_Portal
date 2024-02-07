@@ -385,8 +385,8 @@ const AmbulanceFiles = () => {
   }, [isModalOpen]);
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 33.7519137,
-    lng: 72.7970134,
+    lat: 26.9894429391302,
+    lng: 17.761961078429668,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -469,7 +469,7 @@ const AmbulanceFiles = () => {
     const input = document.getElementById("address");
     const options = {
       // bounds: defaultBounds, // Uncomment this line if you have specific bounds
-      componentRestrictions: { country: null },
+      componentRestrictions: { country: "lby" },
       fields: [
         "address_components",
         "geometry",
@@ -1433,7 +1433,7 @@ const AmbulanceFiles = () => {
                     </div>
                     <Map
                       google={google}
-                      zoom={10}
+                      zoom={5}
                       onClick={handleMapClick}
                       disableDefaultUI
                       zoomControlOptions={{
