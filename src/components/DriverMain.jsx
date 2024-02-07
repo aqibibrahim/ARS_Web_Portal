@@ -14,7 +14,7 @@ import {
 import { BsArrowRightCircle, BsSearch, BsShieldCheck } from "react-icons/bs";
 import { Pagination } from "antd";
 import { Spin } from "antd";
-
+import noData from "../assets/noData.png";
 export default function DriverMain() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModal, setisViewModal] = useState(false);
@@ -341,104 +341,113 @@ export default function DriverMain() {
               </p>
             </div>
           ) : (
-            <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
-              <thead>
-                <tr>
-                  <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
-                    <span className="sr-only">Edit</span>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                  >
-                    Phone Numbers
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                  >
-                    Email
-                  </th>
-                  {/* <th
+            <>
+              {allDrivers?.data?.length > 0 ? (
+                <>
+                  <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
+                    <thead>
+                      <tr>
+                        <th
+                          scope="col"
+                          className="relative py-3 pl-3 pr-4 sm:pr-0"
+                        >
+                          <span className="sr-only">Edit</span>
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                        >
+                          Phone Numbers
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                        >
+                          Email
+                        </th>
+                        {/* <th
                   scope="col"
                   className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                 >
                   PIN
                 </th> */}
-                  {/* <th
+                        {/* <th
                   scope="col"
                   className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                 >
                   Driver Last Name
                 </th> */}
-                  <th
-                    scope="col"
-                    className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                  >
-                    Driver Name
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {allDrivers?.data?.map((data, index) => (
-                  <tr key={index} className="hover:bg-white">
-                    <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <span className="flex gap-5">
-                        <button
-                          className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                          onClick={() => {
-                            setDeleteID(data?.id);
-                            setDeleteModal(true);
-                          }}
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                         >
-                          <BiMessageAltX />
-                        </button>
-                        <button
-                          onClick={() => handleEditClick(data)}
-                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                        >
-                          <BiEdit />
-                        </button>{" "}
-                        <button
-                          onClick={() => handleUpdatePin(data)}
-                          className="text-green-400 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                        >
-                          <BsShieldCheck />
-                        </button>
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-xs">
-                      {data?.phone_numbers?.map((phone) => (
-                        <div key={phone.id}>{phone.number}</div>
+                          Driver Name
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {allDrivers?.data?.map((data, index) => (
+                        <tr key={index} className="hover:bg-white">
+                          <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                            <span className="flex gap-5">
+                              <button
+                                className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                                onClick={() => {
+                                  setDeleteID(data?.id);
+                                  setDeleteModal(true);
+                                }}
+                              >
+                                <BiMessageAltX />
+                              </button>
+                              <button
+                                onClick={() => handleEditClick(data)}
+                                className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                              >
+                                <BiEdit />
+                              </button>{" "}
+                              <button
+                                onClick={() => handleUpdatePin(data)}
+                                className="text-green-400 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                              >
+                                <BsShieldCheck />
+                              </button>
+                            </span>
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-xs">
+                            {data?.phone_numbers?.map((phone) => (
+                              <div key={phone.id}>{phone.number}</div>
+                            ))}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-xs">
+                            {data?.email}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-xs">
+                            {data?.first_name}
+                          </td>
+                        </tr>
                       ))}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-xs">
-                      {data?.email}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-xs">
-                      {data?.first_name}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-          {isLoading ? (
-            ""
-          ) : (
-            <div className="flex justify-end mt-5 ">
-              <Pagination
-                className="flex text-sm text-semi-bold mb-2"
-                current={currentPage}
-                total={allDrivers?.total || 0}
-                pageSize={itemsPerPage}
-                onChange={(page) => setCurrentPage(page)}
-                showSizeChanger={false}
-                showTotal={(total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`
-                }
-              />
-            </div>
+                    </tbody>
+                  </table>
+                  <div className="flex justify-end mt-5 ">
+                    <Pagination
+                      className="flex text-sm text-semi-bold mb-2"
+                      current={currentPage}
+                      total={allDrivers?.total || 0}
+                      pageSize={itemsPerPage}
+                      onChange={(page) => setCurrentPage(page)}
+                      showSizeChanger={false}
+                      showTotal={(total, range) =>
+                        `${range[0]}-${range[1]} of ${total} items`
+                      }
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="flex justify-center">
+                  <img src={noData} />
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -510,8 +519,9 @@ export default function DriverMain() {
                 name="newPin"
                 type="number"
                 placeholder="Enter New PIN"
-                className={`peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right ${validationErrors.newPin ? "border-red-500" : ""
-                  }`}
+                className={`peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right ${
+                  validationErrors.newPin ? "border-red-500" : ""
+                }`}
                 required
               />
               {validationErrors.newPin && (

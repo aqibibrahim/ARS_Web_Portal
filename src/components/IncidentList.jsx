@@ -22,14 +22,16 @@ import { Spin } from "antd";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import IncidentVIewModal from "./IncidentVIewModal";
 import { useAmbulanceContext } from "./AmbulanceContext";
+import noData from "../assets/noData.png";
 
 const Tab = ({ selected, title, onClick }) => {
   return (
     <button
-      className={`px-4 py-2 transition-colors duration-150 ${selected
-        ? "bg-blue-500 text-white"
-        : "bg-white text-black hover:bg-gray-200 "
-        } focus:outline-none`}
+      className={`px-4 py-2 transition-colors duration-150 ${
+        selected
+          ? "bg-blue-500 text-white"
+          : "bg-white text-black hover:bg-gray-200 "
+      } focus:outline-none`}
       onClick={onClick}
     >
       {title}
@@ -39,7 +41,7 @@ const Tab = ({ selected, title, onClick }) => {
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-export default function IncidentList({ }) {
+export default function IncidentList({}) {
   const { setSelectedIncidentId, selectedIncidentId } = useAmbulanceContext();
 
   var token = localStorage.getItem("token");
@@ -183,7 +185,6 @@ export default function IncidentList({ }) {
         })
         .then((response) => {
           setActiveIncidents(response.data?.data);
-
           setTotalActiveIncidents(response.data?.data?.total || 0);
           console.log(response?.data?.data);
         });
@@ -222,7 +223,7 @@ export default function IncidentList({ }) {
     fetchCompleteincidentData();
     fetchincidentData(
       currentPage,
-      activeTab === "active" ? "active" : "Complete"
+      activeTab === "active" ? "active" : "active"
     );
   }, [deleteModal, currentPage, activeTab, deleteFormOpen]);
   useEffect(() => {
@@ -507,8 +508,9 @@ export default function IncidentList({ }) {
     criteriaMatched,
   }) => (
     <div
-      className={`flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border ${criteriaMatched ? "border-green-500 border-2" : "border-gray-400"
-        } p-1 rounded-md mb-2 text-gray-800`}
+      className={`flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border ${
+        criteriaMatched ? "border-green-500 border-2" : "border-gray-400"
+      } p-1 rounded-md mb-2 text-gray-800`}
     >
       <p className="text-right">{label}</p>
       <p className="text-right">Persons Supported: {persons_supported}</p>
@@ -559,86 +561,92 @@ export default function IncidentList({ }) {
                   selected={activeTab === "completed"}
                   title="Completed Incidents"
                   onClick={() => setActiveTab("completed")}
-                  className={`${activeTab === "completed"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-blue-500"
-                    }`}
+                  className={`${
+                    activeTab === "completed"
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-blue-500"
+                  }`}
                 />
                 <Tab
                   selected={activeTab === "active"}
                   title="Active Incidents"
-                  onClick={() => setActiveTab("active")}
-                  className={`${activeTab === "active"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-blue-500"
-                    }`}
+                  onClick={() => {
+                    setActiveTab("active");
+                  }}
+                  className={`${
+                    activeTab === "active"
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-blue-500"
+                  }`}
                 />
               </div>
             </div>
           </div>
-          <div className="rtl">
+          <div>
             {isLoading ? (
               <p className="text-center justify-center flex m-auto p-56">
                 <Spin size="large" />
               </p>
             ) : activeTab === "active" ? (
               <>
-                <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
-                  <thead>
-                    <tr>
-                      {/* <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+                {activeIncidents?.data?.length > 0 ? (
+                  <>
+                    <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
+                      <thead>
+                        <tr>
+                          {/* <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
   <span className="sr-only">Edit</span>
 </th> */}
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        {/* Actions */}
-                      </th>
-                      {/* <th
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            {/* Actions */}
+                          </th>
+                          {/* <th
                         scope="col"
                         className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Status
                       </th> */}
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Contact Number
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Created By
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Emergency Type
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Incident Type
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Informer Name
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {activeIncidents?.data?.map((incident) => (
-                      <tr key={incident?.id} className="hover:bg-gray-100">
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                          <span className="flex items-center justify-center gap-5">
-                            {/* <button
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            Contact Number
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            Created By
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            Emergency Type
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            Incident Type
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            Informer Name
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {activeIncidents?.data?.map((incident) => (
+                          <tr key={incident?.id} className="hover:bg-gray-100">
+                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                              <span className="flex items-center justify-center gap-5">
+                                {/* <button
                               onClick={() => {
                                 handleDeleteClick(incident);
                               }}
@@ -646,207 +654,224 @@ export default function IncidentList({ }) {
                             >
                               <BiMessageAltX />
                             </button> */}
-                            <button
-                              onClick={() => {
-                                handleEditClick(incident);
-                                sethealthCare(false);
-                                setSelectedHealthCareOpetion({});
-                              }}
-                              className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                            >
-                              <BiEdit />
-                            </button>
-                            <button
-                              onClick={() => {
-                                getIncidentDetail(incident?.id);
-                                sethealthCare(false);
-                                setSelectedHealthCareOpetion({});
-                              }}
-                              className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                            >
-                              <BsEye />
-                            </button>
-                          </span>
-                        </td>
-                        {/* <td className="whitespace-nowrap px-3 py-4 text-xs">
+                                <button
+                                  onClick={() => {
+                                    handleEditClick(incident);
+                                    sethealthCare(false);
+                                    setSelectedHealthCareOpetion({});
+                                  }}
+                                  className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                                >
+                                  <BiEdit />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    getIncidentDetail(incident?.id);
+                                    sethealthCare(false);
+                                    setSelectedHealthCareOpetion({});
+                                  }}
+                                  className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                                >
+                                  <BsEye />
+                                </button>
+                              </span>
+                            </td>
+                            {/* <td className="whitespace-nowrap px-3 py-4 text-xs">
                           <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                             {incident.status}
                           </span>
                         </td> */}
-                        <td className="whitespace-nowrap px-3 py-4 text-xs">
-                          {incident?.informer?.phone_numbers?.map((phone) => (
-                            <div key={phone.id}>{phone.number}</div>
-                          ))}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-xs">
-
-                          {incident?.created_by?.first_name +
-                            " " +
-                            incident?.created_by?.last_name}
-                          <p>{formatDateTime(incident?.created_at)}</p>
-                        </td>
-                        <td
-                          className={`whitespace-nowrap px-3 py-4 text-xs ${incident?.emergency_type?.name === "Critical"
-                            ? "text-red-500"
-                            : incident?.emergency_type?.name === "Moderate"
-                              ? "text-yellow-500"
-                              : "text-green-500"
-                            }`}
-                        >
-                          {incident?.emergency_type?.name}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-xs">
-                          {incident?.incident_type?.name}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-xs">
-                          {incident?.informer?.name}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div className="flex justify-end mt-5 ">
-                  <Pagination
-                    current={currentPage}
-                    className="flex text-sm text-semi-bold mb-2"
-                    total={totalActiveIncidents}
-                    pageSize={itemsPerPage}
-                    onChange={(page) => setCurrentPage(page)}
-                    showSizeChanger={false}
-                    showTotal={(total, range) =>
-                      `${range[0]}-${range[1]} of ${total} incidents`
-                    }
-                  />
-                </div>
+                            <td className="whitespace-nowrap px-3 py-4 text-xs">
+                              {incident?.informer?.phone_numbers?.map(
+                                (phone) => (
+                                  <div key={phone.id}>{phone.number}</div>
+                                )
+                              )}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-4 text-xs">
+                              {incident?.created_by?.first_name +
+                                " " +
+                                incident?.created_by?.last_name}
+                              <p>{formatDateTime(incident?.created_at)}</p>
+                            </td>
+                            <td
+                              className={`whitespace-nowrap px-3 py-4 text-xs ${
+                                incident?.emergency_type?.name === "Critical"
+                                  ? "text-red-500"
+                                  : incident?.emergency_type?.name ===
+                                    "Moderate"
+                                  ? "text-yellow-500"
+                                  : "text-green-500"
+                              }`}
+                            >
+                              {incident?.emergency_type?.name}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-4 text-xs">
+                              {incident?.incident_type?.name}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-4 text-xs">
+                              {incident?.informer?.name}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <div className="flex justify-end mt-5 ">
+                      <Pagination
+                        current={currentPage}
+                        className="flex text-sm text-semi-bold mb-2"
+                        total={totalActiveIncidents}
+                        pageSize={itemsPerPage}
+                        onChange={(page) => setCurrentPage(page)}
+                        showSizeChanger={false}
+                        showTotal={(total, range) =>
+                          `${range[0]}-${range[1]} of ${total} incidents`
+                        }
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex justify-center">
+                    <img src={noData} />
+                  </div>
+                )}
               </>
             ) : (
               <>
-                <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
-                  <thead>
-                    <tr>
-                      {/* <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+                {completedIncidents?.length > 0 ? (
+                  <>
+                    <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
+                      <thead>
+                        <tr>
+                          {/* <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
   <span className="sr-only">Edit</span>
 </th> */}
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        {/* Actions */}
-                      </th>
-                      {/* <th
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            {/* Actions */}
+                          </th>
+                          {/* <th
                         scope="col"
                         className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                       >
                         Status
                       </th> */}
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Contact Number
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Updated By
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Emergency Type
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Incident Type
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                      >
-                        Informer Name
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {completedIncidents?.map((incident) => (
-                      <tr key={incident?.id} className="hover:bg-gray-100">
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                          <span className="flex items-center justify-center gap-5">
-                            <button
-                              onClick={() => {
-                                // getIncidentDetail(incident?.id);
-                                setCompletedIncidentsView(true);
-                                sethealthCare(false);
-                                setSelectedHealthCareOpetion({});
-                                setCompletedIncidentDetails(incident);
-                              }}
-                              className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                            >
-                              <BsEye />
-                            </button>
-                          </span>
-                        </td>
-                        {/* <td className="whitespace-nowrap px-3 py-4 text-xs">
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            Contact Number
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            Updated By
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            Emergency Type
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            Incident Type
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                          >
+                            Informer Name
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {completedIncidents?.map((incident) => (
+                          <tr key={incident?.id} className="hover:bg-gray-100">
+                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                              <span className="flex items-center justify-center gap-5">
+                                <button
+                                  onClick={() => {
+                                    // getIncidentDetail(incident?.id);
+                                    setCompletedIncidentsView(true);
+                                    sethealthCare(false);
+                                    setSelectedHealthCareOpetion({});
+                                    setCompletedIncidentDetails(incident);
+                                  }}
+                                  className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                                >
+                                  <BsEye />
+                                </button>
+                              </span>
+                            </td>
+                            {/* <td className="whitespace-nowrap px-3 py-4 text-xs">
                           <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                             {incident.incident.status}
                           </span>
                         </td> */}
-                        <td className="whitespace-nowrap px-3 py-4 text-xs">
-                          {incident?.incident?.informer?.phone_numbers?.map(
-                            (phone) => (
-                              <div key={phone.id}>{phone.number}</div>
-                            )
-                          )}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-xs">
+                            <td className="whitespace-nowrap px-3 py-4 text-xs">
+                              {incident?.incident?.informer?.phone_numbers?.map(
+                                (phone) => (
+                                  <div key={phone.id}>{phone.number}</div>
+                                )
+                              )}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-4 text-xs">
+                              {incident?.incident?.created_by?.first_name +
+                                " " +
+                                incident?.incident?.created_by?.last_name}
+                              <p>
+                                {formatDateTime(incident?.incident?.updated_at)}
+                              </p>
+                            </td>
 
-                          {incident?.incident?.created_by?.first_name +
-                            " " +
-                            incident?.incident?.created_by?.last_name}
-                          <p>
-                            {formatDateTime(incident?.incident?.updated_at)}
-                          </p>
-                        </td>
-
-                        <td
-                          className={`whitespace-nowrap px-3 py-4 text-xs ${incident?.incident?.emergency_type?.name ===
-                            "Critical"
-                            ? "text-red-500"
-                            : incident?.incident?.emergency_type?.name ===
-                              "Moderate"
-                              ? "text-yellow-500"
-                              : "text-green-500"
-                            }`}
-                        >
-                          {incident?.incident?.emergency_type?.name}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-xs">
-                          {incident?.incident?.incident_type?.name}
-                        </td>
-                        <td className=" px-3 py-4 text-xs">
-                          {incident?.incident?.informer?.name}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div className="flex justify-end mt-5 ">
-                  <Pagination
-                    current={currentCompletedPage}
-                    className="flex text-sm text-semi-bold mb-2"
-                    total={totalCompletedIncidents}
-                    pageSize={itemsPerPage}
-                    onChange={(page) => setCurrentCompletedPage(page)}
-                    showSizeChanger={false}
-                    showTotal={(total, range) =>
-                      `${range[0]}-${range[1]} of ${total} incidents`
-                    }
-                  />
-                </div>
+                            <td
+                              className={`whitespace-nowrap px-3 py-4 text-xs ${
+                                incident?.incident?.emergency_type?.name ===
+                                "Critical"
+                                  ? "text-red-500"
+                                  : incident?.incident?.emergency_type?.name ===
+                                    "Moderate"
+                                  ? "text-yellow-500"
+                                  : "text-green-500"
+                              }`}
+                            >
+                              {incident?.incident?.emergency_type?.name}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-4 text-xs">
+                              {incident?.incident?.incident_type?.name}
+                            </td>
+                            <td className=" px-3 py-4 text-xs">
+                              {incident?.incident?.informer?.name}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <div className="flex justify-end mt-5 ">
+                      <Pagination
+                        current={currentCompletedPage}
+                        className="flex text-sm text-semi-bold mb-2"
+                        total={totalCompletedIncidents}
+                        pageSize={itemsPerPage}
+                        onChange={(page) => setCurrentCompletedPage(page)}
+                        showSizeChanger={false}
+                        showTotal={(total, range) =>
+                          `${range[0]}-${range[1]} of ${total} incidents`
+                        }
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex justify-center">
+                    <img src={noData} />
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -855,6 +880,7 @@ export default function IncidentList({ }) {
           viewOpen={viewOpen}
           setViewOpen={setViewOpen}
           showData={showData}
+          setShowData={setShowData}
         />
         <Modal
           title="Are you sure to delete this Incident?"
@@ -930,7 +956,6 @@ export default function IncidentList({ }) {
                           {index + 1}
                         </p>
                         <p>
-
                           <span className="font-semibold">Make: </span>
                           {ambulance.model?.make?.name}
                         </p>
@@ -995,69 +1020,82 @@ export default function IncidentList({ }) {
                   className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                   onClick={() => setCompletedIncidentsView(false)}
                 />
-                <div className="flex  justify-center w-full"> <h3 className="text-2xl font-semibold text-center flex  ">
-                  Incident Details
-                  {/* <span className="text-red-600 ml-2">
+                <div className="flex  justify-center w-full">
+                  <h3 className="text-2xl font-semibold text-center flex  ">
+                    Incident Details
+                    {/* <span className="text-red-600 ml-2">
                     {completedIncidentDetails?.incident?.status}
                   </span> */}
-                </h3>
+                  </h3>
                 </div>
               </div>
               <div className="flex w-full">
-
                 <div className="p-5 text-right w-1/2">
-                  <p className="text-xl text-center font-bold">Incident Details</p>
-                  <p>
+                  <p className="text-xl text-center font-bold">
+                    Incident Details
+                  </p>
+                  {/* <p>
                     <span className="text-green-500">
                       {completedIncidentDetails?.incident?.status}
                     </span>                    <span className="font-semibold">:Incident Status </span>
 
-                  </p>
+                  </p> */}
                   <p>
-
-                    <span
-                      className={` ${completedIncidentDetails?.incident?.emergency_type
-                        ?.name === "Critical"
-                        ? "text-red-500"
-                        : completedIncidentDetails?.incident?.emergency_type
-                          ?.name === "Moderate"
-                          ? "text-yellow-500"
-                          : "text-green-500"
-                        }`}
-
-                    >
-                      {completedIncidentDetails?.incident?.emergency_type?.name}
-                    </span>                    <span className="font-semibold"> : Emergency Type</span>
-
-                  </p>
-                  <p>
-
                     <span>
                       {completedIncidentDetails?.incident?.incident_type?.name}
-                    </span>                    <span className="font-semibold"> :Incident Type </span>
-
+                    </span>{" "}
+                    <span className="font-semibold"> :Incident Type </span>
                   </p>
                   <p>
-
-                    <span>{completedIncidentDetails?.incident?.description}</span>
-                    <span className="font-semibold"> :Description </span>
-
+                    <span
+                      className={` ${
+                        completedIncidentDetails?.incident?.emergency_type
+                          ?.name === "Critical"
+                          ? "text-red-500"
+                          : completedIncidentDetails?.incident?.emergency_type
+                              ?.name === "Moderate"
+                          ? "text-yellow-500"
+                          : "text-green-500"
+                      }`}
+                    >
+                      {completedIncidentDetails?.incident?.emergency_type?.name}
+                    </span>{" "}
+                    <span className="font-semibold"> : Emergency Type</span>
                   </p>
+                  <p>
+                    <span>
+                      {completedIncidentDetails?.incident?.gender?.name}
+                    </span>{" "}
+                    <span className="font-semibold"> :Gender </span>
+                  </p>
+                  <p>
+                    <span>
+                      {completedIncidentDetails?.incident?.number_of_persons}
+                    </span>{" "}
+                    <span className="font-semibold"> :No of Person </span>
+                  </p>
+
+                  <p className="text-wrap flex items-center justify-end">
+                <span>{showData?.description}</span>
+                <span className="font-bold flex "> :Description </span>
+              </p>
                 </div>
                 <div className=" border-4 border-blue-300 border-double	" />
 
                 <div className="p-5 text-right w-1/2">
-                  <p className="text-xl text-center font-bold">Informer Details</p>
-                  <p>
-                    {completedIncidentDetails?.incident?.informer?.name}                    <span className="font-semibold ml-1">:Name </span>
-
+                  <p className="text-xl text-center font-bold">
+                    Informer Details
                   </p>
                   <p>
-
+                    {completedIncidentDetails?.incident?.informer?.name}{" "}
+                    <span className="font-semibold ml-1">:Name </span>
+                  </p>
+                  <p>
                     {
                       completedIncidentDetails?.incident.informer
                         ?.phone_numbers[0]?.number
-                    }   <span className="font-semibold ml-1">:Phone Number</span>
+                    }{" "}
+                    <span className="font-semibold ml-1">:Phone Number</span>
                   </p>
                 </div>
               </div>
@@ -1074,20 +1112,17 @@ export default function IncidentList({ }) {
                           {index + 1}
                         </p> */}
                   <p>
-                    {completedIncidentDetails.ambulance?.plate_no}                        <span className="font-semibold"> :Plate No</span>
-
-                  </p>   <p>
-                    {completedIncidentDetails.ambulance?.model?.name}                        <span className="font-semibold">:Model</span>
-
-                  </p> <p>
-
-                    {
-                      completedIncidentDetails.ambulance?.model?.make
-                        ?.name
-                    }                        <span className="font-semibold ml-2">:Make </span>
-
+                    {completedIncidentDetails.ambulance?.plate_no}{" "}
+                    <span className="font-semibold"> :Plate No</span>
+                  </p>{" "}
+                  <p>
+                    {completedIncidentDetails.ambulance?.model?.name}{" "}
+                    <span className="font-semibold">:Model</span>
+                  </p>{" "}
+                  <p>
+                    {completedIncidentDetails.ambulance?.model?.make?.name}{" "}
+                    <span className="font-semibold ml-2">:Make </span>
                   </p>
-
                 </div>
               </div>
               <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
@@ -1103,22 +1138,26 @@ export default function IncidentList({ }) {
                   {/* <p className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center">
                           {index + 1}
                         </p> */}
-
                   <p>
-                    x                    {completedIncidentDetails.driver?.email}                    <span className="font-semibold">:Email</span>
+                    x {completedIncidentDetails.driver?.email}{" "}
+                    <span className="font-semibold">:Email</span>
+                  </p>
 
+                  <p className="text-wrap flex items-center">
+                    <span className="ml-auto ">
+                      {" "}
+                      {/* Aligns phone numbers to the right */}
+                      {completedIncidentDetails.driver?.phone_numbers.map(
+                        (phone, index) => (
+                          <p key={index}>{phone.number}</p>
+                        )
+                      )}
+                    </span>
+                    <span className="font-semibold ml-auto"> :Phone No</span>
                   </p>
                   <p>
-                    {completedIncidentDetails.driver?.phone_numbers?.map(
-                      (phone) => {
-                        <p>{phone?.number}</p>;
-                      }
-                    )}                    <span className="font-semibold">:Phone Number</span>
-
-                  </p>  <p>
-
-                    {completedIncidentDetails.driver?.first_name}                    <span className="font-semibold">:Name </span>
-
+                    {completedIncidentDetails.driver?.first_name}{" "}
+                    <span className="font-semibold">:Name </span>
                   </p>
                 </div>
               </div>
@@ -1137,121 +1176,143 @@ export default function IncidentList({ }) {
                   {/* <p className="bg-blue-200 p-2 rounded-full w-7 h-7 flex items-center justify-center">
                         {index + 1}
                       </p> */}
-                  <p>
 
-
-                    <span className="text-base flex-wrap">
-
-                      {completedIncidentDetails?.facility?.name
-                        ? completedIncidentDetails?.facility?.focalperson?.name
-                        : "Not Assigned"}
-                    </span>  <span className="font-semibold text-base">
-                      :Focal Person
+                  <p className="text-wrap flex items-center">
+                    <span className="ml-auto ">
+                      {" "}
+                      {/* Aligns phone numbers to the right */}
+                      {completedIncidentDetails.facility?.phone_numbers.map(
+                        (phone, index) => (
+                          <p key={index}>{phone.number}</p>
+                        )
+                      )}
                     </span>
+                    <span className="font-semibold ml-auto"> :Phone No</span>
                   </p>
                   <p>
-
-                    <span className="text-base flex-wrap">
-                      {/* {completedIncidentDetails?.facility?.address
-                        ? completedIncidentDetails?.facility?.address
-                        : "Not Available"} */}
-                    </span> <span className="font-semibold">:Phone Number </span>
-                  </p>
-                  <p>
-
                     <span className="text-base flex-wrap">
                       {completedIncidentDetails?.facility?.address
                         ? completedIncidentDetails?.facility?.address
                         : "Not Available"}
-                    </span> <span className="font-semibold">:Address </span>
+                    </span>{" "}
+                    <span className="font-semibold">:Address </span>
                   </p>
 
                   <p>
-
-
                     <span className="text-base flex-wrap">
-
                       {completedIncidentDetails?.facility?.name
                         ? completedIncidentDetails?.facility?.name
                         : "Not Assigned"}
-                    </span>    <span className="font-semibold text-base">
-                      : Name
-                    </span>
+                    </span>{" "}
+                    <span className="font-semibold text-base">: Name</span>
                   </p>
                 </div>
+                <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
+
+                <div className="flex justify-center w-full m-auto text-xl font-semibold bg-gray-100">Focal Person Details</div>
+
+                <div className="flex flex-row justify-between p-5 bg-gray-100">
+  {completedIncidentDetails?.facility?.focal_persons?.map((focal) => (
+    <div key={focal.id} className="flex justify-between w-full items-center">
+      <p>
+        <span className="text-base flex-wrap">{focal.email}</span>{" "}
+        <span className="font-semibold">:Email </span>
+      </p>
+      <p>
+        <span className="text-base flex-wrap">
+          {focal.phone_numbers?.map((phone) => (
+            <span key={phone.id}>{phone.number}</span>
+          ))}
+        </span>{" "}
+        <span className="font-semibold">:Phone No. </span>
+      </p>
+      <p>
+        <span className="text-base flex-wrap">{focal.first_name}</span>{" "}
+        <span className="font-semibold">:Name </span>
+      </p>
+    </div>
+  ))}
+</div>
+
               </div>
               <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
 
               <div className="p-5  ">
                 <p className="text-xl text-center font-bold">Created Details</p>
-                <div
-                  className="flex flex-row justify-between p-5 bg-gray-100  mt-4"
-                >
+                <div className="flex flex-row justify-between p-5 bg-gray-100  mt-4">
                   <p>
-
                     <span>
                       {formatDateTime(
                         completedIncidentDetails?.incident?.updated_at
                       )}
-                    </span>                    <span className="font-semibold"> :Completed At </span>
-
+                    </span>{" "}
+                    <span className="font-semibold"> :Completed At </span>
                   </p>
                   <p>
-
                     <span>
                       {formatDateTime(
                         completedIncidentDetails?.incident?.created_at
                       )}
-                    </span>                    <span className="font-semibold"> :Created At </span>
-
+                    </span>{" "}
+                    <span className="font-semibold"> :Created At </span>
                   </p>
                   <p>
-
-                    {completedIncidentDetails?.incident?.created_by?.email}                    <span className="font-semibold"> :Email</span>
-
+                    {completedIncidentDetails?.incident?.created_by?.email}{" "}
+                    <span className="font-semibold"> :Email</span>
                   </p>
                   <p>
                     <span className="text-green-500">
                       {completedIncidentDetails?.incident?.created_by
                         ?.first_name +
                         " " +
-                        completedIncidentDetails?.incident?.created_by?.last_name}
-                    </span>                    <span className="font-semibold">:Created By</span>
-
+                        completedIncidentDetails?.incident?.created_by
+                          ?.last_name}
+                    </span>{" "}
+                    <span className="font-semibold">:Created By</span>
                   </p>
                 </div>
               </div>
               <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
 
               <div className="p-5  ">
-                <p className="text-xl text-center font-bold">Incident Location</p>
+                <p className="text-xl text-center font-bold">
+                  Incident Location
+                </p>
                 <div className="h-80 z-50 relative mt-4">
                   <Map
                     google={window.google}
                     zoom={10}
                     style={{ width: "100%", height: "100%" }}
                     center={{
-                      lat: parseFloat(completedIncidentDetails?.incident?.latitude),
-                      lng: parseFloat(completedIncidentDetails?.incident?.longitude),
+                      lat: parseFloat(
+                        completedIncidentDetails?.incident?.latitude
+                      ),
+                      lng: parseFloat(
+                        completedIncidentDetails?.incident?.longitude
+                      ),
                     }}
                     initialCenter={{
-                      lat: parseFloat(completedIncidentDetails?.incident?.latitude),
-                      lng: parseFloat(completedIncidentDetails?.incident?.longitude),
+                      lat: parseFloat(
+                        completedIncidentDetails?.incident?.latitude
+                      ),
+                      lng: parseFloat(
+                        completedIncidentDetails?.incident?.longitude
+                      ),
                     }}
                   >
                     <Marker
                       position={{
-                        lat: parseFloat(completedIncidentDetails?.incident?.latitude),
-                        lng: parseFloat(completedIncidentDetails?.incident?.longitude),
+                        lat: parseFloat(
+                          completedIncidentDetails?.incident?.latitude
+                        ),
+                        lng: parseFloat(
+                          completedIncidentDetails?.incident?.longitude
+                        ),
                       }}
                     />
                   </Map>
                 </div>
-                <div>
-                </div>
-
-
-
+                <div></div>
               </div>
             </div>
           </div>
@@ -1330,7 +1391,7 @@ export default function IncidentList({ }) {
             </div>
           </Dialog>
         </Transition.Root>
-      </div >
+      </div>
     </>
   );
 }

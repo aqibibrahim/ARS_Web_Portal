@@ -13,6 +13,7 @@ import {
   BsEyeSlash,
 } from "react-icons/bs";
 import Select from "react-tailwindcss-select";
+import noData from "../assets/noData.png";
 
 const { TabPane } = Tabs;
 export default function RolesPermission() {
@@ -38,7 +39,7 @@ export default function RolesPermission() {
   const [deleteID, setDeleteID] = useState("");
   const [editID, setEditID] = useState("");
   const [editUserID, setEditUserID] = useState("");
-  const [activeTab, setActiveTab] = useState("Role");
+  const [activeTab, setActiveTab] = useState("User");
 
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
@@ -482,10 +483,11 @@ export default function RolesPermission() {
   const Tab = ({ selected, title, onClick }) => {
     return (
       <button
-        className={`px-4 py-2 transition-colors duration-150 ${selected
-          ? "bg-blue-500 text-white"
-          : "bg-white text-black hover:bg-gray-200 "
-          } focus:outline-none`}
+        className={`px-4 py-2 transition-colors duration-150 ${
+          selected
+            ? "bg-blue-500 text-white"
+            : "bg-white text-black hover:bg-gray-200 "
+        } focus:outline-none`}
         onClick={onClick}
       >
         {title}
@@ -539,24 +541,25 @@ export default function RolesPermission() {
                 Roles & Permissions
               </h1>
               <div className="flex justify-end mb-2">
-
                 <Tab
                   selected={activeTab === "Role"}
                   title="Roles"
                   onClick={() => handleTabChange("Role")}
-                  className={`${activeTab === "Role"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-blue-500"
-                    }`}
+                  className={`${
+                    activeTab === "Role"
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-blue-500"
+                  }`}
                 />{" "}
                 <Tab
                   selected={activeTab === "User"}
                   title="Users"
                   onClick={() => handleTabChange("User")}
-                  className={`${activeTab === "User"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-blue-500"
-                    }`}
+                  className={`${
+                    activeTab === "User"
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-blue-500"
+                  }`}
                 />{" "}
               </div>
             </div>
@@ -847,7 +850,7 @@ export default function RolesPermission() {
                       <p className="text-center  text-primary-100 h-screen align-middle justify-center flex  mt-72 m-auto  ">
                         <Spin size="large" />
                       </p>
-                    ) : (
+                    ) : allUsers?.length > 0 ? (
                       <table className="min-w-full divide-y divide-gray-300 text-right  mr-1 w-full">
                         <thead>
                           <tr>
@@ -944,6 +947,10 @@ export default function RolesPermission() {
                           ))}
                         </tbody>
                       </table>
+                    ) : (
+                      <div className="flex justify-center">
+                        <img src={noData} />
+                      </div>
                     )}
                   </div>
 
@@ -1036,8 +1043,9 @@ export default function RolesPermission() {
 
                               <div className="flex w-full ">
                                 <div
-                                  className={`relative mt-2 ${newPhoneNumber ? "w-11/12" : "w-full"
-                                    }`}
+                                  className={`relative mt-2 ${
+                                    newPhoneNumber ? "w-11/12" : "w-full"
+                                  }`}
                                 >
                                   <InputMask
                                     tabIndex={6}

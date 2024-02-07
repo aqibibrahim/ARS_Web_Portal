@@ -8,9 +8,20 @@ import {
   BsPeople,
 } from "react-icons/bs";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
+const formatDateTime = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
 
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
 export default function IncidentVIewModal(props) {
-  const { showData, setViewOpen, viewOpen } = props;
+  const { showData, setViewOpen, viewOpen, setShowData } = props;
+  debugger
   console.log(showData, "view");
   const getEmergencyTypeColor = (emergencyType) => {
     switch (emergencyType) {
@@ -27,13 +38,39 @@ export default function IncidentVIewModal(props) {
   const formattedDate = showData?.created_at
     ? new Date(showData.created_at).toLocaleString()
     : "";
+  const getStatusStyle = (status) => {
+    let backgroundColor, textColor;
 
+    switch (status) {
+      case "Available":
+        backgroundColor = "bg-green-400";
+        textColor = "text-white";
+        break;
+      case "Dispatched":
+        backgroundColor = "bg-blue-400";
+        textColor = "text-white";
+        break;
+      case "Inactive":
+        backgroundColor = "bg-red-400";
+        textColor = "text-white";
+        break;
+      default:
+        backgroundColor = "bg-yellow-400";
+        textColor = "text-white";
+        break;
+    }
+
+    return `inline-flex items-center rounded-full ${backgroundColor} px-2 py-1 text-lg font-medium ${textColor}`;
+  };
   return (
     <Modal
       open={viewOpen}
-      onCancel={() => setViewOpen(false)}
+      onCancel={() => {
+        setShowData;
+        setViewOpen(false);
+      }}
       footer={null}
-      width={850} // Adjust the width as needed
+      width={1250} // Adjust the width as needed
       closeIcon={null}
     >
       <div>
@@ -43,7 +80,11 @@ export default function IncidentVIewModal(props) {
             className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
             onClick={() => setViewOpen(false)}
           />
-          <h3 className="text-xl font-semibold ">Incident Details</h3>
+          <div className="flex  justify-center w-full">
+            <h3 className="text-3xl font-semibold text-center flex  ">
+              Incident Details
+            </h3>
+          </div>
           {/* <h3 className="text-xl font-semibold text-red-500 ">
             {showData?.incident_type?.name}
             <span className="text-red-600 ml-2">
@@ -51,22 +92,10 @@ export default function IncidentVIewModal(props) {
             </span>
           </h3> */}
         </div>
-        <div className="p-5 text-right -mb-5">
-          <p className="text-xl text-right font-bold">Informer Details</p>
-          <p>
-            {" "}
-            <span className="font-semibold">Name: </span>{" "}
-            {showData?.informer?.name}
-          </p>
-          <p>
-            {" "}
-            <span className="font-semibold">Phone Number: </span>{" "}
-            {showData?.informer?.phone_numbers[0]?.number}
-          </p>
-        </div>{" "}
-        <div className="p-5 text-right">
-          <p className="text-xl text-right font-bold">Incident Details</p>
-          <div className="flex gap-3">
+        <div className="flex w-full">
+          <div className="p-5 text-right w-1/2 text-lg">
+            <p className="text-2xl text-center font-bold">Incident Details</p>
+            {/* <div className="flex gap-3">
             <p className="font-bold">Created By: </p>{" "}
             <span>
               {showData?.created_by?.first_name +
@@ -75,140 +104,249 @@ export default function IncidentVIewModal(props) {
             </span>
             <p className="font-bold">Created at: </p>{" "}
             <span>{formattedDate}</span>
+          </div> */}
+            <div className="flex flex-col mx-auto   justify-around">
+              <p>
+                {showData?.incident_type?.name}
+                <span className="text-lg font-bold"> :Incident Type</span>
+              </p>{" "}
+              <p>
+                {showData?.emergency_type?.name}
+                <span className="text-lg font-bold"> :Emergency Type</span>
+              </p>{" "}
+              <p>
+                {showData?.gender?.name}
+                <span className="text-lg font-bold"> :Gender</span>
+              </p>{" "}
+              <p>
+                {showData?.number_of_persons}
+                <span className="font-bold"> :No. of Person </span>
+              </p>
+              <p className="text-wrap flex items-center justify-end">
+                <span>{showData?.description}</span>
+                <span className="font-bold flex "> :Description </span>
+              </p>
+            </div>
           </div>
-          <div className="flex mx-auto gap-10 mt-3 justify-around">
-            <p className="bg-blue-300 text-white p-2 border rounded-full">
-              {showData?.incident_type?.name}
-            </p>{" "}
-            <p
-              className={`bg-${getEmergencyTypeColor(
-                showData?.emergency_type?.name
-              )} text-white p-2 border rounded-full`}
-            >
-              {showData?.emergency_type?.name}
+          <div className=" border-4 border-blue-300 border-double	" />
+
+          <div className="p-5 text-right w-1/2 text-lg">
+            <p className="text-2xl text-center font-bold">Informer Details</p>
+            <p>
+              {showData?.informer?.name}
+              <span className="font-bold"> :Name </span>
             </p>
-            <p className="mt-0.5">
-              {showData?.gender?.name === "Male" ? (
-                <BsPerson className="text-blue-500" />
-              ) : (
-                <BsPeople className="text-pink-500" />
-              )}
-              {showData?.gender?.name}
-            </p>
-            <p className="flex flex-col">
-              <span className="font-semibold">No. of Person: </span>
-              {showData?.number_of_persons}
-            </p>
-            <p className="flex flex-col">
-              <span className="font-semibold">Description: </span>
-              {showData?.description}
+            <p>
+              {" "}
+              {showData?.informer?.phone_numbers[0]?.number}
+              <span className="font-semibold">:Phone Number </span>{" "}
             </p>
           </div>
         </div>
-        <div>
-          <div className="px-5">
-            <p className="text-lg text-right font-semibold">
-              Ambulance Details
+        <div className=" border-4 mt-2 border-blue-300 border-double	" />
+        <div className="p-5">
+          <p className="text-xl mt-1 text-center font-semibold">
+            Ambulance Details
+          </p>
+          {showData?.ambulances?.length>0 ?
+          showData?.ambulances?.map((ambulance, index) => (
+            // <div
+            //   className="flex flex-col bg-gray-100 mb-5 mt-2 p-4 rounded"
+            //   key={ambulance.id}
+            // >
+            <div
+              className="flex flex-row justify-between p-5 text-lg bg-gray-100 mt-4"
+              key={ambulance.id}
+            >
+              <p className={` ${getStatusStyle(ambulance.status)}`}>
+                {ambulance?.status}
+              </p>
+              <p>
+                {ambulance?.plate_no}
+                <span className="font-semibold"> :Plate No</span>
+              </p>
+              <p>
+                {ambulance?.model?.name}
+                <span className="font-semibold">:Model</span>
+              </p>
+              <span className="flex items-center">
+                {" "}
+                {/* Flex container */}
+                <span>
+                  {ambulance?.model?.make?.name}
+                  <span className="font-semibold ml-2">:Make</span>
+                </span>
+                <span className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center ml-4">
+                  {index + 1}
+                </span>
+              </span>
+            </div>
+          ))
+        : <div
+        className="flex flex-row text-center w-full justify-center p-5 text-lg bg-gray-100 mt-4"
+      >No Ambulance Assigned
+        </div>
+        }
+        </div>
+
+       {showData?.ambulances?.length > 0?
+       <><div className=" border-4 mt-2 border-blue-300 border-double	" />
+        <div className="p-5">
+          <p className="text-xl mt-1 text-center font-semibold">
+            Driver Details
+          </p>
+          {showData?.ambulances?.map((ambulance, index) => (
+            // <div
+            //   className="flex flex-col bg-gray-100 mb-5 mt-2 p-4 rounded"
+            //   key={ambulance.id}
+            // >
+            <div
+              className="flex flex-row flex-wrap justify-between p-5 text-lg bg-gray-100 mt-4"
+              key={ambulance?.driver?.id}
+            >
+              <p className="text-wrap flex items-center">
+                <span className="ml-auto ">
+                  {" "}
+                  {/* Aligns phone numbers to the right */}
+                  {ambulance?.driver?.phone_numbers?.map((phone, index) => (
+                    <p key={index}>{phone.number}</p>
+                  ))}
+                </span>
+                <span className="font-semibold ml-auto"> :Phone No</span>
+              </p>
+              <p className="items-center flex">
+                <span className="items-center">{ambulance?.driver?.email}</span>
+                <span className="font-semibold ml-2">:Email</span>
+              </p>
+
+              <p className="flex items-center">
+                {" "}
+                {/* Flex container */}
+                <span>
+                  {ambulance?.driver?.first_name}
+                  <span className="font-semibold ml-2">:Name</span>
+                </span>
+                <span className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center ml-4">
+                  {index + 1}
+                </span>
+              </p>
+            </div>
+          ))}
+        </div>
+        </> : ""}
+        {showData?.ambulances?.length > 0 ? (
+  <>
+    <div className="border-4 mt-2 border-blue-300 border-double" />
+    <div className="p-5">
+      <p className="text-xl mt-1 text-center font-semibold">
+        Facility Details
+      </p>
+      {showData?.ambulances?.map((ambulance, index) => (
+        <div
+          className="flex flex-row flex-wrap justify-between p-5 text-lg bg-gray-100 mt-4"
+          key={ambulance?.id}
+        >
+          {ambulance?.facility ? (
+          <>  <div className="flex justify-between w-full">
+              <div className="flex justify-evenly">
+                <div className="flex justify-evenly">
+                  <p className="text-wrap flex items-center">
+                    <span className="ml-auto">
+                      {/* Aligns phone numbers to the right */}
+                      {ambulance?.facility?.phone_numbers?.map((phone) => (
+                        <p key={phone.id}>{phone.number}</p>
+                      ))}
+                    </span>
+                    <span className="font-semibold ml-auto">: Phone No</span>
+                  </p>
+                </div>
+              </div>
+              <p className="items-center flex">
+                {ambulance?.facility?.email}
+                <span className="font-semibold">:Email</span>
+              </p>
+              <span className="flex items-center">
+                {/* Flex container */}
+                <span>
+                  {ambulance?.facility?.name}
+                  <span className="font-semibold ml-2">:Name</span>
+                </span>
+                <span className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center ml-4">
+                  {index + 1}
+                </span>
+              </span>
+            </div>
+             <div className="mt-2 mb-2 border-4 w-full border-blue-300 border-double" />
+             <div className="flex justify-center w-full m-auto text-xl font-semibold bg-gray-200">
+               Focal Person Details
+             </div>
+             <div className="flex flex-row justify-between p-5 bg-gray-200 w-full">
+               {ambulance?.facility?.focal_persons?.map((focal) => (
+                 <div key={focal.id} className="flex justify-between w-full items-center">
+                   <p>
+                     <span className="text-base flex-wrap">{focal.email}</span>{" "}
+                     <span className="font-semibold">:Email </span>
+                   </p>
+                   <p>
+                     <span className="text-base flex-wrap">
+                       {focal.phone_numbers?.map((phone) => (
+                         <span key={phone.id}>{phone.number}</span>
+                       ))}
+                     </span>{" "}
+                     <span className="font-semibold">:Phone No. </span>
+                   </p>
+                   <p>
+                     <span className="text-base flex-wrap">{focal.first_name}</span>{" "}
+                     <span className="font-semibold">:Name </span>
+                   </p>
+                 </div>
+               ))}
+             </div>
+             </>
+          ) : (
+            <div className="font-semibold w-full items-center justify-center flex">
+              Facility Not Assigned
+            </div>
+            
+          )}
+        </div>
+      ))}
+    </div>
+   
+  </>
+) : (
+"")}
+
+        <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
+
+        <div className="p-5  ">
+          <p className="text-xl text-center font-bold">Created Details</p>
+          <div className="flex flex-row justify-between p-5 text-lg bg-gray-100  mt-4">
+            <p>
+              <span>{formatDateTime(showData?.created_by?.updated_at)}</span>{" "}
+              <span className="font-semibold"> :Completed At </span>
             </p>
-
-            {showData?.ambulances?.length > 0 ? (
-              showData?.ambulances?.map((ambulance, index) => (
-                <div
-                  className="flex flex-col bg-gray-100 mb-5 mt-2 p-4 rounded"
-                  key={ambulance.id}
-                >
-                  <div className="flex justify-between items-center mb-4">
-                    <div className="flex flex-wrap gap-2">
-                      {/* Other ambulance details */}
-                      <p>{ambulance?.model?.make?.name}</p>
-                      <p>{ambulance?.model?.name}</p>
-                      <p>{ambulance?.plate_no}</p>
-                    </div>
-                    <p>
-                      <span
-                        className={`font-semibold p-2 rounded-full ${ambulance?.status === "Dispatched"
-                            ? "bg-blue-400 text-white"
-                            : ambulance?.status === "Enroute"
-                              ? "bg-orange-400 text-white"
-                              : ""
-                          }`}
-                      >
-                        {ambulance?.status}
-                      </span>{" "}
-                    </p>
-                  </div>
-
-                  <div className="px-5">
-                    <p className="text-lg text-right font-semibold">
-                      Facility Details
-                    </p>
-
-                    <div
-                      className="flex flex-row justify-between p-4 bg-gray-100 mb-5 mt-2"
-                      key={ambulance?.facility?.id}
-                    >
-                      <div className="flex justify-between gap-10  ">
-                        <p className="bg-blue-200 p-2 rounded-full w-7 h-7 flex items-center justify-center">
-                          {index + 1}
-                        </p>
-                        <p>
-                          {" "}
-                          <span className="font-semibold">Name: </span>{" "}
-                          {ambulance?.facility?.name}
-                        </p>
-                        <p>
-                          <span className="font-semibold">Status:</span>{" "}
-                          {ambulance?.facility?.status}
-                        </p>
-                        <p>
-                          <span className="font-semibold">Address: </span>{" "}
-                          {ambulance?.facility?.address}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                // </div>
-              ))
-            ) : (
-              <p className="text-right">No Data Found</p>
-            )}
+            <p>
+              <span>{formatDateTime(showData?.created_by?.created_at)}</span>{" "}
+              <span className="font-semibold"> :Created At </span>
+            </p>
+            <p>
+              {showData?.created_by?.email}{" "}
+              <span className="font-semibold"> :Email</span>
+            </p>
+            <p>
+              <span className="text-green-500">
+                {showData?.created_by?.first_name +
+                  " " +
+                  showData?.created_by?.last_name}
+              </span>{" "}
+              <span className="font-semibold">:Created By</span>
+            </p>
           </div>
+        </div>
+        <div className=" border-4 mt-2 border-blue-300 border-double	" />
 
-          {/* <div className="px-5">
-            <p className="text-lg text-right font-semibold">Facility Details</p>
-            {showData?.ambulances?.facilitiy?.length > 0 ? (
-              showData?.ambulances?.facilitiy?.map((facility, index) => (
-                <div
-                  className="flex flex-row justify-between p-4 bg-gray-100 mb-5 mt-2"
-                  key={facility?.id}
-                >
-                  <div className="flex justify-between gap-10  ">
-                    <p className="bg-blue-200 p-2 rounded-full w-7 h-7 flex items-center justify-center">
-                      {index + 1}
-                    </p>
-                    <p>
-                      {" "}
-                      <span className="font-semibold">Name: </span>{" "}
-                      {facility?.facility?.name}
-                    </p>
-                    <p>
-                      <span className="font-semibold">Status:</span>{" "}
-                      {facility?.facility?.status}
-                    </p>
-                    <p>
-                      <span className="font-semibold">Address: </span>{" "}
-                      {facility?.facility?.address}
-                    </p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-right">No Facility Assigned</p>
-            )}
-          </div> */}
-        </div>{" "}
-        <p className="text-lg text-right font-semibold mr-4 my-2">
+        <p className="text-xl text-center font-bold mr-4 my-2 mb-4">
           Incident Location
         </p>
         <div className="h-80 z-50 relative">

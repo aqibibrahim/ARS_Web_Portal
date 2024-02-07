@@ -23,7 +23,7 @@ import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import Select from "react-tailwindcss-select";
 import InputMask from "react-input-mask";
 import { Pagination, Spin } from "antd";
-
+import noData from "../../../assets/noData.png";
 const HealthCareFiles = () => {
   var token = localStorage.getItem("token");
   const phoneNumberRef = useRef(null);
@@ -605,104 +605,114 @@ const HealthCareFiles = () => {
             <p className="text-center justify-center flex m-auto p-56">
               <Spin size="large" />
             </p>
-          ) : ambulanceData?.data?.length == 0 ? (
-            <p className="text-center text-xl text-primary-100">
-              No data available
-            </p>
           ) : (
             <>
-              {" "}
-              <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
-                <thead>
-                  <tr>
-                    <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
-                      <span className="sr-only">Edit</span>
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3 pl-4 pr-3 text-xs font-medium  tracking-wide text-gray-500 sm:pl-0"
-                    >
-                      Address
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                    >
-                      Departments
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                    >
-                      Facility Email Address
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                    >
-                      Phone Number
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
-                    >
-                      Facilty Name
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ambulanceData?.data?.map((healthcare) => (
-                    <tr key={healthcare.id} className="hover:bg-gray-100">
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                        <span className="flex items-center justify-center gap-3">
-                          <button
-                            data-tooltip-id="my-tooltip-1"
-                            className="text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                            onClick={() => {
-                              setDelete(true);
-                              setDeleteID(healthcare?.id);
-                            }}
-                            data-tip
-                            data-for={`deleteTooltip${healthcare.id}`}
-                          >
-                            <BiMessageAltX />
-                          </button>
+              {ambulanceData?.data?.length > 0 ? (
+                <>
+                  <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
+                    <thead>
+                      <tr>
+                        <th
+                          scope="col"
+                          className="relative py-3 pl-3 pr-4 sm:pr-0"
+                        >
+                          <span className="sr-only">Edit</span>
+                        </th>
+                        <th
+                          scope="col"
+                          className="py-3 pl-4 pr-3 text-xs font-medium  tracking-wide text-gray-500 sm:pl-0"
+                        >
+                          Address
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                        >
+                          Departments
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                        >
+                          Facility Email Address
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                        >
+                          Phone Number
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                        >
+                          Facilty Name
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ambulanceData?.data?.map((healthcare) => (
+                        <tr key={healthcare.id} className="hover:bg-gray-100">
+                          <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                            <span className="flex items-center justify-center gap-3">
+                              <button
+                                data-tooltip-id="my-tooltip-1"
+                                className="text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                                onClick={() => {
+                                  setDelete(true);
+                                  setDeleteID(healthcare?.id);
+                                }}
+                                data-tip
+                                data-for={`deleteTooltip${healthcare.id}`}
+                              >
+                                <BiMessageAltX />
+                              </button>
 
-                          <button
-                            data-tooltip-id="my-tooltip-2"
-                            onClick={() => handleEditClick(healthcare)}
-                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                            data-tip
-                            data-for={`editTooltip${healthcare.id}`}
-                          >
-                            <BiEdit />
-                            <span className="sr-only">{healthcare?.name}</span>
-                          </button>
+                              <button
+                                data-tooltip-id="my-tooltip-2"
+                                onClick={() => handleEditClick(healthcare)}
+                                className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                                data-tip
+                                data-for={`editTooltip${healthcare.id}`}
+                              >
+                                <BiEdit />
+                                <span className="sr-only">
+                                  {healthcare?.name}
+                                </span>
+                              </button>
 
-                          <button
-                            data-tooltip-id="my-tooltip-3"
-                            onClick={() => handleViewClick(healthcare)}
-                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                            data-tip
-                            data-for={`viewTooltip${healthcare.id}`}
-                          >
-                            <BsEye />{" "}
-                            <span className="sr-only"> {healthcare?.name}</span>
-                          </button>
+                              <button
+                                data-tooltip-id="my-tooltip-3"
+                                onClick={() => handleViewClick(healthcare)}
+                                className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                                data-tip
+                                data-for={`viewTooltip${healthcare.id}`}
+                              >
+                                <BsEye />{" "}
+                                <span className="sr-only">
+                                  {" "}
+                                  {healthcare?.name}
+                                </span>
+                              </button>
 
-                          <button
-                            data-tooltip-id="my-tooltip-4"
-                            onClick={() => handleUpdateDepartment(healthcare)}
-                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                            data-tip
-                            data-for={`updateDepartmentTooltip${healthcare.id}`}
-                          >
-                            <BsPlusCircle />
-                            <span className="sr-only"> {healthcare?.name}</span>
-                          </button>
-                        </span>
-                      </td>{" "}
-                      {/* <ReactTooltip
+                              <button
+                                data-tooltip-id="my-tooltip-4"
+                                onClick={() =>
+                                  handleUpdateDepartment(healthcare)
+                                }
+                                className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                                data-tip
+                                data-for={`updateDepartmentTooltip${healthcare.id}`}
+                              >
+                                <BsPlusCircle />
+                                <span className="sr-only">
+                                  {" "}
+                                  {healthcare?.name}
+                                </span>
+                              </button>
+                            </span>
+                          </td>{" "}
+                          {/* <ReactTooltip
                         id="my-tooltip-1"
                         // place="bottom"
                         variant="info"
@@ -726,40 +736,50 @@ const HealthCareFiles = () => {
                         variant="info"
                         content="Add Department"
                       /> */}
-                      <td className="px-3 py-4 text-xs">
-                        {healthcare?.address}
-                      </td>
-                      <td className="px-3 py-4 text-xs">
-                        {healthcare?.departments.map((department) => (
-                          <span className="inline-flex mx-1 my-1 items-center rounded-lg bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                            {department.name}
-                          </span>
-                        ))}
-                      </td>
-                      <td className="px-3 py-4 text-xs">{healthcare?.email}</td>
-                      <td className="px-3 py-4 text-xs whitespace-nowrap leading-4 ">
-                        {healthcare?.phone_numbers?.map((phone) => (
-                          <div key={phone.id}>{phone.number}</div>
-                        ))}
-                      </td>
-                      <td className="px-3 py-4 text-xs">{healthcare?.name}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="flex justify-end mt-5 ">
-                <Pagination
-                  className="flex text-sm text-semi-bold mb-2"
-                  current={currentPage}
-                  total={ambulanceData?.total || 0}
-                  pageSize={itemsPerPage}
-                  onChange={(page) => setCurrentPage(page)}
-                  showSizeChanger={false}
-                  showTotal={(total, range) =>
-                    `${range[0]}-${range[1]} of ${total} items`
-                  }
-                />
-              </div>
+                          <td className="px-3 py-4 text-xs">
+                            {healthcare?.address}
+                          </td>
+                          <td className="px-3 py-4 text-xs">
+                            {healthcare?.departments.map((department) => (
+                              <span className="inline-flex mx-1 my-1 items-center rounded-lg bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                                {department.name}
+                              </span>
+                            ))}
+                          </td>
+                          <td className="px-3 py-4 text-xs">
+                            {healthcare?.email}
+                          </td>
+                          <td className="px-3 py-4 text-xs whitespace-nowrap leading-4 ">
+                            {healthcare?.phone_numbers?.map((phone) => (
+                              <div key={phone.id}>{phone.number}</div>
+                            ))}
+                          </td>
+                          <td className="px-3 py-4 text-xs">
+                            {healthcare?.name}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div className="flex justify-end mt-5 ">
+                    <Pagination
+                      className="flex text-sm text-semi-bold mb-2"
+                      current={currentPage}
+                      total={ambulanceData?.total || 0}
+                      pageSize={itemsPerPage}
+                      onChange={(page) => setCurrentPage(page)}
+                      showSizeChanger={false}
+                      showTotal={(total, range) =>
+                        `${range[0]}-${range[1]} of ${total} items`
+                      }
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="flex justify-center">
+                  <img src={noData} />
+                </div>
+              )}
             </>
           )}
         </div>

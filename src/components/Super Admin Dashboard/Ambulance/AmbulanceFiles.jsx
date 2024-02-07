@@ -25,7 +25,7 @@ import { Spin } from "antd";
 import AmbulanceViewModal from "../../AmbulanceViewModal";
 import { Modal } from "antd";
 import { Vars } from "../../../helpers/helpers";
-
+import noData from "../../../assets/noData.png";
 // const { Option } = AntSelect;
 const AmbulanceFiles = () => {
   var token = localStorage.getItem("token");
@@ -56,6 +56,7 @@ const AmbulanceFiles = () => {
   const itemsPerPage = 10;
   const [isLoading, setIsLoading] = useState(true);
   const [ambulanceData, setAmbulanceData] = useState([]);
+  debugger;
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
   const [submitDone, setSubmitDone] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -676,144 +677,154 @@ const AmbulanceFiles = () => {
             <p className="text-center justify-center flex m-auto p-56">
               <Spin size="large" />
             </p>
-          ) : ambulanceData?.length == 0 ? (
-            <p className="text-center text-xl text-primary-100">
-              No data available
-            </p>
           ) : (
             <>
-              {" "}
-              <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
-                <thead>
-                  <tr>
-                    <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
-                      <span className="sr-only">Edit</span>
-                    </th>
-                    {/* <th
+              {ambulanceData?.data?.length > 0 ? (
+                <>
+                  <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
+                    <thead>
+                      <tr>
+                        <th
+                          scope="col"
+                          className="relative py-3 pl-3 pr-4 sm:pr-0"
+                        >
+                          <span className="sr-only">Edit</span>
+                        </th>
+                        {/* <th
                         scope="col"
                         className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
                       >
                         Region
                       </th>{" "} */}
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
-                    >
-                      Model
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3 pl-4 pr-3 text-xs font-medium    tracking-wide text-gray-500 sm:pl-0"
-                    >
-                      Make
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
-                    >
-                      Plate Number
-                    </th>
-                    {/* <th
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
+                        >
+                          Model
+                        </th>
+                        <th
+                          scope="col"
+                          className="py-3 pl-4 pr-3 text-xs font-medium    tracking-wide text-gray-500 sm:pl-0"
+                        >
+                          Make
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
+                        >
+                          Plate Number
+                        </th>
+                        {/* <th
                     scope="col"
                     className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
                   >
                     Contact Number
                   </th> */}
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
-                    >
-                      Status
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500 "
-                    >
-                      ID No
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ambulanceData.data?.map((ambulance) => (
-                    <tr key={ambulance.id} className="hover:bg-gray-100">
-                      <td className="m-auto  text-sm  sm:pr-0">
-                        <span className="flex items-center justify-center gap-5">
-                          <span
-                            className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                            onClick={() => {
-                              setDelete(true);
-                              setDeleteID(ambulance?.id);
-                            }}
-                          >
-                            <BiMessageAltX />
-                          </span>
-                          <button
-                            onClick={() => handleEditClick(ambulance)}
-                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                          >
-                            <BiEdit />
-                            <span className="sr-only">, {ambulance.name}</span>
-                          </button>
-                          <button
-                            onClick={() => handleViewClick(ambulance)}
-                            className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                          >
-                            <BsEye />
-                            <span className="sr-only">, {ambulance.name}</span>
-                          </button>
-                          <button
-                            onClick={() => handleUpdatePin(ambulance)}
-                            className="text-green-400 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                          >
-                            <BsShieldCheck />
-                          </button>
-                        </span>
-                      </td>
-                      {/* <td className="whitespace-nowrap px-3 py-4 text-xs">
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
+                        >
+                          Status
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500 "
+                        >
+                          ID No
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ambulanceData.data?.map((ambulance) => (
+                        <tr key={ambulance.id} className="hover:bg-gray-100">
+                          <td className="m-auto  text-sm  sm:pr-0">
+                            <span className="flex items-center justify-center gap-5">
+                              <span
+                                className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                                onClick={() => {
+                                  setDelete(true);
+                                  setDeleteID(ambulance?.id);
+                                }}
+                              >
+                                <BiMessageAltX />
+                              </span>
+                              <button
+                                onClick={() => handleEditClick(ambulance)}
+                                className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                              >
+                                <BiEdit />
+                                <span className="sr-only">
+                                  , {ambulance.name}
+                                </span>
+                              </button>
+                              <button
+                                onClick={() => handleViewClick(ambulance)}
+                                className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                              >
+                                <BsEye />
+                                <span className="sr-only">
+                                  , {ambulance.name}
+                                </span>
+                              </button>
+                              <button
+                                onClick={() => handleUpdatePin(ambulance)}
+                                className="text-green-400 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                              >
+                                <BsShieldCheck />
+                              </button>
+                            </span>
+                          </td>
+                          {/* <td className="whitespace-nowrap px-3 py-4 text-xs">
                         {ambulance?.regions[0]?.name}
                       </td> */}
-                      <td className="whitespace-nowrap px-3 py-4 text-xs">
-                        {ambulance.model?.name}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-xs">
-                        {ambulance?.model?.make?.name}
-                      </td>
-                      {/* <td className="whitespace-nowrap px-3 py-4 text-md">
+                          <td className="whitespace-nowrap px-3 py-4 text-xs">
+                            {ambulance.model?.name}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-xs">
+                            {ambulance?.model?.make?.name}
+                          </td>
+                          {/* <td className="whitespace-nowrap px-3 py-4 text-md">
                       {ambulance?.contact_nos?.map((phone) => (
                       <div key={phone}>{phone}</div>
                     ))}
                     </td> */}
-                      <td className="whitespace-nowrap px-3 py-4 text-xs">
-                        {ambulance.plate_no}
-                      </td>
-                      <td className="px-2 py-4 text-md  flex items-baseline justify-end ">
-                        <span
-                          className={` ${getStatusStyle(ambulance.status)}`}
-                        >
-                          {ambulance.status}
-                        </span>
-                      </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-xs">
+                            {ambulance.plate_no}
+                          </td>
+                          <td className="px-2 py-4 text-md  flex items-baseline justify-end ">
+                            <span
+                              className={` ${getStatusStyle(ambulance.status)}`}
+                            >
+                              {ambulance.status}
+                            </span>
+                          </td>
 
-                      <td className="whitespace-nowrap px-3 py-4 text-xs">
-                        {ambulance.id_no}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="flex justify-end mt-5 ">
-                <Pagination
-                  className="flex text-sm text-semi-bold mb-2"
-                  current={currentPage}
-                  total={ambulanceData?.total || 0}
-                  pageSize={itemsPerPage}
-                  onChange={(page) => setCurrentPage(page)}
-                  showSizeChanger={false}
-                  showTotal={(total, range) =>
-                    `${range[0]}-${range[1]} of ${total} items`
-                  }
-                />
-              </div>
+                          <td className="whitespace-nowrap px-3 py-4 text-xs">
+                            {ambulance.id_no}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div className="flex justify-end mt-5 ">
+                    <Pagination
+                      className="flex text-sm text-semi-bold mb-2"
+                      current={currentPage}
+                      total={ambulanceData?.total || 0}
+                      pageSize={itemsPerPage}
+                      onChange={(page) => setCurrentPage(page)}
+                      showSizeChanger={false}
+                      showTotal={(total, range) =>
+                        `${range[0]}-${range[1]} of ${total} items`
+                      }
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="flex justify-center">
+                  <img src={noData} />
+                </div>
+              )}
             </>
           )}
         </div>
@@ -1143,9 +1154,9 @@ const AmbulanceFiles = () => {
                         onChange={EditAmbulance.handleChange}
                         value={[
                           "latitude " +
-                          locationAddress?.latitude +
-                          " longitude " +
-                          locationAddress?.longitude,
+                            locationAddress?.latitude +
+                            " longitude " +
+                            locationAddress?.longitude,
                         ]}
                         type="text"
                         name="addresss"

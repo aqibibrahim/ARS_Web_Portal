@@ -16,7 +16,7 @@ import InputMask from "react-input-mask";
 import { Select as AntSelect } from "antd";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { Spin } from "antd";
-
+import noData from "../../../assets/noData.png";
 const RegionFiles = () => {
   var token = localStorage.getItem("token");
   const headers = {
@@ -457,11 +457,7 @@ const RegionFiles = () => {
             <p className="text-center justify-center flex m-auto p-56">
               <Spin size="large" />
             </p>
-          ) : ambulanceData?.length == 0 ? (
-            <p className="text-center text-xl text-primary-100">
-              No data available
-            </p>
-          ) : (
+          ) : ambulanceData?.length > 0 ? (
             <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
               <thead>
                 <tr>
@@ -570,6 +566,10 @@ const RegionFiles = () => {
                 ))}
               </tbody>
             </table>
+          ) : (
+            <div className="flex justify-center">
+              <img src={noData} />
+            </div>
           )}
         </div>
       </div>
