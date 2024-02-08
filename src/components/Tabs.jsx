@@ -1,7 +1,7 @@
 import React from "react";
 
 const Tabs = ({ activeTab, onTabClick }) => {
-  const tabs = ["HealthCare", "Ambulance", "Incident"];
+  const tabs = ["HealthCare", "Ambulance", "الحادث"];
 
   return (
     <div className="flex bg-lightGray-100 justify-center items-center pt-1">

@@ -180,7 +180,7 @@ const SideBar = (props) => {
           localStorage?.role == "Admin" ? (
             <div className="mb-5  rounded-lg overflow-hidden">
               <MenuItem
-                title="Create Incident"
+                title="تسجيل حادث "
                 bgColor="primary"
                 fontColor="white"
                 onClick={handleCreateIncidentClick}
@@ -193,7 +193,7 @@ const SideBar = (props) => {
             <div className="rounded-lg overflow-hidden">
               <MenuItem
                 icon={incidentIcon}
-                title="Home"
+                title="الرئيسية"
                 onClick={handleHomeClick}
                 isActive={isActive("/")}
               >
@@ -201,7 +201,7 @@ const SideBar = (props) => {
               </MenuItem>
               <MenuItem
                 icon={incidentIcon}
-                title="Incidents"
+                title="الحوادث"
                 onClick={handleIncidentClick}
                 isActive={isActive("/incidents")}
               >
@@ -209,7 +209,8 @@ const SideBar = (props) => {
               </MenuItem>
               <MenuItem
                 icon={ambulanceIcon}
-                title="Ambulances"
+                title="سيارات الإسعاف
+                "
                 onClick={HandleAmbulanceClick}
                 isActive={isActive("/ambulances_files")}
               >
@@ -217,7 +218,8 @@ const SideBar = (props) => {
               </MenuItem>
               <MenuItem
                 icon={healthcareIcon}
-                title="HealthCares"
+                title="الرعاية الصحية
+                "
                 onClick={handleHealthCareClick}
                 isActive={isActive("/healthcares_files")}
               >
@@ -225,7 +227,8 @@ const SideBar = (props) => {
               </MenuItem>
               <MenuItem
                 icon={regionIcon}
-                title="Regions"
+                title="المناطق
+                "
                 onClick={handleRegionClick}
                 isActive={isActive("/regions_files")}
               >
@@ -234,7 +237,8 @@ const SideBar = (props) => {
 
               <MenuItem
                 // icon={rolesPermissionIcon}
-                title={`Roles & Permissions`}
+                title={`الأدوار والأذونات
+                `}
                 onClick={handleRolesPermissionClick}
                 isActive={isActive("/RolesPermission")}
               >
@@ -243,7 +247,8 @@ const SideBar = (props) => {
               </MenuItem>
               <MenuItem
                 // icon={rolesPermissionIcon}
-                title={`Driver`}
+                title={`السائق
+                `}
                 onClick={handleDriverClick}
                 isActive={isActive("/Driver")}
               >
@@ -251,7 +256,8 @@ const SideBar = (props) => {
               </MenuItem>
 
               <MenuItem
-                title={`Mapping`}
+                title={`الربط
+                `}
                 onClick={handleMapping}
                 isActive={isActive("/Mapping")}
                 lookUpOpen={lookUpOpen}
@@ -317,7 +323,8 @@ const SideBar = (props) => {
               <MenuItem
                 icon={healthcareIcon}
                 onClick={handleAdmiProfileClick}
-                title="Admin Profile"
+                title="الملف الشخصي للمسؤول
+                "
               >
                 <MdTune className="w-4 h-4" />
               </MenuItem>

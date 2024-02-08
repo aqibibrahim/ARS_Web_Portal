@@ -543,7 +543,7 @@ export default function IncidentList({}) {
         <Toaster position="bottom-right" richColors />
         <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold">Incidents</h1>
+            <h1 className="text-xl font-semibold">الحوادث</h1>
           </div>
           <div className="flex flex-row items-center p-4 space-x-4 justify-end bg-gray-100  ">
             <div className="flex flex-row space-x-2"></div>
@@ -559,7 +559,7 @@ export default function IncidentList({}) {
               <div className="flex flex-row space-x-2 justify-center">
                 <Tab
                   selected={activeTab === "completed"}
-                  title="Completed Incidents"
+                  title="الحوادث المكتملة"
                   onClick={() => setActiveTab("completed")}
                   className={`${
                     activeTab === "completed"
@@ -569,7 +569,7 @@ export default function IncidentList({}) {
                 />
                 <Tab
                   selected={activeTab === "active"}
-                  title="Active Incidents"
+                  title="الحوادث النشطة"
                   onClick={() => {
                     setActiveTab("active");
                   }}
@@ -613,31 +613,31 @@ export default function IncidentList({}) {
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            Contact Number
+                            رقم الاتصال
                           </th>
                           <th
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            Created By
+                            انشأ من قبل
                           </th>
                           <th
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            Emergency Type
+                            نوع الطوارئ
                           </th>
                           <th
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            Incident Type
+                            نوع الحادث
                           </th>
                           <th
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            Informer Name
+                            اسم المخبر
                           </th>
                         </tr>
                       </thead>
@@ -725,7 +725,7 @@ export default function IncidentList({}) {
                         onChange={(page) => setCurrentPage(page)}
                         showSizeChanger={false}
                         showTotal={(total, range) =>
-                          `${range[0]}-${range[1]} of ${total} incidents`
+                          `${range[0]}-${range[1]} of ${total} الحوادث`
                         }
                       />
                     </div>
@@ -762,31 +762,31 @@ export default function IncidentList({}) {
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            Contact Number
+                            رقم الاتصال
                           </th>
                           <th
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            Updated By
+                            تم التحديث بواسطة
                           </th>
                           <th
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            Emergency Type
+                            نوع الطوارئ
                           </th>
                           <th
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            Incident Type
+                            نوع الحادث
                           </th>
                           <th
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            Informer Name
+                            اسم المخبر
                           </th>
                         </tr>
                       </thead>
@@ -862,7 +862,7 @@ export default function IncidentList({}) {
                         onChange={(page) => setCurrentCompletedPage(page)}
                         showSizeChanger={false}
                         showTotal={(total, range) =>
-                          `${range[0]}-${range[1]} of ${total} incidents`
+                          `${range[0]}-${range[1]} of ${total} الحوادث`
                         }
                       />
                     </div>
@@ -1076,9 +1076,9 @@ export default function IncidentList({}) {
                   </p>
 
                   <p className="text-wrap flex items-center justify-end">
-                <span>{showData?.description}</span>
-                <span className="font-bold flex "> :Description </span>
-              </p>
+                    <span>{showData?.description}</span>
+                    <span className="font-bold flex "> :Description </span>
+                  </p>
                 </div>
                 <div className=" border-4 border-blue-300 border-double	" />
 
@@ -1209,31 +1209,41 @@ export default function IncidentList({}) {
                 </div>
                 <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
 
-                <div className="flex justify-center w-full m-auto text-xl font-semibold bg-gray-100">Focal Person Details</div>
+                <div className="flex justify-center w-full m-auto text-xl font-semibold bg-gray-100">
+                  Focal Person Details
+                </div>
 
                 <div className="flex flex-row justify-between p-5 bg-gray-100">
-  {completedIncidentDetails?.facility?.focal_persons?.map((focal) => (
-    <div key={focal.id} className="flex justify-between w-full items-center">
-      <p>
-        <span className="text-base flex-wrap">{focal.email}</span>{" "}
-        <span className="font-semibold">:Email </span>
-      </p>
-      <p>
-        <span className="text-base flex-wrap">
-          {focal.phone_numbers?.map((phone) => (
-            <span key={phone.id}>{phone.number}</span>
-          ))}
-        </span>{" "}
-        <span className="font-semibold">:Phone No. </span>
-      </p>
-      <p>
-        <span className="text-base flex-wrap">{focal.first_name}</span>{" "}
-        <span className="font-semibold">:Name </span>
-      </p>
-    </div>
-  ))}
-</div>
-
+                  {completedIncidentDetails?.facility?.focal_persons?.map(
+                    (focal) => (
+                      <div
+                        key={focal.id}
+                        className="flex justify-between w-full items-center"
+                      >
+                        <p>
+                          <span className="text-base flex-wrap">
+                            {focal.email}
+                          </span>{" "}
+                          <span className="font-semibold">:Email </span>
+                        </p>
+                        <p>
+                          <span className="text-base flex-wrap">
+                            {focal.phone_numbers?.map((phone) => (
+                              <span key={phone.id}>{phone.number}</span>
+                            ))}
+                          </span>{" "}
+                          <span className="font-semibold">:Phone No. </span>
+                        </p>
+                        <p>
+                          <span className="text-base flex-wrap">
+                            {focal.first_name}
+                          </span>{" "}
+                          <span className="font-semibold">:Name </span>
+                        </p>
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
               <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
 

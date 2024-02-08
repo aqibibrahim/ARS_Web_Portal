@@ -75,7 +75,7 @@ const AmbulanceForm = ({
             }, 500);
           });
       } catch (e) {
-        toast.error("Failed to assign ambulance.");
+        toast.error("خطأ في تعيين سيارة إسعاف");
         console.log(e);
       }
     },
@@ -301,7 +301,7 @@ const AmbulanceForm = ({
             className="text-white bg-blue-400 p-1 w-28 flex justify-center justify-items-end hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border rounded-xl text-right focus:outline-none"
             onClick={handleViewOnMap(value)}
           >
-            View on Map
+            عرض على الخريطة
           </p>
         </div>
       </div>{" "}
@@ -348,7 +348,7 @@ const AmbulanceForm = ({
         <div className="mb-5 mt-2 flex">
           <Select
             value={selectedOption}
-            placeholder="Select Ambulance"
+            placeholder="اختر سيارة اسعاف"
             onChange={handleChange}
             options={myData}
             formatOptionLabel={formatOptionLabel}
@@ -366,7 +366,7 @@ const AmbulanceForm = ({
               className="text-primary-100 flex  bg-white rounded-md border-2 border-primary-100 mr-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
               type="submit"
             >
-              Next
+              التالي
             </button>
           ) : (
             ""
