@@ -103,7 +103,7 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
               </p>
             </div>
           </div>
-          <div className=" border-4 mt-2 border-blue-300 border-double mb-2	" />
+          <div className=" mt-2 mb-2 border border-gray-300 	" />
           <div className="px-2 -mt-2 text-base ">
             <p className="text-lg text-center font-semibold">تفاصيل السائق</p>
             {ambulanceData?.driver ? (
@@ -144,7 +144,7 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
           </div>{" "}
           {ambulanceData?.equipments?.length > 0 ? (
             <>
-              <div className=" border-4 mt-2 border-blue-300 border-double mb-2	" />
+              <div className=" mt-2 mb-2 border border-gray-300 	" />
               <div className="px-1 mt-3 mb-2 ">
                 <p className="text-lg text-center font-semibold">
                   تفاصيل المعدات
@@ -164,7 +164,7 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
           ) : (
             ""
           )}
-          <div className=" border-4 mt-2 border-blue-300 border-double mb-2	" />
+          <div className=" mt-2 mb-2 border border-gray-300 	" />
           <p className="text-lg text-center font-semibold mb-3">
             موقع سيارة الإسعاف
           </p>
