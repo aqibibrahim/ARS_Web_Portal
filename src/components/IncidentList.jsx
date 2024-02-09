@@ -98,7 +98,7 @@ export default function IncidentList({}) {
   const [visibleDivIndex, setVisibleDivIndex] = useState(null);
   const [isAssignHealthcareVisible, setIsAssignHealthcareVisible] =
     useState(true);
-    const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [assignedAmbulance, setAssignedAmbulance] = useState([]);
   const [selectedAmbID, setSelectedAmbID] = useState([]);
   const [ambulanceData, setAmbulanceData] = useState({});
@@ -173,7 +173,7 @@ export default function IncidentList({}) {
     }
   };
   // Get All Incidents
-  const fetchincidentData = async (page = 1, status,keyword) => {
+  const fetchincidentData = async (page = 1, status, keyword) => {
     try {
       await axios
         .get(`https://ars.disruptwave.com/api/incidents`, {
@@ -182,7 +182,7 @@ export default function IncidentList({}) {
             page: currentPage,
             per_page: itemsPerPage,
             status,
-            search:keyword
+            search: keyword,
           },
         })
         .then((response) => {
@@ -228,7 +228,7 @@ export default function IncidentList({}) {
       activeTab === "active" ? "active" : "active",
       searchKeyword
     );
-  }, [deleteModal, currentPage, activeTab, deleteFormOpen,searchKeyword]);
+  }, [deleteModal, currentPage, activeTab, deleteFormOpen, searchKeyword]);
   useEffect(() => {
     fetchCompleteincidentData();
   }, [activeTab, currentCompletedPage, deleteFormOpen]);
@@ -555,9 +555,9 @@ export default function IncidentList({}) {
               <input
                 className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
                 type="text"
-                placeholder="Search Incidents..."
+                placeholder="البحث عن الحوادث"
                 value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+                onChange={(e) => setSearchKeyword(e.target.value)}
               />
             </div>
             <div className="flex flex-row items-center p-4  ">

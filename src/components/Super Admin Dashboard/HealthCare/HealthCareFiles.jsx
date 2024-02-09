@@ -63,7 +63,7 @@ const HealthCareFiles = () => {
   const [isUpdateDepartment, setIsUpdateDepartment] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [updateFocalOption, setUpdateFocalOption] = useState([]);
-  
+
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const itemsPerPage = 10; // You can adjust this based on your preference
@@ -162,8 +162,8 @@ const HealthCareFiles = () => {
     });
     setUpdateFormOpen(true);
   };
-  const fetchFacilitiesData = async (page = currentPage,keyword) => {
-    console.log("Keyword",keyword);
+  const fetchFacilitiesData = async (page = currentPage, keyword) => {
+    console.log("Keyword", keyword);
     try {
       await axios
         .get(`${window.$BackEndUrl}/facilities`, {
@@ -171,7 +171,7 @@ const HealthCareFiles = () => {
           params: {
             page,
             per_page: itemsPerPage,
-            search: keyword
+            search: keyword,
           },
         })
         .then((response) => {
@@ -188,9 +188,8 @@ const HealthCareFiles = () => {
     }
   };
   useEffect(() => {
-    
-    fetchFacilitiesData(currentPage,searchKeyword);
-  }, [submitDone, currentPage,searchKeyword]);
+    fetchFacilitiesData(currentPage, searchKeyword);
+  }, [submitDone, currentPage, searchKeyword]);
 
   useEffect(() => {
     const fetchusersData = async () => {
@@ -591,10 +590,10 @@ const HealthCareFiles = () => {
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
-              placeholder="Search Healthcare..."
+              placeholder="البحث عن الرعاية الصحية"
               value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-            onKeyPress={handleSearchKeyPress}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              onKeyPress={handleSearchKeyPress}
             />
           </div>
           {/* <button

@@ -439,7 +439,7 @@ const RegionFiles = () => {
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
-              placeholder="Search Ambulances..."
+              placeholder="البحث عن المنطقة"
             />
           </div>
 

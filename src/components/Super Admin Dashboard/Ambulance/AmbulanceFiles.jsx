@@ -183,7 +183,7 @@ const AmbulanceFiles = () => {
     setSelectedAmbulance(ambulance);
   };
 
-  const fetchAmbulanceData = async (page = currentPage,keyword = "") => {
+  const fetchAmbulanceData = async (page = currentPage, keyword = "") => {
     try {
       await axios
         .get(`${window.$BackEndUrl}/ambulances`, {
@@ -191,7 +191,7 @@ const AmbulanceFiles = () => {
           params: {
             page,
             per_page: itemsPerPage,
-            search: keyword
+            search: keyword,
           },
         })
         .then((response) => {
@@ -207,8 +207,8 @@ const AmbulanceFiles = () => {
     setShowPassword(!showPassword);
   };
   useEffect(() => {
-    fetchAmbulanceData(currentPage,searchKeyword);
-  }, [submitDone, currentPage, isDelete,searchKeyword]);
+    fetchAmbulanceData(currentPage, searchKeyword);
+  }, [submitDone, currentPage, isDelete, searchKeyword]);
 
   const CreateAmbulance = useFormik({
     initialValues: {
@@ -665,10 +665,10 @@ const AmbulanceFiles = () => {
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
-              placeholder="Search Ambulances..."
+              placeholder="البحث عن سيارات الإسعاف"
               value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-            onKeyPress={handleSearchKeyPress}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              onKeyPress={handleSearchKeyPress}
             />
           </div>
 

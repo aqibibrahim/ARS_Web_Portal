@@ -184,7 +184,7 @@ export default function DriverMain() {
   //   setIsModalOpen(false);
   //   setViewOpen(false);
   // };
-  const GetRecords = async (page = 1,keyword) => {
+  const GetRecords = async (page = 1, keyword) => {
     try {
       var token = localStorage.getItem("token");
       console.log(token);
@@ -198,7 +198,7 @@ export default function DriverMain() {
         params: {
           page,
           per_page: itemsPerPage,
-          search: keyword
+          search: keyword,
         },
       });
 
@@ -212,8 +212,8 @@ export default function DriverMain() {
     }
   };
   useEffect(() => {
-    GetRecords(currentPage,searchKeyword);
-  }, [deleteModal, isModalOpen, currentPage,searchKeyword]);
+    GetRecords(currentPage, searchKeyword);
+  }, [deleteModal, isModalOpen, currentPage, searchKeyword]);
   const handleDelete = () => {
     DeleteDriver();
   };
@@ -322,9 +322,9 @@ export default function DriverMain() {
               <input
                 className="bg-transparent border-0 focus:border-none w-full text-right placeholder:text-sm"
                 type="text"
-                placeholder="Search Driver..."
+                placeholder="البحث عن السائق"
                 value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+                onChange={(e) => setSearchKeyword(e.target.value)}
               />
             </div>
 

@@ -132,7 +132,7 @@ const SideBar = (props) => {
   };
   const handleHealthcareProfile = () => {
     navigate("/healthcare-profile");
-      };
+  };
   const handleIncidentTypeClick = () => {
     navigate("/Incident-type");
     setCreateIncidentOpen(false);
@@ -310,14 +310,14 @@ const SideBar = (props) => {
                 <BiLocationPlus className="w-4 h-4" />
               </MenuItem>{" "}
               <MenuItem
-                icon={regionIcon}
-                title="قسم"
+                icon={healthcareIcon}
+                title="الأقسام"
                 onClick={handleHealthCareDepartmentClick}
                 isActive={isActive("/IncidentHealthCare")}
-                
+
                 // style={{ padding: "10px"  }}
               >
-                <BiLocationPlus className="w-4 h-4" />
+                <BiFirstAid className="w-4 h-4" />
               </MenuItem>
             </div>
           )}
@@ -335,13 +335,13 @@ const SideBar = (props) => {
             </div>
           )}
 
-{localStorage?.role == "Healthcare Manager" && (
+          {localStorage?.role == "Healthcare Manager" && (
             // <div className="rounded-lg">
             <div className=" mt-auto w-full mb-5 overflow-auto rounded-lg ">
               <MenuItem
                 icon={healthcareIcon}
                 onClick={handleHealthcareProfile}
-                title="تفاصيل الرعاية الصحية"
+                title="تفاصيل الحساب  "
               >
                 <MdTune className="w-4 h-4" />
               </MenuItem>
