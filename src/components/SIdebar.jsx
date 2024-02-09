@@ -130,6 +130,9 @@ const SideBar = (props) => {
     setSelectedIncidentId(false);
     localStorage.removeItem("IncidentID");
   };
+  const handleHealthcareProfile = () => {
+    navigate("/healthcare-profile");
+      };
   const handleIncidentTypeClick = () => {
     navigate("/Incident-type");
     setCreateIncidentOpen(false);
@@ -292,8 +295,8 @@ const SideBar = (props) => {
 									<RxHome className="w-4 h-4" />
 								</MenuItem> */}
               <MenuItem
-                icon={healthcareIcon}
-                title="Incidents"
+                icon={incidentIcon}
+                title="الحادث"
                 onClick={handleHealthCareIncidentsClick}
                 isActive={isActive("/IncidentHealthCare")}
                 style={{ padding: "10px" }}
@@ -301,11 +304,12 @@ const SideBar = (props) => {
                 <BiLocationPlus className="w-4 h-4" />
               </MenuItem>{" "}
               <MenuItem
-                icon={healthcareIcon}
-                title="Departments"
+                icon={regionIcon}
+                title="قسم"
                 onClick={handleHealthCareDepartmentClick}
                 isActive={isActive("/IncidentHealthCare")}
-                style={{ padding: "10px" }}
+                
+                // style={{ padding: "10px"  }}
               >
                 <BiLocationPlus className="w-4 h-4" />
               </MenuItem>
@@ -318,6 +322,19 @@ const SideBar = (props) => {
                 icon={healthcareIcon}
                 onClick={handleAdmiProfileClick}
                 title="Admin Profile"
+              >
+                <MdTune className="w-4 h-4" />
+              </MenuItem>
+            </div>
+          )}
+
+{localStorage?.role == "Healthcare Manager" && (
+            // <div className="rounded-lg">
+            <div className=" mt-auto w-full mb-5 overflow-auto rounded-lg ">
+              <MenuItem
+                icon={healthcareIcon}
+                onClick={handleHealthcareProfile}
+                title="تفاصيل الرعاية الصحية"
               >
                 <MdTune className="w-4 h-4" />
               </MenuItem>

@@ -11,6 +11,7 @@ import Equipment from './components/Equipment'
 import RolesPermission from './components/RolesPermission'
 import Departments from './components/Departments'
 import AdminProfile from './components/Admin Profile/AdminProfile'
+import HealthcareProfile from './components/Admin Profile/HealthcareProfile'
 import ChangePassword from './components/Admin Profile/ChangePassword'
 // import DepartmentsFiles from "./components/Super Admin Dashboard/Departments/DepartmentsFiles";
 import AmbulanceFiles from './components/Super Admin Dashboard/Ambulance/AmbulanceFiles'
@@ -47,6 +48,8 @@ const Dashboard = () => {
 					<Route path="/ambulances_files" element={<AmbulanceFiles />} />
 					<Route path="/HomeHealthCare" element={<Maps />} />
 					<Route path="/admin-profile" element={<AdminProfile />} />
+					<Route path="/healthcare-profile" element={<HealthcareProfile />} />
+
 					<Route path="/RolesPermission" element={<RolesPermission />} />
 					<Route path="/Driver" element={<DriverMain />} /> <Route path="/Incident-type" element={<IncidentType />} />
 					<Route path="/Mapping" element={<Mapping />} />
