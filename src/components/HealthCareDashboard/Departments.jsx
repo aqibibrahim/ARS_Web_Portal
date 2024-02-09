@@ -157,7 +157,7 @@ export default function HealthCareDepartments() {
 															'block px-3 py-1 w-full text-right text-sm leading-6 text-gray-900'
 														)}
 													>
-														Edit
+														تحرير
 													</button>
 												)}
 											</Menu.Item>
@@ -170,33 +170,33 @@ export default function HealthCareDepartments() {
 							<dl className="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6 bg-white">
 								<div className="flex justify-between gap-x-4 py-3">
 									<dd className="">{item.pivot.total_beds}</dd>
-									<dt className="text-gray-600">Total Beds</dt>
+									<dt className="text-gray-600">المجموع</dt>
 								</div>
 								<div className="flex justify-between gap-x-4 py-3">
 									<dd className="flex items-start gap-x-2">
 										<div className="flex gap-x-1 divide-x bg-pink-200 px-2 divide-pink-400 text-pink-600 rounded-lg">
-											<span>Women</span>
+											<span>نساء</span>
 											<span className="pl-1">{item.pivot.occupied_beds_women}</span>
 										</div>
 										<div className="flex gap-x-1 divide-x bg-blue-200 px-2 divide-blue-400 text-blue-600 rounded-lg">
-											<span>Men</span>
+											<span>رجال</span>
 											<span className="pl-1">{item.pivot.occupied_beds_men}</span>
 										</div>
 									</dd>
-									<dt className="text-gray-500">Avaiable</dt>
+									<dt className="text-gray-500">المتاح</dt>
 								</div>
 								<div className="flex justify-between gap-x-4 py-3">
 									<dd className="flex items-start gap-x-2">
 										<div className="flex gap-x-1 divide-x bg-pink-200 px-2 divide-pink-400 text-pink-600 rounded-lg">
-											<span>Women</span>
+											<span>نساء</span>
 											<span className="pl-1">{item.pivot.unoccupied_beds_women}</span>
 										</div>
 										<div className="flex gap-x-1 divide-x bg-blue-200 px-2 divide-blue-400 text-blue-600 rounded-lg">
-											<span>Men</span>
+											<span>رجال</span>
 											<span className="pl-1">{item.pivot.unoccupied_beds_men}</span>
 										</div>
 									</dd>
-									<dt className="text-gray-500">Occupied</dt>
+									<dt className="text-gray-500">مشغول</dt>
 								</div>
 							</dl>
 						</li>
@@ -212,12 +212,12 @@ export default function HealthCareDepartments() {
 								className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
 								onClick={handleModalClose}
 							/>
-							<h3 className="text-xl font-semibold">Update Department</h3>
+							<h3 className="text-xl font-semibold">تحديث قسم</h3>
 						</div>
 						<form onSubmit={updatedepartment.handleSubmit}>
 							<div>
 								<label htmlFor="total_beds" className="block  text-sm font-medium leading-6 text-gray-900 text-right">
-									Total Beds
+								المجموع
 								</label>
 								<div className="relative mt-2">
 									<input
@@ -227,7 +227,7 @@ export default function HealthCareDepartments() {
 										type="number"
 										onChange={updatedepartment.handleChange}
 										value={updatedepartment.values.total_beds}
-										placeholder="Total Beds"
+										placeholder="المجموع"
 										className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
 										required
 									/>
@@ -242,7 +242,7 @@ export default function HealthCareDepartments() {
 									htmlFor="occupied_beds_men"
 									className="block  text-sm font-medium leading-6 text-gray-900 text-right"
 								>
-									Occupied Beds Men
+									مشغول(رجال)
 								</label>
 								<div className="relative mt-2">
 									<input
@@ -252,7 +252,6 @@ export default function HealthCareDepartments() {
 										min={0}
 										onChange={updatedepartment.handleChange}
 										value={updatedepartment.values.occupied_beds_men}
-										placeholder="Occupied Beds Men"
 										className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
 										required
 									/>
@@ -267,7 +266,7 @@ export default function HealthCareDepartments() {
 									htmlFor="occupied_beds_women"
 									className="block  text-sm font-medium leading-6 text-gray-900 text-right"
 								>
-									Occupied Beds Women
+									مشغول(نساء)
 								</label>
 								<div className="relative mt-2">
 									<input
@@ -277,7 +276,6 @@ export default function HealthCareDepartments() {
 										min={0}
 										onChange={updatedepartment.handleChange}
 										value={updatedepartment.values.occupied_beds_women}
-										placeholder="Occupied Beds Women"
 										className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
 										required
 									/>
@@ -292,7 +290,7 @@ export default function HealthCareDepartments() {
 									htmlFor="unoccupied_beds_men"
 									className="block  text-sm font-medium leading-6 text-gray-900 text-right"
 								>
-									Unoccupied Beds Men
+									المتاح(رجال)
 								</label>
 								<div className="relative mt-2">
 									<input
@@ -302,7 +300,6 @@ export default function HealthCareDepartments() {
 										min={0}
 										onChange={updatedepartment.handleChange}
 										value={updatedepartment.values.unoccupied_beds_men}
-										placeholder="Unoccupied Beds Men"
 										className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
 										required
 									/>
@@ -317,7 +314,7 @@ export default function HealthCareDepartments() {
 									htmlFor="unoccupied_beds_women"
 									className="block  text-sm font-medium leading-6 text-gray-900 text-right"
 								>
-									Unoccupied Beds women
+									المتاح(نساء)
 								</label>
 								<div className="relative mt-2">
 									<input
@@ -327,7 +324,6 @@ export default function HealthCareDepartments() {
 										min={0}
 										onChange={updatedepartment.handleChange}
 										value={updatedepartment.values.unoccupied_beds_women}
-										placeholder="Unoccupied Beds women"
 										className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
 										required
 									/>
@@ -345,12 +341,15 @@ export default function HealthCareDepartments() {
 									loading...
 								</button>
 							) : (
-								<button
+								<div className='flex justify-end'>
+<button
 									type="submit"
 									className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
 								>
 									Update
 								</button>
+									</div>
+								
 							)}
 						</form>
 					</div>

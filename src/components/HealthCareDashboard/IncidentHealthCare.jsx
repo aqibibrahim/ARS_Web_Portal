@@ -472,7 +472,7 @@ export default function IncidentHealthCare({}) {
   };
   return (
     <div
-      className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
+      className={` bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
     >
       <Toaster position="bottom-right" richColors />
       <div className="bg-lightGray-100 w-full h-auto rounded-lg p-2">
@@ -493,7 +493,7 @@ export default function IncidentHealthCare({}) {
             <div className="flex flex-row space-x-2">
               <Tab
                 selected={activeTab === "completed"}
-                title="Completed Incidents"
+                title="الحوادث المكتملة"
                 onClick={() => setActiveTab("completed")}
                 className={`${
                   activeTab === "completed"
@@ -503,7 +503,7 @@ export default function IncidentHealthCare({}) {
               />{" "}
               <Tab
                 selected={activeTab === "active"}
-                title="Active Incidents"
+                title="الحوادث النشطة"
                 onClick={() => setActiveTab("active")}
                 className={`${
                   activeTab === "active"
@@ -655,7 +655,7 @@ export default function IncidentHealthCare({}) {
                               </div>
                             </div>
                             <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
-                              Description{" "}
+                            التفاصيل  {" "}
                             </div>
                             <div className="w-[316px] h-[42px] text-right text-black text-opacity-50 text-xs font-normal font-['Inter']">
                               {incident?.description}{" "}
