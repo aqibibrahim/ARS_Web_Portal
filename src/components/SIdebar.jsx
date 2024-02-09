@@ -271,7 +271,7 @@ const SideBar = (props) => {
                 <BookOpenIcon className="w-4 h-4" />
               </MenuItem>
               <MenuItem
-                title={`Lookup`}
+                title={`البحث`}
                 onClick={handleLookup}
                 isActive={isActive("/Lookup")}
                 lookUpOpen={lookUpOpen}

@@ -21,7 +21,6 @@ const formatDateTime = (dateString) => {
 };
 export default function IncidentVIewModal(props) {
   const { showData, setViewOpen, viewOpen, setShowData } = props;
-  debugger;
   console.log(showData, "view");
   const getEmergencyTypeColor = (emergencyType) => {
     switch (emergencyType) {
@@ -70,10 +69,10 @@ export default function IncidentVIewModal(props) {
         setViewOpen(false);
       }}
       footer={null}
-      width={1250} // Adjust the width as needed
+      width={1200}
       closeIcon={null}
     >
-      <div>
+      <div className="" style={{ fontFamily: "Cairo" }}>
         <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-5 overflow-hidden">
           <BsArrowRightCircle
             width={20} // Adjust the icon size as needed
@@ -81,7 +80,7 @@ export default function IncidentVIewModal(props) {
             onClick={() => setViewOpen(false)}
           />
           <div className="flex  justify-center w-full">
-            <h3 className="text-3xl font-semibold text-center flex  ">
+            <h3 className="text-2xl font-semibold text-center flex  ">
               تفاصيل الحادث
             </h3>
           </div>
@@ -94,7 +93,7 @@ export default function IncidentVIewModal(props) {
         </div>
         <div className="flex w-full">
           <div className="p-5 text-right w-1/2 text-lg">
-            <p className="text-2xl text-center font-bold">تفاصيل الحادث</p>
+            <p className="text-xl text-center font-bold">تفاصيل الحادث</p>
             {/* <div className="flex gap-3">
             <p className="font-bold">Created By: </p>{" "}
             <span>
@@ -106,43 +105,54 @@ export default function IncidentVIewModal(props) {
             <span>{formattedDate}</span>
           </div> */}
             <div className="flex flex-col mx-auto   justify-around">
-              <div className="flex justify-end">
+              <div className="flex justify-end text-base">
                 {showData?.incident_type?.name}
-                <span className="text-lg font-bold"> :نوع الحادث</span>
+                <span className="text-base font-bold ml-1"> : نوع الحادث</span>
               </div>{" "}
-              <div className="flex justify-end">
+              <div className="flex justify-end text-base">
                 {showData?.emergency_type?.name}
-                <span className="text-lg font-bold"> :نوع الطوارئ</span>
+                <span className="text-base font-bold ml-1"> : نوع الطوارئ</span>
               </div>{" "}
-              <div className="flex justify-end">
+              <div className="flex justify-end text-base">
                 {showData?.gender?.name}
-                <span className="text-lg font-bold"> :جنس</span>
+                <span className="text-base font-bold ml-1"> : جنس</span>
               </div>{" "}
-              <div className="flex justify-end">
+              <div className="flex justify-end text-base">
                 {showData?.number_of_persons}
-                <span className="font-bold"> :رقم الشخص </span>
+                <span className="font-bold ml-1 text-base"> : رقم الشخص </span>
               </div>
-              <div className="text-wrap flex items-center justify-end">
-                <span>{showData?.description}</span>
-                <span className="font-bold flex "> :وصف </span>
+              <div className="flex justify-end flex-row">
+                <div
+                  className="text-base flex text-wrap  w-full justify-end  mr-1 "
+                  style={{ wordBreak: "break-word" }}
+                >
+                  {showData.description}
+                </div>
+                <div className="font-bold flex text-base justify-center ">
+                  <span style={{ marginRight: "5px" }}>: </span>
+                  <span>وصف</span>
+                </div>
               </div>
             </div>
           </div>
-          <div className=" border-4 border-blue-300 border-double	" />
+          <div className=" border mt-2 border-gray-300 	" />
 
           <div className="p-5 text-right w-1/2 text-lg">
-            <p className="text-2xl text-center font-bold">تفاصيل المخبر</p>
-            <div className="flex justify-end">
+            <p className="text-xl text-center font-bold"> تفاصيل المتصل</p>
+            <div className="flex justify-end text-base">
               <div> {showData?.informer?.name}</div>
-              <div className="font-bold "> :اسم </div>
+              <div className="font-bold text-base ml-1"> : اسم </div>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end text-base">
               {showData?.informer?.phone_numbers[0]?.number}
-              <div className="font-semibold"> :Phone Number </div>{" "}
+              <div className="font-semibold ml-1 text-base">
+                {" "}
+                : رقم الهاتف{" "}
+              </div>{" "}
             </div>
           </div>
         </div>
-        <div className=" border-4 mt-2 border-blue-300 border-double	" />
+        <div className=" border mt-2 border-gray-300 	" />
         <div className="p-5">
           <p className="text-xl mt-1 text-center font-semibold">
             تفاصيل سيارة الإسعاف
@@ -154,26 +164,25 @@ export default function IncidentVIewModal(props) {
               //   key={ambulance.id}
               // >
               <div
-                className="flex flex-row justify-between p-5 text-lg bg-gray-100 mt-4"
+                className="flex flex-row justify-between p-5 text-base bg-gray-100 mt-4"
                 key={ambulance.id}
               >
                 <p className={` ${getStatusStyle(ambulance.status)}`}>
                   {ambulance?.status}
                 </p>
                 <div className="flex justify-end">
-                  {ambulance?.plate_no}
-                  <span className="font-semibold"> :لوحة لا</span>
+                  <span className="mr-1"> {ambulance?.plate_no}</span>
+                  <span className="font-semibold"> : رقم لوحة</span>
                 </div>
                 <div className="flex justify-end">
-                  {ambulance?.model?.name}
-                  <span className="font-semibold">:نموذج</span>
+                  <span className="mr-1"> {ambulance?.model?.name}</span>
+                  <span className="font-semibold"> : موديل</span>
                 </div>
                 <span className="flex items-center">
-                  {" "}
                   {/* Flex container */}
                   <div className="flex justify-end">
                     {ambulance?.model?.make?.name}
-                    <span className="font-semibold ml-2">:يصنع</span>
+                    <span className="font-semibold ml-2"> : ماركة</span>
                   </div>
                   <span className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center ml-4">
                     {index + 1}
@@ -190,7 +199,7 @@ export default function IncidentVIewModal(props) {
 
         {showData?.ambulances?.length > 0 ? (
           <>
-            <div className=" border-4 mt-2 border-blue-300 border-double	" />
+            <div className=" border mt-2 border-gray-300 	" />
             <div className="p-5">
               <p className="text-xl mt-1 text-center font-semibold">
                 تفاصيل السائق
@@ -201,7 +210,7 @@ export default function IncidentVIewModal(props) {
                 //   key={ambulance.id}
                 // >
                 <div
-                  className="flex flex-row flex-wrap justify-between p-5 text-lg bg-gray-100 mt-4"
+                  className="flex flex-row flex-wrap justify-between p-5 text-base bg-gray-100 mt-4"
                   key={ambulance?.driver?.id}
                 >
                   <p className="text-wrap flex items-center">
@@ -209,25 +218,27 @@ export default function IncidentVIewModal(props) {
                       {" "}
                       {/* Aligns phone numbers to the right */}
                       {ambulance?.driver?.phone_numbers?.map((phone, index) => (
-                        <p key={index}>{phone.number}</p>
+                        <p className="mr-1" key={index}>
+                          {phone.number}
+                        </p>
                       ))}
                     </span>
-                    <span className="font-semibold ml-auto"> :رقم الهاتف</span>
+                    <span className="font-semibold ml-auto"> : رقم الهاتف</span>
                   </p>
                   <p className="items-center flex">
                     <span className="items-center">
                       {ambulance?.driver?.email}
                     </span>
-                    <span className="font-semibold ml-2">:بريد إلكتروني</span>
+                    <span className="font-semibold ml-2"> : بريد إلكتروني</span>
                   </p>
 
                   <p className="flex items-center">
                     {" "}
                     {/* Flex container */}
-                    <span>
+                    <div className="flex justify-end">
                       {ambulance?.driver?.first_name}
-                      <span className="font-semibold ml-2">:اسم</span>
-                    </span>
+                      <span className="font-semibold ml-2"> : اسم</span>
+                    </div>
                     <span className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center ml-4">
                       {index + 1}
                     </span>
@@ -241,14 +252,14 @@ export default function IncidentVIewModal(props) {
         )}
         {showData?.ambulances?.length > 0 ? (
           <>
-            <div className="border-4 mt-2 border-blue-300 border-double" />
+            <div className=" border mt-2 border-gray-300 	" />
             <div className="p-5">
               <p className="text-xl mt-1 text-center font-semibold">
-                تفاصيل المنشأة
+                تفاصيل الرعاية الصحية{" "}
               </p>
               {showData?.ambulances?.map((ambulance, index) => (
                 <div
-                  className="flex flex-row flex-wrap justify-between p-5 text-lg bg-gray-100 mt-4"
+                  className="flex flex-row flex-wrap justify-between p-5 text-base bg-gray-100 mt-4"
                   key={ambulance?.id}
                 >
                   {ambulance?.facility ? (
@@ -262,7 +273,9 @@ export default function IncidentVIewModal(props) {
                                 {/* Aligns phone numbers to the right */}
                                 {ambulance?.facility?.phone_numbers?.map(
                                   (phone) => (
-                                    <p key={phone.id}>{phone.number}</p>
+                                    <p className="mr-1" key={phone.id}>
+                                      {phone.number}
+                                    </p>
                                   )
                                 )}
                               </span>
@@ -273,25 +286,28 @@ export default function IncidentVIewModal(props) {
                           </div>
                         </div>
                         <p className="items-center flex">
-                          {ambulance?.facility?.email}
-                          <span className="font-semibold"> :بريد إلكتروني</span>
+                          <span className="mr-1">
+                            {" "}
+                            {ambulance?.facility?.email}
+                          </span>
+                          <span className="font-semibold">: بريد إلكتروني</span>
                         </p>
                         <span className="flex items-center">
                           {/* Flex container */}
                           <span className="flex items-center">
                             {ambulance?.facility?.name}
-                            <span className="font-semibold ml-2">:اسم</span>
+                            <span className="font-semibold ml-2"> : اسم</span>
                           </span>
                           <span className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center ml-4">
                             {index + 1}
                           </span>
                         </span>
                       </div>
-                      <div className="mt-2 mb-2 border-4 w-full border-blue-300 border-double" />
-                      <div className="flex justify-center w-full m-auto text-xl font-semibold bg-gray-200">
-                        تفاصيل الشخص المحوري
+                      <div className="mt-2 mb-2 border flex w-full border-gray-300" />
+                      <div className="flex justify-center w-full m-auto text-xl font-semibold ">
+                        تفاصيل شخص مسؤول
                       </div>
-                      <div className="flex flex-row justify-between p-5 bg-gray-200 w-full">
+                      <div className="flex flex-row justify-between p-5  w-full">
                         {ambulance?.facility?.focal_persons?.map((focal) => (
                           <div
                             key={focal.id}
@@ -302,7 +318,7 @@ export default function IncidentVIewModal(props) {
                                 {focal.email}
                               </span>{" "}
                               <span className="font-semibold">
-                                :بريد إلكتروني{" "}
+                                : بريد إلكتروني{" "}
                               </span>
                             </p>
                             <p>
@@ -312,14 +328,14 @@ export default function IncidentVIewModal(props) {
                                 ))}
                               </span>{" "}
                               <span className="font-semibold">
-                                :رقم الهاتف.{" "}
+                                : رقم الهاتف.{" "}
                               </span>
                             </p>
                             <p>
                               <span className="text-base flex-wrap">
                                 {focal.first_name}
                               </span>{" "}
-                              <span className="font-semibold">:اسم </span>
+                              <span className="font-semibold"> : اسم </span>
                             </p>
                           </div>
                         ))}
@@ -338,36 +354,38 @@ export default function IncidentVIewModal(props) {
           ""
         )}
 
-        <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
+        <div className=" mt-2 mb-2 border bg-gray-300  " />
 
         <div className="p-5  ">
-          <p className="text-xl text-center font-bold">
-            التفاصيل التي تم إنشاؤها
-          </p>
-          <div className="flex flex-row justify-between p-5 text-lg bg-gray-100  mt-4">
+          <p className="text-xl text-center font-bold">تفاصيل أخرى </p>
+          <div className="flex flex-row justify-between p-5 text-base bg-gray-100  mt-4">
             <div className="flex justify-end">
-              <span>{formatDateTime(showData?.created_by?.updated_at)}</span>{" "}
-              <span className="font-semibold"> :اكتمل في</span>
+              <span className="mr-1">
+                {formatDateTime(showData?.created_by?.updated_at)}
+              </span>{" "}
+              <span className="font-semibold"> : تاريخ الانتهاء</span>
             </div>
             <div className="flex justify-end">
-              <span>{formatDateTime(showData?.created_by?.created_at)}</span>{" "}
-              <span className="font-semibold"> :أنشئت في </span>
+              <span className="mr-1">
+                {formatDateTime(showData?.created_by?.created_at)}
+              </span>{" "}
+              <span className="font-semibold"> : تاريخ الإنشاء</span>
+            </div>
+            <div className="flex justify-end ">
+              <span className="mr-1"> {showData?.created_by?.email} </span>
+              <span className="font-semibold"> : بريد إلكتروني</span>
             </div>
             <div className="flex justify-end">
-              {showData?.created_by?.email}{" "}
-              <span className="font-semibold"> :بريد إلكتروني</span>
-            </div>
-            <div className="flex justify-end">
-              <span className="text-green-500">
+              <span className="text-green-500 mr-1">
                 {showData?.created_by?.first_name +
                   " " +
                   showData?.created_by?.last_name}
               </span>{" "}
-              <span className="font-semibold">:انشأ من قبل</span>
+              <span className="font-semibold"> : انشأ من قبل</span>
             </div>
           </div>
         </div>
-        <div className=" border-4 mt-2 border-blue-300 border-double	" />
+        <div className=" border mt-2 border-gray-300 	" />
 
         <p className="text-xl text-center font-bold mr-4 my-2 mb-4">
           موقع الحادث

@@ -547,14 +547,14 @@ export default function IncidentList({}) {
           </div>
           <div className="flex flex-row items-center p-4 space-x-4 justify-end bg-gray-100  ">
             <div className="flex flex-row space-x-2"></div>
-            {/* <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 py-1">
+            <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 py-1">
               <BsSearch width={9} height={9} />
               <input
                 className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
                 type="text"
                 placeholder="Search Incidents..."
               />
-            </div> */}
+            </div>
             <div className="flex flex-row items-center p-4  ">
               <div className="flex flex-row space-x-2 justify-center">
                 <Tab
@@ -637,7 +637,7 @@ export default function IncidentList({}) {
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            اسم المخبر
+                            تفاصيل المتصل{" "}
                           </th>
                         </tr>
                       </thead>
@@ -718,6 +718,7 @@ export default function IncidentList({}) {
                     </table>
                     <div className="flex justify-end mt-5 ">
                       <Pagination
+                        style={{ fontFamily: "Cairo" }}
                         current={currentPage}
                         className="flex text-sm text-semi-bold mb-2"
                         total={totalActiveIncidents}
@@ -786,7 +787,7 @@ export default function IncidentList({}) {
                             scope="col"
                             className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                           >
-                            اسم المخبر
+                            تفاصيل المتصل{" "}
                           </th>
                         </tr>
                       </thead>
@@ -855,6 +856,7 @@ export default function IncidentList({}) {
                     </table>
                     <div className="flex justify-end mt-5 ">
                       <Pagination
+                        style={{ fontFamily: "Cairo" }}
                         current={currentCompletedPage}
                         className="flex text-sm text-semi-bold mb-2"
                         total={totalCompletedIncidents}
@@ -862,7 +864,7 @@ export default function IncidentList({}) {
                         onChange={(page) => setCurrentCompletedPage(page)}
                         showSizeChanger={false}
                         showTotal={(total, range) =>
-                          `${range[0]}-${range[1]} of ${total} الحوادث`
+                          `${range[0]}-${range[1]} of ${total}  الحوادث`
                         }
                       />
                     </div>
@@ -1022,7 +1024,7 @@ export default function IncidentList({}) {
                 />
                 <div className="flex  justify-center w-full">
                   <h3 className="text-2xl font-semibold text-center flex  ">
-                    Incident Details
+                    تفاصيل الحادث
                     {/* <span className="text-red-600 ml-2">
                     {completedIncidentDetails?.incident?.status}
                   </span> */}
@@ -1030,23 +1032,24 @@ export default function IncidentList({}) {
                 </div>
               </div>
               <div className="flex w-full">
-                <div className="p-5 text-right w-1/2">
-                  <p className="text-xl text-center font-bold">
-                    Incident Details
-                  </p>
+                <div className="p-5 text-right w-1/2 bg-gray-200 rounded-xl m-5">
+                  <p className="text-xl text-center font-bold">تفاصيل الحادث</p>
                   {/* <p>
                     <span className="text-green-500">
                       {completedIncidentDetails?.incident?.status}
                     </span>                    <span className="font-semibold">:Incident Status </span>
 
                   </p> */}
-                  <p>
+                  <div className="flex justify-end text-base">
                     <span>
                       {completedIncidentDetails?.incident?.incident_type?.name}
                     </span>{" "}
-                    <span className="font-semibold"> :Incident Type </span>
-                  </p>
-                  <p>
+                    <span className="text-base font-bold ml-1">
+                      {" "}
+                      : نوع الحادث{" "}
+                    </span>
+                  </div>
+                  <div className="flex justify-end text-base">
                     <span
                       className={` ${
                         completedIncidentDetails?.incident?.emergency_type
@@ -1060,49 +1063,59 @@ export default function IncidentList({}) {
                     >
                       {completedIncidentDetails?.incident?.emergency_type?.name}
                     </span>{" "}
-                    <span className="font-semibold"> : Emergency Type</span>
-                  </p>
-                  <p>
+                    <span className="text-base font-bold ml-1">
+                      : نوع الطوارئ
+                    </span>
+                  </div>
+                  <div className="flex justify-end text-base">
                     <span>
                       {completedIncidentDetails?.incident?.gender?.name}
                     </span>{" "}
-                    <span className="font-semibold"> :Gender </span>
-                  </p>
-                  <p>
+                    <span className="text-base font-bold ml-1">: جنس </span>
+                  </div>
+                  <div className="flex justify-end text-base">
                     <span>
-                      {completedIncidentDetails?.incident?.number_of_persons}
+                      {
+                        completedIncidentDetails?.completedIncidentDetails
+                          ?.number_of_persons
+                      }
                     </span>{" "}
-                    <span className="font-semibold"> :No of Person </span>
-                  </p>
+                    <span className="font-semibold"> : رقم الشخص</span>
+                  </div>
 
-                  <p className="text-wrap flex items-center justify-end">
-                    <span>{showData?.description}</span>
-                    <span className="font-bold flex "> :Description </span>
-                  </p>
+                  <div className="flex justify-end flex-row">
+                    <div
+                      className="text-base flex text-wrap  w-full justify-end  mr-1 "
+                      style={{ wordBreak: "break-word" }}
+                    >
+                      {completedIncidentDetails?.incident?.description}
+                    </div>
+                    <div className="font-bold flex text-base justify-center ">
+                      <span style={{ marginRight: "5px" }}>: </span>
+                      <span>وصف</span>
+                    </div>
+                  </div>
                 </div>
-                <div className=" border-4 border-blue-300 border-double	" />
 
-                <div className="p-5 text-right w-1/2">
-                  <p className="text-xl text-center font-bold">
-                    Informer Details
-                  </p>
+                <div className="p-5 text-right w-1/2 bg-gray-200 rounded-xl m-5">
+                  <p className="text-xl text-center font-bold">تفاصيل المخبر</p>
                   <p>
                     {completedIncidentDetails?.incident?.informer?.name}{" "}
-                    <span className="font-semibold ml-1">:Name </span>
+                    <span className="font-semibold ml-1"> :اسم </span>
                   </p>
                   <p>
                     {
                       completedIncidentDetails?.incident.informer
                         ?.phone_numbers[0]?.number
                     }{" "}
-                    <span className="font-semibold ml-1">:Phone Number</span>
+                    <span className="font-semibold ml-1"> : رقم الهاتف</span>
                   </p>
                 </div>
               </div>
-              <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
+              <div className=" mt-2 mb-2 border border-gray-300 	" />
               <div className="p-5">
                 <p className="text-xl mt-1 text-center font-semibold">
-                  Ambulance Details
+                  تفاصيل سيارة الإسعاف
                 </p>
                 <div
                   className="flex flex-row justify-between p-5 bg-gray-100  mt-4"
@@ -1111,25 +1124,30 @@ export default function IncidentList({}) {
                   {/* <p className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center">
                           {index + 1}
                         </p> */}
-                  <p>
-                    {completedIncidentDetails.ambulance?.plate_no}{" "}
-                    <span className="font-semibold"> :Plate No</span>
-                  </p>{" "}
-                  <p>
-                    {completedIncidentDetails.ambulance?.model?.name}{" "}
-                    <span className="font-semibold">:Model</span>
-                  </p>{" "}
-                  <p>
+                  <div className="flex justify-end text-base">
+                    <span className="mr-1">
+                      {" "}
+                      {completedIncidentDetails.ambulance?.plate_no}{" "}
+                    </span>
+                    <span className="font-semibold"> : رقم لوحة</span>
+                  </div>{" "}
+                  <div className="flex justify-end text-base">
+                    <span className="mr-1">
+                      {completedIncidentDetails.ambulance?.model?.name}{" "}
+                    </span>
+                    <span className="font-semibold"> : موديل</span>
+                  </div>{" "}
+                  <div className="flex justify-end text-base">
                     {completedIncidentDetails.ambulance?.model?.make?.name}{" "}
-                    <span className="font-semibold ml-2">:Make </span>
-                  </p>
+                    <span className="font-semibold ml-2"> : ماركة </span>
+                  </div>
                 </div>
               </div>
-              <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
+              <div className=" mt-2 mb-2 border border-gray-300 	" />
 
               <div className="p-5">
                 <p className="text-xl text-center font-semibold">
-                  Driver Details
+                  تفاصيل السائق
                 </p>
                 <div
                   className="flex flex-row justify-between p-5 bg-gray-100  mt-4"
@@ -1138,13 +1156,8 @@ export default function IncidentList({}) {
                   {/* <p className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center">
                           {index + 1}
                         </p> */}
-                  <p>
-                    x {completedIncidentDetails.driver?.email}{" "}
-                    <span className="font-semibold">:Email</span>
-                  </p>
-
                   <p className="text-wrap flex items-center">
-                    <span className="ml-auto ">
+                    <span className="mr-1 ">
                       {" "}
                       {/* Aligns phone numbers to the right */}
                       {completedIncidentDetails.driver?.phone_numbers.map(
@@ -1153,19 +1166,25 @@ export default function IncidentList({}) {
                         )
                       )}
                     </span>
-                    <span className="font-semibold ml-auto"> :Phone No</span>
-                  </p>
+                    <span className="font-semibold ml-auto"> : رقم الهاتف</span>
+                  </p>{" "}
                   <p>
-                    {completedIncidentDetails.driver?.first_name}{" "}
-                    <span className="font-semibold">:Name </span>
+                    x {completedIncidentDetails.driver?.email}{" "}
+                    <span className="font-semibold"> : بريد إلكتروني</span>
                   </p>
+                  <div className="flex justify-end text-base">
+                    <span className="mr-1">
+                      {completedIncidentDetails.driver?.first_name}
+                    </span>
+                    <span className="font-semibold"> : اسم </span>
+                  </div>
                 </div>
               </div>
-              <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
+              <div className=" mt-2 mb-2 border border-gray-300 	" />
 
               <div className="p-5">
                 <p className="text-xl text-center font-semibold">
-                  Facility Details
+                  تفاصيل الرعاية الصحية
                 </p>
                 {/* {completedIncidentDetails?.ambulances?.length > 0 ? (
                     showData?.ambulances?.map((facility, index) => ( */}
@@ -1178,7 +1197,7 @@ export default function IncidentList({}) {
                       </p> */}
 
                   <p className="text-wrap flex items-center">
-                    <span className="ml-auto ">
+                    <span className="mr-1 ">
                       {" "}
                       {/* Aligns phone numbers to the right */}
                       {completedIncidentDetails.facility?.phone_numbers.map(
@@ -1187,7 +1206,7 @@ export default function IncidentList({}) {
                         )
                       )}
                     </span>
-                    <span className="font-semibold ml-auto"> :Phone No</span>
+                    <span className="font-semibold ml-auto"> : رقم الهاتف</span>
                   </p>
                   <p>
                     <span className="text-base flex-wrap">
@@ -1195,22 +1214,22 @@ export default function IncidentList({}) {
                         ? completedIncidentDetails?.facility?.address
                         : "Not Available"}
                     </span>{" "}
-                    <span className="font-semibold">:Address </span>
+                    <span className="font-semibold"> : عنوان </span>
                   </p>
 
-                  <p>
-                    <span className="text-base flex-wrap">
+                  <div className="flex justify-end text-base">
+                    <span className="text-base flex-wrap mr-1">
                       {completedIncidentDetails?.facility?.name
                         ? completedIncidentDetails?.facility?.name
                         : "Not Assigned"}
                     </span>{" "}
-                    <span className="font-semibold text-base">: Name</span>
-                  </p>
+                    <span className="font-semibold text-base"> : اسم</span>
+                  </div>
                 </div>
-                <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
+                <div className=" mt-2 mb-2 border border-gray-300 	" />
 
                 <div className="flex justify-center w-full m-auto text-xl font-semibold bg-gray-100">
-                  Focal Person Details
+                  تفاصيل شخص مسؤول
                 </div>
 
                 <div className="flex flex-row justify-between p-5 bg-gray-100">
@@ -1220,35 +1239,41 @@ export default function IncidentList({}) {
                         key={focal.id}
                         className="flex justify-between w-full items-center"
                       >
-                        <p>
-                          <span className="text-base flex-wrap">
-                            {focal.email}
-                          </span>{" "}
-                          <span className="font-semibold">:Email </span>
-                        </p>
-                        <p>
+                        {" "}
+                        <div className="flex justify-end text-base">
                           <span className="text-base flex-wrap">
                             {focal.phone_numbers?.map((phone) => (
-                              <span key={phone.id}>{phone.number}</span>
+                              <span className="mr-1" key={phone.id}>
+                                {phone.number}
+                              </span>
                             ))}
                           </span>{" "}
-                          <span className="font-semibold">:Phone No. </span>
-                        </p>
-                        <p>
+                          <span className="font-semibold"> : رقم الهاتف</span>
+                        </div>
+                        <div className="flex justify-end text-base">
+                          <span className="text-base flex-wrap mr-1">
+                            {focal.email}
+                          </span>{" "}
+                          <span className="font-semibold">
+                            {" "}
+                            : بريد إلكتروني{" "}
+                          </span>
+                        </div>
+                        <div className="flex justify-end text-base">
                           <span className="text-base flex-wrap">
                             {focal.first_name}
                           </span>{" "}
-                          <span className="font-semibold">:Name </span>
-                        </p>
+                          <span className="font-semibold"> : اسم </span>
+                        </div>
                       </div>
                     )
                   )}
                 </div>
               </div>
-              <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
+              <div className=" mt-2 mb-2 border border-gray-300 	" />
 
               <div className="p-5  ">
-                <p className="text-xl text-center font-bold">Created Details</p>
+                <p className="text-xl text-center font-bold">تفاصيل أخرى</p>
                 <div className="flex flex-row justify-between p-5 bg-gray-100  mt-4">
                   <p>
                     <span>
@@ -1256,7 +1281,7 @@ export default function IncidentList({}) {
                         completedIncidentDetails?.incident?.updated_at
                       )}
                     </span>{" "}
-                    <span className="font-semibold"> :Completed At </span>
+                    <span className="font-semibold"> : تاريخ الانتهاء</span>
                   </p>
                   <p>
                     <span>
@@ -1264,11 +1289,11 @@ export default function IncidentList({}) {
                         completedIncidentDetails?.incident?.created_at
                       )}
                     </span>{" "}
-                    <span className="font-semibold"> :Created At </span>
+                    <span className="font-semibold"> :تاريخ الإنشاء </span>
                   </p>
                   <p>
                     {completedIncidentDetails?.incident?.created_by?.email}{" "}
-                    <span className="font-semibold"> :Email</span>
+                    <span className="font-semibold"> : بريد إلكتروني</span>
                   </p>
                   <p>
                     <span className="text-green-500">
@@ -1278,11 +1303,11 @@ export default function IncidentList({}) {
                         completedIncidentDetails?.incident?.created_by
                           ?.last_name}
                     </span>{" "}
-                    <span className="font-semibold">:Created By</span>
+                    <span className="font-semibold">: انشأ من قبل</span>
                   </p>
                 </div>
               </div>
-              <div className=" mt-2 mb-2 border-4 border-blue-300 border-double	" />
+              <div className=" mt-2 mb-2 border border-gray-300 	" />
 
               <div className="p-5  ">
                 <p className="text-xl text-center font-bold">

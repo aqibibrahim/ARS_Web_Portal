@@ -68,6 +68,7 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
       footer={null}
       closeIcon={null}
       width={650} // Adjust the width as needed
+      style={{ fontFamily: "Cairo" }}
     >
       <div className="">
         <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-5 overflow-hidden z-10">
@@ -77,7 +78,7 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
             onClick={() => setViewOpen(false)}
           />
           <h3 className="text-xl font-semibold text-center w-full">
-            Ambulance Details
+            تفاصيل سيارة الإسعاف
           </h3>
         </div>
         <div>
@@ -88,30 +89,30 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
               </span>
             </div>
             <div className="text-right text-base w-1/2">
-              <p>
+              <div className="flex justify-end">
                 {ambulanceData?.model?.make?.name}
-                <span className="font-semibold">:Make</span>
-              </p>
-              <p>
+                <span className="font-semibold ml-1"> : ماركة </span>
+              </div>
+              <div className="flex justify-end">
                 {ambulanceData?.model?.name}
-                <span className="font-semibold">:Model </span>
-              </p>
+                <span className="font-semibold  ml-1">: موديل</span>
+              </div>
               <p>
                 {ambulanceData?.plate_no}
-                <span className="font-semibold">:Plate No. </span>
+                <span className="font-semibold  ml-1">: رقم لوحة</span>
               </p>
             </div>
           </div>
           <div className=" border-4 mt-2 border-blue-300 border-double mb-2	" />
-          <div className="px-5 -mt-2">
-            <p className="text-lg text-center font-semibold">Driver Details</p>
+          <div className="px-2 -mt-2 text-base ">
+            <p className="text-lg text-center font-semibold">تفاصيل السائق</p>
             {ambulanceData?.driver ? (
               <div>
-                <p className="text-base text-right">
+                <div className="flex justify-end">
                   {ambulanceData?.driver?.first_name}
-                  <span className="font-semibold"> :Name</span>
-                </p>
-                <div className="mt-1 text-right">
+                  <span className="font-semibold  ml-1"> : اسم</span>
+                </div>
+                <div className="flex justify-end flex-wrap">
                   {/* <p className="text-lg text-right font-semibold">
                     Driver Phone No.
                   </p> */}
@@ -120,16 +121,21 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
                       key={phone_numbers.id}
                       className="text-base text-right"
                     >
-                      {phone_numbers.number}
+                      <span className="flex bg-green-200 m-1 rounded-lg p-1">
+                        {" "}
+                        {phone_numbers.number}
+                      </span>
                     </span>
                   ))}
-                  <span className="font-semibold text-base"> :Phone No.</span>
+                  <span className="font-semibold text-base  mt-2">
+                    : رقم الهاتف
+                  </span>
                 </div>
               </div>
             ) : (
               <div>
                 <p className="text-base text-center bg-gray-200">
-                  No Driver Assigned Yet
+                  لم يتم تعيين سائق حتى الآن
                 </p>
               </div>
             )}
@@ -139,11 +145,11 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
           {ambulanceData?.equipments?.length > 0 ? (
             <>
               <div className=" border-4 mt-2 border-blue-300 border-double mb-2	" />
-              <div className="px-5 mt-3 mb-2 ">
+              <div className="px-1 mt-3 mb-2 ">
                 <p className="text-lg text-center font-semibold">
-                  Equipment Details
+                  تفاصيل المعدات
                 </p>
-                <div className="flex justify-end mt-1">
+                <div className="flex justify-end mt-1 flex-wrap">
                   {ambulanceData?.equipments?.map((equipment, index) => (
                     <p
                       key={index} // Ensure each child in a list has a unique "key" prop
@@ -151,7 +157,7 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
                     >
                       {equipment.name}
                     </p>
-                  ))}
+                  ))}{" "}
                 </div>
               </div>
             </>
@@ -160,7 +166,7 @@ const AmbulanceViewModal = ({ viewOpen, selectedAmbulance, setViewOpen }) => {
           )}
           <div className=" border-4 mt-2 border-blue-300 border-double mb-2	" />
           <p className="text-lg text-center font-semibold mb-3">
-            Ambulance Location
+            موقع سيارة الإسعاف
           </p>
           <div className="h-80 z-50 relative">
             <Map

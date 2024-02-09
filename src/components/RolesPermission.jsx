@@ -12,7 +12,7 @@ import {
   BsSearch,
   BsEyeSlash,
 } from "react-icons/bs";
-import Select from "react-tailwindcss-select";
+import { Select } from "antd";
 import noData from "../assets/noData.png";
 
 const { TabPane } = Tabs;
@@ -538,12 +538,12 @@ export default function RolesPermission() {
             {" "}
             <div className="text-right flex-col bg-gray-100 rounded-lg p-2 flex justify-end items-right">
               <h1 className="text-xl font-semibold m-2 mt-3 text-center">
-                Roles & Permissions
+                الأدوار والأذونات
               </h1>
               <div className="flex justify-end mb-2">
                 <Tab
                   selected={activeTab === "Role"}
-                  title="Roles"
+                  title="الأدوار"
                   onClick={() => handleTabChange("Role")}
                   className={`${
                     activeTab === "Role"
@@ -553,7 +553,7 @@ export default function RolesPermission() {
                 />{" "}
                 <Tab
                   selected={activeTab === "User"}
-                  title="Users"
+                  title="المستخدمين"
                   onClick={() => handleTabChange("User")}
                   className={`${
                     activeTab === "User"
@@ -569,7 +569,7 @@ export default function RolesPermission() {
                   <div className="flex justify-end flex-col">
                     <div className="text-right flex-col  rounded-lg p-2 flex justify-end ">
                       <h1 className="text-xl font-semibold ml-2 mt-3 ">
-                        Roles
+                        الأدوار
                       </h1>
                     </div>
                     <div className="flex justify-end mr-2">
@@ -580,7 +580,7 @@ export default function RolesPermission() {
                         }}
                         className="text-white  bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm "
                       >
-                        + Create New Role
+                        + إنشاء دور جديد
                       </button>
                     </div>
                   </div>
@@ -604,7 +604,7 @@ export default function RolesPermission() {
                               scope="col"
                               className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                             >
-                              Role Name
+                              اسم الدور
                             </th>
                           </tr>
                         </thead>
@@ -636,7 +636,7 @@ export default function RolesPermission() {
                                     }
                                     className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                                   >
-                                    Assign Permissions
+                                    تعيين الأذونات
                                   </button>
                                 </span>
                               </td>
@@ -652,36 +652,65 @@ export default function RolesPermission() {
                   {/* </div> */}
                   {/* Delete Role Modal */}
                   <Modal
-                    title="Are you sure to delete this Role?"
+                    title={
+                      <div className="flex p-5 justify-end">
+                        هل أنت متأكد من حذف هذا الدور؟
+                      </div>
+                    }
                     open={deleteModal}
                     onOk={handleDelete}
                     onCancel={handleCancel}
                     closable={false}
                     maskClosable={false}
                     okButtonProps={{
-                      style: { backgroundColor: "red" },
+                      style: {
+                        backgroundColor: "red",
+                        margin: 10,
+                        fontFamily: "Cairo",
+                      },
                     }}
-                    okText="Delete"
+                    cancelButtonProps={{ style: { fontFamily: "Cairo" } }}
+                    okText="حذف"
+                    cancelText="أغلق"
+                    style={{ padding: 10, fontFamily: "Cairo" }}
                   ></Modal>
                   {/* Edit Role Modal */}
                   <Modal
-                    title="Edit Role"
+                    title={
+                      <span
+                        className="flex justify-end p-4"
+                        style={{ fontFamily: "Cairo" }}
+                      >
+                        تعديل الدور
+                      </span>
+                    }
                     open={editModal}
                     onOk={handleEdit}
                     onCancel={handleCancel}
                     maskClosable={false}
                     closable={false}
                     okButtonProps={{
-                      style: { backgroundColor: "green", borderColor: "green" },
+                      style: {
+                        backgroundColor: "green",
+                        borderColor: "green",
+                        fontFamily: "Cairo",
+                        margin: 5,
+                      },
                     }}
-                    okText="Edit"
+                    cancelButtonProps={{
+                      style: {
+                        fontFamily: "Cairo",
+                      },
+                    }}
+                    okText="تعديل"
+                    cancelText="أغلق"
                   >
-                    <div>
+                    <div className="mr-2">
                       <label
                         htmlFor="name"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        Name
+                        اسم
                       </label>
                       <div className="relative mt-2">
                         <input
@@ -702,7 +731,14 @@ export default function RolesPermission() {
                     </div>
                   </Modal>
                   <Modal
-                    title={"Create New Role"}
+                    title={
+                      <div
+                        className="flex justify-end p-5 "
+                        style={{ fontFamily: "Cairo" }}
+                      >
+                        تسجيل دور جديد
+                      </div>
+                    }
                     open={isModalOpen}
                     onOk={handleNewRole}
                     onCancel={handleCancel}
@@ -712,16 +748,24 @@ export default function RolesPermission() {
                       style: {
                         backgroundColor: "green",
                         borderColor: "green",
+                        fontFamily: "Cairo",
+                        margin: 10,
                       },
                     }}
-                    okText={"Save"}
+                    cancelButtonProps={{
+                      style: {
+                        fontFamily: "Cairo",
+                      },
+                    }}
+                    okText={"يحفظ"}
+                    cancelText="يلغي"
                   >
-                    <div>
+                    <div style={{ fontFamily: "Cairo", margin: 10 }}>
                       <label
                         htmlFor="name"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        Name
+                        اسم
                       </label>
                       <div className="relative mt-2">
                         <input
@@ -730,7 +774,7 @@ export default function RolesPermission() {
                           id="name"
                           value={roleName}
                           onChange={(e) => setRoleName(e.target.value)}
-                          placeholder="Enter Name"
+                          placeholder="أدخل الاسم"
                           className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                         />
@@ -744,16 +788,21 @@ export default function RolesPermission() {
                     onCancel={handleCancel}
                     closable={false}
                     okButtonProps={{
-                      style: { backgroundColor: "green", borderColor: "green" },
+                      style: {
+                        backgroundColor: "green",
+                        borderColor: "green",
+                        margin: 10,
+                      },
                     }}
                     okText="Assign"
                     onOk={handleAssignPermissions}
+                    style={{ padding: 10 }}
                   >
-                    <h2 className="text-center font-semibold text-lg mb-3">
+                    <h2 className="text-center font-semibold text-lg mb-3 ">
                       Assign Permissions
                     </h2>
                     {/* Rest of your modal content */}
-                    <div className="flex flex-col w-full ">
+                    <div className="flex flex-col w-full p-5">
                       {permissionModalData.map((module, index) => (
                         <div
                           key={module.privilege_id}
@@ -832,7 +881,10 @@ export default function RolesPermission() {
                 <div className="flex justify-end -mt-2 flex-col">
                   <div className="text-right flex-col  rounded-lg p-2 flex justify-end ">
                     {" "}
-                    <h1 className="text-xl font-semibold m-2 mt-3"> Users</h1>
+                    <h1 className="text-xl font-semibold m-2 mt-3">
+                      {" "}
+                      المستخدمين
+                    </h1>
                     <div className="flex justify-end">
                       {" "}
                       <button
@@ -841,7 +893,7 @@ export default function RolesPermission() {
                         }}
                         className="text-white  bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm "
                       >
-                        + Create New User
+                        + تسجيل مستخدم جديد
                       </button>
                     </div>
                   </div>
@@ -864,37 +916,37 @@ export default function RolesPermission() {
                               scope="col"
                               className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                             >
-                              Email
+                              بريد إلكتروني
                             </th>
                             <th
                               scope="col"
                               className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                             >
-                              First Name
+                              الاسم الأول
                             </th>
                             <th
                               scope="col"
                               className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                             >
-                              Last Name
+                              اسم العائلة
                             </th>
                             <th
                               scope="col"
                               className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                             >
-                              Designation
+                              تعيين
                             </th>
                             <th
                               scope="col"
                               className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                             >
-                              Phone Nmbers
+                              أرقام الهواتف
                             </th>
                             <th
                               scope="col"
                               className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                             >
-                              Role
+                              دور
                             </th>
                           </tr>
                         </thead>
@@ -957,16 +1009,27 @@ export default function RolesPermission() {
                   {/* </div> */}
 
                   <Modal
-                    title={editFlag ? "Edit User" : "Create New User"}
+                    title={
+                      <span className="flex justify-end p-2 font-bold">
+                        {editFlag ? "تحرير العضو" : "تسجيل مستخدم جديد"}
+                      </span>
+                    }
                     open={isUserModalOpen}
                     onOk={createNewUser}
                     onCancel={handleCancel}
                     closable={false}
                     maskClosable={false}
+                    width={600}
                     okButtonProps={{
-                      style: { backgroundColor: "green", borderColor: "green" },
+                      style: {
+                        backgroundColor: "green",
+                        borderColor: "green",
+                        margin: 10,
+                      },
                     }}
-                    okText={editFlag ? "Save " : "Create"}
+                    style={{ fontFamily: "Cairo" }}
+                    cancelText="أغلق"
+                    okText={editFlag ? "يحفظ " : "تسجيل مستخدم جديد"}
                   >
                     <div className="p-5">
                       <div className="flex flex-row justify-between gap-4 mb-4">
@@ -976,7 +1039,7 @@ export default function RolesPermission() {
                               htmlFor="name"
                               className="block text-sm font-medium leading-6 text-gray-900 text-right"
                             >
-                              Last Name
+                              اسم العائلة
                             </label>
                             <div className="relative mt-2">
                               <input
@@ -986,7 +1049,7 @@ export default function RolesPermission() {
                                 id="last_name"
                                 onChange={handleChange}
                                 value={state?.last_name}
-                                placeholder="Enter Last Name"
+                                placeholder="إدخال اسم آخر"
                                 className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
                                 onKeyDown={(e) => {
@@ -1005,7 +1068,7 @@ export default function RolesPermission() {
                               htmlFor="name"
                               className="block text-sm font-medium leading-6 text-gray-900 text-right"
                             >
-                              Designation
+                              تعيين
                             </label>
                             <div className="relative mt-2">
                               <input
@@ -1015,7 +1078,7 @@ export default function RolesPermission() {
                                 id="designation"
                                 onChange={handleChange}
                                 value={state?.designation}
-                                placeholder="Enter Designation"
+                                placeholder="أدخل التعيين"
                                 className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
                                 onKeyDown={(e) => {
@@ -1035,7 +1098,7 @@ export default function RolesPermission() {
                               htmlFor="phone_numbers"
                               className="block text-sm font-medium leading-6 text-gray-900 text-right"
                             >
-                              Phone Number
+                              رقم التليفون
                             </label>
 
                             <div className="w-full  mb-6 ">
@@ -1107,7 +1170,7 @@ export default function RolesPermission() {
                               htmlFor="name"
                               className="block text-sm font-medium leading-6 text-gray-900 text-right"
                             >
-                              First Name
+                              الاسم الأول
                             </label>
                             <div className="relative mt-2">
                               <input
@@ -1117,7 +1180,7 @@ export default function RolesPermission() {
                                 id="first_name"
                                 onChange={handleChange}
                                 value={state?.first_name}
-                                placeholder="Enter First Name"
+                                placeholder="أدخل الاسم الأول"
                                 className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
                                 onKeyDown={(e) => {
@@ -1136,7 +1199,7 @@ export default function RolesPermission() {
                               htmlFor="name"
                               className="block text-sm font-medium leading-6 text-gray-900 text-right"
                             >
-                              Password
+                              كلمة المرور
                             </label>
                             <div className="relative mt-2">
                               {/* <input
@@ -1163,7 +1226,7 @@ export default function RolesPermission() {
                                 autoComplete="new-password"
                                 onChange={handlePasswordChange}
                                 value={state?.password}
-                                placeholder="Password"
+                                placeholder="أدخل كلمة المرور"
                                 className="peer block w-full px-3 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
                                 onKeyDown={(e) => {
@@ -1190,14 +1253,14 @@ export default function RolesPermission() {
                               htmlFor="email"
                               className="block text-sm font-medium leading-6 text-gray-900 text-right"
                             >
-                              Email
+                              بريد إلكتروني
                             </label>
                             <div className="relative mt-2">
                               <input
                                 tabIndex={5}
                                 name="email"
                                 onChange={handleChange}
-                                placeholder="Enter Email"
+                                placeholder="أدخل البريد الإلكتروني"
                                 className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
                                 value={state?.email}
@@ -1217,18 +1280,21 @@ export default function RolesPermission() {
                               htmlFor="name"
                               className="block text-sm font-medium leading-6 text-gray-900 text-right"
                             >
-                              Roles
+                              الأدوار
                             </label>
                             <div className="relative mt-2">
                               <Select
                                 name="role"
+                                showSearch={true}
+                                placeholder="حدد الأدوار"
                                 id="role"
                                 onChange={(e) => handleRoleChange(e)}
                                 value={roleID}
                                 options={allRoles}
-                                className="peer block  w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                                dropdownStyle={{ textAlign: "right" }}
+                                className="peer block w-full border-0 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                                 required
-                              ></Select>
+                              />
                             </div>
                           </div>
                         </div>
@@ -1237,7 +1303,7 @@ export default function RolesPermission() {
                   </Modal>
                   {/* Delete Role Modal */}
                   <Modal
-                    title="Are you sure to delete this Role?"
+                    title="هل أنت متأكد من حذف هذا الدور؟"
                     open={deleteModal}
                     onOk={handleDelete}
                     onCancel={handleCancel}
@@ -1246,20 +1312,39 @@ export default function RolesPermission() {
                     okButtonProps={{
                       style: { backgroundColor: "red" },
                     }}
-                    okText="Delete"
+                    style={{ padding: 10 }}
+                    okText="يمسح"
+                    cancelText="يغلق"
                   ></Modal>
                   {/* Edit Role Modal */}
                   <Modal
-                    title="Are you sure to delete this User?"
+                    title={
+                      <div
+                        className="flex justify-end p-5"
+                        style={{ fontFamily: "Cairo" }}
+                      >
+                        هل أنت متأكد من حذف هذا المستخدم؟
+                      </div>
+                    }
                     open={deleteUserModal}
                     onOk={handleDeleteUser}
                     onCancel={handleCancel}
                     closable={false}
                     maskClosable={false}
                     okButtonProps={{
-                      style: { backgroundColor: "red" },
+                      style: {
+                        backgroundColor: "red",
+                        margin: 10,
+                        fontFamily: "Cairo",
+                      },
                     }}
-                    okText="Delete"
+                    cancelButtonProps={{
+                      style: {
+                        fontFamily: "Cairo",
+                      },
+                    }}
+                    okText="يمسح"
+                    cancelText="يغلق"
                   ></Modal>
                 </div>
               )}

@@ -20,7 +20,7 @@ import { Toaster, toast } from "sonner";
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
-import Select from "react-tailwindcss-select";
+import { Select } from "antd";
 import InputMask from "react-input-mask";
 import { Pagination, Spin } from "antd";
 import noData from "../../../assets/noData.png";
@@ -572,18 +572,18 @@ const HealthCareFiles = () => {
       <Toaster position="bottom-right" richColors />
       <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
         <div className="p-4 text-right  bg-gray-100 ">
-          <h1 className="text-xl font-semibold">Health Cares</h1>
+          <h1 className="text-xl font-semibold">الرعاية الصحية</h1>
         </div>
         <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100 justify-end ">
           <div className="flex flex-row space-x-2"></div>
-          {/* <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
+          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
             <BsSearch width={9} height={9} />
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
               placeholder="Search Ambulances..."
             />
-          </div> */}
+          </div>
           {/* <button
               className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
               type="button"
@@ -596,7 +596,7 @@ const HealthCareFiles = () => {
             type="button"
             onClick={handleCreateHealtCareClick}
           >
-            + Create Healthcare
+            + تسجيل الرعاية الصحية
           </button>
         </div>
 
@@ -622,31 +622,31 @@ const HealthCareFiles = () => {
                           scope="col"
                           className="py-3 pl-4 pr-3 text-xs font-medium  tracking-wide text-gray-500 sm:pl-0"
                         >
-                          Address
+                          عنوان
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                         >
-                          Departments
+                          الأقسام
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                         >
-                          Facility Email Address
+                          عنوان البريد الإلكتروني للمنشأة
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                         >
-                          Phone Number
+                          رقم التليفون
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                         >
-                          Facilty Name
+                          إسم المنشأة
                         </th>
                       </tr>
                     </thead>
@@ -770,7 +770,7 @@ const HealthCareFiles = () => {
                       onChange={(page) => setCurrentPage(page)}
                       showSizeChanger={false}
                       showTotal={(total, range) =>
-                        `${range[0]}-${range[1]} of ${total} items`
+                        `${range[0]}-${range[1]} of ${total} منشأة`
                       }
                     />
                   </div>
@@ -793,7 +793,7 @@ const HealthCareFiles = () => {
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                 onClick={handleModalClose}
               />
-              <h3 className="text-xl font-semibold">Assign Department</h3>
+              <h3 className="text-xl font-semibold">قسم التعيين</h3>
             </div>
             <form onSubmit={CreateDepartments.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -814,42 +814,50 @@ const HealthCareFiles = () => {
                     />
                   </div>{" "} */}
                   <div>
-                    <label
+                    {/* <label
                       htmlFor="focal_persons"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
                       Focal Persons
-                    </label>
-                    <div className="relative mt-2">
+                    </label> */}
+                    <div className="relative mt-2  ">
                       <Select
                         value={selectedDepartment}
-                        placeholder="Select Department"
+                        placeholder={
+                          <div
+                            className="flex justify-end"
+                            style={{ fontFamily: "Cairo" }}
+                          >
+                            اختر القسم
+                          </div>
+                        }
+                        dropdownStyle={{ textAlign: "right" }}
                         onChange={(e) => handleDepartmentChange(e)}
                         options={myData}
                         isMultiple={true}
                         isClearable={true}
                         primaryColor={"blue"}
                         isSearchable={true}
-                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right z-50"
+                        className="peer w-full  border-0 bg-offWhiteCustom-100  text-gray-900 focus:ring-0 sm:text-sm sm:leading-6  z-50"
                       />
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="flex justify-start">
+              <div className="flex justify-end">
                 {loadingMessage ? (
                   <button
                     type="button"
                     className="text-white bg-primary-100 w-60 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
                   >
-                    loading...
+                    تحميل...
                   </button>
                 ) : (
                   <button
                     type="submit"
                     className="text-white bg-primary-100 rounded-md w-60 border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
                   >
-                    Add Department
+                    إضافة قسم
                   </button>
                 )}
               </div>
@@ -865,18 +873,18 @@ const HealthCareFiles = () => {
                 width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                 onClick={() => setViewOpen(false)}
-              />
+              />{" "}
+              <span className="text-lime-600 ml-2">
+                {selectedHealthCare?.status}
+              </span>
               <h3 className="text-xl font-semibold">
                 {selectedHealthCare?.name}
-                <span className="text-lime-600 ml-2">
-                  {selectedHealthCare?.status}
-                </span>
               </h3>
             </div>
             <div>
               <div className="flex flex-row mr-2 p-5 -mt-6 justify-end">
                 <p>
-                  <span className="font-semibold flex justify-end">Name</span>
+                  <span className="font-semibold flex justify-end">اسم</span>
                   <p> {selectedHealthCare?.name}</p>
                 </p>
                 {/* <p>
@@ -885,9 +893,7 @@ const HealthCareFiles = () => {
                 </p> */}
               </div>
               <div className="px-5 ">
-                <p className="text-lg text-right font-semibold">
-                  Department Details
-                </p>
+                <p className="text-lg text-right font-semibold">تفاصيل القسم</p>
                 {selectedHealthCare?.departments.length > 0 ? (
                   selectedHealthCare?.departments?.map((departments) => (
                     <>
@@ -934,12 +940,12 @@ const HealthCareFiles = () => {
                     </>
                   ))
                 ) : (
-                  <p className="text-right">No Data</p>
+                  <p className="text-right">لايوجد بيانات</p>
                 )}
               </div>
               <div className="px-5 mt-4 mb-5">
                 <p className="text-lg text-right font-semibold">
-                  Phone Number(s)
+                  أرقام الهواتف
                 </p>
                 {selectedHealthCare?.phone_numbers?.map((phone_numbers) => (
                   <p key={phone_numbers.id} className="text-base text-right">
@@ -948,7 +954,7 @@ const HealthCareFiles = () => {
                 ))}
               </div>{" "}
               <div className="px-5 mt-4 mb-5">
-                <p className="text-lg text-right font-semibold">Focal Person</p>
+                <p className="text-lg text-right font-semibold">شخص مسؤول</p>
                 {selectedHealthCare?.focal_persons?.map((person) => (
                   <p key={person.id} className="text-base text-right">
                     {`${person?.first_name || ""} ${person?.last_name || ""}`}
@@ -988,7 +994,7 @@ const HealthCareFiles = () => {
                   setIsModalOpen(false);
                 }}
               />
-              <h3 className="text-xl font-semibold">Create HealthCare</h3>
+              <h3 className="text-xl font-semibold">تسجيل الرعاية الصحية</h3>
             </div>
             <form className="p-5" onSubmit={CreateHealtCare.handleSubmit}>
               <div className="flex flex-col justify-between gap-4 mb-4">
@@ -998,7 +1004,7 @@ const HealthCareFiles = () => {
                       htmlFor="phone_numbers"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Phone Number
+                      رقم التليفون
                     </label>
 
                     <div className="w-full">
@@ -1057,7 +1063,7 @@ const HealthCareFiles = () => {
                       htmlFor="name"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      HealthCare Name
+                      اسم الرعاية الصحية
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1067,7 +1073,7 @@ const HealthCareFiles = () => {
                         id="name"
                         onChange={CreateHealtCare.handleChange}
                         value={CreateHealtCare.values.name}
-                        placeholder="Enter Healthcare Name"
+                        placeholder="أدخل اسم الرعاية الصحية"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
@@ -1086,7 +1092,7 @@ const HealthCareFiles = () => {
                       htmlFor="addresss"
                       className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
                     >
-                      Address
+                      عنوان
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1098,7 +1104,7 @@ const HealthCareFiles = () => {
                         name="addresss"
                         id="addresss"
                         className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        placeholder=" Choose On Map"
+                        placeholder="اختر على الخريطة"
                         required
                         readOnly
                       />
@@ -1109,7 +1115,7 @@ const HealthCareFiles = () => {
                       htmlFor="email"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Email
+                      بريد إلكتروني
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1119,7 +1125,7 @@ const HealthCareFiles = () => {
                         id="email"
                         onChange={CreateHealtCare.handleChange}
                         value={CreateHealtCare.values.email}
-                        placeholder="Enter Email"
+                        placeholder="أدخل البريد الإلكتروني"
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
@@ -1139,7 +1145,7 @@ const HealthCareFiles = () => {
                     htmlFor="focal_persons"
                     className="block text-sm font-medium leading-6 text-gray-900 text-right"
                   >
-                    Focal Person
+                    شخص مسؤول
                   </label>
                   <div className="relative mt-2">
                     {/* <Select
@@ -1159,12 +1165,20 @@ const HealthCareFiles = () => {
                       onChange={(e) => handleChangeFocalPerson(e)}
                       options={updateFocalOption}
                       value={optionsFocalPerson}
-                      placeholder="Select"
+                      placeholder={
+                        <span
+                          className="flex justify-end"
+                          style={{ fontFamily: "Cairo" }}
+                        >
+                          حدد شخص مسؤول
+                        </span>
+                      }
                       isMultiple={true}
                       isClearable={true}
                       primaryColor={"blue"}
-                      isSearchable={true}
-                      className="  px-2  justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                      dropdownStyle={{ textAlign: "right" }}
+                      isSearchable={false}
+                      className="peer block  w-full border-0 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
                   </div>
                 </div>
@@ -1175,7 +1189,7 @@ const HealthCareFiles = () => {
                     htmlFor="focal_persons"
                     className="block text-sm  mt-1 font-medium leading-6 text-gray-900 text-right"
                   >
-                    Selected Focal Person
+                    الشخص المحوري المختار
                   </label>
                   <ul
                     role="list"
@@ -1221,14 +1235,14 @@ const HealthCareFiles = () => {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    تحميل...
                   </button>
                 ) : (
                   <button
                     type="submit"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 `}
                   >
-                    Create
+                    تسجيل الرعاية الصحية
                   </button>
                 )}
               </div>
@@ -1245,7 +1259,7 @@ const HealthCareFiles = () => {
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                 onClick={() => setUpdateFormOpen(false)}
               />
-              <h3 className="text-xl font-semibold">HealtCare Details</h3>
+              <h3 className="text-xl font-semibold">تفاصيل الرعاية الصحية</h3>
             </div>
             <form className="p-5" onSubmit={UpdateHealtCare.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -1255,7 +1269,7 @@ const HealthCareFiles = () => {
                       htmlFor="phone_numbers"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Phone Number
+                      رقم التليفون
                     </label>
 
                     <div className="w-full  mb-6 ">
@@ -1265,6 +1279,7 @@ const HealthCareFiles = () => {
                             tabIndex={1}
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
+                            required
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
                             onKeyDown={(e) => {
@@ -1321,7 +1336,7 @@ const HealthCareFiles = () => {
                       htmlFor="addresss"
                       className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
                     >
-                      Address
+                      عنوان
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1332,7 +1347,7 @@ const HealthCareFiles = () => {
                         name="addresss"
                         id="addresss"
                         className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        placeholder=" Choose On Map"
+                        placeholder=" اختر على الخريطة"
                         required
                         readOnly
                       />
@@ -1349,7 +1364,7 @@ const HealthCareFiles = () => {
                       htmlFor="name"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Name
+                      اسم
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1359,7 +1374,7 @@ const HealthCareFiles = () => {
                         id="name"
                         onChange={UpdateHealtCare.handleChange}
                         value={UpdateHealtCare.values.name}
-                        placeholder="Enter Name"
+                        placeholder="أدخل الاسم"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
@@ -1380,7 +1395,7 @@ const HealthCareFiles = () => {
                       htmlFor="email"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Email
+                      بريد إلكتروني
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1390,7 +1405,7 @@ const HealthCareFiles = () => {
                         id="email"
                         onChange={UpdateHealtCare.handleChange}
                         value={UpdateHealtCare.values.email}
-                        placeholder="Enter Email"
+                        placeholder="أدخل البريد الإلكتروني"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
@@ -1411,19 +1426,20 @@ const HealthCareFiles = () => {
                       htmlFor="focal_persons"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Focal Persons
+                      الأشخاص المحوريون
                     </label>
                     <div className="relative mt-2">
                       <Select
                         value={updateFocalPerson}
-                        placeholder="Select"
+                        placeholder="حدد الأشخاص المحوريين"
                         options={updateFocalOption}
                         onChange={(e) => handleOnChange(e)}
                         isMultiple={true}
                         isClearable={true}
                         primaryColor={"blue"}
+                        dropdownStyle={{ textAlign: "right" }}
                         isSearchable={true}
-                        className="peer w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right z-50"
+                        className="peer w-full flex justify-end border-0 bg-offWhiteCustom-100  text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right z-50"
                       />
                     </div>
                   </div>
@@ -1436,14 +1452,14 @@ const HealthCareFiles = () => {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    تحميل...
                   </button>
                 ) : (
                   <button
                     type="submit"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100`}
                   >
-                    Update
+                    تحديث
                   </button>
                 )}
               </div>
@@ -1501,7 +1517,7 @@ const HealthCareFiles = () => {
                       </Dialog.Title>
                       <div className="mt-10 ">
                         <p className="text-sm flex justify-center items-center text-gray-500">
-                          Are you sure want to DELETE?
+                          هل أنت متأكد أنك تريد الحذف؟
                         </p>
                       </div>
                     </div>
@@ -1516,7 +1532,7 @@ const HealthCareFiles = () => {
                         className="inline-flex w-full text-lg justify-center rounded-md bg-red-400 px-3 py-2 font-semibold text-white  hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                         onClick={() => setDelete(false)}
                       >
-                        Delete
+                        يمسح
                       </button>
                     </form>
                   </div>
