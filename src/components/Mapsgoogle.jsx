@@ -5,10 +5,10 @@ const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
 const Mapsgoogle = (props) => {
   const { ControlPosition, Geocoder } = props.google.maps;
   const [position, setPosition] = useState({
-    lat: 23.8859,
-    lng: 45.0792
+    lat: 26.9894429391302,
+    lng: 17.761961078429668,
   });
-  
+
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [address, setAddress] = useState("No address available");
@@ -22,7 +22,7 @@ const Mapsgoogle = (props) => {
   const handleMarkerDragEnd = (t, map, coord) => {
     const newPosition = {
       lat: coord.latLng.lat(),
-      lng: coord.latLng.lng()
+      lng: coord.latLng.lng(),
     };
 
     geocoder.geocode({ location: newPosition }, (results, status) => {
@@ -32,7 +32,7 @@ const Mapsgoogle = (props) => {
           sendDataToParent({
             latitude: newPosition.lat,
             longitude: newPosition.lng,
-            address: results[0].formatted_address
+            address: results[0].formatted_address,
           });
         } else {
           setAddress("No address available");
@@ -48,7 +48,7 @@ const Mapsgoogle = (props) => {
   const handleMapClick = (mapProps, map, clickEvent) => {
     const newPosition = {
       lat: clickEvent.latLng.lat(),
-      lng: clickEvent.latLng.lng()
+      lng: clickEvent.latLng.lng(),
     };
 
     geocoder.geocode({ location: newPosition }, (results, status) => {
@@ -58,7 +58,7 @@ const Mapsgoogle = (props) => {
           sendDataToParent({
             latitude: newPosition.lat,
             longitude: newPosition.lng,
-            address: results[0].formatted_address
+            address: results[0].formatted_address,
           });
         } else {
           setAddress("No address available");
@@ -87,7 +87,7 @@ const Mapsgoogle = (props) => {
     const input = document.getElementById("address");
     const options = {
       bounds: defaultBounds,
-      componentRestrictions: { country: "us" },
+      componentRestrictions: { country: "lby" },
       fields: [
         "address_components",
         "geometry",
@@ -158,40 +158,40 @@ const Mapsgoogle = (props) => {
     });
   };
 
-
   return (
     <div
       style={{
         width: "100%",
-        height: "100vh"
+        height: "100vh",
       }}
-    >  <div id="pac-card" className="flex rounded-md gap-10 justify-center my-4">
-    <input
-      id="address"
-      name="address"
-      required
-      className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-      type="text"
-      placeholder="Enter a location"
-      onChange={handlePlaceChange}
-      // value={locationAddress}
-    />
-     <button onClick={() => props.modelClose()}>
-                          Close Second Moda </button>
-  </div>
-  <div
-    id="map"
-    // style={{ height: "0px", width: "0px" }}
-  ></div>
+    >
+      {" "}
+      <div id="pac-card" className="flex rounded-md gap-10 justify-center my-4">
+        <input
+          id="address"
+          name="address"
+          required
+          className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+          type="text"
+          placeholder="Enter a location"
+          onChange={handlePlaceChange}
+          // value={locationAddress}
+        />
+        <button onClick={() => props.modelClose()}>Close Second Moda </button>
+      </div>
+      <div
+        id="map"
+        // style={{ height: "0px", width: "0px" }}
+      ></div>
       <Map
         google={props.google}
         zoom={10}
         onClick={handleMapClick}
         zoomControlOptions={{
-          position: ControlPosition.BOTTOM_LEFT
+          position: ControlPosition.BOTTOM_LEFT,
         }}
         mapTypeControlOptions={{
-          position: ControlPosition.TOP_CENTER
+          position: ControlPosition.TOP_CENTER,
         }}
         initialCenter={position}
       >
@@ -209,7 +209,5 @@ const Mapsgoogle = (props) => {
 };
 
 export default GoogleApiWrapper({
-  apiKey: GOOGLE_MAPS_APIKEY
+  apiKey: GOOGLE_MAPS_APIKEY,
 })(Mapsgoogle);
-
-

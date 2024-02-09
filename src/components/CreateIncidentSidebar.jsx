@@ -426,8 +426,8 @@ const Header = ({
   const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 33.7519137,
-    lng: 72.7970134,
+    lat: 26.9894429391302,
+    lng: 17.761961078429668,
   });
   const [uncontrolledAddress, setUncontrolledAddress] = useState("");
   const [address, setAddress] = useState("No address Selected");
@@ -510,7 +510,7 @@ const Header = ({
     const input = document.getElementById("address");
     const options = {
       // bounds: defaultBounds, // Uncomment this line if you have specific bounds
-      componentRestrictions: { country: null },
+      componentRestrictions: { country: "lby" },
       fields: [
         "address_components",
         "geometry",
@@ -1436,7 +1436,7 @@ const Header = ({
                       ></div>
                       <Map
                         google={google}
-                        zoom={10}
+                        zoom={5}
                         onClick={handleMapClick}
                         zoomControlOptions={{
                           position: ControlPosition.BOTTOM_LEFT,

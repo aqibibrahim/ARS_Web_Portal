@@ -286,8 +286,8 @@ export default function IncidentHealthCare({}) {
   const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
+    lat: 26.9894429391302,
+    lng: 17.761961078429668,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -372,7 +372,7 @@ export default function IncidentHealthCare({}) {
     const input = document.getElementById("address");
     const options = {
       bounds: defaultBounds,
-      componentRestrictions: { country: "sa" }, // Set the country to Pakistan
+      componentRestrictions: { country: "lby" }, // Set the country to Pakistan
       fields: [
         "address_components",
         "geometry",
