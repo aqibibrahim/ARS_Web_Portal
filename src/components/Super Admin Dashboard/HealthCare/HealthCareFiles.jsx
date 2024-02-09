@@ -63,6 +63,8 @@ const HealthCareFiles = () => {
   const [isUpdateDepartment, setIsUpdateDepartment] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [updateFocalOption, setUpdateFocalOption] = useState([]);
+  
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   const itemsPerPage = 10; // You can adjust this based on your preference
   const [totalDepartments, setTotalDepartments] = useState(0);
@@ -73,6 +75,11 @@ const HealthCareFiles = () => {
   const handleOnChange = (value) => {
     setupdateFocalPerson(value);
     console.log("value:", value);
+  };
+  const handleSearchKeyPress = (event) => {
+    if (event.key === "Enter") {
+      fetchAmbulanceData(1, searchKeyword);
+    }
   };
   const handleChangeFocalPerson = (value) => {
     setOptionsFocalPerson(value);
@@ -155,32 +162,35 @@ const HealthCareFiles = () => {
     });
     setUpdateFormOpen(true);
   };
-  useEffect(() => {
-    const fetchFacilitiesData = async (page = currentPage) => {
-      try {
-        await axios
-          .get(`${window.$BackEndUrl}/facilities`, {
-            headers: headers,
-            params: {
-              page,
-              per_page: itemsPerPage,
-            },
-          })
-          .then((response) => {
-            setAmbulanceData(response?.data?.data);
-            setIsLoading(false);
-            console.log(response?.data?.data, "asds");
-          });
-      } catch (e) {
-        if (e?.response?.data?.message === "Internal Server Error") {
+  const fetchFacilitiesData = async (page = currentPage,keyword) => {
+    console.log("Keyword",keyword);
+    try {
+      await axios
+        .get(`${window.$BackEndUrl}/facilities`, {
+          headers: headers,
+          params: {
+            page,
+            per_page: itemsPerPage,
+            search: keyword
+          },
+        })
+        .then((response) => {
+          setAmbulanceData(response?.data?.data);
           setIsLoading(false);
-          setAmbulanceData([]);
-        }
-        console.log(e);
+          console.log(response?.data?.data, "asds");
+        });
+    } catch (e) {
+      if (e?.response?.data?.message === "Internal Server Error") {
+        setIsLoading(false);
+        setAmbulanceData([]);
       }
-    };
-    fetchFacilitiesData();
-  }, [submitDone, currentPage]);
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    
+    fetchFacilitiesData(currentPage,searchKeyword);
+  }, [submitDone, currentPage,searchKeyword]);
 
   useEffect(() => {
     const fetchusersData = async () => {
@@ -359,8 +369,8 @@ const HealthCareFiles = () => {
   });
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 33.7519137,
-    lng: 72.7970134,
+    lat: 26.9894429391302,
+    lng: 17.761961078429668,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -480,7 +490,7 @@ const HealthCareFiles = () => {
     const input = document.getElementById("address");
     const options = {
       // bounds: defaultBounds, // Uncomment this line if you have specific bounds
-      componentRestrictions: { country: null },
+      componentRestrictions: { country: "lby" },
       fields: [
         "address_components",
         "geometry",
@@ -581,7 +591,10 @@ const HealthCareFiles = () => {
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
-              placeholder="Search Ambulances..."
+              placeholder="Search Healthcare..."
+              value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyPress={handleSearchKeyPress}
             />
           </div>
           {/* <button
@@ -1654,7 +1667,7 @@ const HealthCareFiles = () => {
                     </div>
                     <Map
                       google={google}
-                      zoom={10}
+                      zoom={5}
                       onClick={handleMapClick}
                       disableDefaultUI
                       zoomControlOptions={{

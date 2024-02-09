@@ -38,6 +38,8 @@ export default function DriverMain() {
     newPin: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchKeyword, setSearchKeyword] = useState("");
+
   const itemsPerPage = 10;
   const [phoneNumbers, setPhoneNumbers] = useState([]);
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
@@ -182,7 +184,7 @@ export default function DriverMain() {
   //   setIsModalOpen(false);
   //   setViewOpen(false);
   // };
-  const GetRecords = async (page = 1) => {
+  const GetRecords = async (page = 1,keyword) => {
     try {
       var token = localStorage.getItem("token");
       console.log(token);
@@ -196,6 +198,7 @@ export default function DriverMain() {
         params: {
           page,
           per_page: itemsPerPage,
+          search: keyword
         },
       });
 
@@ -209,8 +212,8 @@ export default function DriverMain() {
     }
   };
   useEffect(() => {
-    GetRecords(currentPage);
-  }, [deleteModal, isModalOpen, currentPage]);
+    GetRecords(currentPage,searchKeyword);
+  }, [deleteModal, isModalOpen, currentPage,searchKeyword]);
   const handleDelete = () => {
     DeleteDriver();
   };
@@ -320,6 +323,8 @@ export default function DriverMain() {
                 className="bg-transparent border-0 focus:border-none w-full text-right placeholder:text-sm"
                 type="text"
                 placeholder="Search Driver..."
+                value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
               />
             </div>
 

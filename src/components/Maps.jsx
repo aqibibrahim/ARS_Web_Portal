@@ -43,8 +43,8 @@ const Maps = (props) => {
   const [healthCareData, setHealthCareData] = useState([]);
   const [regionData, setRegionData] = useState([]);
   const [position, setPosition] = useState({
-    lat: 33.7519137,
-    lng: 72.7970134,
+    lat: 26.9894429391302,
+    lng: 17.761961078429668,
   });
   const [newposition, setNewPosition] = useState({
     lat: "",
@@ -413,7 +413,7 @@ const Maps = (props) => {
       <Map
         Map
         google={google}
-        zoom={10}
+        zoom={6}
         initialCenter={position}
         disableDefaultUI
         center={newposition}

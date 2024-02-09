@@ -46,7 +46,7 @@ const AmbulanceFiles = () => {
   const [allMakes, setAllMakes] = useState([""]);
   const [allModels, setAllModels] = useState([""]);
   const [selectedOption, setSelectedOption] = useState(null);
-
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedMakeOption, setSelectedMakeOption] = useState(null);
   const [selectedModelOption, setSelectedModelOption] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState(false);
@@ -84,6 +84,11 @@ const AmbulanceFiles = () => {
     }
 
     CreateAmbulance.setFieldValue("password", event.target.value);
+  };
+  const handleSearchKeyPress = (event) => {
+    if (event.key === "Enter") {
+      fetchAmbulanceData(1, searchKeyword);
+    }
   };
   const handleEditPasswordChange = (event) => {
     const inputValue = event.target.value;
@@ -178,7 +183,7 @@ const AmbulanceFiles = () => {
     setSelectedAmbulance(ambulance);
   };
 
-  const fetchAmbulanceData = async (page = currentPage) => {
+  const fetchAmbulanceData = async (page = currentPage,keyword = "") => {
     try {
       await axios
         .get(`${window.$BackEndUrl}/ambulances`, {
@@ -186,6 +191,7 @@ const AmbulanceFiles = () => {
           params: {
             page,
             per_page: itemsPerPage,
+            search: keyword
           },
         })
         .then((response) => {
@@ -201,8 +207,8 @@ const AmbulanceFiles = () => {
     setShowPassword(!showPassword);
   };
   useEffect(() => {
-    fetchAmbulanceData(currentPage);
-  }, [submitDone, currentPage, isDelete]);
+    fetchAmbulanceData(currentPage,searchKeyword);
+  }, [submitDone, currentPage, isDelete,searchKeyword]);
 
   const CreateAmbulance = useFormik({
     initialValues: {
@@ -385,8 +391,8 @@ const AmbulanceFiles = () => {
   }, [isModalOpen]);
   const { ControlPosition, Geocoder } = google.maps;
   const [position, setPosition] = useState({
-    lat: 33.7519137,
-    lng: 72.7970134,
+    lat: 26.9894429391302,
+    lng: 17.761961078429668,
   });
 
   const [address, setAddress] = useState("No address available");
@@ -469,7 +475,7 @@ const AmbulanceFiles = () => {
     const input = document.getElementById("address");
     const options = {
       // bounds: defaultBounds, // Uncomment this line if you have specific bounds
-      componentRestrictions: { country: null },
+      componentRestrictions: { country: "lby" },
       fields: [
         "address_components",
         "geometry",
@@ -660,6 +666,9 @@ const AmbulanceFiles = () => {
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
               placeholder="Search Ambulances..."
+              value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyPress={handleSearchKeyPress}
             />
           </div>
 
@@ -1473,7 +1482,7 @@ const AmbulanceFiles = () => {
                     </div>
                     <Map
                       google={google}
-                      zoom={10}
+                      zoom={5}
                       onClick={handleMapClick}
                       disableDefaultUI
                       zoomControlOptions={{
