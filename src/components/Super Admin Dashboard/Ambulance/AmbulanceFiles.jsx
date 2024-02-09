@@ -46,7 +46,7 @@ const AmbulanceFiles = () => {
   const [allMakes, setAllMakes] = useState([""]);
   const [allModels, setAllModels] = useState([""]);
   const [selectedOption, setSelectedOption] = useState(null);
-
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedMakeOption, setSelectedMakeOption] = useState(null);
   const [selectedModelOption, setSelectedModelOption] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState(false);
@@ -85,6 +85,11 @@ const AmbulanceFiles = () => {
     }
 
     CreateAmbulance.setFieldValue("password", event.target.value);
+  };
+  const handleSearchKeyPress = (event) => {
+    if (event.key === "Enter") {
+      fetchAmbulanceData(1, searchKeyword);
+    }
   };
   const handleEditPasswordChange = (event) => {
     const inputValue = event.target.value;
@@ -179,7 +184,7 @@ const AmbulanceFiles = () => {
     setSelectedAmbulance(ambulance);
   };
 
-  const fetchAmbulanceData = async (page = currentPage) => {
+  const fetchAmbulanceData = async (page = currentPage,keyword = "") => {
     try {
       await axios
         .get(`${window.$BackEndUrl}/ambulances`, {
@@ -187,6 +192,7 @@ const AmbulanceFiles = () => {
           params: {
             page,
             per_page: itemsPerPage,
+            search: keyword
           },
         })
         .then((response) => {
@@ -202,8 +208,8 @@ const AmbulanceFiles = () => {
     setShowPassword(!showPassword);
   };
   useEffect(() => {
-    fetchAmbulanceData(currentPage);
-  }, [submitDone, currentPage, isDelete]);
+    fetchAmbulanceData(currentPage,searchKeyword);
+  }, [submitDone, currentPage, isDelete,searchKeyword]);
 
   const CreateAmbulance = useFormik({
     initialValues: {
@@ -655,14 +661,17 @@ const AmbulanceFiles = () => {
         </div>
         <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100 justify-end  ">
           <div className="flex flex-row space-x-2 "></div>
-          {/* <div className="flex flex-1 ml-4 items-center bg-gray-300 rounded-lg px-3 ">
+          <div className="flex flex-1 ml-4 items-center bg-gray-300 rounded-lg px-3 ">
             <BsSearch width={9} height={9} />
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
               placeholder="Search Ambulances..."
+              value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyPress={handleSearchKeyPress}
             />
-          </div> */}
+          </div>
 
           <button
             className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"

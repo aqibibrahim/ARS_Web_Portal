@@ -63,6 +63,8 @@ const HealthCareFiles = () => {
   const [isUpdateDepartment, setIsUpdateDepartment] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [updateFocalOption, setUpdateFocalOption] = useState([]);
+  
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   const itemsPerPage = 10; // You can adjust this based on your preference
   const [totalDepartments, setTotalDepartments] = useState(0);
@@ -73,6 +75,11 @@ const HealthCareFiles = () => {
   const handleOnChange = (value) => {
     setupdateFocalPerson(value);
     console.log("value:", value);
+  };
+  const handleSearchKeyPress = (event) => {
+    if (event.key === "Enter") {
+      fetchAmbulanceData(1, searchKeyword);
+    }
   };
   const handleChangeFocalPerson = (value) => {
     setOptionsFocalPerson(value);
@@ -155,32 +162,35 @@ const HealthCareFiles = () => {
     });
     setUpdateFormOpen(true);
   };
-  useEffect(() => {
-    const fetchFacilitiesData = async (page = currentPage) => {
-      try {
-        await axios
-          .get(`${window.$BackEndUrl}/facilities`, {
-            headers: headers,
-            params: {
-              page,
-              per_page: itemsPerPage,
-            },
-          })
-          .then((response) => {
-            setAmbulanceData(response?.data?.data);
-            setIsLoading(false);
-            console.log(response?.data?.data, "asds");
-          });
-      } catch (e) {
-        if (e?.response?.data?.message === "Internal Server Error") {
+  const fetchFacilitiesData = async (page = currentPage,keyword) => {
+    console.log("Keyword",keyword);
+    try {
+      await axios
+        .get(`${window.$BackEndUrl}/facilities`, {
+          headers: headers,
+          params: {
+            page,
+            per_page: itemsPerPage,
+            search: keyword
+          },
+        })
+        .then((response) => {
+          setAmbulanceData(response?.data?.data);
           setIsLoading(false);
-          setAmbulanceData([]);
-        }
-        console.log(e);
+          console.log(response?.data?.data, "asds");
+        });
+    } catch (e) {
+      if (e?.response?.data?.message === "Internal Server Error") {
+        setIsLoading(false);
+        setAmbulanceData([]);
       }
-    };
-    fetchFacilitiesData();
-  }, [submitDone, currentPage]);
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    
+    fetchFacilitiesData(currentPage,searchKeyword);
+  }, [submitDone, currentPage,searchKeyword]);
 
   useEffect(() => {
     const fetchusersData = async () => {
@@ -576,14 +586,17 @@ const HealthCareFiles = () => {
         </div>
         <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100 justify-end ">
           <div className="flex flex-row space-x-2"></div>
-          {/* <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
+          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
             <BsSearch width={9} height={9} />
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
-              placeholder="Search Ambulances..."
+              placeholder="Search Healthcare..."
+              value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyPress={handleSearchKeyPress}
             />
-          </div> */}
+          </div>
           {/* <button
               className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
               type="button"
