@@ -24,8 +24,8 @@ function classNames(...classes) {
 }
 const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
 const tabConfig = {
-  Incident: "Create Incident",
-  Ambulance: "Select Ambulance",
+  الحادث: "تسجيل حادث",
+  Ambulance: "اختر سيارة اسعاف",
   HealthCare: "Select HealthCare",
 };
 
@@ -40,7 +40,7 @@ const tabConfig = {
 //   { label: "Both", value: 3 },
 // ];
 const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
-  const [activeTab, setActiveTab] = useState("Incident");
+  const [activeTab, setActiveTab] = useState("الحادث");
   const [isAssignedAmbulancesVisible, setIsAssignedAmbulancesVisible] =
     useState(false);
   const [incidentData, setIncidentData] = useState({});
@@ -140,7 +140,7 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
   const renderFormForTab = () => {
     let editId = localStorage.getItem("IncidentID");
     switch (activeTab) {
-      case "Incident":
+      case "الحادث":
         return (
           <Header
             getlatitude={data}
@@ -593,7 +593,7 @@ const Header = ({
                   onClick={() => setOpen(true)}
                   className=" text-sm  leading-6 text-gray-900 text-right w-full flex justify-end pr-2 "
                 >
-                  Choose Incident Location
+                  اختر موقع الحادث
                 </button>
               </label>
               <div className="relative mt-2">
@@ -622,7 +622,7 @@ const Header = ({
                 htmlFor="informer_name"
                 className="block text-sm font-sm leading-6 text-gray-900 text-right placeholder:text-sm mr-2"
               >
-                Informer Name
+                اسم المتصل
               </label>
               <div className="relative mt-2">
                 <input
@@ -632,7 +632,7 @@ const Header = ({
                   name="informer_name"
                   id="informer_name"
                   className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                  placeholder="Enter Informer Name"
+                  placeholder="أدخل اسم المتصل"
                   readOnly
                 />
               </div>
@@ -644,7 +644,7 @@ const Header = ({
                 htmlFor="informer_phone_numbers"
                 className="block text-sm mr-2 leading-6 text-gray-900 text-right"
               >
-                Contact Number
+                رقم التواصل
               </label>
               <div className="relative mt-2">
                 <InputMask
@@ -668,7 +668,7 @@ const Header = ({
                 htmlFor="informer_phone_numbers"
                 className="block text-sm mr-2 leading-6 text-gray-900 text-right"
               >
-                No. of Person
+                عدد الأشخاص
               </label>
               <div className="relative mt-2">
                 <input
@@ -678,7 +678,7 @@ const Header = ({
                   name="number_of_persons"
                   id="number_of_persons"
                   className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                  placeholder="Enter Number of Person"
+                  placeholder="أدخل عدد الأشخاص"
                   readOnly
                 />
               </div>
@@ -765,7 +765,7 @@ const Header = ({
               htmlFor="informer_phone_numbers"
               className="block text-sm mr-2 leading-6 text-gray-900 text-right"
             >
-              Incident Type
+              اختر نوع الحادث
             </label>
             <input
               // onChange={createIncident.handleChange}
@@ -774,7 +774,7 @@ const Header = ({
               name="number_of_persons"
               id="number_of_persons"
               className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-              placeholder="Enter Number of Person"
+              // placeholder="Enter Number of Person"
               readOnly
             />
           </div>
@@ -859,7 +859,7 @@ const Header = ({
               htmlFor="informer_phone_numbers"
               className="block text-sm mr-2 leading-6 text-gray-900 text-right"
             >
-              Emergency Type
+              اختر نوع الطوارئ
             </label>
             <input
               // onChange={createIncident.handleChange}
@@ -868,7 +868,7 @@ const Header = ({
               name="number_of_persons"
               id="number_of_persons"
               className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-              placeholder="Enter Number of Person"
+              // placeholder="Enter Number of Person"
               readOnly
             />
           </div>
@@ -953,7 +953,7 @@ const Header = ({
               htmlFor="informer_phone_numbers"
               className="block text-sm mr-2 leading-6 text-gray-900 text-right"
             >
-              Gender
+              الجنس
             </label>
             <input
               // onChange={createIncident.handleChange}
@@ -972,7 +972,7 @@ const Header = ({
                 htmlFor="description"
                 className="block text-sm mr-2 font-medium leading-6 text-gray-900 text-right"
               >
-                Description
+                التفاصيل
               </label>
               <div className="mt-2">
                 <textarea
@@ -994,7 +994,7 @@ const Header = ({
             type="button"
             onClick={handleIncidentNextEdit}
           >
-            Next
+            التالي
           </button>
         </div>
       ) : (
@@ -1010,7 +1010,7 @@ const Header = ({
                   onClick={() => setOpen(true)}
                   className=" text-sm  leading-6 text-gray-900 text-right w-full flex justify-end pr-2 "
                 >
-                  Choose Incident Location
+                  اختر موقع الحادث
                 </button>
               </label>
               <div className="relative mt-2">
@@ -1039,7 +1039,7 @@ const Header = ({
                 htmlFor="informer_name"
                 className="block text-sm font-sm leading-6 text-gray-900 text-right placeholder:text-sm mr-2"
               >
-                Informer Name
+                اسم المتصل
               </label>
               <div className="relative mt-2">
                 <input
@@ -1049,7 +1049,7 @@ const Header = ({
                   name="informer_name"
                   id="informer_name"
                   className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                  placeholder="Enter Informer Name"
+                  placeholder="أدخل اسم المتصل"
                   required
                 />
               </div>
@@ -1061,7 +1061,7 @@ const Header = ({
                 htmlFor="informer_phone_numbers"
                 className="block text-sm mr-2 leading-6 text-gray-900 text-right"
               >
-                Contact Number
+                رقم التواصل
               </label>
               <div className="relative mt-2">
                 <InputMask
@@ -1085,7 +1085,7 @@ const Header = ({
                 htmlFor="informer_phone_numbers"
                 className="block text-sm mr-2 leading-6 text-gray-900 text-right"
               >
-                No. of Person
+                عدد الأشخاص
               </label>
               <div className="relative mt-2">
                 <input
@@ -1095,7 +1095,7 @@ const Header = ({
                   name="number_of_persons"
                   id="number_of_persons"
                   className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                  placeholder="Enter Number of Person"
+                  placeholder="أدخل عدد الأشخاص"
                   required
                 />
               </div>
@@ -1106,7 +1106,7 @@ const Header = ({
               {({ open }) => (
                 <>
                   <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
-                    Select Incident type
+                    اختر نوع الحادث
                   </Listbox.Label>
                   <div className="relative mt-2">
                     <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
@@ -1187,7 +1187,7 @@ const Header = ({
               {({ open }) => (
                 <>
                   <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
-                    Select Emergency type
+                    اختر نوع الطوارئ
                   </Listbox.Label>
                   <div className="relative mt-2">
                     <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
@@ -1265,7 +1265,7 @@ const Header = ({
               {({ open }) => (
                 <>
                   <Listbox.Label className="block text-sm font-medium leading-6 mr-2 text-gray-900 text-right">
-                    Select Gender
+                    اختر الجنس
                   </Listbox.Label>
                   <div className="relative mt-2">
                     <Listbox.Button className="relative w-full h-8 cursor-default rounded-md bg-white py-1.5 pl-10 pr-3 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100 sm:text-sm sm:leading-6">
@@ -1344,7 +1344,7 @@ const Header = ({
                 htmlFor="description"
                 className="block text-sm mr-2 font-medium leading-6 text-gray-900 text-right"
               >
-                Description
+                التفاصيل
               </label>
               <div className="mt-2">
                 <textarea
@@ -1354,7 +1354,7 @@ const Header = ({
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 bg-offWhiteCustom-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-100 sm:text-sm sm:leading-6 text-right"
                   onChange={createIncident.handleChange}
                   value={createIncident.values.description}
-                  placeholder="Description"
+                  placeholder="التفاصيل"
                 />
               </div>
             </div>
@@ -1364,7 +1364,7 @@ const Header = ({
         `}
             type="submit"
           >
-            Next
+            التالي
           </button>
         </form>
       )}

@@ -184,7 +184,7 @@ export default function DriverMain() {
   //   setIsModalOpen(false);
   //   setViewOpen(false);
   // };
-  const GetRecords = async (page = 1,keyword) => {
+  const GetRecords = async (page = 1, keyword) => {
     try {
       var token = localStorage.getItem("token");
       console.log(token);
@@ -198,7 +198,7 @@ export default function DriverMain() {
         params: {
           page,
           per_page: itemsPerPage,
-          search: keyword
+          search: keyword,
         },
       });
 
@@ -212,8 +212,8 @@ export default function DriverMain() {
     }
   };
   useEffect(() => {
-    GetRecords(currentPage,searchKeyword);
-  }, [deleteModal, isModalOpen, currentPage,searchKeyword]);
+    GetRecords(currentPage, searchKeyword);
+  }, [deleteModal, isModalOpen, currentPage, searchKeyword]);
   const handleDelete = () => {
     DeleteDriver();
   };
@@ -313,7 +313,7 @@ export default function DriverMain() {
         {" "}
         <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold">Drivers</h1>
+            <h1 className="text-xl font-semibold">السائق</h1>
           </div>
           <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100 justify-end  ">
             <div className="flex flex-row space-x-2 "></div>
@@ -322,9 +322,9 @@ export default function DriverMain() {
               <input
                 className="bg-transparent border-0 focus:border-none w-full text-right placeholder:text-sm"
                 type="text"
-                placeholder="Search Driver..."
+                placeholder="البحث عن السائق"
                 value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+                onChange={(e) => setSearchKeyword(e.target.value)}
               />
             </div>
 
@@ -335,7 +335,7 @@ export default function DriverMain() {
                 NewDriverCreation();
               }}
             >
-              + Create Driver
+              + السائق تسجيل
             </button>
           </div>
           {isLoading ? (
@@ -362,13 +362,13 @@ export default function DriverMain() {
                           scope="col"
                           className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                         >
-                          Phone Numbers
+                          رقم الهاتف
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                         >
-                          Email
+                          بريد إلكتروني
                         </th>
                         {/* <th
                   scope="col"
@@ -386,7 +386,7 @@ export default function DriverMain() {
                           scope="col"
                           className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                         >
-                          Driver Name
+                          اسم السائق
                         </th>
                       </tr>
                     </thead>
@@ -436,13 +436,14 @@ export default function DriverMain() {
                   <div className="flex justify-end mt-5 ">
                     <Pagination
                       className="flex text-sm text-semi-bold mb-2"
+                      style={{ fontFamily: "Cairo" }}
                       current={currentPage}
                       total={allDrivers?.total || 0}
                       pageSize={itemsPerPage}
                       onChange={(page) => setCurrentPage(page)}
                       showSizeChanger={false}
                       showTotal={(total, range) =>
-                        `${range[0]}-${range[1]} of ${total} items`
+                        `${range[0]}-${range[1]} of ${total} السائق`
                       }
                     />
                   </div>
@@ -458,26 +459,48 @@ export default function DriverMain() {
       </div>
 
       <Modal
-        title="Are you sure to delete this Driver?"
+        title={
+          <div
+            style={{ fontFamily: "Cairo", padding: 10 }}
+            className="flex justify-end"
+          >
+            هل أنت متأكد من حذف برنامج التشغيل هذا؟
+          </div>
+        }
         open={deleteModal}
         onOk={handleDelete}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
-          style: { backgroundColor: "red" },
+          style: { backgroundColor: "red", fontFamily: "Cairo", margin: 10 },
         }}
-        okText="Delete"
+        cancelButtonProps={{
+          style: { fontFamily: "Cairo" },
+        }}
+        okText="حذف"
+        cancelText="أغلق"
       ></Modal>
       <Modal
-        title="Update Pin"
+        title={
+          <span
+            className="flex justify-end p-5"
+            style={{ fontFamily: "Cairo" }}
+          >
+            تحديث دبوس
+          </span>
+        }
         open={pinModal}
         onOk={handleNewPin}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
-          style: { backgroundColor: "green" },
+          style: { backgroundColor: "green", fontFamily: "Cairo", margin: 10 },
         }}
-        okText="Update"
+        cancelButtonProps={{
+          style: { fontFamily: "Cairo" },
+        }}
+        cancelText="أغلق"
+        okText="تحديث "
       >
         <div className="flex flex-col space-y-2 w-full">
           {/* <div>
@@ -510,12 +533,12 @@ export default function DriverMain() {
               />
             </div>
           </div> */}
-          <div>
+          <div style={{ fontFamily: "Cairo", padding: 10 }}>
             <label
               htmlFor="email"
               className="block text-sm font-medium leading-6  text-gray-900 text-right"
             >
-              New PIN
+              دبوس جديد
             </label>
             <div className="relative mt-2">
               <input

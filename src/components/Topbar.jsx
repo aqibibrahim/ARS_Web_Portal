@@ -121,7 +121,7 @@ function TopBar({}) {
               </Dropdown>
             )}
           </TopBarItem>
-          <TopBarItem
+          {/* <TopBarItem
             icon={IoSettingsOutline}
             onClick={() => toggleDropdown("settings")}
             isActive={activeDropdown === "settings"}
@@ -134,7 +134,7 @@ function TopBar({}) {
                 <Settings />
               </Dropdown>
             )}
-          </TopBarItem>
+          </TopBarItem> */}
           <button
             onClick={() => {
               localStorage.clear();
