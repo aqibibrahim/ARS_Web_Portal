@@ -98,6 +98,7 @@ export default function IncidentList({}) {
   const [visibleDivIndex, setVisibleDivIndex] = useState(null);
   const [isAssignHealthcareVisible, setIsAssignHealthcareVisible] =
     useState(true);
+    const [searchKeyword, setSearchKeyword] = useState("");
   const [assignedAmbulance, setAssignedAmbulance] = useState([]);
   const [selectedAmbID, setSelectedAmbID] = useState([]);
   const [ambulanceData, setAmbulanceData] = useState({});
@@ -172,7 +173,7 @@ export default function IncidentList({}) {
     }
   };
   // Get All Incidents
-  const fetchincidentData = async (page = 1, status) => {
+  const fetchincidentData = async (page = 1, status,keyword) => {
     try {
       await axios
         .get(`https://ars.disruptwave.com/api/incidents`, {
@@ -181,6 +182,7 @@ export default function IncidentList({}) {
             page: currentPage,
             per_page: itemsPerPage,
             status,
+            search:keyword
           },
         })
         .then((response) => {
@@ -223,9 +225,10 @@ export default function IncidentList({}) {
     fetchCompleteincidentData();
     fetchincidentData(
       currentPage,
-      activeTab === "active" ? "active" : "active"
+      activeTab === "active" ? "active" : "active",
+      searchKeyword
     );
-  }, [deleteModal, currentPage, activeTab, deleteFormOpen]);
+  }, [deleteModal, currentPage, activeTab, deleteFormOpen,searchKeyword]);
   useEffect(() => {
     fetchCompleteincidentData();
   }, [activeTab, currentCompletedPage, deleteFormOpen]);
@@ -547,14 +550,16 @@ export default function IncidentList({}) {
           </div>
           <div className="flex flex-row items-center p-4 space-x-4 justify-end bg-gray-100  ">
             <div className="flex flex-row space-x-2"></div>
-            {/* <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 py-1">
+            <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 py-1">
               <BsSearch width={9} height={9} />
               <input
                 className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
                 type="text"
                 placeholder="Search Incidents..."
+                value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
               />
-            </div> */}
+            </div>
             <div className="flex flex-row items-center p-4  ">
               <div className="flex flex-row space-x-2 justify-center">
                 <Tab
