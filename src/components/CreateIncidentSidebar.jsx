@@ -182,9 +182,8 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
           />
         )}
         <div
-          className={`h-full bg-grayBg-100 transition-all duration-300 ${
-            isAssignedAmbulancesVisible ? "" : "rounded-l-lg"
-          } 
+          className={`h-full bg-grayBg-100 transition-all duration-300 ${isAssignedAmbulancesVisible ? "" : "rounded-l-lg"
+            } 
            overflow-y-scroll no-scrollbar`}
         >
           <div className="flex flex-col px-2 py-1  rounded-[12px] bg-white w-[450px] h-screen overflow-hidden">
@@ -393,7 +392,7 @@ const Header = ({
               } else {
                 toast.error(
                   "Failed to create incident. Unexpected status code: " +
-                    res.status
+                  res.status
                 );
                 console.log("Unexpected status code:", res.status);
               }
@@ -402,14 +401,14 @@ const Header = ({
           setLoadingMessage(false);
           {
             e?.response?.data?.data?.informer_name &&
-            e.response.data.data.informer_name.length > 0
+              e.response.data.data.informer_name.length > 0
               ? toast.error(e.response.data.data.informer_name[0])
               : null;
           }
 
           {
             e?.response?.data?.data?.description &&
-            e.response.data.data.description.length > 0
+              e.response.data.data.description.length > 0
               ? toast.error(e.response.data.data.description[0])
               : null;
           }
@@ -1419,7 +1418,7 @@ const Header = ({
                           type="text"
                           placeholder="Enter a location"
                           onChange={handlePlaceChange}
-                          // value={createIncident.values.informer_address}
+                        // value={createIncident.values.informer_address}
                         />
                         <div style={{ marginTop: "10px" }}>
                           <strong>Address:</strong> {address}
@@ -1433,7 +1432,7 @@ const Header = ({
                       </div>
                       <div
                         id="map"
-                        // style={{ height: "0px", width: "0px" }}
+                      // style={{ height: "0px", width: "0px" }}
                       ></div>
                       <Map
                         google={google}

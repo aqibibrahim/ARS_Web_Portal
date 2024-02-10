@@ -256,10 +256,10 @@ const ModalComponent = (props) => {
                         {editBit
                           ? ""
                           : validationErrors.pin && (
-                              <p className="text-red-500 text-sm">
-                                {validationErrors.pin}
-                              </p>
-                            )}
+                            <p className="text-red-500 text-sm">
+                              {validationErrors.pin}
+                            </p>
+                          )}
                       </div>
                     )}
 
@@ -433,7 +433,7 @@ const ModalComponent = (props) => {
                       onClick={createNewDriver}
                       className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                     >
-                      SAve
+                      تسجيل
                     </button>
                   ) : (
                     <button

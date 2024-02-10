@@ -217,7 +217,7 @@ export default function HealthCareDepartments() {
 						<form onSubmit={updatedepartment.handleSubmit}>
 							<div>
 								<label htmlFor="total_beds" className="block  text-sm font-medium leading-6 text-gray-900 text-right">
-								المجموع
+									المجموع
 								</label>
 								<div className="relative mt-2">
 									<input
@@ -338,18 +338,17 @@ export default function HealthCareDepartments() {
 									type="button"
 									className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
 								>
-									loading...
-								</button>
+									تحميل...								</button>
 							) : (
 								<div className='flex justify-end'>
-<button
-									type="submit"
-									className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
-								>
-									Update
-								</button>
-									</div>
-								
+									<button
+										type="submit"
+										className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
+									>
+										تحديث
+									</button>
+								</div>
+
 							)}
 						</form>
 					</div>

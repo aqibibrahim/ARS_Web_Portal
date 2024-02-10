@@ -40,13 +40,14 @@ const Lookups = () => {
         <div className="p-4 text-center  ">
           <h1 className="text-2xl font-semibold m-2 mt-3 justify-center">
             {" "}
-            Lookup
+            البحث
+
           </h1>
         </div>{" "}
         <div className="flex justify-end ">
           <Tab
             selected={activeTab === "vehicleModel"}
-            title="Vehicle Model"
+            title="موديل السيارة"
             onClick={() => handleTabClick("vehicleModel")}
             className={`${activeTab === "vehicleModel"
               ? "bg-blue-500 text-white"
@@ -54,7 +55,7 @@ const Lookups = () => {
               }`}
           />{" "}   <Tab
             selected={activeTab === "vehicleMake"}
-            title="Vehicle Make"
+            title="نوع السيارة"
             onClick={() => handleTabClick("vehicleMake")}
             className={`${activeTab === "vehicleMake"
               ? "bg-blue-500 text-white"
@@ -65,7 +66,7 @@ const Lookups = () => {
           <Tab
             selected={activeTab === "Departments"}
             onClick={() => handleTabClick("Departments")}
-            title="Departments"
+            title="الاقسام"
             className={`${activeTab === "Departments"
               ? "bg-blue-500 text-white"
               : "bg-white text-blue-500"
@@ -74,7 +75,7 @@ const Lookups = () => {
           <Tab
             selected={activeTab === "incidentType"}
             onClick={() => handleTabClick("incidentType")}
-            title="Incident Types"
+            title="نوع الحادث"
             className={`${activeTab === "incidentType"
               ? "bg-blue-500 text-white"
               : "bg-white text-blue-500"
@@ -83,7 +84,7 @@ const Lookups = () => {
           <Tab
             selected={activeTab === "gender"}
             onClick={() => handleTabClick("gender")}
-            title="Gender"
+            title="الجنس"
             className={`${activeTab === "gender"
               ? "bg-blue-500 text-white"
               : "bg-white text-blue-500"
@@ -91,7 +92,7 @@ const Lookups = () => {
           />{" "}
           <Tab
             selected={activeTab === "emergencyType"}
-            title="Emergency Type"
+            title="نوع الحالة"
             onClick={() => handleTabClick("emergencyType")}
             className={`${activeTab === "emergencyType"
               ? "bg-blue-500 text-white"
@@ -100,7 +101,7 @@ const Lookups = () => {
           />{" "}
           <Tab
             selected={activeTab === "reasons"}
-            title="Rejected Reasons"
+            title="اسباب الرفض"
             onClick={() => handleTabClick("reasons")}
             className={`${activeTab === "reasons"
               ? "bg-blue-500 text-white"
@@ -109,7 +110,7 @@ const Lookups = () => {
           />
           <Tab
             selected={activeTab === "equipments"}
-            title="Equipments"
+            title="المعدات"
             onClick={() => handleTabClick("equipments")}
             className={`${activeTab === "equipments"
               ? "bg-blue-500 text-white"

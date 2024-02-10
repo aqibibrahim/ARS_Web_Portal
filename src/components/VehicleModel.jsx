@@ -265,7 +265,7 @@ export default function VehicleModal() {
                   setSelectedOption("");
                 }}
               />
-              <h3 className="text-xl font-semibold">Create Vehicle Model</h3>
+              <h3 className="text-xl font-semibold">اضافة موديل سيارة جديد</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -275,7 +275,7 @@ export default function VehicleModal() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Vehicle Model
+                      موديل السيارة
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -283,7 +283,7 @@ export default function VehicleModal() {
                         name="vehicleModel"
                         onChange={handleChange}
                         value={state?.vehicleModel}
-                        placeholder="Vehicle Model"
+                        placeholder="    موديل السيارة "
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -293,11 +293,11 @@ export default function VehicleModal() {
                         htmlFor="persons_supported"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        Vehicle Make
+                        نوع السيارة
                       </label>
                       <Select
                         value={selectedOption}
-                        placeholder="Select Vehicle Make"
+                        placeholder="حدد  نوع السيارة"
                         onChange={handleSelect}
                         options={myData}
                         isMulti={false} // Updated from isMultiple
@@ -318,7 +318,7 @@ export default function VehicleModal() {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    اضافة...
                   </button>
                 ) : (
                   <button
@@ -326,7 +326,7 @@ export default function VehicleModal() {
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300 
                       `}
                   >
-                    Add
+                    اضافة
                   </button>
                 )}
               </div>
@@ -334,7 +334,7 @@ export default function VehicleModal() {
           </div>
         </div>
       )}{" "}
-      {viewOpen && (
+      {/* {viewOpen && (
         <div className=" inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
           <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
@@ -345,7 +345,6 @@ export default function VehicleModal() {
               />
               <h3 className="text-xl font-semibold">
                 Vehicle Model Details
-                {/* <span className="text-lime-600 ml-2">{editData?.status}</span> */}
               </h3>
             </div>
             <div>
@@ -359,19 +358,12 @@ export default function VehicleModal() {
                     Vehicle Model: {editData?.name}{" "}
                   </p>
                 </p>
-                {/* <p>
-                  <span className="font-semibold">Model:</span>{" "}
-                  {selectedAmbulance?.model}
-                </p>
-                <p>
-                  <span className="font-semibold">Plate#:</span>{" "}
-                  {selectedAmbulance?.plate_no}
-                </p> */}
+              
               </div>
             </div>
           </div>
         </div>
-      )}
+      )} */}
       {editOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
           <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white h-auto mb-5">
@@ -384,7 +376,7 @@ export default function VehicleModal() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">Edit Vehicle Model</h3>
+              <h3 className="text-xl font-semibold">    تحديث موديل السيارة</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -394,7 +386,7 @@ export default function VehicleModal() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Vehicle Model:
+                      موديل السيارة
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -402,7 +394,7 @@ export default function VehicleModal() {
                         name="editVehicleModel"
                         onChange={handleChange}
                         value={state?.editVehicleModel}
-                        placeholder="Name of Vehicle Model"
+                        placeholder="موديل السيارة"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -416,11 +408,10 @@ export default function VehicleModal() {
                         htmlFor="persons_supported"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        Vehicle Make
-                      </label>
+                        نوع السيارة                      </label>
                       <Select
                         value={selectedOption}
-                        placeholder="Select Vehicle Make"
+                        placeholder="نوع السيارة"
                         onChange={handleSelect}
                         options={myData}
                         isMultiple={false}
@@ -445,14 +436,14 @@ export default function VehicleModal() {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    تحديث...
                   </button>
                 ) : (
                   <button
                     onClick={editVehcileMake}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Update
+                    تحديث
                   </button>
                 )}
               </div>
@@ -477,7 +468,7 @@ export default function VehicleModal() {
         {" "}
         <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold m-2">Vehicle Make</h1>
+            <h1 className="text-xl font-semibold m-2">موديل السيارة</h1>
             <div>
               <button
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
@@ -486,7 +477,7 @@ export default function VehicleModal() {
                   AddNewVehicleModel();
                 }}
               >
-                + Add New Vehicle Make
+                + اضافة موديل السيارة جديد
               </button>
             </div>
           </div>
@@ -518,14 +509,13 @@ export default function VehicleModal() {
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Vehicle Make
+                  نوع السيارة
                 </th>
                 <th
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Vehicle Model
-                </th>
+                  موديل السيارة                </th>
               </tr>
             </thead>
             <tbody>
@@ -550,14 +540,14 @@ export default function VehicleModal() {
                       >
                         <BiEdit />
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => {
                           handleView(data);
                         }}
                         className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                       >
                         <BsEye />
-                      </button>
+                      </button> */}
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-md">

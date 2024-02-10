@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import StyledInput from "./StyledInput";
 import { Toaster, toast } from "sonner";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
+import loginImage from "../assets/mainlogo.png";
 const Login = ({ updateAuthenticationStatus }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,11 +17,10 @@ const Login = ({ updateAuthenticationStatus }) => {
   const Tab = ({ selected, title, onClick }) => {
     return (
       <button
-        className={`px-[62.5px]  py-2 transition-colors duration-150 ${
-          selected
-            ? "bg-blue-500 text-white"
-            : "bg-white  hover:bg-gray-200  text-black"
-        } focus:outline-none`}
+        className={`px-[62.5px]  py-2 transition-colors duration-150 ${selected
+          ? "bg-blue-500 text-white"
+          : "bg-white  hover:bg-gray-200  text-black"
+          } focus:outline-none`}
         onClick={onClick}
         style={{
           backgroundColor: selected ? "#3182ce !important" : "#fff !important",
@@ -84,65 +84,66 @@ const Login = ({ updateAuthenticationStatus }) => {
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-200">
       <Toaster richColors />
-      <div className="mb-5 font-bold text-lg">Call Center Manager</div>
-
-      
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-96"
-      >
-        
-       
-        <div className="mb-4">
-          <StyledInput
-            label={"Email"}
-            id={"email"}
-            type={"email"}
-            placeholder={"Email"}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-row items-center gap-28">
+        <div className="flex flex-col gap-7 m-auto items-center">
+          <img src={loginImage} alt="Login" className="w-48 h-48 mb-8" />
+          <p>منظومة الإسعاف والاستجابة للطوارئ</p>
         </div>
-        <div className="mb-6 relative rtl">
-          <StyledInput
-            label={"Password"}
-            id={"password"}
-            type={showPassword ? "text" : "password"} // Toggle between text and password
-            placeholder={"Password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="pl-10" // Add padding to accommodate the icon
-          />
-          {/* Show/Hide password button */}
-          <button
-            type="button"
-            onClick={togglePasswordVisibility}
-            className="relative -top-7 left-1 cursor-pointer z-10"
-          >
-            {showPassword ? <BsEyeSlash /> : <BsEye />}
-          </button>
-        </div>
-
-        <div className="flex items-center justify-center">
-          {loading ? (
-            <div
-              className="text-primary-100 bg-white rounded-md border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
-              type="submit"
-            >
-              Logging in...
+        <div className="flex flex-col gap-4 items-end">
+          <p className="font-bold text-xl">تسجيل الدخول</p>
+          <form onSubmit={handleSubmit} className="w-96">
+            <div className="mb-4">
+              <StyledInput
+                label={"اسم المستخدم"}
+                id={"email"}
+                type={"email"}
+                placeholder={"Email"}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
-          ) : (
-            <button
-              className="text-primary-100 bg-white rounded-md border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
-              type="submit"
-            >
-              Sign In
-            </button>
-          )}
-          {/* <p className="mx-3">Or</p>
+            <div className="mb-6 relative rtl">
+              <StyledInput
+                label={"كلمة المرور"}
+                id={"password"}
+                type={showPassword ? "text" : "password"} // Toggle between text and password
+                placeholder={"Password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pl-10" // Add padding to accommodate the icon
+              />
+              {/* Show/Hide password button */}
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="relative -top-7 left-1 cursor-pointer z-10"
+              >
+                {showPassword ? <BsEyeSlash /> : <BsEye />}
+              </button>
+            </div>
+
+            <div className="flex items-center justify-center">
+              {loading ? (
+                <div
+                  className="text-primary-100 bg-white rounded-md border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
+                  type="submit"
+                >
+                  Logging in...
+                </div>
+              ) : (
+                <button
+                  className="text-primary-100 bg-white rounded-md border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
+                  type="submit"
+                >
+                  تسجيل الدخول
+                </button>
+              )}
+              {/* <p className="mx-3">Or</p>
           <p>Login  <a  className="text-primary-100" href="/HealthcareLogin">Healthcare</a></p>     */}
-             </div>
-      </form>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

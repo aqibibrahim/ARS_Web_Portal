@@ -267,8 +267,7 @@ export default function Reasons() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Reason Name:
-                    </label>
+                      سبب الرفض                    </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
@@ -362,8 +361,7 @@ export default function Reasons() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Name:
-                    </label>
+                      اسباب الرفض                    </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
@@ -411,7 +409,7 @@ export default function Reasons() {
         </div>
       )}
       <Modal
-        title="Are you sure to delete this Reason?"
+        title={<span className="flex justify-end " style={{ fontFamily: "Cairo" }}>هل أنت متأكد من حذف هذا السبب؟</span>}
         open={deleteModal}
         onOk={deleteReason}
         onCancel={handleCancel}
@@ -419,7 +417,8 @@ export default function Reasons() {
         okButtonProps={{
           style: { backgroundColor: "red" },
         }}
-        okText="Delete"
+        cancelText="أغلق"
+        okText="حذف "
       ></Modal>
       <div
         className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen  `}
@@ -427,7 +426,7 @@ export default function Reasons() {
         {" "}
         <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold m-2">Rejected Reason</h1>
+            <h1 className="text-xl font-semibold m-2">اسباب الرفض</h1>
             <div>
               <button
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
@@ -436,7 +435,7 @@ export default function Reasons() {
                   createNewReasonClick();
                 }}
               >
-                + Create New Reason
+                + اضافة اسباب جديدة
               </button>
             </div>
           </div>
@@ -469,7 +468,7 @@ export default function Reasons() {
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Reason
+                  اسباب الرفض
                 </th>
               </tr>
             </thead>

@@ -5,7 +5,7 @@ import { Vars } from "../../helpers/helpers";
 import { useFormik } from "formik";
 import axios from "axios";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { EyeSlashIcon,EyeIcon } from "@heroicons/react/24/outline";
+import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 const ChangePassword = () => {
   var token = localStorage.getItem("token");
@@ -19,8 +19,8 @@ const ChangePassword = () => {
 
   const ChangePassword = useFormik({
     initialValues: {
-        oldPassword: "",
-        newPassword: "",
+      oldPassword: "",
+      newPassword: "",
     },
     onSubmit: (values) => {
       const JSON = {
@@ -38,7 +38,7 @@ const ChangePassword = () => {
               setLoading(false)
               toast.success("Updated Successfuly");
               ChangePassword.resetForm();
-        
+
             });
         } catch (e) {
           toast.error("Try Again");
@@ -70,20 +70,21 @@ const ChangePassword = () => {
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <Toaster richColors />
-      <div className="flex justify-between flex-col py-4">
-   
-          <span
-            onClick={() => goBack()}
-            className="hover:cursor-pointer w-16 flex justify-start items-center"
-          >
-            <ArrowLeftIcon className="h-5 w-5 mr-1 flex justify-center items-center  text-gray-500 cursor-pointer" />{" "}
-            Back
-          </span>
-    
+      <div className="flex justify-start  flex-col ">
+
+        <span
+          onClick={() => goBack()}
+          className="hover:cursor-pointer w-16 flex justify-start items-center"
+        >
+          <ArrowLeftIcon className="h-5 w-5 mr-1 flex justify-center items-center  text-gray-500 cursor-pointer" />{" "}
+          خلف
+        </span>
+
 
         <div>
-          <h1 className="text-lg  text-gray-800">Password Change</h1>
         </div>
+        <h1 className="text-lg  text-gray-800">تغيير كلمة السر </h1>
+
       </div>
       <form
         onSubmit={ChangePassword.handleSubmit}
@@ -94,66 +95,66 @@ const ChangePassword = () => {
             htmlFor="oldPassword"
             className="block text-sm font-medium leading-6 text-gray-900 text-right"
           >
-          Old Password
+            كلمة المرور القديمة
           </label>
           <div className="relative mt-2 flex items-center">
-      <button
-        type="button"
-        onClick={handleToggleOldPassword}
-        className="peer  px-2 border-0 bg-offWhiteCustom-100 py-2 sm:text-sm sm:leading-6"
-      >
-        {showOldPassword ?  <EyeIcon className="h-5 w-5  flex justify-center items-center  text-gray-500 cursor-pointer" /> : <EyeSlashIcon className="h-5 w-5  flex justify-center items-center  text-gray-500 cursor-pointer" />}
-      </button>
-      <div className="flex-1">
-        <input
-          id="oldPassword"
-          name="oldPassword"
-          type={showOldPassword ? 'text' : 'password'}
-          placeholder="Enter Old Password"
-          onChange={ChangePassword.handleChange}
-          value={ChangePassword.values.oldPassword}
-          className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-          required
-        />
-        <div
-          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-          aria-hidden="true"
-        />
-      </div>
-    </div>
-</div>
+            <button
+              type="button"
+              onClick={handleToggleOldPassword}
+              className="peer  px-2 border-0 bg-offWhiteCustom-100 py-2 sm:text-sm sm:leading-6"
+            >
+              {showOldPassword ? <EyeIcon className="h-5 w-5  flex justify-center items-center  text-gray-500 cursor-pointer" /> : <EyeSlashIcon className="h-5 w-5  flex justify-center items-center  text-gray-500 cursor-pointer" />}
+            </button>
+            <div className="flex-1">
+              <input
+                id="oldPassword"
+                name="oldPassword"
+                type={showOldPassword ? 'text' : 'password'}
+                placeholder="أدخل كلمة المرور القديمة"
+                onChange={ChangePassword.handleChange}
+                value={ChangePassword.values.oldPassword}
+                className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                required
+              />
+              <div
+                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        </div>
         <div className="mb-6">
           <label
             htmlFor="newPassword"
             className="block text-sm font-medium leading-6 text-gray-900 text-right"
           >
-            New Password
+            كلمة المرور الجديدة
           </label>
           <div className="relative mt-2 flex items-center">
-      <button
-        type="button"
-        onClick={handleTogglenewPassword}
-        className="peer  px-2 border-0 bg-offWhiteCustom-100 py-2 sm:text-sm sm:leading-6"
-      >
-        {shownewPassword ?  <EyeIcon className="h-5 w-5  flex justify-center items-center  text-gray-500 cursor-pointer" /> : <EyeSlashIcon className="h-5 w-5  flex justify-center items-center  text-gray-500 cursor-pointer" />}
-      </button>
-      <div className="flex-1">
-        <input
-          id="newPassword"
-          name="newPassword"
-          type={shownewPassword ? 'text' : 'password'}
-          placeholder="Enter New Password"
-          onChange={ChangePassword.handleChange}
-          value={ChangePassword.values.newPassword}
-          className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-          required
-        />
-        <div
-          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-          aria-hidden="true"
-        />
-      </div>
-    </div>
+            <button
+              type="button"
+              onClick={handleTogglenewPassword}
+              className="peer  px-2 border-0 bg-offWhiteCustom-100 py-2 sm:text-sm sm:leading-6"
+            >
+              {shownewPassword ? <EyeIcon className="h-5 w-5  flex justify-center items-center  text-gray-500 cursor-pointer" /> : <EyeSlashIcon className="h-5 w-5  flex justify-center items-center  text-gray-500 cursor-pointer" />}
+            </button>
+            <div className="flex-1">
+              <input
+                id="newPassword"
+                name="newPassword"
+                type={shownewPassword ? 'text' : 'password'}
+                placeholder="أدخل كلمة المرور الجديدة  "
+                onChange={ChangePassword.handleChange}
+                value={ChangePassword.values.newPassword}
+                className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                required
+              />
+              <div
+                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
         </div>
         <div className="flex items-center justify-between">
           {loading ? (
@@ -168,7 +169,7 @@ const ChangePassword = () => {
               className="text-primary-100 bg-white rounded-md border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
               type="submit"
             >
-              Update
+              تحديث
             </button>
           )}
         </div>

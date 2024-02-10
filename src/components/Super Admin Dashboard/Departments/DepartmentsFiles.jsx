@@ -209,14 +209,14 @@ const DepartmentsFiles = () => {
         <Toaster position="bottom-right" richColors />
         <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold m-2">Departments</h1>
+            <h1 className="text-xl font-semibold m-2">الاقسام</h1>
             <div>
               <button
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
                 type="button"
                 onClick={handleAddDepartment}
               >
-                + Add Department
+                + اضافة قسم
               </button>
             </div>
           </div>
@@ -230,8 +230,7 @@ const DepartmentsFiles = () => {
                     onClick={handleModalClose}
                   />
                   <h3 className="text-xl font-semibold">
-                    Create New Department
-                  </h3>
+                    اضافة قسم جديد                  </h3>
                 </div>
                 <form onSubmit={CreateDepartments.handleSubmit}>
                   <div className="flex flex-row justify-between gap-4 mb-4">
@@ -241,15 +240,14 @@ const DepartmentsFiles = () => {
                           htmlFor="name"
                           className="block  text-sm font-medium leading-6 text-gray-900 text-right"
                         >
-                          Department Name
-                        </label>
+                          اسم القسم                        </label>
                         <div className="relative mt-2">
                           <input
                             id="name"
                             name="name"
                             onChange={CreateDepartments.handleChange}
                             value={CreateDepartments.values.name}
-                            placeholder="Department Name"
+                            placeholder="اسم القسم"
                             className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                             required
                           />
@@ -258,12 +256,11 @@ const DepartmentsFiles = () => {
 
                       <div>
                         <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                          Incident Type
-                        </label>
+                          نوع الحادث                        </label>
 
                         <AntSelect
                           value={options}
-                          placeholder="Select"
+                          placeholder={<span className="mr-4">نوع الحادث</span>}
                           onChange={(value) => handleChange(value)}
                           mode="multiple"
                           allowClear={true}
@@ -274,6 +271,7 @@ const DepartmentsFiles = () => {
                               ?.toLowerCase()
                               .indexOf(input?.toLowerCase()) >= 0
                           }
+                          style={{ fontFamily: "Cairo" }}
                         >
                           {myData.map((item) => (
                             <Option key={item.value} value={item.value}>
@@ -290,14 +288,14 @@ const DepartmentsFiles = () => {
                         type="button"
                         className="text-white bg-primary-100 w-60 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
                       >
-                        loading...
+                        اضافة قسم...
                       </button>
                     ) : (
                       <button
                         type="submit"
                         className={`text-white bg-primary-100 rounded-md w-60 border-2 border-primary-100  py-2 px-5 transition-all duration-300`}
                       >
-                        Add Department
+                        اضافة قسم
                       </button>
                     )}
                   </div>
@@ -314,7 +312,7 @@ const DepartmentsFiles = () => {
                     className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                     onClick={handleModalClose}
                   />
-                  <h3 className="text-xl font-semibold">Update Department</h3>
+                  <h3 className="text-xl font-semibold">تحديث  الاقسام</h3>
                 </div>
                 <form onSubmit={updatedepartment.handleSubmit}>
                   <div>
@@ -322,7 +320,7 @@ const DepartmentsFiles = () => {
                       htmlFor="name"
                       className="block  text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Department Name
+                      اسم القسم
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -347,14 +345,14 @@ const DepartmentsFiles = () => {
                         type="button"
                         className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
                       >
-                        loading...
+                        تحديث ...
                       </button>
                     ) : (
                       <button
                         type="submit"
                         className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
                       >
-                        Update
+                        تحديث
                       </button>
                     )}
                   </div>
@@ -383,7 +381,7 @@ const DepartmentsFiles = () => {
                         scope="col"
                         className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                       >
-                        Status
+                        حالة
                       </th>
 
                       {/* <th
@@ -402,7 +400,7 @@ const DepartmentsFiles = () => {
                         scope="col"
                         className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                       >
-                        Departments{" "}
+                        القسم{" "}
                       </th>
                     </tr>
                   </thead>

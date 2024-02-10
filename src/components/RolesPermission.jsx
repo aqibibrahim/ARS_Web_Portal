@@ -199,7 +199,7 @@ export default function RolesPermission() {
           password: state?.password,
           phone_numbers: phoneNumbers,
           designation: state?.designation,
-          role_id: roleID?.value,
+          role_id: roleID?.value ? roleID?.value : roleID,
         };
         const userId = editUserData.id; // Assuming you have the user ID in editUserData
         response = await axios.patch(
@@ -492,11 +492,10 @@ export default function RolesPermission() {
   const Tab = ({ selected, title, onClick }) => {
     return (
       <button
-        className={`px-4 py-2 transition-colors duration-150 ${
-          selected
-            ? "bg-blue-500 text-white"
-            : "bg-white text-black hover:bg-gray-200 "
-        } focus:outline-none`}
+        className={`px-4 py-2 transition-colors duration-150 ${selected
+          ? "bg-blue-500 text-white"
+          : "bg-white text-black hover:bg-gray-200 "
+          } focus:outline-none`}
         onClick={onClick}
       >
         {title}
@@ -554,21 +553,19 @@ export default function RolesPermission() {
                   selected={activeTab === "Role"}
                   title="الأدوار"
                   onClick={() => handleTabChange("Role")}
-                  className={`${
-                    activeTab === "Role"
-                      ? "bg-blue-500 text-white"
-                      : "bg-white text-blue-500"
-                  }`}
+                  className={`${activeTab === "Role"
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-blue-500"
+                    }`}
                 />{" "}
                 <Tab
                   selected={activeTab === "User"}
                   title="المستخدمين"
                   onClick={() => handleTabChange("User")}
-                  className={`${
-                    activeTab === "User"
-                      ? "bg-blue-500 text-white"
-                      : "bg-white text-blue-500"
-                  }`}
+                  className={`${activeTab === "User"
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-blue-500"
+                    }`}
                 />{" "}
               </div>
             </div>
@@ -1115,9 +1112,8 @@ export default function RolesPermission() {
 
                               <div className="flex w-full ">
                                 <div
-                                  className={`relative mt-2 ${
-                                    newPhoneNumber ? "w-11/12" : "w-full"
-                                  }`}
+                                  className={`relative mt-2 ${newPhoneNumber ? "w-11/12" : "w-full"
+                                    }`}
                                 >
                                   <InputMask
                                     tabIndex={6}
