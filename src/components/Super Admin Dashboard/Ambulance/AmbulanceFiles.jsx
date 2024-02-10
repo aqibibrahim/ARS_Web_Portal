@@ -817,6 +817,7 @@ const AmbulanceFiles = () => {
                   <div className="flex justify-end mt-5 ">
                     <Pagination
                       className="flex text-sm text-semi-bold mb-2"
+                      style={{ fontFamily: "Cairo" }}
                       current={currentPage}
                       total={ambulanceData?.total || 0}
                       pageSize={itemsPerPage}

@@ -553,7 +553,7 @@ export default function IncidentList({}) {
             <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 py-1">
               <BsSearch width={9} height={9} />
               <input
-                className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
+                className="bg-transparent focus:border-none outline-none border-0 w-full text-right placeholder:text-sm"
                 type="text"
                 placeholder="البحث عن الحوادث"
                 value={searchKeyword}

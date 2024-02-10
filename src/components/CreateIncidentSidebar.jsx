@@ -25,8 +25,9 @@ function classNames(...classes) {
 const GOOGLE_MAPS_APIKEY = "AIzaSyDZiTIdSoTe6XJ7-kiAadVrOteynKR9_38";
 const tabConfig = {
   الحادث: "تسجيل حادث",
-  Ambulance: "اختر سيارة اسعاف",
-  HealthCare: "Select HealthCare",
+  سياره_اسعاف: " سيارة اسعاف",
+
+  الرعاية_الصحية: "حدد الرعاية الصحية",
 };
 
 // const EmergencyType = [
@@ -119,17 +120,17 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
   const handleIncidentNext = (formData) => {
     setIncidentData(formData);
 
-    setActiveTab("Ambulance");
+    setActiveTab("سياره_اسعاف");
   };
   const handleIncidentNextEdit = () => {
     setIncidentData(incidentData);
 
-    setActiveTab("Ambulance");
+    setActiveTab("سياره_اسعاف");
   };
   const handleAmbulanceNext = (formData) => {
     setAmbulanceData(formData);
 
-    setActiveTab("HealthCare");
+    setActiveTab("الرعاية_الصحية");
   };
   const handelclose = () => {
     onClose();
@@ -150,7 +151,7 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
             handleIncidentNextEdit={handleIncidentNextEdit}
           />
         );
-      case "Ambulance":
+      case "سياره_اسعاف":
         return (
           <AmbulanceForm
             handleAmbulanceNext={handleAmbulanceNext}
@@ -159,7 +160,7 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
             editData={incidentEditData}
           />
         );
-      case "HealthCare":
+      case "الرعاية_الصحية":
         return (
           <HealthCareForm
             onClick={handelclose}
@@ -610,7 +611,7 @@ const Header = ({
                   name="informer_address"
                   id="informer_address"
                   className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                  placeholder="Choose On Map"
+                  placeholder="اختر على الخريطة"
                   readOnly
                 />
               </div>
@@ -1027,7 +1028,7 @@ const Header = ({
                   name="informer_address"
                   id="informer_address"
                   className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                  placeholder="Choose On Map"
+                  placeholder="اختر على الخريطة"
                   required
                 />
               </div>

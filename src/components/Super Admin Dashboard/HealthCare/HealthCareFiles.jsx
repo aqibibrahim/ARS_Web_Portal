@@ -646,7 +646,7 @@ const HealthCareFiles = () => {
                           scope="col"
                           className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                         >
-                          عنوان البريد الإلكتروني للمنشأة
+                          بريد إلكتروني
                         </th>
                         <th
                           scope="col"
@@ -658,7 +658,7 @@ const HealthCareFiles = () => {
                           scope="col"
                           className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                         >
-                          إسم المنشأة
+                          اسم الرعاية الصحية{" "}
                         </th>
                       </tr>
                     </thead>
@@ -777,12 +777,13 @@ const HealthCareFiles = () => {
                     <Pagination
                       className="flex text-sm text-semi-bold mb-2"
                       current={currentPage}
+                      style={{ fontFamily: "Cairo" }}
                       total={ambulanceData?.total || 0}
                       pageSize={itemsPerPage}
                       onChange={(page) => setCurrentPage(page)}
                       showSizeChanger={false}
                       showTotal={(total, range) =>
-                        `${range[0]}-${range[1]} of ${total} منشأة`
+                        `${range[0]}-${range[1]} of ${total} الرعاية الصحية`
                       }
                     />
                   </div>

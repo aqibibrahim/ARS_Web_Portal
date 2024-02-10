@@ -306,7 +306,7 @@ const Maps = (props) => {
             selectedPlace: {
               name: data?.name,
               status: data?.status,
-              phoneNumbers: data?.phone_numbers || [], // Add phoneNumbers to the selectedPlace
+              phoneNumbers: data?.phone_numbers || [],
               focalPersons: data?.focal_persons || [],
               departments: data?.departments || [],
               latitude: data?.latitude,
@@ -408,6 +408,7 @@ const Maps = (props) => {
       style={{
         width: "100%",
         height: "100vh",
+        fontFamily: "Cairo",
       }}
     >
       <Map
@@ -484,7 +485,7 @@ const Maps = (props) => {
         >
           <div
             className="m-auto overflow-hidden w-72 max-h-fit"
-            style={{ fontFamily: "Inter, sans-serif", overflow: "hidden" }}
+            style={{ fontFamily: "Cairo", overflow: "hidden" }}
           >
             <div className="mb-5 mt-5 text-right  pr-4">
               <span
@@ -505,7 +506,7 @@ const Maps = (props) => {
             </div>
             <div className=" bg-white  overflow-hidden pt-1 pb-6">
               <p className="text-base font-semibold mb-1 text-gray-900    text-right pr-4">
-                Equipments
+                المعدات
               </p>
               <div className="justify-end flex-wrap flex bg-white pr-4">
                 {ambulanceInfo?.selectedPlace?.equipments?.length > 0 ? (
@@ -522,7 +523,7 @@ const Maps = (props) => {
               </div>
               {renderAmbulanceEquipment(ambulanceInfo?.selectedPlace?.id)}
               <p className="text-base font-semibold mb-1 text-gray-900   text-right pr-4">
-                Driver Information
+                تفاصيل السائق
               </p>
 
               {ambulanceInfo?.selectedPlace?.driver?.status !== undefined &&
@@ -570,7 +571,7 @@ const Maps = (props) => {
           <div
             className="m-auto     overflow-hidden w-72 "
             style={{
-              fontFamily: "Inter, sans-serif",
+              fontFamily: "Cairo",
             }}
           >
             <div className="backdrop-blur-lg  ">
@@ -579,23 +580,34 @@ const Maps = (props) => {
                 <span className="mr-2 text-md bg-green-500 p-1 rounded-xl text-white">
                   {healthCareInfo?.selectedPlace?.status}
                 </span>
-                <span className="text-lg font-bold mb-2 font-Inter">
+                <span className="text-lg font-bold  font-Inter">
                   {healthCareInfo?.selectedPlace?.name}
                 </span>
+                <p className="text-lg font-bold font-Inter">
+                  {healthCareInfo?.selectedPlace?.phoneNumbers?.map(
+                    (phone, index) => (
+                      <p
+                        key={index}
+                        className="text-sm text-gray-500 text-right font-semibold "
+                      >
+                        {phone?.number}
+                      </p>
+                    )
+                  )}
+                </p>
               </div>
               <div className=" bg-white  overflow-hidden pt-1 pb-6">
                 <div className="mb-2 flex gap-y-2 flex-col text-right">
                   {/* <p className="text-lg text-gray-900 text-left font-medium">
                 {healthCareInfo?.selectedPlace?.status}
               </p> */}
-                  <div></div>
                 </div>
-                <p className="text-base font-semibold mb-1 text-gray-900   text-right  pr-4">
-                  {healthCareInfo?.selectedPlace?.departments?.length}{" "}
-                  {healthCareInfo?.selectedPlace?.departments?.length === 1
-                    ? "Department "
-                    : "Departments "}
-                  Available
+                <p className="text-base font-semibold mb-1 text-gray-900 flex justify-end   pr-4">
+                  {/* {healthCareInfo?.selectedPlace?.departments?.length} */}
+                  {healthCareInfo?.selectedPlace?.departments?.length > 0
+                    ? "الأقسام "
+                    : "قسم "}
+                  المتاحة
                   <i className="bi bi-shield-check"></i>
                 </p>
                 <div className="justify-end flex-wrap flex  pr-4">
@@ -610,11 +622,11 @@ const Maps = (props) => {
                       )
                     )
                   ) : (
-                    <p className="text-md text-left">No Data Found</p>
+                    <p className="text-md text-left">لم يتم العثور على أقسام</p>
                   )}
                 </div>
                 <p className="text-base font-semibold mb-1 text-gray-900   pr-4  text-right">
-                  Focal Persons <i className="bi bi-shield-check"></i>
+                  شخص مسؤول<i className="bi bi-shield-check"></i>
                 </p>
                 <div>
                   {healthCareInfo?.selectedPlace?.focalPersons?.length > 0 ? (
@@ -663,7 +675,7 @@ const Maps = (props) => {
           <div
             className="m-auto   overflow-auto w-72 "
             style={{
-              fontFamily: "Inter, sans-serif",
+              fontFamily: "Cairo",
             }}
           >
             <div className="mb-5 mt-5 text-right  pr-4">
@@ -678,7 +690,7 @@ const Maps = (props) => {
               <div className="mt-2">
                 {" "}
                 <p className="text-base font-semibold mb-1 text-gray-900 pr-4  text-right">
-                  Phone Number<i className="bi bi-shield-check"></i>
+                  رقم التليفون <i className="bi bi-shield-check"></i>
                 </p>
                 {regionInfo?.selectedPlace?.phoneNumber?.map((phoneNumber) => (
                   <p
@@ -690,7 +702,7 @@ const Maps = (props) => {
                 ))}
               </div>
               <p className="text-base font-semibold mb-1 text-gray-900 pr-4  text-right">
-                Address<i className="bi bi-shield-check"></i>
+                عنوان<i className="bi bi-shield-check"></i>
               </p>
               <p className="text-sm text-gray-500 justify-end  text-right font-semibold pr-4 flex-wrap flex pl-2">
                 {regionInfo?.selectedPlace?.address}
@@ -702,14 +714,14 @@ const Maps = (props) => {
               </p>
             </div> */}
               <p className="text-base font-semibold mb-1 text-gray-900 pr-4  text-right ">
-                No. of Ambulances: <i className="bi bi-shield-check"></i>
+                عدد سيارات الإسعاف <i className="bi bi-shield-check"></i>
               </p>
               <p className="text-right pr-4">
                 {regionInfo?.selectedPlace?.ambulances?.length}
               </p>
 
               <p className="text-base font-semibold mb-1 text-gray-900 pr-4  text-right">
-                Ambulance Details<i className="bi bi-shield-check"></i>
+                تفاصيل سيارة الإسعاف<i className="bi bi-shield-check"></i>
               </p>
               <p className="text-base text-right">
                 {regionInfo?.selectedPlace?.ambulances?.map((ambulance) => (
@@ -722,11 +734,11 @@ const Maps = (props) => {
                     >
                       {ambulance?.status}
                     </span>
-                    {ambulance?.model?.make?.name +
+                    {ambulance?.plate_no +
                       " " +
                       ambulance?.model?.name +
                       " " +
-                      ambulance?.plate_no}
+                      ambulance?.model?.make?.name}
                   </p>
                 ))}
               </p>
