@@ -368,7 +368,7 @@ export default function IncidentType() {
         </div>
       )}
       <Modal
-        title="Are you sure to delete this Incident Type?"
+        title="هل أنت متأكد من حذف نوع الحادث هذا؟"
         open={deleteModal}
         onOk={deleteIncidentType}
         onCancel={handleCancel}
@@ -376,7 +376,8 @@ export default function IncidentType() {
         okButtonProps={{
           style: { backgroundColor: "red" },
         }}
-        okText="Delete"
+        okText="حذف"
+        cancelText="أغلق"
       ></Modal>
       <div
         className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen  `}

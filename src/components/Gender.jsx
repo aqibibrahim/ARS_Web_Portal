@@ -401,7 +401,7 @@ export default function Gender() {
         </div>
       )}
       <Modal
-        title="Are you sure to delete this Gender?"
+        title="هل أنت متأكد من حذف الجنس هذا؟"
         open={deleteModal}
         onOk={deleteGender}
         onCancel={handleCancel}
@@ -409,7 +409,8 @@ export default function Gender() {
         okButtonProps={{
           style: { backgroundColor: "red" },
         }}
-        okText="Delete"
+        okText="حذف"
+        cancelText="أغلق"
       ></Modal>
       <div
         className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen  `}

@@ -368,8 +368,9 @@ export default function VehicleMake() {
           </div>
         </div>
       )}
+
       <Modal
-        title="Are you sure to delete this Vehicle Make?"
+        title="هل أنت متأكد من حذف نوع السيارة هذا؟"
         open={deleteModal}
         onOk={deleteVehicleMake}
         onCancel={handleCancel}
@@ -377,7 +378,8 @@ export default function VehicleMake() {
         okButtonProps={{
           style: { backgroundColor: "red" },
         }}
-        okText="Delete"
+        okText="حذف"
+        cancelText="أغلق"
       ></Modal>
       <div
         className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen  `}

@@ -6,9 +6,8 @@ import axios from "axios";
 const Tab = ({ selected, title, onClick }) => {
   return (
     <button
-      className={`px-4 py-2 transition-colors duration-150  ${
-        selected ? "bg-white" : "bg-transparent text-gray-700"
-      } focus:outline-none`}
+      className={`px-4 py-2 transition-colors duration-150  ${selected ? "bg-white" : "bg-transparent text-gray-700"
+        } focus:outline-none`}
       onClick={onClick}
     >
       {title}
@@ -58,7 +57,7 @@ export default function Home() {
       <Toaster position="bottom-right" richColors />
       <div className="bg-lightGray-100 w-full max-h-screen rounded-lg p-2">
         <div className="p-4 text-right">
-          <h1 className="text-2xl font-semibold">Incident List</h1>
+          <h1 className="text-2xl font-semibold">قائمة الحوادث </h1>
         </div>
         <div className="flex flex-row items-center p-4 space-x-4">
           <div className="flex flex-row space-x-2">
@@ -80,8 +79,8 @@ export default function Home() {
               className="bg-transparent outline-none border-0 w-full text-right"
               type="text"
               placeholder="Search incidents..."
-              // Implement onChange handler to update the search query state
-              // onChange={handleSearchQueryChange}
+            // Implement onChange handler to update the search query state
+            // onChange={handleSearchQueryChange}
             />
           </div>
         </div>
