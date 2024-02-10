@@ -1123,19 +1123,16 @@ const AmbulanceFiles = () => {
                     <label className="block text-base font-medium leading-6 text-gray-900 text-right">
                       معدات
                     </label>
-
                     <Select
                       tabIndex={1}
-                      showSearch={true}
-                      style={{ width: "100%" }}
-                      placeholder={<span className="flex ">حدد المعدات</span>}
-                      onChange={(e) => handleChangeEquiments(e)}
-                      options={
-                        <div className="flex justify-end mr-5"> {myData}</div>
-                      }
-                      mode="multiple"
                       value={editOptions}
-                      allowClear={true}
+                      placeholder="حدد طراز السيارة"
+                      onChange={(e) => handleChangeEquiments(e)}
+                      options={myData}
+                      showSearch
+                      mode="multiple"
+                      optionFilterProp="label"
+                      className="w-full mt-2"
                       onKeyDown={(e) => {
                         if (e.key === "Tab") {
                           e.preventDefault();
@@ -1143,6 +1140,26 @@ const AmbulanceFiles = () => {
                         }
                       }}
                     />
+                    {/* <Select
+                      tabIndex={1}
+                      showSearch={true}
+                      style={{ width: "100%" }}
+                      // placeholder={<span className="flex ">حدد المعدات</span>}
+                      onChange={(e) => handleChangeEquiments(e)}
+                      options={
+                        // <div className="flex justify-end mr-5"> {myData}</div>
+                        ""
+                      }
+                      mode="multiple"
+                      // value={editOptions}
+                      // allowClear={true}
+                      onKeyDown={(e) => {
+                        if (e.key === "Tab") {
+                          e.preventDefault();
+                          document.querySelector('[tabIndex="2"]').focus();
+                        }
+                      }}
+                    /> */}
                   </div>
 
                   <div>
@@ -1187,9 +1204,9 @@ const AmbulanceFiles = () => {
                         onChange={EditAmbulance.handleChange}
                         value={[
                           "latitude " +
-                            locationAddress?.latitude +
-                            " longitude " +
-                            locationAddress?.longitude,
+                          locationAddress?.latitude +
+                          " longitude " +
+                          locationAddress?.longitude,
                         ]}
                         type="text"
                         name="addresss"
