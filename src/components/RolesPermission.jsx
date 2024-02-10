@@ -188,14 +188,23 @@ export default function RolesPermission() {
         password: state?.password,
         phone_numbers: phoneNumbers,
         designation: state?.designation,
-        role_id: roleID?.value,
+        role_id: roleID,
       };
       let response;
       if (editFlag) {
+        const Editdata = {
+          first_name: state?.first_name,
+          last_name: state?.last_name,
+          email: state?.email,
+          password: state?.password,
+          phone_numbers: phoneNumbers,
+          designation: state?.designation,
+          role_id: roleID?.value,
+        };
         const userId = editUserData.id; // Assuming you have the user ID in editUserData
         response = await axios.patch(
           `${Vars.domain}/users/${editUserID}`,
-          data,
+          Editdata,
           {
             headers,
           }
