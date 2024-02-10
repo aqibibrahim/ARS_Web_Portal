@@ -355,10 +355,9 @@ export default function Mapping() {
                         <thead>
                           <tr className="border-b border-gray-300 m-6">
                             <th className="text-gray-800 text-right mb-4">
-                              Incident Types
-                            </th>
+                              انواع الحوادث                            </th>
                             <th className="text-gray-800 text-right mb-4">
-                              Department
+                              الاقسام
                             </th>
                           </tr>
                         </thead>
