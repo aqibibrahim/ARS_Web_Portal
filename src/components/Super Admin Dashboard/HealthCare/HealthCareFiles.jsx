@@ -20,7 +20,7 @@ import { Toaster, toast } from "sonner";
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
-import { Select } from "antd";
+import Select from "react-tailwindcss-select";
 import InputMask from "react-input-mask";
 import { Pagination, Spin } from "antd";
 import noData from "../../../assets/noData.png";
