@@ -286,9 +286,8 @@ const AmbulanceForm = ({
     <>
       {" "}
       <div
-        className={`flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border ${
-          criteriaMatched ? "border-green-500 border-2" : "border-gray-400"
-        } p-1 rounded-md mb-2 text-gray-800`}
+        className={`flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border ${criteriaMatched ? "border-green-500 border-2" : "border-gray-400"
+          } p-1 rounded-md mb-2 text-gray-800`}
       >
         <p className="text-right">{label}</p>
         <p className="text-right">شخص مدعوم: {persons_supported}</p>
@@ -298,7 +297,7 @@ const AmbulanceForm = ({
         </p>{" "}
         <div className="flex justify-end">
           <p
-            className="text-white bg-blue-400 p-1 w-28 flex justify-center justify-items-end hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border rounded-xl text-right focus:outline-none"
+            className="text-white bg-blue-400 p-1 w-auto flex justify-center justify-items-end hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border rounded-xl text-right focus:outline-none"
             onClick={handleViewOnMap(value)}
           >
             عرض على الخريطة
@@ -364,8 +363,8 @@ const AmbulanceForm = ({
         </div>
         <div className="flex  bottom-10 absolute">
           {initiallyAssignedAmbulance.length > 0 ||
-          assignAmbulance.length > 0 ||
-          selectedOption ? (
+            assignAmbulance.length > 0 ||
+            selectedOption ? (
             <button
               className="text-primary-100 flex  bg-white rounded-md border-2 border-primary-100 mr-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
               type="submit"
