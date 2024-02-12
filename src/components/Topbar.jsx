@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useContext } from "react";
+import React, { useState, useEffect,Fragment, useContext } from "react";
 import { IoSettingsOutline } from "react-icons/io5";
 import { BsBell, BsPersonBadge } from "react-icons/bs";
 import user from "../assets/user.png";
@@ -87,13 +87,59 @@ function Dropdown({ onClose, title, children }) {
 
 function TopBar({}) {
   const { resetState } = useAmbulanceContext();
-
   const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [notificationCount, setNotificationCount] = useState(
-    notificationsData.length
-  );
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [notificationsData, setNotificationsData] = useState([]);
+  useEffect(() => {
+    // Establish websocket connection
+    const clientId = parseInt(localStorage.getItem("user_id"));
+  let clientToken = localStorage.getItem("token");
+    console.log("User id",clientId,"User Token",clientToken);
+  // Establish websocket connection with headers
+  const endpoint = 'wss://ars-websockets.disruptwave.com/ws/subscribe';
 
+// Headers
+const headers = {
+    'client_id': clientId,
+    'client_token': clientToken
+};
+
+  const socket = new WebSocket("wss://ars-websockets.disruptwave.com/ws/subscribe", {
+     headers: { 'client_id': clientId,'client_token': clientToken }} )
+  
+    socket.onopen = () => {
+    console.log("WebSocket connection established.");
+  };
+
+  // Event listener for websocket connection closed
+  socket.onclose = () => {
+    console.log("WebSocket connection closed.");
+  };
+
+  // Event listener for websocket connection errors
+  socket.onerror = (error) => {
+    console.error("WebSocket error:", error);
+  };
+    // Listen for messages from the server
+    socket.addEventListener("message", (event) => {
+      // Log the received data for debugging
+      console.log("Received data:", event.data);
+      const jData = []
+      jData.push(event.data)
+      // Try parsing the incoming message as JSON
+     
+        
+        // Update notification data
+        setNotificationsData([event.data]);
+        setNotificationCount(jData.length);
+     
+    });
+    // Clean up websocket connection on unmount
+    return () => {
+      socket.close();
+    };
+  }, []);
   const toggleDropdown = (dropdown) => {
     if (dropdown === "notifications" && notificationCount > 0) {
       setNotificationCount(0);
@@ -117,7 +163,7 @@ function TopBar({}) {
                 onClose={() => setActiveDropdown(null)}
                 title="Notifications"
               >
-                <Notifications notificationsData={notificationsData} />
+                <Notifications cations notificationsData={notificationsData} />
               </Dropdown>
             )}
           </TopBarItem>
