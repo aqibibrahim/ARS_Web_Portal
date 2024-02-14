@@ -75,7 +75,7 @@ const AmbulanceForm = ({
             }, 500);
           });
       } catch (e) {
-        toast.error("Failed to assign ambulance.");
+        toast.error("خطأ في تعيين سيارة إسعاف");
         console.log(e);
       }
     },
@@ -144,11 +144,11 @@ const AmbulanceForm = ({
             setMyData(
               response.data?.data?.map((variant) => ({
                 label:
-                  variant.model?.make?.name +
+                  variant?.plate_no +
                   " " +
                   variant.model?.name +
                   " " +
-                  variant?.plate_no,
+                  variant.model?.make?.name,
                 value: variant.id,
                 persons_supported: variant.persons_supported,
                 id_no: variant.id_no,
@@ -286,22 +286,21 @@ const AmbulanceForm = ({
     <>
       {" "}
       <div
-        className={`flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border ${
-          criteriaMatched ? "border-green-500 border-2" : "border-gray-400"
-        } p-1 rounded-md mb-2 text-gray-800`}
+        className={`flex flex-col hover:bg-gray-100 cursor-pointer justify-end gap-2 border ${criteriaMatched ? "border-green-500 border-2" : "border-gray-400"
+          } p-1 rounded-md mb-2 text-gray-800`}
       >
         <p className="text-right">{label}</p>
-        <p className="text-right">Persons Supported: {persons_supported}</p>
+        <p className="text-right">شخص مدعوم: {persons_supported}</p>
         <p className="text-right">Id No: {id_no}</p>
         <p className="text-right text-green-500">
           {distance} {duration}
         </p>{" "}
         <div className="flex justify-end">
           <p
-            className="text-white bg-blue-400 p-1 w-28 flex justify-center justify-items-end hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border rounded-xl text-right focus:outline-none"
+            className="text-white bg-blue-400 p-1 w-auto flex justify-center justify-items-end hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border rounded-xl text-right focus:outline-none"
             onClick={handleViewOnMap(value)}
           >
-            View on Map
+            عرض على الخريطة
           </p>
         </div>
       </div>{" "}
@@ -311,32 +310,32 @@ const AmbulanceForm = ({
     <>
       <Toaster position="bottom-right" richColors />
       {showAssignAmbulance?.length > 0 ? (
-        <div className="px-5">
+        <div className="px-1 py-2 flex flex-col">
           <p className="text-base text-right font-semibold">
-            Selected Ambulance Details
+            تفاصيل سيارة الإسعاف المختارة
           </p>
           {showAssignAmbulance?.map((ambulance, index) => (
             <div
-              className="flex flex-row justify-between p-5 bg-gray-100 mb-5 mt-2"
+              className="flex flex-row  p-6 bg-gray-100 mb-5 mt-2 text-sm "
               key={ambulance.id}
             >
-              <div className="flex justify-between gap-12  ">
-                <p className="bg-blue-200 p-2 rounded-full w-8 h-8 justify-center text-center flex flex-grow">
-                  {index + 1}
-                </p>
+              <div className="flex gap-2 ">
                 <p>
                   {" "}
-                  <span className="font-semibold">Make: </span>{" "}
-                  {ambulance.model?.make?.name}
-                </p>
+                  {ambulance?.plate_no}
+                  <span className="font-semibold"> : رقم لوحة </span>{" "}
+                </p>{" "}
                 <p>
-                  <span className="font-semibold">Model:</span>{" "}
+                  <span className="font-semibold"> : موديل</span>{" "}
                   {ambulance?.model?.name}
                 </p>
-                <p>
-                  <span className="font-semibold">Plate#:</span>{" "}
-                  {ambulance?.plate_no}
-                </p>
+                <span className="flex justify-end">
+                  {ambulance?.model?.make?.name}
+                  <span className="font-semibold ml-2"> : ماركة</span>
+                </span>
+                <span className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center ml-4">
+                  {index + 1}
+                </span>
               </div>
             </div>
           ))}
@@ -345,28 +344,32 @@ const AmbulanceForm = ({
         ""
       )}
       <form onSubmit={assignAmbulance.handleSubmit}>
-        <div className="mb-5 mt-2 flex">
+        <div className="mb-5 mt-2 flex " style={{ fontFamily: "Cairo" }}>
           <Select
             value={selectedOption}
-            placeholder="Select Ambulance"
+            placeholder={
+              <div className="flex justify-end" style={{ fontFamily: "Cairo" }}>
+                اختر سيارة اسعاف
+              </div>
+            }
             onChange={handleChange}
             options={myData}
             formatOptionLabel={formatOptionLabel}
             isMultiple={true}
             isClearable={true}
             primaryColor={"blue"}
-            className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+            className="peer  w-full  flex justify-end border-0 bg-offWhiteCustom-100  text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
           />
         </div>
         <div className="flex  bottom-10 absolute">
           {initiallyAssignedAmbulance.length > 0 ||
-          assignAmbulance.length > 0 ||
-          selectedOption ? (
+            assignAmbulance.length > 0 ||
+            selectedOption ? (
             <button
               className="text-primary-100 flex  bg-white rounded-md border-2 border-primary-100 mr-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
               type="submit"
             >
-              Next
+              التالي
             </button>
           ) : (
             ""

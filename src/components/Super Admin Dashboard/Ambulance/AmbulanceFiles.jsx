@@ -56,7 +56,6 @@ const AmbulanceFiles = () => {
   const itemsPerPage = 10;
   const [isLoading, setIsLoading] = useState(true);
   const [ambulanceData, setAmbulanceData] = useState([]);
-  debugger;
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
   const [submitDone, setSubmitDone] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -184,7 +183,7 @@ const AmbulanceFiles = () => {
     setSelectedAmbulance(ambulance);
   };
 
-  const fetchAmbulanceData = async (page = currentPage,keyword = "") => {
+  const fetchAmbulanceData = async (page = currentPage, keyword = "") => {
     try {
       await axios
         .get(`${window.$BackEndUrl}/ambulances`, {
@@ -192,7 +191,7 @@ const AmbulanceFiles = () => {
           params: {
             page,
             per_page: itemsPerPage,
-            search: keyword
+            search: keyword,
           },
         })
         .then((response) => {
@@ -208,8 +207,8 @@ const AmbulanceFiles = () => {
     setShowPassword(!showPassword);
   };
   useEffect(() => {
-    fetchAmbulanceData(currentPage,searchKeyword);
-  }, [submitDone, currentPage, isDelete,searchKeyword]);
+    fetchAmbulanceData(currentPage, searchKeyword);
+  }, [submitDone, currentPage, isDelete, searchKeyword]);
 
   const CreateAmbulance = useFormik({
     initialValues: {
@@ -657,7 +656,7 @@ const AmbulanceFiles = () => {
       <Toaster position="bottom-right" richColors />
       <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
         <div className="p-4 text-right  bg-gray-100 ">
-          <h1 className="text-xl font-semibold">Ambulances</h1>
+          <h1 className="text-xl font-semibold">سيارات الإسعاف</h1>
         </div>
         <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100 justify-end  ">
           <div className="flex flex-row space-x-2 "></div>
@@ -666,19 +665,19 @@ const AmbulanceFiles = () => {
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
-              placeholder="Search Ambulances..."
+              placeholder="البحث عن سيارات الإسعاف"
               value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-            onKeyPress={handleSearchKeyPress}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              onKeyPress={handleSearchKeyPress}
             />
           </div>
 
           <button
-            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
+            className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-base"
             type="button"
             onClick={handleCreateAmbulanceClick}
           >
-            + Create Ambulance
+            + تسجيل سيارة إسعاف
           </button>
         </div>
         <div className="rtl">
@@ -690,7 +689,7 @@ const AmbulanceFiles = () => {
             <>
               {ambulanceData?.data?.length > 0 ? (
                 <>
-                  <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
+                  <table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1 ">
                     <thead>
                       <tr>
                         <th
@@ -707,39 +706,39 @@ const AmbulanceFiles = () => {
                       </th>{" "} */}
                         <th
                           scope="col"
-                          className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
+                          className="px-3 py-3 text-sm font-medium   tracking-wide text-gray-500"
                         >
-                          Model
+                          موديل
                         </th>
                         <th
                           scope="col"
-                          className="py-3 pl-4 pr-3 text-xs font-medium    tracking-wide text-gray-500 sm:pl-0"
+                          className="py-3 pl-4 pr-3 text-sm font-medium    tracking-wide text-gray-500 sm:pl-0"
                         >
-                          Make
+                          ماركة
                         </th>
                         <th
                           scope="col"
-                          className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
+                          className="px-3 py-3 text-sm font-medium   tracking-wide text-gray-500"
                         >
-                          Plate Number
+                          رقم لوحة
                         </th>
                         {/* <th
                     scope="col"
-                    className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
+                    className="px-3 py-3 text-sm font-medium   tracking-wide text-gray-500"
                   >
                     Contact Number
                   </th> */}
                         <th
                           scope="col"
-                          className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500"
+                          className="px-3 py-3 text-sm font-medium   tracking-wide text-gray-500"
                         >
-                          Status
+                          حالة
                         </th>
                         <th
                           scope="col"
-                          className="px-3 py-3 text-xs font-medium   tracking-wide text-gray-500 "
+                          className="px-3 py-3 text-sm font-medium   tracking-wide text-gray-500 "
                         >
-                          ID No
+                          رقم تسلسل سيارة الإسعاف
                         </th>
                       </tr>
                     </thead>
@@ -818,13 +817,14 @@ const AmbulanceFiles = () => {
                   <div className="flex justify-end mt-5 ">
                     <Pagination
                       className="flex text-sm text-semi-bold mb-2"
+                      style={{ fontFamily: "Cairo" }}
                       current={currentPage}
                       total={ambulanceData?.total || 0}
                       pageSize={itemsPerPage}
                       onChange={(page) => setCurrentPage(page)}
                       showSizeChanger={false}
                       showTotal={(total, range) =>
-                        `${range[0]}-${range[1]} of ${total} items`
+                        `${range[0]}-${range[1]} of ${total} سيارات الإسعاف`
                       }
                     />
                   </div>
@@ -856,7 +856,7 @@ const AmbulanceFiles = () => {
                   CreateAmbulance.resetForm();
                 }}
               />
-              <h3 className="text-xl font-semibold">Create New Ambulance</h3>
+              <h3 className="text-xl font-semibold">تسجيل سيارة إسعاف جديدة</h3>
             </div>
             <form
               className="p-5"
@@ -866,18 +866,26 @@ const AmbulanceFiles = () => {
               <div className="flex flex-row justify-between gap-4 mb-4">
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
-                    <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                      Equipment
+                    <label className="block text-base font-medium leading-6 text-gray-900 text-right">
+                      معدات
                     </label>
-                    <div className="mt-[7px]">
+                    <div className="mt-[7px] ">
                       <Select
                         tabIndex={1}
                         showSearch={true}
                         mode="multiple"
                         style={{ width: "100%" }}
-                        placeholder="Equipments"
+                        placeholder={
+                          <span
+                            className="flex justify-end mr-3"
+                            style={{ fontFamily: "Cairo" }}
+                          >
+                            حدد المعدات
+                          </span>
+                        }
                         onChange={(value) => handleChange(value)}
                         options={myData}
+                        dropdownStyle={{ textAlign: "right" }}
                         onKeyDown={(e) => {
                           if (e.key === "Tab") {
                             e.preventDefault();
@@ -890,20 +898,20 @@ const AmbulanceFiles = () => {
                   <div>
                     <label
                       htmlFor="persons_supported"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                      className="block text-base mt-2 font-medium leading-6 text-gray-900 text-right"
                     >
-                      Persons Supported
+                      الأشخاص المدعومين
                     </label>
                     <div className="relative mt-2">
                       <input
                         tabIndex={3}
-                        className={`appearance-none block w-full bg-gray-200 text-right text-gray-700 border text-sm border-gray-200 rounded py-2.5 px-4 leading-4 focus:outline-none focus:bg-white`}
+                        className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         type="number"
                         name="persons_supported"
                         id="persons_supported"
                         onChange={CreateAmbulance.handleChange}
                         value={CreateAmbulance.values.persons_supported}
-                        placeholder="Persons Supported"
+                        placeholder="الأشخاص المدعومين"
                         required
                         onKeyDown={(e) => {
                           if (e.key === "Tab") {
@@ -918,9 +926,9 @@ const AmbulanceFiles = () => {
                   <div>
                     <label
                       htmlFor="addresss"
-                      className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
+                      className=" text-base flex justify-end font-medium leading-6 text-gray-900 text-right"
                     >
-                      Parking Area
+                      منطقة مواقف السيارات
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -931,7 +939,7 @@ const AmbulanceFiles = () => {
                         name="addresss"
                         id="addresss"
                         className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        placeholder=" Choose On Map"
+                        placeholder=" اختر على الخريطة"
                         required
                         readOnly
                         onKeyDown={(e) => {
@@ -948,20 +956,20 @@ const AmbulanceFiles = () => {
                   <div>
                     <label
                       htmlFor="plate_no"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                      className="block text-base font-medium leading-6 text-gray-900 text-right"
                     >
-                      Plate No
+                      رقم لوحة{" "}
                     </label>
                     <div className="relative mt-2">
                       <input
                         tabIndex={0}
-                        className={`appearance-none block w-full  bg-gray-200 text-right text-gray-700 border text-sm border-gray-200 rounded py-2.5 px-4 leading-4 focus:outline-none focus:bg-white `}
+                        className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         type="text"
                         name="plate_no"
                         id="plate_no"
                         onChange={CreateAmbulance.handleChange}
                         value={CreateAmbulance.values.plate_no}
-                        placeholder="Enter Plate No"
+                        placeholder="أدخل رقم اللوحة"
                         required
                         autoComplete="nope"
                         onKeyDown={(e) => {
@@ -977,20 +985,31 @@ const AmbulanceFiles = () => {
                   <div>
                     <label
                       htmlFor="model"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                      className="block text-base font-medium leading-6 text-gray-900 text-right"
                     >
-                      Model
+                      ماركة وموديل
                     </label>
-                    <div className="relative mt-2">
+                    <div className="relative mt-2 ">
                       <Select
                         tabIndex={2}
                         value={selectedModelOption}
-                        placeholder="Select Vehicle Model"
+                        placeholder={
+                          <span
+                            className="flex justify-end"
+                            style={{ fontFamily: "Cairo" }}
+                          >
+                            حدد طراز السيارة
+                          </span>
+                        }
                         onChange={handleModelSelect}
                         options={myModelData}
                         showSearch
                         optionFilterProp="label"
-                        className="w-full mt-2"
+                        className="w-full mt-2 "
+                        dropdownStyle={{
+                          textAlign: "right",
+                          fontFamily: "Cairo",
+                        }}
                         onKeyDown={(e) => {
                           if (e.key === "Tab") {
                             e.preventDefault();
@@ -1003,9 +1022,9 @@ const AmbulanceFiles = () => {
                   <div>
                     <label
                       htmlFor="gps_no"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                      className="block text-base font-base leading-6 text-gray-900 text-right"
                     >
-                      GPS No
+                      GPS رقم{" "}
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1015,7 +1034,7 @@ const AmbulanceFiles = () => {
                         id="gps_no"
                         onChange={CreateAmbulance.handleChange}
                         value={CreateAmbulance.values.gps_no}
-                        placeholder="GPS No"
+                        placeholder="GPS رقم"
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -1027,15 +1046,15 @@ const AmbulanceFiles = () => {
                 {/* Separator */}
               </div>
               <h3 className="text-xl font-semibold text-right">
-                Ambulance Credentials
+                كلمة المرور لحساب سيارة الإسعاف
               </h3>
               <div className="flex justify-end mt-1">
                 <div className="justify-end">
                   <label
                     htmlFor="password"
-                    className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                    className="block text-base font-medium leading-6 text-gray-900 text-right"
                   >
-                    Password
+                    كلمة المرور
                   </label>
                   <div className="relative mt-2">
                     <input
@@ -1045,8 +1064,8 @@ const AmbulanceFiles = () => {
                       autoComplete="new-password"
                       onChange={handlePasswordChange}
                       value={CreateAmbulance.values.password}
-                      placeholder="Password"
-                      className="peer block w-full px-3 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                      placeholder="أدخل كلمة المرور"
+                      className="peer block px-2 w-64 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       required
                     />
 
@@ -1074,7 +1093,7 @@ const AmbulanceFiles = () => {
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 
                      `}
                   >
-                    Save Ambulance
+                    تسجيل سيارة الإسعاف
                   </button>
                 )}
               </div>
@@ -1090,28 +1109,30 @@ const AmbulanceFiles = () => {
               <BsArrowRightCircle
                 width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                onClick={() => setUpdateFormOpen(false)}
+                onClick={() => {
+                  setUpdateFormOpen(false);
+                  setSelectedModelOption("");
+                }}
               />
-              <h3 className="text-xl font-semibold">Update Ambulance</h3>
+              <h3 className="text-xl font-semibold">تحديث سيارة الإسعاف</h3>
             </div>
             <form className="p-5" onSubmit={EditAmbulance.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
-                    <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                      Equipment
+                    <label className="block text-base font-medium leading-6 text-gray-900 text-right">
+                      معدات
                     </label>
-
                     <Select
                       tabIndex={1}
-                      showSearch={true}
-                      style={{ width: "100%" }}
-                      placeholder="Equipments"
+                      value={editOptions}
+                      placeholder="حدد طراز السيارة"
                       onChange={(e) => handleChangeEquiments(e)}
                       options={myData}
+                      showSearch
                       mode="multiple"
-                      value={editOptions}
-                      allowClear={true}
+                      optionFilterProp="label"
+                      className="w-full mt-2"
                       onKeyDown={(e) => {
                         if (e.key === "Tab") {
                           e.preventDefault();
@@ -1119,14 +1140,34 @@ const AmbulanceFiles = () => {
                         }
                       }}
                     />
+                    {/* <Select
+                      tabIndex={1}
+                      showSearch={true}
+                      style={{ width: "100%" }}
+                      // placeholder={<span className="flex ">حدد المعدات</span>}
+                      onChange={(e) => handleChangeEquiments(e)}
+                      options={
+                        // <div className="flex justify-end mr-5"> {myData}</div>
+                        ""
+                      }
+                      mode="multiple"
+                      // value={editOptions}
+                      // allowClear={true}
+                      onKeyDown={(e) => {
+                        if (e.key === "Tab") {
+                          e.preventDefault();
+                          document.querySelector('[tabIndex="2"]').focus();
+                        }
+                      }}
+                    /> */}
                   </div>
 
                   <div>
                     <label
                       htmlFor="persons_supported"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                      className="block text-base mt-2 font-medium leading-6 text-gray-900 text-right"
                     >
-                      Persons Supported
+                      الأشخاص المدعومين
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1136,8 +1177,8 @@ const AmbulanceFiles = () => {
                         id="persons_supported"
                         onChange={EditAmbulance.handleChange}
                         value={EditAmbulance.values.persons_supported}
-                        placeholder="Persons Supported"
-                        className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        placeholder="أدخل الشخص المدعوم"
+                        className="peer block mt-4  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
                           if (e.key === "Tab") {
@@ -1152,9 +1193,9 @@ const AmbulanceFiles = () => {
                   <div>
                     <label
                       htmlFor="addresss"
-                      className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
+                      className=" text-base flex justify-end font-medium leading-6 text-gray-900 text-right"
                     >
-                      Parking Area
+                      منطقة مواقف السيارات
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1163,15 +1204,15 @@ const AmbulanceFiles = () => {
                         onChange={EditAmbulance.handleChange}
                         value={[
                           "latitude " +
-                            locationAddress?.latitude +
-                            " longitude " +
-                            locationAddress?.longitude,
+                          locationAddress?.latitude +
+                          " longitude " +
+                          locationAddress?.longitude,
                         ]}
                         type="text"
                         name="addresss"
                         id="addresss"
                         className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        placeholder=" Choose On Map"
+                        placeholder="اختر على الخريطة"
                         required
                       />
                     </div>
@@ -1181,9 +1222,9 @@ const AmbulanceFiles = () => {
                   <div>
                     <label
                       htmlFor="plate_no"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                      className="block text-base font-medium leading-6 text-gray-900 text-right"
                     >
-                      Plate No
+                      رقم لوحة{" "}
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1193,7 +1234,7 @@ const AmbulanceFiles = () => {
                         id="plate_no"
                         onChange={EditAmbulance.handleChange}
                         value={EditAmbulance.values.plate_no}
-                        placeholder="Enter Plate No"
+                        placeholder="أدخل رقم اللوحة"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
@@ -1209,15 +1250,15 @@ const AmbulanceFiles = () => {
                   <div>
                     <label
                       htmlFor="model"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                      className="block text-base font-medium leading-6 text-gray-900 text-right"
                     >
-                      Model
+                      ماركة وموديل
                     </label>
                     <div className="relative mt-2">
                       <Select
                         tabIndex={2}
                         value={selectedModelOption}
-                        placeholder="Select Vehicle Model"
+                        placeholder="حدد طراز السيارة"
                         onChange={handleModelSelect}
                         options={myModelData}
                         showSearch
@@ -1235,9 +1276,9 @@ const AmbulanceFiles = () => {
                   <div>
                     <label
                       htmlFor="gps_no"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                      className="block text-base font-medium leading-6 text-gray-900 text-right"
                     >
-                      GPS No
+                      رقم GPS
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -1247,7 +1288,7 @@ const AmbulanceFiles = () => {
                         id="gps_no"
                         onChange={EditAmbulance.handleChange}
                         value={EditAmbulance.values.gps_no}
-                        placeholder="GPS No"
+                        placeholder=" رقم GPS"
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
@@ -1267,7 +1308,7 @@ const AmbulanceFiles = () => {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    تحميل...
                   </button>
                 ) : (
                   <button
@@ -1275,7 +1316,7 @@ const AmbulanceFiles = () => {
                     // disabled={isEditSubmitDisabled()}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  hover:border-primary-100 "`}
                   >
-                    Update Ambulance
+                    تحديث سيارة الإسعاف
                   </button>
                 )}
               </div>
@@ -1284,15 +1325,21 @@ const AmbulanceFiles = () => {
         </div>
       )}
       <Modal
-        title="Update Ambulance Password"
+        title={
+          <span className="flex justify-end">
+            تحديث كلمة المرور لسيارة الإسعاف
+          </span>
+        }
+        style={{ fontFamily: "Cairo" }}
         open={pinModal}
         onOk={handleNewPin}
         onCancel={handleCancel}
         closable={false}
+        cancelText="يلغي"
         okButtonProps={{
           style: { backgroundColor: "green" },
         }}
-        okText="Update"
+        okText="تحديث"
       >
         <div className="flex flex-col space-y-2 w-full">
           <div>
@@ -1300,7 +1347,7 @@ const AmbulanceFiles = () => {
               htmlFor="email"
               className="block text-sm font-medium leading-6  text-gray-900 text-right"
             >
-              New Password
+              كلمة المرور الجديدة
             </label>
             <div className="relative mt-2">
               <input
@@ -1308,7 +1355,7 @@ const AmbulanceFiles = () => {
                 value={updatePinState.newPin}
                 name="newPin"
                 type="number"
-                placeholder="Enter New Password"
+                placeholder="أدخل كلمة المرور الجديدة"
                 className={`peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right 
                 }`}
                 required
@@ -1358,7 +1405,7 @@ const AmbulanceFiles = () => {
                       className="rounded-md bg-white text-gray-400 hover:text-gray-500 "
                       onClick={() => setDelete(false)}
                     >
-                      <span className="sr-only">Close</span>
+                      <span className="sr-only">أغلق</span>
                       <BsArrowRightCircle
                         className="h-6 w-6"
                         aria-hidden="true"
@@ -1374,8 +1421,8 @@ const AmbulanceFiles = () => {
                         Deactivate account
                       </Dialog.Title>
                       <div className="mt-10 ">
-                        <p className="text-sm flex justify-center items-center text-gray-500">
-                          Are you sure you want to Delete?
+                        <p className="text-xl flex justify-center items-center text-gray-500">
+                          هل أنت متأكد أنك تريد حذف؟
                         </p>
                       </div>
                     </div>
@@ -1390,7 +1437,7 @@ const AmbulanceFiles = () => {
                         className="inline-flex w-full text-lg justify-center rounded-md bg-red-400 px-3 py-2 font-semibold text-white  hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                         onClick={() => setDelete(false)}
                       >
-                        Delete
+                        يمسح
                       </button>
                     </form>
                   </div>
@@ -1446,9 +1493,9 @@ const AmbulanceFiles = () => {
                       </div>
                       <button
                         onClick={() => setOpen(false)}
-                        className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
+                        className="bg-blue-400 rounded-xl px-4 text-white mt-1 font-semibold"
                       >
-                        Close
+                        أغلق
                       </button>
                     </div>
                     <Map

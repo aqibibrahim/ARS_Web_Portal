@@ -24,11 +24,10 @@ import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 const Tab = ({ selected, title, onClick }) => {
   return (
     <button
-      className={`px-4 py-2 transition-colors duration-150 ${
-        selected
-          ? "bg-blue-500 text-white"
-          : "bg-white text-black hover:bg-gray-200"
-      } focus:outline-none`}
+      className={`px-4 py-2 transition-colors duration-150 ${selected
+        ? "bg-blue-500 text-white"
+        : "bg-white text-black hover:bg-gray-200"
+        } focus:outline-none`}
       onClick={onClick}
     >
       {title}
@@ -38,7 +37,7 @@ const Tab = ({ selected, title, onClick }) => {
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-export default function IncidentHealthCare({}) {
+export default function IncidentHealthCare({ }) {
   var token = localStorage.getItem("token");
   const headers = {
     "Content-Type": "application/json",
@@ -471,13 +470,14 @@ export default function IncidentHealthCare({}) {
     return ` ${backgroundColor} ${textColor} rounded-xl p-1`;
   };
   return (
-    <div
+    <div style={{ fontFamily: "Cairo" }}
       className={` bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 pr-[200px] h-screen ml-20`}
     >
       <Toaster position="bottom-right" richColors />
-      <div className="bg-lightGray-100 w-full h-auto rounded-lg p-2">
-        <div className="p-4 text-right">
-          <h1 className="text-2xl font-semibold">Incidents List</h1>
+      <div className="bg-lightGray-100 w-full h-auto rounded-lg p-2" style={{ fontFamily: "Cairo" }}>
+        <div className="p-4 text-right" style={{ fontFamily: "Cairo" }}>
+          <h1 className="text-2xl font-semibold" style={{ fontFamily: "Cairo" }}>قائمة الحوادث
+          </h1>
         </div>
         <div className="flex flex-row items-center p-4 space-x-4">
           <div className="flex flex-row space-x-2"></div>
@@ -486,7 +486,7 @@ export default function IncidentHealthCare({}) {
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right"
               type="text"
-              placeholder="Search Incidents..."
+              placeholder="البحث عن الحوادث"
             />
           </div>
           <div className="flex flex-row items-center p-4 space-x-4">
@@ -495,21 +495,19 @@ export default function IncidentHealthCare({}) {
                 selected={activeTab === "completed"}
                 title="الحوادث المكتملة"
                 onClick={() => setActiveTab("completed")}
-                className={`${
-                  activeTab === "completed"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-blue-500"
-                }`}
+                className={`${activeTab === "completed"
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-blue-500"
+                  }`}
               />{" "}
               <Tab
                 selected={activeTab === "active"}
                 title="الحوادث النشطة"
                 onClick={() => setActiveTab("active")}
-                className={`${
-                  activeTab === "active"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-blue-500"
-                }`}
+                className={`${activeTab === "active"
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-blue-500"
+                  }`}
               />
             </div>
           </div>
@@ -566,7 +564,7 @@ export default function IncidentHealthCare({}) {
                           </div>
                           <div className="grow shrink basis-0 flex-col justify-center items-end gap-[3px] inline-flex">
                             <div className="self-stretch flex-col justify-start items-end gap-[5px] flex">
-                              <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter'] rtl">
+                              <div style={{ fontFamily: "Cairo" }} className="self-stretch text-right text-black text-opacity-75 text-sm font-semibold font-['Inter'] rtl">
                                 اسم السائق{" "}
                                 {/* {incident?.ambulances?.map(
                                   (ambulance, index) => (
@@ -581,8 +579,7 @@ export default function IncidentHealthCare({}) {
                                   (ambulance, index) => (
                                     <>
                                       {" "}
-                                      <p key={index} className="m-1">
-                                        {ambulance?.driver?.first_name}{" "}
+                                      <p key={index} className="m-1" style={{ fontFamily: "Cairo" }}>
                                         <span
                                           className={`grow shrink basis-0 ml-2 text-right  ${getStatusStyle(
                                             ambulance?.driver?.status
@@ -590,11 +587,12 @@ export default function IncidentHealthCare({}) {
                                         >
                                           {" "}
                                           {ambulance?.driver?.status}
-                                        </span>
+                                        </span> {ambulance?.driver?.first_name}{" "}
+
                                       </p>
+                                      <div className="flex w-full border mt-2 mb-1              border-gray-200"></div>
                                       <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
-                                        <div></div>
-                                        <span
+                                        <span style={{ fontFamily: "Cairo" }}
                                           className={`grow shrink basis-0 ml-2 text-right  ${getStatusStyle(
                                             ambulance?.status
                                           )} text-xs font-normal font-['Inter']`}
@@ -604,11 +602,16 @@ export default function IncidentHealthCare({}) {
                                         </span>{" "}
                                         <p
                                           key={index}
-                                          className="flex flex-nowrap w-40 text-right "
+                                          className="  w-auto text-right mb-2 " style={{ fontFamily: "Cairo" }}
                                         >
-                                          {ambulance?.model?.make?.name}-{" "}
-                                          {ambulance?.model?.name} -{" "}
-                                          {ambulance?.plate_no}
+
+
+
+
+                                          <span className=" px-2">
+                                            {ambulance?.plate_no + " " + ambulance?.model?.name + " " + ambulance?.model?.make?.name
+                                            }
+                                          </span>
                                         </p>
                                       </div>
                                     </>
@@ -654,8 +657,8 @@ export default function IncidentHealthCare({}) {
                                 </div>
                               </div>
                             </div>
-                            <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
-                            التفاصيل  {" "}
+                            <div style={{ fontFamily: "Cairo" }} className="self-stretch text-right text-black text-opacity-75 text-sm font-semibold font-['Inter']">
+                              التفاصيل  {" "}
                             </div>
                             <div className="w-[316px] h-[42px] text-right text-black text-opacity-50 text-xs font-normal font-['Inter']">
                               {incident?.description}{" "}
@@ -664,8 +667,8 @@ export default function IncidentHealthCare({}) {
                         </div>
                         <div className="w-[292px] self-stretch p-[15px] justify-end items-center gap-2.5 flex">
                           <div className="grow shrink basis-0 flex-col justify-start items-end gap-[5px] inline-flex">
-                            <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
-                              اسم المريض - {incident?.informer?.name}
+                            <div style={{ fontFamily: "Cairo" }} className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
+                              {incident?.informer?.name} :  اسم المتصل
                             </div>
                             <div className="justify-end items-start gap-[5px] inline-flex">
                               <div className="px-1.5 py-[3px] bg-blue-500 bg-opacity-50 rounded-[20px] justify-center items-center gap-[5px] flex">
@@ -734,7 +737,7 @@ export default function IncidentHealthCare({}) {
                       <div className="grow shrink basis-0 self-stretch p-[15px] bg-white bg-opacity-50 justify-end items-center gap-[15px] flex">
                         <div className="grow shrink basis-0 h-[35px] justify-start items-end gap-3.5 flex">
                           <div className=" rounded-lg justify-center items-center gap-2.5 flex">
-                            <button
+                            <button style={{ fontFamily: "Cairo" }}
                               className={`text-white bg-green-400 rounded-lg text-xs font-semibold font-inter py-2.5 px-[15px] `}
                             >
                               {/* {incident?.ambulances?.map((ambulance, index) => ( */}
@@ -752,18 +755,18 @@ export default function IncidentHealthCare({}) {
                         </div>
                         <div className="grow shrink basis-0 flex-col justify-center items-end gap-[3px] inline-flex">
                           <div className="self-stretch h-[88px] flex-col justify-start items-end gap-[5px] flex">
-                            <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter'] rtl">
-                              Ambulance Details
+                            <div style={{ fontFamily: "Cairo" }} className="self-stretch text-right text-black text-opacity-75 text-sm font-semibold font-['Inter'] rtl">
+                              تفاصيل سيارة الإسعاف
                             </div>
-                            <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                            <div style={{ fontFamily: "Cairo" }} className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
                               {/* {incident?.ambulances?.map((ambulance, index) => ( */}
                               <>
                                 {/* <span key={index}> */}
-                                {incident?.ambulance?.model?.make?.name +
+                                {incident?.ambulance?.plate_no +
                                   " " +
                                   incident?.ambulance?.model?.name +
                                   " " +
-                                  incident?.ambulance?.plate_no}
+                                  incident?.ambulance?.model?.make?.name}
                                 <p>{incident?.ambulance?.driver?.first_name}</p>
                                 {/* </span> */}
                                 <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
@@ -800,18 +803,18 @@ export default function IncidentHealthCare({}) {
                       <div className="grow shrink basis-0 self-stretch p-[15px] justify-end items-center gap-2.5 flex">
                         <div className="grow shrink basis-0 flex-col justify-start items-end gap-[5px] inline-flex">
                           <div className="self-stretch justify-end items-center gap-[5px]">
-                            <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                            <div style={{ fontFamily: "Cairo" }} className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
                               {incident?.latitude}- {incident?.longitude} -{" "}
                               {incident?.ambulance?.facility?.address}
                             </div>{" "}
-                            <div className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                            <div style={{ fontFamily: "Cairo" }} className="grow shrink basis-0 text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
                               {incident?.ambulance?.facility?.name}
                             </div>
                           </div>
-                          <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
-                            Description{" "}
+                          <div style={{ fontFamily: "Cairo" }} className="self-stretch text-right text-black text-opacity-75 text-sm font-semibold font-['Inter']">
+                            وصف{" "}
                           </div>
-                          <div className="w-[316px] h-[42px] text-right text-black text-opacity-50 text-xs font-normal font-['Inter']">
+                          <div style={{ fontFamily: "Cairo" }} className="w-[316px] h-[42px] text-right text-black text-opacity-50 text-xs font-normal font-['Inter']">
                             {incident?.description}{" "}
                           </div>
                         </div>
@@ -823,22 +826,23 @@ export default function IncidentHealthCare({}) {
                       </div>
                       <div className="w-[292px] self-stretch p-[15px] justify-end items-center gap-2.5 flex">
                         <div className="grow shrink basis-0 flex-col justify-start items-end gap-[5px] inline-flex">
-                          <div className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
-                            اسم المريض - {incident?.informer?.name}
+                          <div style={{ fontFamily: "Cairo" }} className="self-stretch text-right text-black text-opacity-75 text-base font-semibold font-['Inter']">
+                            {incident?.informer?.name} -  اسم المتصل
+
                           </div>
                           <div className="justify-end items-start gap-[5px] inline-flex">
                             <div className="px-1.5 py-[3px] bg-blue-500 bg-opacity-50 rounded-[20px] justify-center items-center gap-[5px] flex">
-                              <div className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
+                              <div style={{ fontFamily: "Cairo" }} className="text-right text-white text-opacity-90 text-xs font-normal font-['Inter']">
                                 {incident?.incident_type?.name}
                               </div>
                             </div>
                             <div className="px-1.5 py-[3px] bg-fuchsia-400 bg-opacity-75 rounded-[20px] justify-center items-center gap-[5px] flex">
-                              <div className="text-right text-white  text-xs font-normal font-['Inter']">
+                              <div style={{ fontFamily: "Cairo" }} className="text-right text-white  text-xs font-normal font-['Inter']">
                                 {incident?.gender?.name}
                               </div>
                             </div>
                           </div>
-                          <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                          <div style={{ fontFamily: "Cairo" }} className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
                             {incident?.informer?.phone_numbers?.map(
                               (phoneNumber, index) => (
                                 <p key={index}>{phoneNumber?.number}</p>
@@ -853,13 +857,13 @@ export default function IncidentHealthCare({}) {
                                   ? "red"
                                   : incident?.emergency_type?.name ===
                                     "Moderate"
-                                  ? "yellow"
-                                  : incident?.emergency_type?.name === "Mild"
-                                  ? "green"
-                                  : "black",
+                                    ? "yellow"
+                                    : incident?.emergency_type?.name === "Mild"
+                                      ? "green"
+                                      : "black",
                             }}
                           >
-                            <div
+                            <div style={{ fontFamily: "Cairo" }}
                               className={`text-white text-xs font-semibold font-['Inter']`}
                             >
                               {incident?.emergency_type?.name}
@@ -1353,7 +1357,7 @@ export default function IncidentHealthCare({}) {
                         </div>
                         <div
                           id="map"
-                          // style={{ height: "0px", width: "0px" }}
+                        // style={{ height: "0px", width: "0px" }}
                         ></div>
                         <Map
                           google={google}

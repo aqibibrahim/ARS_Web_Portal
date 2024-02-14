@@ -170,14 +170,14 @@ export default function Equipment() {
         <Toaster position="bottom-right" richColors />
         <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold m-2">Equipment</h1>
+            <h1 className="text-xl font-semibold m-2">المعدات</h1>
             <div>
               <button
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
                 type="button"
                 onClick={handleAddEquipmentClick}
               >
-                + Add Equipment
+                + إضافة معدات
               </button>
             </div>
             {isModalOpen && (
@@ -190,7 +190,7 @@ export default function Equipment() {
                       onClick={handleModalClose}
                     />
                     <h3 className="text-xl font-semibold">
-                      Create New Equipment
+                      إضافة معدات جديدة
                     </h3>
                   </div>
                   <form onSubmit={CreateEquipment.handleSubmit}>
@@ -199,7 +199,7 @@ export default function Equipment() {
                         htmlFor="name"
                         className="block sr-only text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        Equipments Name
+                        إسم المعدة
                       </label>
                       <div className="relative mt-2">
                         <input
@@ -207,7 +207,7 @@ export default function Equipment() {
                           name="name"
                           onChange={CreateEquipment.handleChange}
                           value={CreateEquipment.values.name}
-                          placeholder="Equipments Name"
+                          placeholder="إسم المعدة "
                           className="peer block w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                         />
@@ -218,14 +218,14 @@ export default function Equipment() {
                         type="button"
                         className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
                       >
-                        loading...
+                        إضافة...
                       </button>
                     ) : (
                       <button
                         type="submit"
                         className={`text-white bg-primary-100 rounded-md border-2 border-primary-100 aa py-2 px-5 transition-all duration-300  mt-2`}
                       >
-                        Create
+                        إضافة
                       </button>
                     )}
                   </form>
@@ -241,7 +241,7 @@ export default function Equipment() {
                       className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                       onClick={handleModalClose}
                     />
-                    <h3 className="text-xl font-semibold">Edit Equipment</h3>
+                    <h3 className="text-xl font-semibold">تحرير المعدات</h3>
                   </div>
                   <form onSubmit={updateEquipment.handleSubmit}>
                     <div>
@@ -279,7 +279,7 @@ export default function Equipment() {
                         type="submit"
                         className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
                       >
-                        submit
+                        إضافة
                       </button>
                     )}
                   </form>
@@ -305,7 +305,7 @@ export default function Equipment() {
                       scope="col"
                       className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
-                      Status
+                      حالة
                     </th>
 
                     {/* <th
@@ -324,8 +324,7 @@ export default function Equipment() {
                       scope="col"
                       className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
-                      Departments
-                    </th>
+                      المعدات                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -415,7 +414,7 @@ export default function Equipment() {
                       </Dialog.Title>
                       <div className="mt-10 ">
                         <p className="text-sm flex justify-center items-center text-gray-500">
-                          Are you sure want to DELETE?
+                          هل أنت متأكد من حذف المعدات هذا؟
                         </p>
                       </div>
                     </div>
@@ -430,7 +429,7 @@ export default function Equipment() {
                         className="inline-flex w-full text-lg justify-center rounded-md bg-red-400 px-3 py-2 font-semibold text-white  hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                         onClick={() => setDelete(false)}
                       >
-                        Delete
+                        حذف
                       </button>
                     </form>
                   </div>

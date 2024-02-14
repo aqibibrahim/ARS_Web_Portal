@@ -221,7 +221,7 @@ export default function VehicleMake() {
                   setState({ vehicleMake: "" });
                 }}
               />
-              <h3 className="text-xl font-semibold">Create Vehicle Make</h3>
+              <h3 className="text-xl font-semibold">تسجيل نوع السيارة </h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -231,7 +231,8 @@ export default function VehicleMake() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Vehicle Make:
+
+                      نوع السيارة
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -239,7 +240,7 @@ export default function VehicleMake() {
                         name="vehicleMake"
                         onChange={handleChange}
                         value={state?.vehicleMake}
-                        placeholder="Vehicle Make"
+                        placeholder="نوع السيارة"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -255,7 +256,7 @@ export default function VehicleMake() {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    تسجيل ...
                   </button>
                 ) : (
                   <button
@@ -263,7 +264,7 @@ export default function VehicleMake() {
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300 
                       `}
                   >
-                    Add
+                    تسجيل
                   </button>
                 )}
               </div>
@@ -271,7 +272,7 @@ export default function VehicleMake() {
           </div>
         </div>
       )}{" "}
-      {viewOpen && (
+      {/* {viewOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
           <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
@@ -282,7 +283,6 @@ export default function VehicleMake() {
               />
               <h3 className="text-xl font-semibold">
                 Vehicle Make Details
-                {/* <span className="text-lime-600 ml-2">{editData?.status}</span> */}
               </h3>
             </div>
             <div>
@@ -292,19 +292,12 @@ export default function VehicleMake() {
                   <span className="font-semibold">Vehicle Make:</span>{" "}
                   {editData?.name}
                 </p>
-                {/* <p>
-                  <span className="font-semibold">Model:</span>{" "}
-                  {selectedAmbulance?.model}
-                </p>
-                <p>
-                  <span className="font-semibold">Plate#:</span>{" "}
-                  {selectedAmbulance?.plate_no}
-                </p> */}
+               
               </div>
             </div>
           </div>
         </div>
-      )}
+      )} */}
       {editOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
           <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
@@ -317,7 +310,7 @@ export default function VehicleMake() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">Edit Vehicle Make</h3>
+              <h3 className="text-xl font-semibold">تحديث  نوع السيارة</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -327,7 +320,7 @@ export default function VehicleMake() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Vehicle Make:
+                      نوع السيارة
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -335,7 +328,7 @@ export default function VehicleMake() {
                         name="editVehicleMake"
                         onChange={handleChange}
                         value={state?.editVehicleMake}
-                        placeholder="Name of Vehicle Make"
+                        placeholder="نوع السيارة"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -360,14 +353,14 @@ export default function VehicleMake() {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    تحديث ...
                   </button>
                 ) : (
                   <button
                     onClick={editVehcileMake}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Update
+                    تحديث
                   </button>
                 )}
               </div>
@@ -375,8 +368,9 @@ export default function VehicleMake() {
           </div>
         </div>
       )}
+
       <Modal
-        title="Are you sure to delete this Vehicle Make?"
+        title="هل أنت متأكد من حذف نوع السيارة هذا؟"
         open={deleteModal}
         onOk={deleteVehicleMake}
         onCancel={handleCancel}
@@ -384,7 +378,8 @@ export default function VehicleMake() {
         okButtonProps={{
           style: { backgroundColor: "red" },
         }}
-        okText="Delete"
+        okText="حذف"
+        cancelText="أغلق"
       ></Modal>
       <div
         className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen  `}
@@ -392,7 +387,7 @@ export default function VehicleMake() {
         {" "}
         <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold m-2">Vehicle Make</h1>
+            <h1 className="text-xl font-semibold m-2">نوع السيارة</h1>
             <div>
               <button
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
@@ -401,7 +396,7 @@ export default function VehicleMake() {
                   AddNewVehicleMake();
                 }}
               >
-                + Add New Vehicle Make
+                + اضافة نوع سيارة جديد
               </button>
             </div>
           </div>
@@ -434,7 +429,7 @@ export default function VehicleMake() {
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Vehicle Make
+                  نوع السيارة
                 </th>
               </tr>
             </thead>
@@ -460,14 +455,14 @@ export default function VehicleMake() {
                       >
                         <BiEdit />
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => {
                           handleView(data);
                         }}
                         className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
                       >
                         <BsEye />
-                      </button>
+                      </button> */}
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-md">

@@ -430,25 +430,25 @@ const RegionFiles = () => {
       <Toaster position="bottom-right" richColors />
       <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
         <div className="p-4 text-right  bg-gray-100 ">
-          <h1 className="text-xl font-semibold">Regions</h1>
+          <h1 className="text-xl font-semibold">المناطق</h1>
         </div>
         <div className="flex flex-row items-center p-4 space-x-4 bg-gray-100 justify-end ">
           <div className="flex flex-row space-x-2"></div>
-          {/* <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
+          <div className="flex flex-1 ml-4 items-center bg-gray-200 rounded-lg px-3 ">
             <BsSearch width={9} height={9} />
             <input
               className="bg-transparent focus:border-none border-0 w-full text-right placeholder:text-sm"
               type="text"
-              placeholder="Search Ambulances..."
+              placeholder="البحث عن المنطقة"
             />
-          </div> */}
+          </div>
 
           <button
             className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-4 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
             type="button"
             onClick={handleCreateRegionClick}
           >
-            + Create Region
+            + تسجيل المنطقة
           </button>
         </div>
 
@@ -474,19 +474,19 @@ const RegionFiles = () => {
                     scope="col"
                     className="py-3 pl-4 pr-3 text-xs font-medium  tracking-wide text-gray-500 sm:pl-0"
                   >
-                    Phone Numbers
+                    أرقام الهواتف
                   </th>
                   <th
                     scope="col"
                     className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
-                    Ambulance Count
+                    عدد سيارات الإسعاف
                   </th>
                   <th
                     scope="col"
                     className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
-                    Status
+                    حالة
                   </th>
                   {/* <th
                 scope="col"
@@ -498,13 +498,13 @@ const RegionFiles = () => {
                     scope="col"
                     className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
-                    Address
+                    عنوان
                   </th>
                   <th
                     scope="col"
                     className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
                   >
-                    Region Name
+                    اسم المنطقة
                   </th>
                 </tr>
               </thead>
@@ -584,7 +584,7 @@ const RegionFiles = () => {
                   CreateRegion.resetForm();
                 }}
               />
-              <h3 className="text-xl font-semibold">Create Region</h3>
+              <h3 className="text-xl font-semibold">تسجيل المنطقة</h3>
             </div>
             <form className="p-5" onSubmit={CreateRegion.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -619,7 +619,7 @@ const RegionFiles = () => {
                       htmlFor="addresss"
                       className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
                     >
-                      Address
+                      عنوان
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -632,7 +632,7 @@ const RegionFiles = () => {
                         name="addresss"
                         id="addresss"
                         className="peer mt-3 block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        placeholder=" Choose On Map"
+                        placeholder=" اختر على الخريطة"
                         onKeyDown={(e) => {
                           if (e.key === "Tab") {
                             e.preventDefault();
@@ -644,18 +644,26 @@ const RegionFiles = () => {
                     </div>
                     <div className="relative mt-2">
                       <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                        Assigned Ambulances*
+                        سيارات الإسعاف المخصصة
                       </label>
 
                       <AntSelect
                         mode="multiple"
                         value={options || []} // Ensure value is an empty array if options are null
-                        placeholder="Select Ambulance"
+                        placeholder={
+                          <span
+                            className="flex justify-end mr-3"
+                            style={{ fontFamily: "Cairo" }}
+                          >
+                            اختر سيارة الإسعاف
+                          </span>
+                        }
                         onChange={(value) => handleChange(value)}
                         options={myData}
                         showSearch
                         optionFilterProp="label"
                         className="w-full mt-2"
+                        dropdownStyle={{ textAlign: "right" }}
                       />
                     </div>
                   </div>
@@ -666,7 +674,7 @@ const RegionFiles = () => {
                       htmlFor="name"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Region Name
+                      اسم المنطقة
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -676,7 +684,7 @@ const RegionFiles = () => {
                         id="name"
                         onChange={CreateRegion.handleChange}
                         value={CreateRegion.values.name}
-                        placeholder="Type Region Name"
+                        placeholder="اكتب اسم المنطقة"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
@@ -693,7 +701,7 @@ const RegionFiles = () => {
                       htmlFor="phone_numbers"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Phone Number
+                      رقم التليفون
                     </label>
 
                     <div className="w-full  mb-6 ">
@@ -750,14 +758,14 @@ const RegionFiles = () => {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    تحميل...
                   </button>
                 ) : (
                   <button
                     type="submit"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300  `}
                   >
-                    Create
+                    تسجيل المنطقة
                   </button>
                 )}
               </div>
@@ -774,7 +782,7 @@ const RegionFiles = () => {
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                 onClick={() => setUpdateFormOpen(false)}
               />
-              <h3 className="text-xl font-semibold">Region Details</h3>
+              <h3 className="text-xl font-semibold">تفاصيل المنطقة</h3>
             </div>
             <form className="p-5" onSubmit={EditRegion.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -784,7 +792,7 @@ const RegionFiles = () => {
                       htmlFor="addresss"
                       className=" text-sm flex justify-end font-medium leading-6 text-gray-900 text-right"
                     >
-                      Address
+                      عنوان{" "}
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -796,7 +804,7 @@ const RegionFiles = () => {
                         name="addresss"
                         id="addresss"
                         className="peer block w-full border-0 cursor-pointer bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        placeholder=" Choose On Map"
+                        placeholder=" اختر على الخريطة"
                         required
                         readOnly
                         onKeyDown={(e) => {
@@ -814,17 +822,22 @@ const RegionFiles = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                      Assigned Ambulances
+                      سيارات الإسعاف المخصصة
                     </label>
 
                     <Select
                       value={options}
-                      placeholder="Select"
+                      placeholder={
+                        <span style={{ fontFamily: "Cairo" }}>
+                          اختر سيارات الإسعاف
+                        </span>
+                      }
                       onChange={(e) => handleChange(e)}
                       options={myData}
                       isMultiple={true}
                       isClearable={true}
                       primaryColor={"blue"}
+                      dropdownStyle={{ textAlign: "right" }}
                       className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
                   </div>
@@ -835,7 +848,7 @@ const RegionFiles = () => {
                       htmlFor="name"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Region Name
+                      اسم المنطقة
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -845,7 +858,7 @@ const RegionFiles = () => {
                         id="name"
                         onChange={EditRegion.handleChange}
                         value={EditRegion.values.name}
-                        placeholder="Type Region Name"
+                        placeholder="اكتب اسم المنطقة"
                         className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                         onKeyDown={(e) => {
@@ -866,7 +879,7 @@ const RegionFiles = () => {
                       htmlFor="phone_numbers"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Phone Number
+                      رقم التليفون
                     </label>
 
                     <div className="w-full  mb-6 ">
@@ -927,14 +940,14 @@ const RegionFiles = () => {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    تحميل...
                   </button>
                 ) : (
                   <button
                     type="submit"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Update
+                    تحديث
                   </button>
                 )}
               </div>
@@ -992,7 +1005,7 @@ const RegionFiles = () => {
                       </Dialog.Title>
                       <div className="mt-10 ">
                         <p className="text-sm flex justify-center items-center text-gray-500">
-                          Are you sure you want to Delete?
+                          هل أنت متأكد أنك تريد حذف؟
                         </p>
                       </div>
                     </div>
@@ -1007,7 +1020,7 @@ const RegionFiles = () => {
                         className="inline-flex w-full text-lg justify-center rounded-md bg-red-400 px-3 py-2 font-semibold text-white  hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                         onClick={() => setDelete(false)}
                       >
-                        Delete
+                        يمسح
                       </button>
                     </form>
                   </div>

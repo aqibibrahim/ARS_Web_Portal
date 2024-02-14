@@ -177,11 +177,10 @@ export default function Mapping() {
   const Tab = ({ selected, title, onClick }) => {
     return (
       <button
-        className={`px-4 py-2 transition-colors duration-150 ${
-          selected
-            ? "bg-blue-500 text-white "
-            : "bg-white text-black hover:bg-gray-200 "
-        } focus:outline-none`}
+        className={`px-4 py-2 transition-colors duration-150 ${selected
+          ? "bg-blue-500 text-white "
+          : "bg-white text-black hover:bg-gray-200 "
+          } focus:outline-none`}
         onClick={onClick}
       >
         {title}
@@ -201,14 +200,14 @@ export default function Mapping() {
         maskClosable={false}
       >
         <div className="flex flex-col">
-          <div className="flex p-5 ">
+          <div className="flex p-5 " style={{ fontFamily: "Cairo" }}>
             <select
               value={selectedDepartment}
               onChange={(e) => handleDepartmentChange(e.target.value)}
               className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl"
             >
               <option value="" disabled>
-                Select Department
+                إختار القسم
               </option>
               {departments.map((details, index) => (
                 <option key={index} value={details?.id}>
@@ -217,18 +216,20 @@ export default function Mapping() {
               ))}
             </select>
           </div>
-          <div>
+          <div style={{ fontFamily: "Cairo" }} >
             <MultiSelectDropdown
+
               options={incident}
               selectedOptions={selectedEquipment}
               setSelectedOptions={setSelectedEquipment}
               //   label={"Equipment"}
-              placeholder="Select Incident Type"
+              placeholder="إختار نوع الحادث
+"
               bgColor={"#91EAAA"}
             />
           </div>
           <div className="flex m-auto mt-5 bg-blue-400 p-5 rounded-xl text-lg text-white">
-            <button onClick={handleMappingSubmit}>Submit Mapping</button>
+            <button onClick={handleMappingSubmit}>إضافة الربط</button>
           </div>
         </div>
       </Modal>
@@ -244,14 +245,15 @@ export default function Mapping() {
       >
         {" "}
         <div className="flex flex-col">
-          <div className="flex p-5 ">
+          <div className="flex p-5 " style={{ fontFamily: "Cairo" }}>
             <select
               className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl"
               onChange={handleIncidentChange}
               value={selectedIncidentId}
             >
               <option value="" disabled selected>
-                Select Incident Type
+                إختار نوع الحادث
+
               </option>
               {incident?.map((details, index) => (
                 <option key={details?.id} value={details?.id}>
@@ -260,21 +262,20 @@ export default function Mapping() {
               ))}
             </select>
           </div>
-          <div>
+          <div style={{ fontFamily: "Cairo" }}>
             <MultiSelectDropdown
               options={equipments}
               selectedOptions={selectedEquipment}
               setSelectedOptions={setSelectedEquipment}
-              label={"Equipment"}
-              placeholder="Select Equipment"
+              label={"المعدات"}
+              placeholder="إختار المعدات"
               bgColor={"#91EAAA"}
             />
           </div>
 
           <div className="flex m-auto mt-5 bg-blue-400 p-5 rounded-xl text-lg text-white">
-            <button onClick={handleIncidentMappingSubmit}>
-              Submit Mapping
-            </button>
+            <button onClick={handleIncidentMappingSubmit} style={{ fontFamily: "Cairo" }}>
+              إضافة الربط            </button>
           </div>
         </div>
       </Modal>
@@ -284,28 +285,27 @@ export default function Mapping() {
       >
         <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
           <div className="p-4 text-center   ">
-            <h1 className="text-2xl font-semibold m-2 mt-3"> Mapping</h1>
+            <h1 className="text-2xl font-semibold m-2 mt-3"> الربط
+            </h1>
           </div>
           <div className="flex justify-end ">
             <Tab
               selected={activeTab === "incidentTypeMapping"}
-              title="Incident Type Mapping"
+              title="ربط الحوادث بمعدات الإسعاف  "
               onClick={() => handleTabChange("incidentTypeMapping")}
-              className={`${
-                activeTab === "incidentTypeMapping"
-                  ? "bg-blue-500 text-white"
-                  : "bg-white text-blue-500"
-              }`}
+              className={`${activeTab === "incidentTypeMapping"
+                ? "bg-blue-500 text-white"
+                : "bg-white text-blue-500"
+                }`}
             />{" "}
             <Tab
               selected={activeTab === "departmentMapping"}
-              title="Department Mapping"
+              title="ربط الأقسام بالحوادث "
               onClick={() => handleTabChange("departmentMapping")}
-              className={`${
-                activeTab === "departmentMapping"
-                  ? "bg-blue-500 text-white"
-                  : "bg-white text-blue-500"
-              }`}
+              className={`${activeTab === "departmentMapping"
+                ? "bg-blue-500 text-white"
+                : "bg-white text-blue-500"
+                }`}
             />
           </div>
           <div className="m-auto bg-white mt-5 rounded-xl">
@@ -341,7 +341,7 @@ export default function Mapping() {
                         onClick={() => setDepartmentMapping(true)}
                         className="mt-5 mr-3 text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 ml-auto"
                       >
-                        + Add Department Mapping
+                        + إضافة ربط الأقسام بالحوادث
                       </button>
                     </div>
                   </>
@@ -355,10 +355,9 @@ export default function Mapping() {
                         <thead>
                           <tr className="border-b border-gray-300 m-6">
                             <th className="text-gray-800 text-right mb-4">
-                              Incident Types
-                            </th>
+                              انواع الحوادث                            </th>
                             <th className="text-gray-800 text-right mb-4">
-                              Department
+                              الاقسام
                             </th>
                           </tr>
                         </thead>
@@ -395,7 +394,7 @@ export default function Mapping() {
                         onClick={() => setIncidentTypeMapping(true)}
                         className="mt-5 ml-3 text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
                       >
-                        + Add Incident Type Mapping
+                        + إضافة ربط لنوع الحادث
                       </button>
                     </div>
                   </>
@@ -409,11 +408,9 @@ export default function Mapping() {
                         <thead>
                           <tr className="border-b border-gray-300">
                             <th className="text-gray-800 text-right">
-                              Equipments
-                            </th>
+                              المعدات                            </th>
                             <th className="text-gray-800 text-right">
-                              Incident Type
-                            </th>
+                              نوع الحادث                            </th>
                           </tr>
                         </thead>
                         <tbody>

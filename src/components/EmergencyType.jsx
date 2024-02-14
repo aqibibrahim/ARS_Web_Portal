@@ -252,8 +252,7 @@ export default function EmergencyType() {
                 }}
               />
               <h3 className="text-xl font-semibold">
-                Create New Emergency Type
-              </h3>
+                اضافة نوع حالة جديد              </h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -263,7 +262,7 @@ export default function EmergencyType() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Emergency Type Name:
+                      نوع الحالة
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -271,7 +270,7 @@ export default function EmergencyType() {
                         name="EmergencyType"
                         onChange={handleChange}
                         value={state?.EmergencyType}
-                        placeholder="Name of Emergency type"
+                        placeholder="نوع الحالة"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -287,14 +286,14 @@ export default function EmergencyType() {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    إضافة...
                   </button>
                 ) : (
                   <button
                     onClick={createNewGender}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300  `}
                   >
-                    Create
+                    إضافة
                   </button>
                 )}
               </div>
@@ -347,7 +346,7 @@ export default function EmergencyType() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">Edit Emergency Name</h3>
+              <h3 className="text-xl font-semibold">تحرير نوع لحالة </h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -357,7 +356,7 @@ export default function EmergencyType() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Name:
+                      نوع الحالة
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -390,14 +389,14 @@ export default function EmergencyType() {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    تحرير...
                   </button>
                 ) : (
                   <button
                     onClick={editGender}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Update
+                    تحرير
                   </button>
                 )}
               </div>
@@ -406,7 +405,7 @@ export default function EmergencyType() {
         </div>
       )}
       <Modal
-        title="Are you sure to delete this Emergency Type?"
+        title="هل أنت متأكد من حذف نوع الطوارئ هذا؟"
         open={deleteModal}
         onOk={deleteGender}
         onCancel={handleCancel}
@@ -414,7 +413,8 @@ export default function EmergencyType() {
         okButtonProps={{
           style: { backgroundColor: "red" },
         }}
-        okText="Delete"
+        cancelText="أغلق"
+        okText="حذف "
       ></Modal>
       <div
         className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen  `}
@@ -422,7 +422,7 @@ export default function EmergencyType() {
         {" "}
         <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold m-2">Emergency Type</h1>
+            <h1 className="text-xl font-semibold m-2">نوع الحالة </h1>
             <div>
               <button
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
@@ -431,7 +431,7 @@ export default function EmergencyType() {
                   createNewGenderClick();
                 }}
               >
-                + Create New Emergency Type
+                + اضافة نوع حالة جديد
               </button>
             </div>
           </div>
@@ -464,8 +464,7 @@ export default function EmergencyType() {
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Emergency Type
-                </th>
+                  نوع الحالة                </th>
               </tr>
             </thead>
             <tbody>

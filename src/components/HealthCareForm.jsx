@@ -133,7 +133,7 @@ function HealthCareForm({ onClick, datatt, onClose }) {
             className="text-white bg-blue-400 p-1 w-28 flex justify-center justify-items-end hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border rounded-xl text-right focus:outline-none"
             onClick={handleViewOnMap(value)}
           >
-            View on Map
+            عرض على الخريطة
           </p>
         </div>
       </div>{" "}
@@ -158,24 +158,30 @@ function HealthCareForm({ onClick, datatt, onClose }) {
             className="flex mt-4 flex-col   cursor-pointer justify-end gap-1 border border-gray-400 p-1 rounded-md mb-2 text-gray-800"
           >
             <div className="bg-blue-300 text-white p-3 rounded-lg mb-1">
-              <p className=" font-bold text-md">Ambulance Detail</p>
-              <p className="text-right">
-                Model:
-                {ambulance?.model?.make?.name +
+              <p className=" font-bold text-md text-center flex justify-center">
+                تفاصيل سيارة الإسعاف
+              </p>
+              <p className="text-right flex justify-end">
+                {ambulance?.plate_no +
                   " " +
                   ambulance?.model?.name +
                   " " +
-                  ambulance?.plate_no}
+                  ambulance?.model?.make?.name}
+                <span className="ml-1 font-bold"> : ماركة</span>
               </p>
               <p className="text-right">
-                Persons Supported:{ambulance?.persons_supported}
+                {ambulance?.persons_supported}{" "}
+                <span className="ml-1 font-bold">: شخص مدعوم</span>
               </p>
-              <p className="text-right">Id No:{ambulance?.id_no}</p>
-              <p className="text-right">
-                Driver: {ambulance?.driver?.first_name}
+              <p className="text-right font-bold">{ambulance?.id_no} : Id No</p>
+              <p className="text-right flex justify-end">
+                {ambulance?.driver?.first_name}
+
+                <span className="flex justify-end font-bold">: السائق</span>
               </p>
               <p className="text-right">
-                Driver Email: {ambulance?.driver?.email}
+                {ambulance?.driver?.email}
+                <span className="font-bold">: البريد الإلكتروني للسائق </span>
               </p>
             </div>
             <div
@@ -184,49 +190,56 @@ function HealthCareForm({ onClick, datatt, onClose }) {
             >
               {selectedFacilities[ambulance?.id] ? (
                 <div className="flex justify-around flex-col ">
-                  <p className=" font-bold text-md">Assigned Health Care</p>
-                  <p>
-                    <span>Facility Name: </span>
+                  <p className=" font-bold text-md text-center">
+                    الرعاية الصحية المخصصة
+                  </p>
+                  <p className="text-right flex justify-end">
                     {selectedFacilities[ambulance?.id]?.label}
+                    <span className="font-bold"> : الرعاية الصحية</span>
                   </p>
-                  <p>
-                    <span>Email: </span>
+                  <p className="text-right flex justify-end">
                     {selectedFacilities[ambulance?.id]?.email}
+                    <span className="font-bold">: بريد إلكتروني </span>
                   </p>
-                  <p>
-                    <span>Distance: </span>
+                  <p className="text-right flex justify-end">
                     {selectedFacilities[ambulance?.id]?.distance +
                       " " +
                       selectedFacilities[ambulance?.id]?.duration}
+                    <span className="font-bold">: مسافة</span>
                   </p>
                 </div>
               ) : (
-                <div className="mt-2 flex justify-around flex-col ">
-                  <p className=" font-bold text-md text-left">
-                    Assigned Health Care
+                <div className="mt-2 flex justify-around flex-col">
+                  <p className="font-bold text-md text-center">
+                    الرعاية الصحية المخصصة
                   </p>
-                  <p>
-                    <span>Facility Name: </span>
-                    {ambulance?.facility?.name}
+                  <p className="text-right flex justify-end">
+                    {ambulance?.facility?.name ?? "  "}
+                    <span className="font-bold">: الرعاية الصحية</span>
                   </p>
-                  <p>
-                    <span>Email: </span>
-                    {ambulance?.facility?.email}
+                  <p className="text-right flex justify-end">
+                    {ambulance?.facility?.email ?? "  "}
+                    <span className="font-bold">: بريد إلكتروني</span>
                   </p>
-                  <p>
-                    <span>Distance: </span>
+                  <p className="text-right flex justify-end">
                     {ambulance?.distance_info?.from_incident_to_facility
-                      ?.rows[0]?.elements[0]?.distance?.text +
-                      " " +
-                      ambulance?.distance_info?.from_incident_to_facility
-                        ?.rows[0]?.elements[0]?.duration?.text}
+                      ?.rows[0]?.elements[0]?.distance?.text &&
+                    ambulance?.distance_info?.from_incident_to_facility?.rows[0]
+                      ?.elements[0]?.duration?.text
+                      ? `${ambulance?.distance_info?.from_incident_to_facility?.rows[0]?.elements[0]?.distance?.text} ${ambulance?.distance_info?.from_incident_to_facility?.rows[0]?.elements[0]?.duration?.text}`
+                      : ""}
+                    <span className="font-bold">: مسافة</span>
                   </p>
                 </div>
               )}
               <div className="mb-5 mt-2 flex flex-col">
                 <Select
                   value={selectedFacilities[ambulance?.id]}
-                  placeholder="Select HealthCare"
+                  placeholder={
+                    <div className="flex ml-56" style={{ fontFamily: "Cairo" }}>
+                      حدد الرعاية الصحية
+                    </div>
+                  }
                   onChange={(selectedOption) => {
                     handleChange(selectedOption, ambulance);
                   }}
@@ -235,7 +248,7 @@ function HealthCareForm({ onClick, datatt, onClose }) {
                   isClearable={true}
                   primaryColor={"blue"}
                   formatOptionLabel={formatOptionLabel}
-                  className="peer w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                  className="peer w-full  flex justify-end border-0 bg-offWhiteCustom-100  text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-rght"
                 />
 
                 <div className="flex mt-3 text-right justify-start ml-auto">
@@ -247,7 +260,7 @@ function HealthCareForm({ onClick, datatt, onClose }) {
                         createAssignAmbulance();
                       }}
                     >
-                      Assign HealthCare
+                      تعيين الرعاية الصحية
                     </button>
                   )}
                 </div>
@@ -265,7 +278,7 @@ function HealthCareForm({ onClick, datatt, onClose }) {
             onClose();
           }}
         >
-          Close
+          أغلق
         </button>
       </div>
     </>

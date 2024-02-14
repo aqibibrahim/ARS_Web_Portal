@@ -211,8 +211,8 @@ const ModalComponent = (props) => {
                 />
                 <h3 className="text-xl font-semibold">
                   {editData && editData.name
-                    ? "Update Driver"
-                    : "Create Driver"}
+                    ? " تحديث السائق "
+                    : "تسجيل السائق"}
                 </h3>
               </div>
               <div className="p-5">
@@ -256,10 +256,10 @@ const ModalComponent = (props) => {
                         {editBit
                           ? ""
                           : validationErrors.pin && (
-                              <p className="text-red-500 text-sm">
-                                {validationErrors.pin}
-                              </p>
-                            )}
+                            <p className="text-red-500 text-sm">
+                              {validationErrors.pin}
+                            </p>
+                          )}
                       </div>
                     )}
 
@@ -268,7 +268,7 @@ const ModalComponent = (props) => {
                         htmlFor="phone_numbers"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        Phone Number
+                        رقم التليفون{" "}
                       </label>
 
                       <div className="w-full  mb-6 ">
@@ -334,7 +334,7 @@ const ModalComponent = (props) => {
                         htmlFor="name"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        Name
+                        اسم
                       </label>
                       <div className="relative mt-2">
                         <input
@@ -344,7 +344,7 @@ const ModalComponent = (props) => {
                           id="name"
                           onChange={handleChange}
                           value={state?.name}
-                          placeholder="Enter Name"
+                          placeholder="أدخل الاسم "
                           className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                           onKeyDown={(e) => {
@@ -370,14 +370,14 @@ const ModalComponent = (props) => {
                         htmlFor="email"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        Email
+                        بريد إلكتروني
                       </label>
                       <div className="relative mt-2">
                         <input
                           tabIndex={2}
                           name="email"
                           onChange={handleChange}
-                          placeholder="Enter Email"
+                          placeholder="أدخل البريد الإلكتروني"
                           className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                           value={state?.email || ""}
@@ -426,21 +426,21 @@ const ModalComponent = (props) => {
                       type="button"
                       className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                     >
-                      Loading...
+                      تحميل...{" "}
                     </button>
                   ) : !editBit ? (
                     <button
                       onClick={createNewDriver}
                       className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                     >
-                      Save
+                      تسجيل
                     </button>
                   ) : (
                     <button
                       onClick={UpdateDriver}
                       className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                     >
-                      Edit
+                      تحديث
                     </button>
                   )}
                 </div>

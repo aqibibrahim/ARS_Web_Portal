@@ -249,7 +249,7 @@ export default function Gender() {
                   setState({ GenderName: "" });
                 }}
               />
-              <h3 className="text-xl font-semibold">Create New Gender</h3>
+              <h3 className="text-xl font-semibold">اضافة جنس الحالة</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -259,7 +259,7 @@ export default function Gender() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Gender Name:
+                      اسم الجنس
                     </label>
                     <div className="relative mt-2">
                       <input
@@ -267,7 +267,7 @@ export default function Gender() {
                         name="GenderName"
                         onChange={handleChange}
                         value={state?.GenderName}
-                        placeholder="Name of Gender"
+                        placeholder="اسم الجنس"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -283,14 +283,14 @@ export default function Gender() {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    إضافة...
                   </button>
                 ) : (
                   <button
                     onClick={createNewGender}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300  `}
                   >
-                    Create
+                    إضافة
                   </button>
                 )}
               </div>
@@ -343,7 +343,7 @@ export default function Gender() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">Edit Gender Name</h3>
+              <h3 className="text-xl font-semibold"> تحديث اسم الجنس </h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -353,8 +353,7 @@ export default function Gender() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      Name:
-                    </label>
+                      اسم الجنس                    </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
@@ -386,14 +385,14 @@ export default function Gender() {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Loading...
+                    تحديث...
                   </button>
                 ) : (
                   <button
                     onClick={editGender}
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    Update
+                    تحديث
                   </button>
                 )}
               </div>
@@ -402,7 +401,7 @@ export default function Gender() {
         </div>
       )}
       <Modal
-        title="Are you sure to delete this Gender?"
+        title="هل أنت متأكد من حذف الجنس هذا؟"
         open={deleteModal}
         onOk={deleteGender}
         onCancel={handleCancel}
@@ -410,7 +409,8 @@ export default function Gender() {
         okButtonProps={{
           style: { backgroundColor: "red" },
         }}
-        okText="Delete"
+        okText="حذف"
+        cancelText="أغلق"
       ></Modal>
       <div
         className={`w-full bg-grayBg-100 transition-all duration-300 z-[10] rounded-b-lg overflow-y-scroll no-scrollbar h-screen  `}
@@ -418,7 +418,7 @@ export default function Gender() {
         {" "}
         <div className="text-right flex-col bg-white rounded-b-lg p-2 flex justify-end items-right  ml-20  -mt-1">
           <div className="p-4 text-right  bg-gray-100 ">
-            <h1 className="text-xl font-semibold m-2">Gender</h1>
+            <h1 className="text-xl font-semibold m-2">الجنس</h1>
             <div>
               <button
                 className="text-white bg-primary-100 rounded-b-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
@@ -427,7 +427,7 @@ export default function Gender() {
                   createNewGenderClick();
                 }}
               >
-                + Create New Gender
+                + اضافة جنس الحالة
               </button>
             </div>
           </div>
@@ -460,7 +460,7 @@ export default function Gender() {
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Gender
+                  الجنس
                 </th>
               </tr>
             </thead>
