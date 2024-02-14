@@ -105,9 +105,27 @@ function TopBar({}) {
 		socket.addEventListener('message', (event) => {
 			// Log the received data for debugging
 			console.log('Received data:', event.data)
+			if (event.data !== 'ping') {
+				try {
+					const jsonString = event.data
+					const jsonObject = JSON.parse(jsonString)
+					const jsonStringfy = JSON.stringify(jsonObject)
+					const jsonObject1 = JSON.parse(jsonStringfy)
+					const Payload = JSON.parse(jsonObject1)
+
+					// Access the type and message fields
+					const type = Payload.type
+					const message = Payload.message
+
+					if (type === 'AMBULANCE_ACTIVE') {
+						setNotificationsData((prevNotifications) => [...prevNotifications, Payload])
+						setNotificationCount((prevCount) => prevCount + 1)
+					}
+				} catch (error) {
+					console.error('Error parsing JSON data:', error)
+				}
+			}
 			// Update notification data
-			setNotificationsData((prevNotifications) => [...prevNotifications, event.data])
-			setNotificationCount((prevCount) => prevCount + 1)
 		})
 		// Clean up websocket connection on unmount
 		return () => {
@@ -124,27 +142,25 @@ function TopBar({}) {
 		setNotificationsData([])
 		setNotificationCount(0)
 	}
-  return (
-    <div className="hidden  ml-2 lg:fixed lg:inset-y-0 z-50  lg:flex lg:flex-col">
-      {/* Sidebar component, swap this element with another sidebar if you like */}
-      <div className="flex grow flex-row gap-y-5 border-r border-gray-200 bg-transparent pb-4">
-        <div className="px-1 mt-2">
-          <TopBarItem
-            icon={BsBell}
-            onClick={() => toggleDropdown("notifications")}
-            isActive={activeDropdown === "notifications"}
-            notificationCount={notificationCount}
-          >
-            {activeDropdown === "notifications" && (
-              <Dropdown
-                onClose={() => setActiveDropdown(null)}
-                title="Notifications"
-              >
-                <Notifications notificationsData={notificationsData} />
-              </Dropdown>
-            )}
-          </TopBarItem>
-          {/* <TopBarItem
+	return (
+		<div className="hidden  ml-2 lg:fixed lg:inset-y-0 z-50  lg:flex lg:flex-col">
+			{/* Sidebar component, swap this element with another sidebar if you like */}
+			<div className="flex grow flex-row gap-y-5 border-r border-gray-200 bg-transparent pb-4">
+				<div className="px-1 mt-2">
+					<TopBarItem
+						icon={BsBell}
+						onClick={() => toggleDropdown('notifications')}
+						isActive={activeDropdown === 'notifications'}
+						notificationCount={notificationCount}
+					>
+						{activeDropdown === 'notifications' && (
+							<Dropdown onClose={() => setActiveDropdown(null)} title="Notifications">
+								<button onClick={clearNotifications}>Clear Notifications</button>
+								<Notifications notificationsData={notificationsData} />
+							</Dropdown>
+						)}
+					</TopBarItem>
+					{/* <TopBarItem
             icon={IoSettingsOutline}
             onClick={() => toggleDropdown("settings")}
             isActive={activeDropdown === "settings"}
@@ -158,20 +174,20 @@ function TopBar({}) {
               </Dropdown>
             )}
           </TopBarItem> */}
-          <button
-            onClick={() => {
-              localStorage.clear();
-              resetState();
-              navigate("/login");
-            }}
-            className="relative flex items-center justify-center rounded-full p-2 transition-all duration-300 z-10"
-          >
-            <ArrowLeftOnRectangleIcon className="p-2 transition-all duration-300 w-9 h-9 text-primary-100 bg-white rounded-full" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+					<button
+						onClick={() => {
+							localStorage.clear()
+							resetState()
+							navigate('/login')
+						}}
+						className="relative flex items-center justify-center rounded-full p-2 transition-all duration-300 z-10"
+					>
+						<ArrowLeftOnRectangleIcon className="p-2 transition-all duration-300 w-9 h-9 text-primary-100 bg-white rounded-full" />
+					</button>
+				</div>
+			</div>
+		</div>
+	)
 }
 
 export default TopBar
