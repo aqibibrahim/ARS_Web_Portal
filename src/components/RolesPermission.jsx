@@ -492,10 +492,11 @@ export default function RolesPermission() {
   const Tab = ({ selected, title, onClick }) => {
     return (
       <button
-        className={`px-4 py-2 transition-colors duration-150 ${selected
-          ? "bg-blue-500 text-white"
-          : "bg-white text-black hover:bg-gray-200 "
-          } focus:outline-none`}
+        className={`px-4 py-2 transition-colors duration-150 ${
+          selected
+            ? "bg-blue-500 text-white"
+            : "bg-white text-black hover:bg-gray-200 "
+        } focus:outline-none`}
         onClick={onClick}
       >
         {title}
@@ -553,19 +554,21 @@ export default function RolesPermission() {
                   selected={activeTab === "Role"}
                   title="الأدوار"
                   onClick={() => handleTabChange("Role")}
-                  className={`${activeTab === "Role"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-blue-500"
-                    }`}
+                  className={`${
+                    activeTab === "Role"
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-blue-500"
+                  }`}
                 />{" "}
                 <Tab
                   selected={activeTab === "User"}
                   title="المستخدمين"
                   onClick={() => handleTabChange("User")}
-                  className={`${activeTab === "User"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-blue-500"
-                    }`}
+                  className={`${
+                    activeTab === "User"
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-blue-500"
+                  }`}
                 />{" "}
               </div>
             </div>
@@ -715,6 +718,7 @@ export default function RolesPermission() {
                       <label
                         htmlFor="name"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
+                        style={{ fontFamily: "Cairo" }}
                       >
                         اسم
                       </label>
@@ -725,7 +729,8 @@ export default function RolesPermission() {
                           id="name"
                           value={editName}
                           onChange={(e) => setEditName(e.target.value)}
-                          placeholder="Enter Name of the Role"
+                          placeholder=" اسم الدور"
+                          style={{ fontFamily: "Cairo" }}
                           className="peer block w-full px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           required
                         />
@@ -764,7 +769,7 @@ export default function RolesPermission() {
                       },
                     }}
                     okText={"يحفظ"}
-                    cancelText="يلغي"
+                    cancelText="أغلق"
                   >
                     <div style={{ fontFamily: "Cairo", margin: 10 }}>
                       <label
@@ -1031,11 +1036,17 @@ export default function RolesPermission() {
                         backgroundColor: "green",
                         borderColor: "green",
                         margin: 10,
+                        fontFamily: "Cairo",
                       },
                     }}
                     style={{ fontFamily: "Cairo" }}
                     cancelText="أغلق"
                     okText={editFlag ? "يحفظ " : "تسجيل مستخدم جديد"}
+                    cancelButtonProps={{
+                      style: {
+                        fontFamily: "Cairo",
+                      },
+                    }}
                   >
                     <div className="p-5">
                       <div className="flex flex-row justify-between gap-4 mb-4">
@@ -1112,8 +1123,9 @@ export default function RolesPermission() {
 
                               <div className="flex w-full ">
                                 <div
-                                  className={`relative mt-2 ${newPhoneNumber ? "w-11/12" : "w-full"
-                                    }`}
+                                  className={`relative mt-2 ${
+                                    newPhoneNumber ? "w-11/12" : "w-full"
+                                  }`}
                                 >
                                   <InputMask
                                     tabIndex={6}
@@ -1315,9 +1327,10 @@ export default function RolesPermission() {
                     maskClosable={false}
                     closable={false}
                     okButtonProps={{
-                      style: { backgroundColor: "red" },
+                      style: { backgroundColor: "red", fontFamily: "Cairo" },
                     }}
                     style={{ padding: 10 }}
+                    cancelButtonProps={{ style: { fontFamily: "Cairo" } }}
                     okText="يمسح"
                     cancelText="يغلق"
                   ></Modal>

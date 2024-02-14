@@ -885,7 +885,10 @@ const AmbulanceFiles = () => {
                         }
                         onChange={(value) => handleChange(value)}
                         options={myData}
-                        dropdownStyle={{ textAlign: "right" }}
+                        dropdownStyle={{
+                          textAlign: "right",
+                          fontFamily: "Cairo",
+                        }}
                         onKeyDown={(e) => {
                           if (e.key === "Tab") {
                             e.preventDefault();
@@ -960,7 +963,7 @@ const AmbulanceFiles = () => {
                     >
                       رقم لوحة{" "}
                     </label>
-                    <div className="relative mt-2">
+                    <div className="relative mt-2 ">
                       <input
                         tabIndex={0}
                         className="peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
@@ -1005,11 +1008,12 @@ const AmbulanceFiles = () => {
                         options={myModelData}
                         showSearch
                         optionFilterProp="label"
-                        className="w-full mt-2 "
+                        className="w-full mt-2 text-right"
                         dropdownStyle={{
                           textAlign: "right",
                           fontFamily: "Cairo",
                         }}
+                        style={{ fontFamily: "Cairo" }}
                         onKeyDown={(e) => {
                           if (e.key === "Tab") {
                             e.preventDefault();
@@ -1124,15 +1128,27 @@ const AmbulanceFiles = () => {
                       معدات
                     </label>
                     <Select
+                      style={{ fontFamily: "Cairo" }}
                       tabIndex={1}
                       value={editOptions}
-                      placeholder="حدد طراز السيارة"
+                      placeholder={
+                        <span
+                          className="flex justify-end mr-3"
+                          style={{ fontFamily: "Cairo" }}
+                        >
+                          حدد طراز السيارة{" "}
+                        </span>
+                      }
                       onChange={(e) => handleChangeEquiments(e)}
                       options={myData}
                       showSearch
+                      dropdownStyle={{
+                        textAlign: "right",
+                        fontFamily: "Cairo",
+                      }}
                       mode="multiple"
                       optionFilterProp="label"
-                      className="w-full mt-2"
+                      className="w-full mt-2 text-right justify-end"
                       onKeyDown={(e) => {
                         if (e.key === "Tab") {
                           e.preventDefault();
@@ -1204,9 +1220,9 @@ const AmbulanceFiles = () => {
                         onChange={EditAmbulance.handleChange}
                         value={[
                           "latitude " +
-                          locationAddress?.latitude +
-                          " longitude " +
-                          locationAddress?.longitude,
+                            locationAddress?.latitude +
+                            " longitude " +
+                            locationAddress?.longitude,
                         ]}
                         type="text"
                         name="addresss"
@@ -1254,16 +1270,28 @@ const AmbulanceFiles = () => {
                     >
                       ماركة وموديل
                     </label>
-                    <div className="relative mt-2">
+                    <div className=" mt-2">
                       <Select
+                        dropdownStyle={{
+                          textAlign: "right",
+                          display: "flex",
+                          justifyContent: "end",
+                        }}
+                        placeholder={
+                          <span
+                            className="flex justify-end mr-3"
+                            style={{ fontFamily: "Cairo" }}
+                          >
+                            حدد طراز السيارة{" "}
+                          </span>
+                        }
                         tabIndex={2}
                         value={selectedModelOption}
-                        placeholder="حدد طراز السيارة"
                         onChange={handleModelSelect}
                         options={myModelData}
                         showSearch
                         optionFilterProp="label"
-                        className="w-full mt-2"
+                        className="w-full mt-2 text-right ml-auto"
                         onKeyDown={(e) => {
                           if (e.key === "Tab") {
                             e.preventDefault();
@@ -1335,11 +1363,14 @@ const AmbulanceFiles = () => {
         onOk={handleNewPin}
         onCancel={handleCancel}
         closable={false}
-        cancelText="يلغي"
+        cancelText="أغلق"
         okButtonProps={{
-          style: { backgroundColor: "green" },
+          style: { backgroundColor: "green", fontFamily: "Cairo" },
         }}
         okText="تحديث"
+        cancelButtonProps={{
+          style: { fontFamily: "Cairo" },
+        }}
       >
         <div className="flex flex-col space-y-2 w-full">
           <div>

@@ -708,9 +708,11 @@ const RegionFiles = () => {
                       <div className="flex w-full ">
                         <div className="relative mt-2 w-full">
                           <InputMask
-                            required
+                            {...(phoneNumbers
+                              ? { required: false }
+                              : { required: true })}
                             tabIndex={2}
-                            mask="00218 99 9999999" // Define your desired mask here
+                            mask="00218 99 9999999"
                             maskChar=""
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
@@ -825,20 +827,29 @@ const RegionFiles = () => {
                       سيارات الإسعاف المخصصة
                     </label>
 
-                    <Select
+                    <AntSelect
                       value={options}
                       placeholder={
-                        <span style={{ fontFamily: "Cairo" }}>
+                        <span
+                          style={{
+                            fontFamily: "Cairo",
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            marginRight: 13,
+                          }}
+                        >
                           اختر سيارات الإسعاف
                         </span>
                       }
+                      className="w-full mt-2"
+                      mode="multiple"
+                      dropdownStyle={{ textAlign: "right" }}
                       onChange={(e) => handleChange(e)}
                       options={myData}
                       isMultiple={true}
                       isClearable={true}
                       primaryColor={"blue"}
-                      dropdownStyle={{ textAlign: "right" }}
-                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                      // className="peer  w-full  flex justify-end border-0 bg-offWhiteCustom-100  text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
                   </div>
                 </div>

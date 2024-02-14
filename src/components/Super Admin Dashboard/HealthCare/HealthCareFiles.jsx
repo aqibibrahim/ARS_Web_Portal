@@ -799,7 +799,7 @@ const HealthCareFiles = () => {
       </div>
       {isUpdateDepartment && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-          <div className="relative top-0 mx-auto p-5 border w-[650px] shadow-lg rounded-md bg-white">
+          <div className="relative top-5 mx-auto p-5 border w-[650px] shadow-lg rounded-md bg-white">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full p-2 rounded-lg overflow-hidden">
               <BsArrowRightCircle
                 width={9}
@@ -838,13 +838,17 @@ const HealthCareFiles = () => {
                         value={selectedDepartment}
                         placeholder={
                           <div
-                            className="flex justify-end"
+                            className="flex justify-end ml-auto"
                             style={{ fontFamily: "Cairo" }}
                           >
                             اختر القسم
                           </div>
                         }
-                        dropdownStyle={{ textAlign: "right" }}
+                        dropdownStyle={{
+                          textAlign: "right",
+                          display: "flex",
+                          justifyContent: "flex-end",
+                        }}
                         onChange={(e) => handleDepartmentChange(e)}
                         options={myData}
                         isMultiple={true}
@@ -919,31 +923,31 @@ const HealthCareFiles = () => {
                         </p>
                         <div className=" flex justify-around text-base text-right">
                           <p className="text-xs">
-                            Total Beds:{" "}
+                            المجموع :{" "}
                             <span className="text-red-400">
                               {departments.pivot.total_beds}
                             </span>
                           </p>
                           <p className="text-xs">
-                            Occupied Beds (Men):{" "}
+                            مشغول (رجال):{" "}
                             <span className="text-red-400">
                               {departments.pivot.occupied_beds_men}
                             </span>
                           </p>
                           <p className="text-xs">
-                            Occupied Beds (Women):{" "}
+                            مشغول (نساء):{" "}
                             <span className="text-red-400">
                               {departments.pivot.occupied_beds_women}
                             </span>
                           </p>
                           <p className="text-xs">
-                            Unoccupied Beds (Men):{" "}
+                            المتاح (رجال):{" "}
                             <span className="text-red-400">
                               {departments.pivot.unoccupied_beds_men}
                             </span>
                           </p>
                           <p className="text-xs">
-                            Unoccupied Beds (Women):{" "}
+                            المتاح (نساء):{" "}
                             <span className="text-red-400">
                               {departments.pivot.unoccupied_beds_women}
                             </span>
@@ -1004,6 +1008,8 @@ const HealthCareFiles = () => {
                 width={9}
                 className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                 onClick={() => {
+                  CreateHealtCare.resetForm();
+
                   setIsModalOpen(false);
                 }}
               />
@@ -1040,6 +1046,9 @@ const HealthCareFiles = () => {
                                 handleAddPhoneNumber();
                               }
                             }}
+                            {...(phoneNumbers
+                              ? { required: false }
+                              : { required: true })}
                             value={newPhoneNumber}
                             type="tel"
                             name="phone_numbers"
@@ -1180,16 +1189,17 @@ const HealthCareFiles = () => {
                       value={optionsFocalPerson}
                       placeholder={
                         <span
-                          className="flex justify-end"
+                          className="ml-auto"
                           style={{ fontFamily: "Cairo" }}
                         >
                           حدد شخص مسؤول
                         </span>
                       }
+                      dropdownStyle={{ textAlign: "right" }}
+                      style={{ textAlign: "right" }}
                       isMultiple={true}
                       isClearable={true}
                       primaryColor={"blue"}
-                      dropdownStyle={{ textAlign: "right" }}
                       isSearchable={false}
                       className="peer block  w-full border-0 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
@@ -1197,33 +1207,31 @@ const HealthCareFiles = () => {
                 </div>
               </div>
               {cardFocalPersons?.length > 0 ? (
-                <div className="w-full">
+                <div className="w-full flex flex-col justify-end">
+                  {" "}
                   <label
                     htmlFor="focal_persons"
-                    className="block text-sm  mt-1 font-medium leading-6 text-gray-900 text-right"
+                    className="block text-sm   mt-1 font-medium leading-6 text-gray-900 text-right"
                   >
                     الشخص المحوري المختار
                   </label>
-                  <ul
-                    role="list"
-                    className="grid  grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3   "
-                  >
+                  <ul role="list" className="flex    justify-end gap-3 w-full">
                     {cardFocalPersons?.map((person) => (
-                      <li
+                      <div
                         key={person.user.id}
-                        className="col-span-2 divide-y divide-gray-200 rounded-lg bg-white shadow-lg justify-end"
+                        className="flex justify-end text-right divide-gray-200 items-end w-56   rounded-lg  shadow-lg"
                       >
-                        <div className="flex w-full items-center justify-between space-x-6 px-3 py-2">
-                          <div className="flex-1 truncate">
-                            <div className="flex items-center space-x-3">
+                        <div className="flex w-full  items-center justify-between space-x-6 px-3 py-2 ">
+                          <div className="flex-1 truncate justify-end ">
+                            <div className="flex items-end justify-end space-x-3 text-right">
+                              <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                                {person.user.designation}
+                              </span>
                               <h3 className="truncate text-sm font-medium text-gray-900">
                                 {person?.user.first_name +
                                   " " +
                                   person.user.last_name}
                               </h3>
-                              <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                                {person.user.designation}
-                              </span>
                             </div>
                             <p className="mt-1 truncate text-sm text-gray-500">
                               {person.user.email}
@@ -1235,13 +1243,14 @@ const HealthCareFiles = () => {
                             </p>
                           </div>
                         </div>
-                      </li>
+                      </div>
                     ))}
                   </ul>
                 </div>
               ) : (
                 ""
               )}
+
               <div className="text-left mt-10">
                 {loadingMessage ? (
                   <button
@@ -1444,7 +1453,14 @@ const HealthCareFiles = () => {
                     <div className="relative mt-2">
                       <Select
                         value={updateFocalPerson}
-                        placeholder="حدد الأشخاص المحوريين"
+                        placeholder={
+                          <span
+                            className="ml-auto"
+                            style={{ fontFamily: "Cairo" }}
+                          >
+                            حدد الأشخاص المحوريين
+                          </span>
+                        }
                         options={updateFocalOption}
                         onChange={(e) => handleOnChange(e)}
                         isMultiple={true}

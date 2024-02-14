@@ -267,7 +267,8 @@ export default function Reasons() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      سبب الرفض                    </label>
+                      سبب الرفض{" "}
+                    </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
@@ -361,7 +362,8 @@ export default function Reasons() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      اسباب الرفض                    </label>
+                      اسباب الرفض{" "}
+                    </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
@@ -409,13 +411,20 @@ export default function Reasons() {
         </div>
       )}
       <Modal
-        title={<span className="flex justify-end " style={{ fontFamily: "Cairo" }}>هل أنت متأكد من حذف هذا السبب؟</span>}
+        title={
+          <span className="flex justify-end " style={{ fontFamily: "Cairo" }}>
+            هل أنت متأكد من حذف هذا السبب؟
+          </span>
+        }
         open={deleteModal}
         onOk={deleteReason}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
-          style: { backgroundColor: "red" },
+          style: { backgroundColor: "red", fontFamily: "Cairo" },
+        }}
+        cancelButtonProps={{
+          style: { fontFamily: "Cairo" },
         }}
         cancelText="أغلق"
         okText="حذف "

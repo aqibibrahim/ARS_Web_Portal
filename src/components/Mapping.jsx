@@ -177,10 +177,11 @@ export default function Mapping() {
   const Tab = ({ selected, title, onClick }) => {
     return (
       <button
-        className={`px-4 py-2 transition-colors duration-150 ${selected
-          ? "bg-blue-500 text-white "
-          : "bg-white text-black hover:bg-gray-200 "
-          } focus:outline-none`}
+        className={`px-4 py-2 transition-colors duration-150 ${
+          selected
+            ? "bg-blue-500 text-white "
+            : "bg-white text-black hover:bg-gray-200 "
+        } focus:outline-none`}
         onClick={onClick}
       >
         {title}
@@ -204,7 +205,7 @@ export default function Mapping() {
             <select
               value={selectedDepartment}
               onChange={(e) => handleDepartmentChange(e.target.value)}
-              className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl"
+              className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl text-right pl-4 pr-8"
             >
               <option value="" disabled>
                 إختار القسم
@@ -216,9 +217,8 @@ export default function Mapping() {
               ))}
             </select>
           </div>
-          <div style={{ fontFamily: "Cairo" }} >
+          <div style={{ fontFamily: "Cairo" }}>
             <MultiSelectDropdown
-
               options={incident}
               selectedOptions={selectedEquipment}
               setSelectedOptions={setSelectedEquipment}
@@ -228,7 +228,10 @@ export default function Mapping() {
               bgColor={"#91EAAA"}
             />
           </div>
-          <div className="flex m-auto mt-5 bg-blue-400 p-5 rounded-xl text-lg text-white">
+          <div
+            style={{ fontFamily: "Cairo" }}
+            className="flex m-auto mt-5 bg-blue-400 p-5 rounded-xl text-lg text-white"
+          >
             <button onClick={handleMappingSubmit}>إضافة الربط</button>
           </div>
         </div>
@@ -247,13 +250,12 @@ export default function Mapping() {
         <div className="flex flex-col">
           <div className="flex p-5 " style={{ fontFamily: "Cairo" }}>
             <select
-              className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl"
+              className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl text-right pl-4 pr-8"
               onChange={handleIncidentChange}
               value={selectedIncidentId}
             >
               <option value="" disabled selected>
                 إختار نوع الحادث
-
               </option>
               {incident?.map((details, index) => (
                 <option key={details?.id} value={details?.id}>
@@ -273,9 +275,16 @@ export default function Mapping() {
             />
           </div>
 
-          <div className="flex m-auto mt-5 bg-blue-400 p-5 rounded-xl text-lg text-white">
-            <button onClick={handleIncidentMappingSubmit} style={{ fontFamily: "Cairo" }}>
-              إضافة الربط            </button>
+          <div
+            style={{ fontFamily: "Cairo" }}
+            className="flex m-auto mt-5 bg-blue-400 p-5 rounded-xl text-lg text-white"
+          >
+            <button
+              onClick={handleIncidentMappingSubmit}
+              style={{ fontFamily: "Cairo" }}
+            >
+              <span style={{ fontFamily: "Cairo" }}> إضافة الربط </span>
+            </button>
           </div>
         </div>
       </Modal>
@@ -285,27 +294,28 @@ export default function Mapping() {
       >
         <div className="bg-lightGray-100 ml-16 rounded-lg     mt-2">
           <div className="p-4 text-center   ">
-            <h1 className="text-2xl font-semibold m-2 mt-3"> الربط
-            </h1>
+            <h1 className="text-2xl font-semibold m-2 mt-3"> الربط</h1>
           </div>
           <div className="flex justify-end ">
             <Tab
               selected={activeTab === "incidentTypeMapping"}
               title="ربط الحوادث بمعدات الإسعاف  "
               onClick={() => handleTabChange("incidentTypeMapping")}
-              className={`${activeTab === "incidentTypeMapping"
-                ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500"
-                }`}
+              className={`${
+                activeTab === "incidentTypeMapping"
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-blue-500"
+              }`}
             />{" "}
             <Tab
               selected={activeTab === "departmentMapping"}
               title="ربط الأقسام بالحوادث "
               onClick={() => handleTabChange("departmentMapping")}
-              className={`${activeTab === "departmentMapping"
-                ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500"
-                }`}
+              className={`${
+                activeTab === "departmentMapping"
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-blue-500"
+              }`}
             />
           </div>
           <div className="m-auto bg-white mt-5 rounded-xl">
@@ -355,7 +365,8 @@ export default function Mapping() {
                         <thead>
                           <tr className="border-b border-gray-300 m-6">
                             <th className="text-gray-800 text-right mb-4">
-                              انواع الحوادث                            </th>
+                              انواع الحوادث{" "}
+                            </th>
                             <th className="text-gray-800 text-right mb-4">
                               الاقسام
                             </th>
@@ -408,9 +419,11 @@ export default function Mapping() {
                         <thead>
                           <tr className="border-b border-gray-300">
                             <th className="text-gray-800 text-right">
-                              المعدات                            </th>
+                              المعدات{" "}
+                            </th>
                             <th className="text-gray-800 text-right">
-                              نوع الحادث                            </th>
+                              نوع الحادث{" "}
+                            </th>
                           </tr>
                         </thead>
                         <tbody>

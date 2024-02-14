@@ -214,8 +214,7 @@ export default function IncidentType() {
                   setState({ IncidentTypeName: "" });
                 }}
               />
-              <h3 className="text-xl font-semibold">
-                تسجيل  نوع حادث جديد              </h3>
+              <h3 className="text-xl font-semibold">تسجيل نوع حادث جديد </h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -309,7 +308,7 @@ export default function IncidentType() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">تحديث  نوع الحادث</h3>
+              <h3 className="text-xl font-semibold">تحديث نوع الحادث</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -368,13 +367,20 @@ export default function IncidentType() {
         </div>
       )}
       <Modal
-        title="هل أنت متأكد من حذف نوع الحادث هذا؟"
+        title={
+          <span className="flex justify-end " style={{ fontFamily: "Cairo" }}>
+            هل أنت متأكد من حذف نوع الحادث هذا؟
+          </span>
+        }
         open={deleteModal}
         onOk={deleteIncidentType}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
-          style: { backgroundColor: "red" },
+          style: { backgroundColor: "red", fontFamily: "Cairo" },
+        }}
+        cancelButtonProps={{
+          style: { fontFamily: "Cairo" },
         }}
         okText="حذف"
         cancelText="أغلق"

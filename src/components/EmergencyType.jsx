@@ -251,8 +251,7 @@ export default function EmergencyType() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">
-                اضافة نوع حالة جديد              </h3>
+              <h3 className="text-xl font-semibold">اضافة نوع حالة جديد </h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -405,13 +404,20 @@ export default function EmergencyType() {
         </div>
       )}
       <Modal
-        title="هل أنت متأكد من حذف نوع الطوارئ هذا؟"
+        title={
+          <span className="flex justify-end " style={{ fontFamily: "Cairo" }}>
+            هل أنت متأكد من حذف نوع الطوارئ هذا؟
+          </span>
+        }
         open={deleteModal}
         onOk={deleteGender}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
-          style: { backgroundColor: "red" },
+          style: { backgroundColor: "red", fontFamily: "Cairo" },
+        }}
+        cancelButtonProps={{
+          style: { fontFamily: "Cairo" },
         }}
         cancelText="أغلق"
         okText="حذف "
@@ -464,7 +470,8 @@ export default function EmergencyType() {
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  نوع الحالة                </th>
+                  نوع الحالة{" "}
+                </th>
               </tr>
             </thead>
             <tbody>

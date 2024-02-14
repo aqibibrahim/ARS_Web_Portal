@@ -231,7 +231,6 @@ export default function VehicleMake() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-
                       نوع السيارة
                     </label>
                     <div className="relative mt-2">
@@ -310,7 +309,7 @@ export default function VehicleMake() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">تحديث  نوع السيارة</h3>
+              <h3 className="text-xl font-semibold">تحديث نوع السيارة</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -368,15 +367,21 @@ export default function VehicleMake() {
           </div>
         </div>
       )}
-
       <Modal
-        title="هل أنت متأكد من حذف نوع السيارة هذا؟"
+        title={
+          <span className="flex justify-end " style={{ fontFamily: "Cairo" }}>
+            هل أنت متأكد من حذف نوع السيارة هذا؟
+          </span>
+        }
         open={deleteModal}
         onOk={deleteVehicleMake}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
-          style: { backgroundColor: "red" },
+          style: { backgroundColor: "red", fontFamily: "Cairo" },
+        }}
+        cancelButtonProps={{
+          style: { fontFamily: "Cairo" },
         }}
         okText="حذف"
         cancelText="أغلق"

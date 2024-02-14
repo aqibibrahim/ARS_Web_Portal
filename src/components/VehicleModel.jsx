@@ -376,7 +376,7 @@ export default function VehicleModal() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">    تحديث موديل السيارة</h3>
+              <h3 className="text-xl font-semibold"> تحديث موديل السيارة</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -408,7 +408,8 @@ export default function VehicleModal() {
                         htmlFor="persons_supported"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
                       >
-                        نوع السيارة                      </label>
+                        نوع السيارة{" "}
+                      </label>
                       <Select
                         value={selectedOption}
                         placeholder="نوع السيارة"
@@ -452,13 +453,20 @@ export default function VehicleModal() {
         </div>
       )}
       <Modal
-        title="هل أنت متأكد من حذف موديل الطوارئ هذا؟"
+        title={
+          <span className="flex justify-end " style={{ fontFamily: "Cairo" }}>
+            هل أنت متأكد من حذف موديل الطوارئ هذا؟
+          </span>
+        }
         open={deleteModal}
         onOk={deleteVehicleModel}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
-          style: { backgroundColor: "red" },
+          style: { backgroundColor: "red", fontFamily: "Cairo" },
+        }}
+        cancelButtonProps={{
+          style: { fontFamily: "Cairo" },
         }}
         okText="حذف"
         cancelText="أغلق"
@@ -516,7 +524,8 @@ export default function VehicleModal() {
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  موديل السيارة                </th>
+                  موديل السيارة{" "}
+                </th>
               </tr>
             </thead>
             <tbody>

@@ -227,10 +227,12 @@ const DepartmentsFiles = () => {
                   <BsArrowRightCircle
                     width={9}
                     className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-                    onClick={handleModalClose}
+                    onClick={() => {
+                      handleModalClose();
+                      CreateDepartments.resetForm();
+                    }}
                   />
-                  <h3 className="text-xl font-semibold">
-                    اضافة قسم جديد                  </h3>
+                  <h3 className="text-xl font-semibold">اضافة قسم جديد </h3>
                 </div>
                 <form onSubmit={CreateDepartments.handleSubmit}>
                   <div className="flex flex-row justify-between gap-4 mb-4">
@@ -240,7 +242,8 @@ const DepartmentsFiles = () => {
                           htmlFor="name"
                           className="block  text-sm font-medium leading-6 text-gray-900 text-right"
                         >
-                          اسم القسم                        </label>
+                          اسم القسم{" "}
+                        </label>
                         <div className="relative mt-2">
                           <input
                             id="name"
@@ -256,7 +259,8 @@ const DepartmentsFiles = () => {
 
                       <div>
                         <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                          نوع الحادث                        </label>
+                          نوع الحادث{" "}
+                        </label>
 
                         <AntSelect
                           value={options}
@@ -312,7 +316,7 @@ const DepartmentsFiles = () => {
                     className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                     onClick={handleModalClose}
                   />
-                  <h3 className="text-xl font-semibold">تحديث  الاقسام</h3>
+                  <h3 className="text-xl font-semibold">تحديث الاقسام</h3>
                 </div>
                 <form onSubmit={updatedepartment.handleSubmit}>
                   <div>

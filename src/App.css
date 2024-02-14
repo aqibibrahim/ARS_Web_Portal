@@ -6,7 +6,9 @@
   .custom-scroll-style::-webkit-scrollbar {
     width: 12px;
   }
-  
+ 
+  .ant-select-selection-overflow{
+justify-content: end;  }
   .custom-scroll-style::-webkit-scrollbar-thumb {
     background-color:#60a5fa;
     border-radius: 4px;

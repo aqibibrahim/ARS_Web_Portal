@@ -353,7 +353,8 @@ export default function Gender() {
                       htmlFor="persons_supported"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      اسم الجنس                    </label>
+                      اسم الجنس{" "}
+                    </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
@@ -401,13 +402,20 @@ export default function Gender() {
         </div>
       )}
       <Modal
-        title="هل أنت متأكد من حذف الجنس هذا؟"
+        title={
+          <span className="flex justify-end " style={{ fontFamily: "Cairo" }}>
+            هل أنت متأكد من حذف الجنس هذا؟
+          </span>
+        }
         open={deleteModal}
         onOk={deleteGender}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
-          style: { backgroundColor: "red" },
+          style: { backgroundColor: "red", fontFamily: "Cairo" },
+        }}
+        cancelButtonProps={{
+          style: { fontFamily: "Cairo" },
         }}
         okText="حذف"
         cancelText="أغلق"
