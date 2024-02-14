@@ -1,106 +1,129 @@
-import React, { useState, Fragment, useContext } from "react";
-import { IoSettingsOutline } from "react-icons/io5";
-import { BsBell, BsPersonBadge } from "react-icons/bs";
-import user from "../assets/user.png";
-import Settings from "./Settings";
-import Notifications from "./Notifications";
-import { Dialog, Menu, Transition } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeftOnRectangleIcon } from "@heroicons/react/20/solid";
-import { useAmbulanceContext } from "./AmbulanceContext";
+import React, { useState, useEffect, Fragment, useContext } from 'react'
+import { IoSettingsOutline } from 'react-icons/io5'
+import { BsBell, BsPersonBadge } from 'react-icons/bs'
+import user from '../assets/user.png'
+import Settings from './Settings'
+import Notifications from './Notifications'
+import { Dialog, Menu, Transition } from '@headlessui/react'
+import { useNavigate } from 'react-router-dom'
+import { ArrowLeftOnRectangleIcon } from '@heroicons/react/20/solid'
+import { useAmbulanceContext } from './AmbulanceContext'
 
-const userNavigation = [{ name: "Sign out", href: "#" }];
+const userNavigation = [{ name: 'Sign out', href: '#' }]
 
 const notificationsData = [
-  {
-    id: 1,
-    title: "Nissan HJC-4653",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque alias necessitatibus, excepturi consectetur inventore dolores? Distinctio dignissimos ad, dolores, ipsam quod asperiores est, assumenda inventore culpa quidem rem quia. Hic.",
-  },
-  {
-    id: 2,
-    title: "Nissan HJC-4653",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque alias necessitatibus, excepturi consectetur inventore dolores? Distinctio dignissimos ad, dolores, ipsam quod asperiores est, assumenda inventore culpa quidem rem quia. Hic.",
-  },
-];
+	{
+		id: 1,
+		title: 'Nissan HJC-4653',
+		description:
+			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque alias necessitatibus, excepturi consectetur inventore dolores? Distinctio dignissimos ad, dolores, ipsam quod asperiores est, assumenda inventore culpa quidem rem quia. Hic.',
+	},
+	{
+		id: 2,
+		title: 'Nissan HJC-4653',
+		description:
+			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque alias necessitatibus, excepturi consectetur inventore dolores? Distinctio dignissimos ad, dolores, ipsam quod asperiores est, assumenda inventore culpa quidem rem quia. Hic.',
+	},
+]
 
 const UserImg = () => {
-  return (
-    <div className="relative flex items-center justify-center rounded-full p-2 transition-all duration-300 cursor-pointer z-10">
-      <img className={`w-8 h-8 rounded-full`} src={user} alt="user" />
-    </div>
-  );
-};
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+	return (
+		<div className="relative flex items-center justify-center rounded-full p-2 transition-all duration-300 cursor-pointer z-10">
+			<img className={`w-8 h-8 rounded-full`} src={user} alt="user" />
+		</div>
+	)
 }
 
-function TopBarItem({
-  icon: Icon,
-  onClick,
-  isActive,
-  children,
-  notificationCount,
-}) {
-  return (
-    <div
-      onClick={onClick}
-      className="relative flex items-center justify-center rounded-full p-2 transition-all duration-300 z-10"
-    >
-      <Icon
-        className={`w-9 h-9 text-primary-100 bg-white rounded-full ${
-          isActive ? "bg-primary-300" : "hover:bg-primary-300"
-        } p-2 transition-all duration-300`}
-      />
-      {notificationCount > 0 && (
-        <span className="absolute -top-1 -right-1 flex items-center justify-center bg-primary-100 text-white text-xs rounded-full h-6 w-6">
-          {notificationCount}
-        </span>
-      )}
-      {children}
-    </div>
-  );
+function classNames(...classes) {
+	return classes.filter(Boolean).join(' ')
+}
+
+function TopBarItem({ icon: Icon, onClick, isActive, children, notificationCount }) {
+	return (
+		<div
+			onClick={onClick}
+			className="relative flex items-center justify-center rounded-full p-2 transition-all duration-300 z-10"
+		>
+			<Icon
+				className={`w-9 h-9 text-primary-100 bg-white rounded-full ${
+					isActive ? 'bg-primary-300' : 'hover:bg-primary-300'
+				} p-2 transition-all duration-300`}
+			/>
+			{notificationCount > 0 && (
+				<span className="absolute -top-1 -right-1 flex items-center justify-center bg-primary-100 text-white text-xs rounded-full h-6 w-6">
+					{notificationCount}
+				</span>
+			)}
+			{children}
+		</div>
+	)
 }
 
 function Dropdown({ onClose, title, children }) {
-  const handleClick = (event) => {
-    event.stopPropagation();
-  };
-  return (
-    <div
-      onClick={handleClick}
-      className="absolute -top-1 left-14 mt-2 py-2 bg-white/30 backdrop-blur-md shadow-lg rounded-lg text-sm w-80 max-h-screen overflow-y-scroll no-scrollbar"
-    >
-      <div className="flex items-center justify-between mb-4 px-4">
-        <button onClick={onClose} className="top-1 right-2 text-xl">
-          &times;
-        </button>
-        <h1 className="text-xl font-bold">{title}</h1>
-      </div>
-      {children}
-    </div>
-  );
+	const handleClick = (event) => {
+		event.stopPropagation()
+	}
+	return (
+		<div
+			onClick={handleClick}
+			className="absolute -top-1 left-14 mt-2 py-2 bg-white/30 backdrop-blur-md shadow-lg rounded-lg text-sm w-80 max-h-screen overflow-y-scroll no-scrollbar"
+		>
+			<div className="flex items-center justify-between mb-4 px-4">
+				<button onClick={onClose} className="top-1 right-2 text-xl">
+					&times;
+				</button>
+				<h1 className="text-xl font-bold">{title}</h1>
+			</div>
+			{children}
+		</div>
+	)
 }
 
 function TopBar({}) {
-  const { resetState } = useAmbulanceContext();
+	const { resetState } = useAmbulanceContext()
+	const navigate = useNavigate()
+	const [activeDropdown, setActiveDropdown] = useState(null)
+	const [notificationCount, setNotificationCount] = useState(0)
+	const [notificationsData, setNotificationsData] = useState([])
+	useEffect(() => {
+		// Establish websocket connection
+		const clientId = parseInt(localStorage.getItem('user_id'))
+		let clientToken = localStorage.getItem('token')
+		console.log('User id', clientId, 'User Token', clientToken)
+		// Establish websocket connection with headers
 
-  const navigate = useNavigate();
-  const [activeDropdown, setActiveDropdown] = useState(null);
-  const [notificationCount, setNotificationCount] = useState(
-    notificationsData.length
-  );
+		const endpoint = `wss://ars-websockets.disruptwave.com/ws/subscribe?client_id=${clientId}&client_token=${clientToken}`
+		const socket = new WebSocket(endpoint)
+		socket.onopen = () => {
+			console.log('WebSocket connection established.')
+		}
 
-  const toggleDropdown = (dropdown) => {
-    if (dropdown === "notifications" && notificationCount > 0) {
-      setNotificationCount(0);
-    }
-    setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
-  };
-
+		socket.onerror = (error) => {
+			console.error('WebSocket error:', error)
+		}
+		// Listen for messages from the server
+		socket.addEventListener('message', (event) => {
+			// Log the received data for debugging
+			console.log('Received data:', event.data)
+			// Update notification data
+			setNotificationsData((prevNotifications) => [...prevNotifications, event.data])
+			setNotificationCount((prevCount) => prevCount + 1)
+		})
+		// Clean up websocket connection on unmount
+		return () => {
+			socket.close()
+		}
+	}, [])
+	const toggleDropdown = (dropdown) => {
+		if (dropdown === 'notifications' && notificationCount > 0) {
+			setNotificationCount(0)
+		}
+		setActiveDropdown(activeDropdown === dropdown ? null : dropdown)
+	}
+	const clearNotifications = () => {
+		setNotificationsData([])
+		setNotificationCount(0)
+	}
   return (
     <div className="hidden  ml-2 lg:fixed lg:inset-y-0 z-50  lg:flex lg:flex-col">
       {/* Sidebar component, swap this element with another sidebar if you like */}
@@ -151,4 +174,4 @@ function TopBar({}) {
   );
 }
 
-export default TopBar;
+export default TopBar
