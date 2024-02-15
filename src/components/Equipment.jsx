@@ -189,9 +189,7 @@ export default function Equipment() {
                       className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
                       onClick={handleModalClose}
                     />
-                    <h3 className="text-xl font-semibold">
-                      إضافة معدات جديدة
-                    </h3>
+                    <h3 className="text-xl font-semibold">إضافة معدات جديدة</h3>
                   </div>
                   <form onSubmit={CreateEquipment.handleSubmit}>
                     <div>
@@ -324,7 +322,8 @@ export default function Equipment() {
                       scope="col"
                       className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
                     >
-                      المعدات                    </th>
+                      المعدات{" "}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -397,7 +396,7 @@ export default function Equipment() {
                       className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       onClick={() => setDelete(false)}
                     >
-                      <span className="sr-only">Close</span>
+                      <span className="sr-only">أغلق</span>
                       <BsArrowRightCircle
                         className="h-6 w-6"
                         aria-hidden="true"

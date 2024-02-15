@@ -267,7 +267,7 @@ const RegionFiles = () => {
     lng: 17.761961078429668,
   });
 
-  const [address, setAddress] = useState("No address available");
+  const [address, setAddress] = useState("لم يتم تحديد عنوان");
   const geocoder = new Geocoder();
   const handleMarkerDragEnd = (t, map, coord) => {
     const newPosition = {
@@ -999,7 +999,7 @@ const RegionFiles = () => {
                       className="rounded-md bg-white text-gray-400 hover:text-gray-500 "
                       onClick={() => setDelete(false)}
                     >
-                      <span className="sr-only">Close</span>
+                      <span className="sr-only">أغلق</span>
                       <BsArrowRightCircle
                         className="h-6 w-6"
                         aria-hidden="true"
@@ -1078,17 +1078,17 @@ const RegionFiles = () => {
                         required
                         className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         type="text"
-                        placeholder="Enter a location"
+                        placeholder="أدخل الموقع"
                         onChange={handlePlaceChange}
                       />
                       <div style={{ marginTop: "10px" }}>
-                        <strong>Address:</strong> {address}
+                        <strong> عنوان : </strong> {address}
                       </div>
                       <button
                         onClick={() => setOpen(false)}
                         className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
                       >
-                        Close
+                        أغلق
                       </button>
                     </div>
                     <Map

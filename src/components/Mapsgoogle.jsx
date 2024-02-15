@@ -173,7 +173,7 @@ const Mapsgoogle = (props) => {
           required
           className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
           type="text"
-          placeholder="Enter a location"
+          placeholder="أدخل الموقع"
           onChange={handlePlaceChange}
           // value={locationAddress}
         />
@@ -202,7 +202,7 @@ const Mapsgoogle = (props) => {
         />
       </Map>
       <div style={{ marginTop: "10px" }}>
-        <strong>Address:</strong> {address}
+        <strong> عنوان : </strong> {address}
       </div>
     </div>
   );
