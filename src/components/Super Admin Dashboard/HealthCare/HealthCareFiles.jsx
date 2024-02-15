@@ -446,7 +446,7 @@ const HealthCareFiles = () => {
     onSubmit: (values) => {
       setLoadingMessage(true);
       const JSON = {
-        departments: selectedDepartment?.map((item) => item?.value),
+        departments: selectedDepartment,
         facility_id: selectedHealthCare,
       };
       const createequipment = async () => {
@@ -824,21 +824,33 @@ const HealthCareFiles = () => {
             <form onSubmit={CreateDepartments.handleSubmit}>
               <div className="flex flex-row justify-between gap-4 mb-4">
                 <div className="flex flex-col space-y-2 w-full">
-                  {/* <div>
+                  <div>
                     <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
                       Departments
                     </label>
                     <Select
-                      value={selectedDepartment}
-                      placeholder="Select Department"
+                      style={{ fontFamily: "Cairo", width: "100%" }}
+                      placeholder={
+                        <div
+                          className="flex justify-end ml-auto mr-5"
+                          style={{ fontFamily: "Cairo" }}
+                        >
+                          اختر القسم
+                        </div>
+                      }
+                      // value={selectedDepartment}
                       onChange={(e) => handleDepartmentChange(e)}
                       options={myData}
-                      isMultiple={true}
+                      mode="multiple"
                       isClearable={true}
+                      dropdownStyle={{
+                        textAlign: "right",
+                        justifyContent: "flex-end",
+                        fontFamily: "Cairo",
+                      }}
                       primaryColor={"blue"}
-                      className="peer  w-full px-2 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                     />
-                  </div>{" "} */}
+                  </div>{" "}
                   <div>
                     {/* <label
                       htmlFor="focal_persons"
@@ -847,8 +859,8 @@ const HealthCareFiles = () => {
                       Focal Persons
                     </label> */}
                     <div className="relative mt-2  ">
-                      <Select
-                        value={selectedDepartment}
+                      {/* <Select
+                        // value={selectedDepartment}
                         placeholder={
                           <div
                             className="flex justify-end ml-auto"
@@ -869,7 +881,7 @@ const HealthCareFiles = () => {
                         primaryColor={"blue"}
                         isSearchable={true}
                         className="peer w-full  border-0 bg-offWhiteCustom-100  text-gray-900 focus:ring-0 sm:text-sm sm:leading-6  z-50"
-                      />
+                      /> */}
                     </div>
                   </div>
                 </div>
