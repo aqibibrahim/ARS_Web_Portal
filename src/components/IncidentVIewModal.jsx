@@ -174,25 +174,32 @@ export default function IncidentVIewModal(props) {
                   </p>
                   {ambulance?.status === "Dispatched" ? (
                     <div>
-                      <p>
-                        {
-                          ambulance?.distance_info?.from_ambulance_to_incident
-                            ?.rows[0]?.elements[0]?.distance?.text
-                        }
+                      <p className=" w-full flex justify-end">
+                        <span className="text-green-400">
+                          {
+                            ambulance?.distance_info?.from_ambulance_to_incident
+                              ?.rows[0]?.elements[0]?.distance?.text
+                          }
+                        </span>
                         <span className="font-semibold  ml-1">: مسافة</span>
                       </p>
                       <p>
-                        {
-                          ambulance?.distance_info?.from_ambulance_to_incident
-                            ?.rows[0]?.elements[0]?.duration?.text
-                        }
-                        <span className="font-semibold  ml-1">: مدة</span>
+                        <span className="text-green-400">
+                          {" "}
+                          {
+                            ambulance?.distance_info?.from_ambulance_to_incident
+                              ?.rows[0]?.elements[0]?.duration?.text
+                          }
+                        </span>
+                        <span className="font-semibold  ml-1">
+                          : الوقت المقدر
+                        </span>
                       </p>
                     </div>
                   ) : ambulance?.status === "Enroute" ? (
                     // Code to render when status is "Enroute"
                     <div>
-                      <p>
+                      <p className=" w-full flex justify-end">
                         {
                           ambulance?.distance_info?.from_incident_to_facility
                             ?.rows[0]?.elements[0]?.distance?.text
@@ -204,7 +211,9 @@ export default function IncidentVIewModal(props) {
                           ambulance?.distance_info?.from_incident_to_facility
                             ?.rows[0]?.elements[0]?.duration?.text
                         }
-                        <span className="font-semibold  ml-1">: مدة</span>
+                        <span className="font-semibold  ml-1">
+                          : الوقت المقدر
+                        </span>
                       </p>
                     </div>
                   ) : null}
