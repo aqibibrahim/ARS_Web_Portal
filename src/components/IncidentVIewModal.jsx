@@ -163,32 +163,72 @@ export default function IncidentVIewModal(props) {
               //   className="flex flex-col bg-gray-100 mb-5 mt-2 p-4 rounded"
               //   key={ambulance.id}
               // >
-              <div
-                className="flex flex-row justify-between p-5 text-base bg-gray-100 mt-4"
-                key={ambulance.id}
-              >
-                <p className={` ${getStatusStyle(ambulance.status)}`}>
-                  {ambulance?.status}
-                </p>
-                <div className="flex justify-end">
-                  <span className="mr-1"> {ambulance?.plate_no}</span>
-                  <span className="font-semibold"> : رقم لوحة</span>
-                </div>
-                <div className="flex justify-end">
-                  <span className="mr-1"> {ambulance?.model?.name}</span>
-                  <span className="font-semibold"> : موديل</span>
-                </div>
-                <span className="flex items-center">
-                  {/* Flex container */}
+              <>
+                {" "}
+                <div
+                  className="flex flex-row justify-between p-5 text-base bg-gray-100 mt-4"
+                  key={ambulance.id}
+                >
+                  <p className={` ${getStatusStyle(ambulance.status)}`}>
+                    {ambulance?.status}
+                  </p>
+                  {ambulance?.status === "Dispatched" ? (
+                    <div>
+                      <p>
+                        {
+                          ambulance?.distance_info?.from_ambulance_to_incident
+                            ?.rows[0]?.elements[0]?.distance?.text
+                        }
+                        <span className="font-semibold  ml-1">: مسافة</span>
+                      </p>
+                      <p>
+                        {
+                          ambulance?.distance_info?.from_ambulance_to_incident
+                            ?.rows[0]?.elements[0]?.duration?.text
+                        }
+                        <span className="font-semibold  ml-1">: مدة</span>
+                      </p>
+                    </div>
+                  ) : ambulance?.status === "Enroute" ? (
+                    // Code to render when status is "Enroute"
+                    <div>
+                      <p>
+                        {
+                          ambulance?.distance_info?.from_incident_to_facility
+                            ?.rows[0]?.elements[0]?.distance?.text
+                        }
+                        <span className="font-semibold  ml-1">: مسافة</span>
+                      </p>
+                      <p>
+                        {
+                          ambulance?.distance_info?.from_incident_to_facility
+                            ?.rows[0]?.elements[0]?.duration?.text
+                        }
+                        <span className="font-semibold  ml-1">: مدة</span>
+                      </p>
+                    </div>
+                  ) : null}
+
                   <div className="flex justify-end">
-                    {ambulance?.model?.make?.name}
-                    <span className="font-semibold ml-2"> : ماركة</span>
+                    <span className="mr-1"> {ambulance?.plate_no}</span>
+                    <span className="font-semibold"> : رقم لوحة</span>
                   </div>
-                  <span className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center ml-4">
-                    {index + 1}
+                  <div className="flex justify-end">
+                    <span className="mr-1"> {ambulance?.model?.name}</span>
+                    <span className="font-semibold"> : موديل</span>
+                  </div>
+                  <span className="flex items-center">
+                    {/* Flex container */}
+                    <div className="flex justify-end">
+                      {ambulance?.model?.make?.name}
+                      <span className="font-semibold ml-2"> : ماركة</span>
+                    </div>
+                    <span className="bg-blue-200 p-2 rounded-full w-8 h-8 flex items-center justify-center ml-4">
+                      {index + 1}
+                    </span>
                   </span>
-                </span>
-              </div>
+                </div>
+              </>
             ))
           ) : (
             <div className="flex flex-row text-center w-full justify-center p-5 text-lg bg-gray-100 mt-4">

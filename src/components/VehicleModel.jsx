@@ -7,7 +7,7 @@ import ModalComponent from "./Common/ModalComponent";
 import { BsEye } from "react-icons/bs";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { BsArrowRightCircle, BsSearch } from "react-icons/bs";
-import Select from "react-tailwindcss-select";
+import { Select } from "antd";
 
 export default function VehicleModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -156,7 +156,7 @@ export default function VehicleModal() {
       };
       const data = {
         name: state?.vehicleModel,
-        make_id: selectedOption?.value,
+        make_id: selectedOption,
       };
       const response = await axios.post(`${Vars.domain}/vehicle-models`, data, {
         headers,
@@ -167,10 +167,12 @@ export default function VehicleModal() {
         setState({ vehicleModal: "" });
         setIsModalOpen(false);
         setSelectedOption("");
+        setState({ vehicleModel: "" });
       }
     } catch (error) {
       console.error("Error creating role:", error);
-      toast.error(error?.response?.data?.name[0]);
+      toast.error(error?.response?.data?.data?.name[0]);
+      setIsLoading(false);
     }
 
     setIsLoading(false);
@@ -194,7 +196,7 @@ export default function VehicleModal() {
       };
       const data = {
         name: state?.editVehicleModel,
-        make_id: selectedOption?.value,
+        make_id: selectedOption?.value ? selectedOption?.value : selectedOption,
       };
       const response = await axios.patch(
         `${Vars.domain}/vehicle-models/${editIncidentID}`,
@@ -208,6 +210,7 @@ export default function VehicleModal() {
         setIsLoading(false);
         setEditIncidentID("");
         setEditOpen(false);
+        setState({ editVehicleModel: "" });
       }
     } catch (error) {
       console.error("Error updating Incident Type:", error);
@@ -263,6 +266,7 @@ export default function VehicleModal() {
                   setIsModalOpen(false);
                   resetValidationErrors();
                   setSelectedOption("");
+                  setState({ vehicleModel: "" });
                 }}
               />
               <h3 className="text-xl font-semibold">اضافة موديل سيارة جديد</h3>
@@ -279,16 +283,16 @@ export default function VehicleModal() {
                     </label>
                     <div className="relative mt-2">
                       <input
+                        required
                         type="text"
                         name="vehicleModel"
                         onChange={handleChange}
                         value={state?.vehicleModel}
                         placeholder="    موديل السيارة "
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        required
                       />
                     </div>{" "}
-                    <div className="flex flex-col space-y-2 w-full mt-4">
+                    <div className="flex flex-col space-y-2 w-full mt-4 text-right">
                       <label
                         htmlFor="persons_supported"
                         className="block text-sm font-medium leading-6 text-gray-900 text-right"
@@ -296,15 +300,27 @@ export default function VehicleModal() {
                         نوع السيارة
                       </label>
                       <Select
+                        style={{ fontFamily: "Cairo" }}
                         value={selectedOption}
-                        placeholder="حدد  نوع السيارة"
+                        showSearch={true}
+                        placeholder={
+                          <span
+                            className="flex justify-end mr-3"
+                            style={{ fontFamily: "Cairo" }}
+                          >
+                            حدد نوع السيارة
+                          </span>
+                        }
                         onChange={handleSelect}
                         options={myData}
-                        isMulti={false} // Updated from isMultiple
+                        isMulti={false}
                         isClearable={true}
                         primaryColor={"blue"}
-                        className="peer w-full  px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
-                        menuPlacement="auto" // Set menuPlacement to 'auto'
+                        dropdownStyle={{
+                          textAlign: "right",
+                          fontFamily: "Cairo",
+                        }}
+                        className="peer w-full flex justify-end border-0 bg-offWhiteCustom-100  text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
                     </div>
                   </div>{" "}
@@ -374,6 +390,7 @@ export default function VehicleModal() {
                 onClick={() => {
                   setEditOpen(false);
                   resetValidationErrors();
+                  setSelectedOption("");
                 }}
               />
               <h3 className="text-xl font-semibold"> تحديث موديل السيارة</h3>
@@ -411,14 +428,27 @@ export default function VehicleModal() {
                         نوع السيارة{" "}
                       </label>
                       <Select
+                        style={{ fontFamily: "Cairo" }}
                         value={selectedOption}
-                        placeholder="نوع السيارة"
+                        placeholder={
+                          <span
+                            className="flex justify-end mr-3"
+                            style={{ fontFamily: "Cairo" }}
+                          >
+                            نوع السيارة
+                          </span>
+                        }
                         onChange={handleSelect}
                         options={myData}
                         isMultiple={false}
                         isClearable={true}
+                        showSearch={true}
+                        dropdownStyle={{
+                          textAlign: "right",
+                          fontFamily: "Cairo",
+                        }}
                         primaryColor={"blue"}
-                        className="peer  w-full px-1 flex justify-end border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
+                        className="peer  w-full  flex justify-end border-0 bg-offWhiteCustom-100  text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
                     </div>
                   </div>{" "}

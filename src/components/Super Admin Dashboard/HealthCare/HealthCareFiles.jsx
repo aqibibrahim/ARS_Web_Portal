@@ -20,9 +20,9 @@ import { Toaster, toast } from "sonner";
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
-import Select from "react-tailwindcss-select";
+// import Select from "react-tailwindcss-select";
 import InputMask from "react-input-mask";
-import { Pagination, Spin } from "antd";
+import { Pagination, Spin, Select } from "antd";
 import noData from "../../../assets/noData.png";
 const HealthCareFiles = () => {
   var token = localStorage.getItem("token");
@@ -43,7 +43,7 @@ const HealthCareFiles = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
   const [locationAddress, setLocationAddress] = useState({});
-  const [updateFocalPerson, setupdateFocalPerson] = useState(null);
+  const [updateFocalPerson, setupdateFocalPerson] = useState([]);
   const [updateFocalOpetion, setUpdateFocalOpetion] = useState([]);
   const [open, setOpen] = useState(false);
   const [formattedAddress, setFormattedAddress] = useState();
@@ -55,7 +55,7 @@ const HealthCareFiles = () => {
   const [isDelete, setDelete] = useState(false);
   const [options, setOptions] = useState([]);
   const [optionsFocalPerson, setOptionsFocalPerson] = useState(null);
-  const [cardFocalPersons, setCardFocalPersons] = useState([]);
+  const [cardFocalPersons, setCardFocalPersons] = useState(null);
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [selectedHealthCare, setSelectedHealthCare] = useState(null);
@@ -74,7 +74,20 @@ const HealthCareFiles = () => {
   };
   const handleOnChange = (value) => {
     setupdateFocalPerson(value);
-    console.log("value:", value);
+    // console.log("value:", value);
+    setupdateFocalPerson(
+      value?.map((item2) => {
+        const user = allUsers.find((item1) => item1.id === item2.value);
+        if (user) {
+          return {
+            ...item2,
+            user,
+          };
+        } else {
+          return item2;
+        }
+      })
+    );
   };
   const handleSearchKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -1184,20 +1197,17 @@ const HealthCareFiles = () => {
                       value={optionsFocalPerson}
                     /> */}
                     <Select
-                      onChange={(e) => handleChangeFocalPerson(e)}
+                      onChange={(e, option) => handleChangeFocalPerson(option)}
                       options={updateFocalOption}
-                      value={optionsFocalPerson}
+                      // value={optionsFocalPerson}
                       placeholder={
-                        <span
-                          className="ml-auto"
-                          style={{ fontFamily: "Cairo" }}
-                        >
+                        <span className="mr-4" style={{ fontFamily: "Cairo" }}>
                           حدد شخص مسؤول
                         </span>
                       }
                       dropdownStyle={{ textAlign: "right" }}
                       style={{ textAlign: "right" }}
-                      isMultiple={true}
+                      mode="multiple"
                       isClearable={true}
                       primaryColor={"blue"}
                       isSearchable={false}
@@ -1218,28 +1228,30 @@ const HealthCareFiles = () => {
                   <ul role="list" className="flex    justify-end gap-3 w-full">
                     {cardFocalPersons?.map((person) => (
                       <div
-                        key={person.user.id}
+                        key={person?.user?.id}
                         className="flex justify-end text-right divide-gray-200 items-end w-56   rounded-lg  shadow-lg"
                       >
                         <div className="flex w-full  items-center justify-between space-x-6 px-3 py-2 ">
                           <div className="flex-1 truncate justify-end ">
                             <div className="flex items-end justify-end space-x-3 text-right">
                               <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                                {person.user.designation}
+                                {person?.user?.designation}
                               </span>
                               <h3 className="truncate text-sm font-medium text-gray-900">
-                                {person?.user.first_name +
+                                {person?.user?.first_name +
                                   " " +
-                                  person.user.last_name}
+                                  person?.user?.last_name}
                               </h3>
                             </div>
                             <p className="mt-1 truncate text-sm text-gray-500">
-                              {person.user.email}
+                              {person?.user?.email}
                             </p>{" "}
                             <p className="mt-1 truncate text-sm text-gray-500">
-                              {person.user.phone_numbers.map((phone, index) => (
-                                <p key={index}>{phone?.number}</p>
-                              ))}
+                              {person?.user?.phone_numbers.map(
+                                (phone, index) => (
+                                  <p key={index}>{phone?.number}</p>
+                                )
+                              )}
                             </p>
                           </div>
                         </div>
@@ -1301,7 +1313,9 @@ const HealthCareFiles = () => {
                             tabIndex={1}
                             mask="00218 99 9999999" // Define your desired mask here
                             maskChar=""
-                            required
+                            {...(phoneNumbers
+                              ? { required: false }
+                              : { required: true })}
                             placeholder="00218 XX XXXXXXX"
                             onChange={(e) => setNewPhoneNumber(e.target.value)}
                             onKeyDown={(e) => {
@@ -1448,11 +1462,11 @@ const HealthCareFiles = () => {
                       htmlFor="focal_persons"
                       className="block text-sm font-medium leading-6 text-gray-900 text-right"
                     >
-                      الأشخاص المحوريون
+                      شخص مسؤول
                     </label>
                     <div className="relative mt-2">
                       <Select
-                        value={updateFocalPerson}
+                        value={updateFocalPerson ? updateFocalPerson : []}
                         placeholder={
                           <span
                             className="ml-auto"
@@ -1462,13 +1476,13 @@ const HealthCareFiles = () => {
                           </span>
                         }
                         options={updateFocalOption}
-                        onChange={(e) => handleOnChange(e)}
-                        isMultiple={true}
+                        onChange={(e, option) => handleOnChange(option)}
+                        mode="multiple"
                         isClearable={true}
                         primaryColor={"blue"}
                         dropdownStyle={{ textAlign: "right" }}
                         isSearchable={true}
-                        className="peer w-full flex justify-end border-0 bg-offWhiteCustom-100  text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right z-50"
+                        className="peer block  w-full border-0 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                       />
                     </div>
                   </div>

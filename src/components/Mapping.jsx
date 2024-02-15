@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Select as AntSelect } from "antd";
+import { Modal, Select } from "antd";
 // import 'antd/dist/antd.css' // Import the Ant Design styles
 
 import axios from "axios";
 import { Vars } from "../helpers/helpers";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import { Toaster, toast } from "sonner";
-import Select from "react-tailwindcss-select";
+// import Select from "react-tailwindcss-select";
 import { Spin } from "antd";
 export default function Mapping() {
   const [departmentMapping, setDepartmentMapping] = useState(false);
@@ -14,24 +14,29 @@ export default function Mapping() {
   const [departments, setDepartments] = useState([]);
   const [equipments, setEquipments] = useState([]);
   const [incident, setIncident] = useState([]);
-  const [selectedEquipment, setSelectedEquipment] = useState([]);
+  const [selectedEquipment, setSelectedEquipment] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedIncidentId, setSelectedIncidentId] = useState("");
   const [activeTab, setActiveTab] = useState("departmentMapping");
   const [loading, setLoading] = useState(true);
+  const [myData, setMyData] = useState([]);
+  const [myIncidentData, setMyIncidentData] = useState([]);
+
   const handleCancelView = () => {
     setDepartmentMapping(false);
     setIncidentTypeMapping(false);
     setSelectedDepartment("");
     setSelectedEquipment([]);
+    setSelectedIncidentId("");
   };
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
-  const handleIncidentChange = (event) => {
-    const selectedId = event.target.value;
-    setSelectedIncidentId(selectedId);
+  const handleIncidentChange = (value) => {
+    // const selectedId = event.target.value;
+    setSelectedIncidentId(value);
   };
   const handleDepartmentChange = (value) => {
     setSelectedDepartment(value);
@@ -118,6 +123,12 @@ export default function Mapping() {
 
         if (response.status === 200 || response.status === 201) {
           setDepartments(response?.data?.data);
+          setMyData(
+            response?.data?.data.map((details, index) => ({
+              label: details.name,
+              value: details.id,
+            }))
+          );
         }
       } catch (error) {
         console.error("Error fetching departments:", error);
@@ -165,6 +176,12 @@ export default function Mapping() {
 
         if (response.status === 200 || response.status === 201) {
           setIncident(response.data.data);
+          setMyIncidentData(
+            response?.data?.data.map((details, index) => ({
+              label: details.name,
+              value: details.id,
+            }))
+          );
         }
       } catch (error) {
         console.error("Error fetching incidents:", error);
@@ -195,15 +212,18 @@ export default function Mapping() {
       {/* Department Mapping Modal */}
       <Modal
         open={departmentMapping}
-        onCancel={handleCancelView}
+        onCancel={() => {
+          handleCancelView();
+          setSelectedDepartment();
+        }}
         footer={null}
         closable={true}
         maskClosable={false}
       >
-        <div className="flex flex-col">
-          <div className="flex p-5 " style={{ fontFamily: "Cairo" }}>
-            <select
-              value={selectedDepartment}
+        <div className="flex  p-2 flex-col">
+          <div className="flex  flex-col mt-5 " style={{ fontFamily: "Cairo" }}>
+            {/* <select
+              value={selectedDepartment} 
               onChange={(e) => handleDepartmentChange(e.target.value)}
               className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl text-right pl-4 pr-8"
             >
@@ -215,9 +235,42 @@ export default function Mapping() {
                   {details?.name}
                 </option>
               ))}
-            </select>
+            </select> */}
+            <label className="block text-sm  mb-2 font-medium  text-gray-900 text-right">
+              إختار القسم
+            </label>
+            <Select
+              tabIndex={1}
+              showSearch={true}
+              style={{ width: "100%", fontFamily: "Cairo" }}
+              placeholder={
+                <span
+                  className="flex justify-end ml-24 "
+                  style={{ fontFamily: "Cairo" }}
+                >
+                  إختار القسم
+                </span>
+              }
+              value={selectedDepartment}
+              onChange={(e, option) => handleDepartmentChange(e, option)}
+              options={myData}
+              dropdownStyle={{
+                textAlign: "right",
+                fontFamily: "Cairo",
+              }}
+              className="text-right"
+              onKeyDown={(e) => {
+                if (e.key === "Tab") {
+                  e.preventDefault();
+                  document.querySelector('[tabIndex="2"]').focus();
+                }
+              }}
+            />
           </div>
           <div style={{ fontFamily: "Cairo" }}>
+            <label className="block text-sm  mt-2 font-medium  text-gray-900 text-right">
+              إختار نوع الحادث
+            </label>
             <MultiSelectDropdown
               options={incident}
               selectedOptions={selectedEquipment}
@@ -247,9 +300,33 @@ export default function Mapping() {
         maskClosable={false} // Set this to false to prevent closing on outside click
       >
         {" "}
-        <div className="flex flex-col">
-          <div className="flex p-5 " style={{ fontFamily: "Cairo" }}>
-            <select
+        <div className="flex flex-col p-2 ">
+          <div className="flex mt-5 flex-col " style={{ fontFamily: "Cairo" }}>
+            <label className="block text-sm mb-2 font-medium  text-gray-900 text-right">
+              نوع الحادث
+            </label>
+            <Select
+              tabIndex={1}
+              showSearch={true}
+              style={{ width: "100%", fontFamily: "Cairo" }}
+              placeholder={
+                <span
+                  className="flex justify-end ml-24 "
+                  style={{ fontFamily: "Cairo" }}
+                >
+                  إختار نوع الحادث
+                </span>
+              }
+              value={selectedIncidentId}
+              onChange={(e, option) => handleIncidentChange(e, option)}
+              options={myIncidentData}
+              dropdownStyle={{
+                textAlign: "right",
+                fontFamily: "Cairo",
+              }}
+              className="text-right"
+            />
+            {/* <select
               className="py-3 w-full border-none bg-grayBg-300 mt-2 rounded-xl text-right pl-4 pr-8"
               onChange={handleIncidentChange}
               value={selectedIncidentId}
@@ -262,14 +339,16 @@ export default function Mapping() {
                   {details?.name}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
           <div style={{ fontFamily: "Cairo" }}>
+            <label className="block text-sm  mt-2 font-medium  text-gray-900 text-right">
+              المعدات
+            </label>
             <MultiSelectDropdown
               options={equipments}
               selectedOptions={selectedEquipment}
               setSelectedOptions={setSelectedEquipment}
-              label={"المعدات"}
               placeholder="إختار المعدات"
               bgColor={"#91EAAA"}
             />
