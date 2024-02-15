@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { Modal, Pagination, Table, Skeleton } from 'antd'
+import { Modal, Pagination } from 'antd'
 
 import { Listbox } from '@headlessui/react'
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid'
@@ -15,12 +15,12 @@ import { Vars } from '../helpers/helpers'
 import { BsArrowRightCircle, BsEye, BsSearch } from 'react-icons/bs'
 import { BiEdit, BiMessageAltX } from 'react-icons/bi'
 import EditHealthCare from './EditHealthCareForm'
-import { Spin } from 'antd'
+import { Spin, Skeleton } from 'antd'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
 import IncidentVIewModal from './IncidentVIewModal'
 import { useAmbulanceContext } from './AmbulanceContext'
 import noData from '../assets/noData.png'
-// import Skeleton from './Common/Skelton'
+
 const Tab = ({ selected, title, onClick }) => {
 	return (
 		<button
@@ -263,7 +263,26 @@ export default function IncidentList({}) {
 			console.log(e)
 		}
 	}
-
+	// const removeAmbulance = async () => {
+	// 	try {
+	// 		var token = localStorage.getItem('token')
+	// 		const headers = {
+	// 			'Content-Type': 'application/json',
+	// 			Authorization: `Bearer ${token}`,
+	// 		}
+	// 		const response = await axios.delete(`${Vars.domain}/drivers/${deleteID}`, {
+	// 			headers,
+	// 		})
+	// 		console.log(response, 'res')
+	// 		if (response.status === 200 || response.status === 201 || response.status === 204) {
+	// 			toast.success('Driver Deleted Successfuly')
+	// 			setDeleteModal(false)
+	// 		}
+	// 	} catch (error) {
+	// 		toast.error('Something went wrong')
+	// 		setDeleteModal(false)
+	// 	}
+	// }
 	const fetchSingleIncident = async () => {
 		console.log('Hello', selectedIncident)
 		try {
@@ -273,14 +292,60 @@ export default function IncidentList({}) {
 				})
 				.then((response) => {
 					setShowAssignAmbulance(response?.data?.data?.ambulances)
-
+					// setAssignedAmbulance(response?.data?.data?.ambulances);
+					// setMyData(
+					// 	response.data?.data?.map((variant) => ({
+					// 		label: variant.model,
+					// 		value: variant.id,
+					// 		persons_supported: variant.persons_supported,
+					// 		make: variant.make,
+					// 		plate_no: variant.plate_no,
+					// 		id_no: variant.id_no,
+					// 	}))
+					// )
+					// setIsLoading(false);
 					console.log(response?.data?.data)
 				})
 		} catch (e) {
 			console.log(e)
 		}
 	}
+	// 	fetchAmbulanceData()
+	// }, [])
 
+	// useEffect(() => {
+	//   const fetchSingleIncident = async () => {
+	//     console.log("Hello", selectedIncident);
+	//     try {
+	//       await axios
+	//         .get(
+	//           `https://ars.disruptwave.com/api/incidents/${selectedIncident.id}`,
+	//           {
+	//             headers: headers,
+	//           }
+	//         )
+	//         .then((response) => {
+	//           setShowAssignAmbulance(response?.data?.data?.ambulances);
+
+	//           // setMyData(
+	//           // 	response.data?.data?.map((variant) => ({
+	//           // 		label: variant.model,
+	//           // 		value: variant.id,
+	//           // 		persons_supported: variant.persons_supported,
+	//           // 		make: variant.make,
+	//           // 		plate_no: variant.plate_no,
+	//           // 		id_no: variant.id_no,
+	//           // 	}))
+	//           // )
+	//           // setIsLoading(false);
+	//           console.log(response?.data?.data);
+	//         });
+	//     } catch (e) {
+	//       console.log(e);
+	//     }
+	//   };
+	//   fetchSingleIncident();
+	// }, [deleteModal, assignedAmbulance]);
 	const assignAmbulance = useFormik({
 		initialValues: {
 			ambulances: '',
@@ -417,52 +482,19 @@ export default function IncidentList({}) {
 		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 	}
 
+	// Usage
 	const columns = [
 		{
 			title: 'Actions',
 			dataIndex: '',
 			key: 'actions',
 			align: 'right',
-			render: (_, incident) => (
-				<span className="flex items-center justify-center gap-5">
-					<button
-						onClick={() => {
-							handleEditClick(incident)
-							sethealthCare(false)
-							setSelectedHealthCareOpetion({})
-						}}
-						className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-					>
-						<BiEdit />
-					</button>
-					<button
-						onClick={() => {
-							getIncidentDetail(incident?.id)
-							sethealthCare(false)
-							setSelectedHealthCareOpetion({})
-						}}
-						className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-					>
-						<BsEye />
-					</button>
-				</span>
-			),
 		},
 		{
 			title: 'رقم الاتصال',
 			dataIndex: 'informer.phone_numbers',
 			key: 'phone_numbers',
 			align: 'right',
-
-			render: (phoneNumbers, _) => {
-				return (
-					<>
-						{_.informer?.phone_numbers?.map((phone) => (
-							<p key={phone.id}>{phone.number}</p>
-						))}
-					</>
-				)
-			},
 		},
 
 		{
@@ -470,63 +502,24 @@ export default function IncidentList({}) {
 			dataIndex: ['created_by', 'first_name', 'created_at'],
 			key: 'created_by',
 			align: 'right',
-
-			render: (firstName, _, index) => {
-				return (
-					<>
-						{`${_.created_by.last_name} ${_.created_by.last_name}`}
-						<p>{formatDateTime(_.created_at)}</p>
-					</>
-				)
-			},
 		},
 		{
 			title: 'نوع الطوارئ',
 			dataIndex: 'emergency_type.name',
 			key: 'emergency_type',
 			align: 'right',
-
-			render: (emergencyType, _) => (
-				<span
-					className={`${
-						_.emergency_type?.name === 'Critical'
-							? 'text-red-500'
-							: _.emergency_type?.name === 'Moderate'
-							? 'text-yellow-500'
-							: 'text-green-500'
-					}`}
-				>
-					{_.emergency_type?.name}
-				</span>
-			),
 		},
 		{
 			title: 'نوع الحادث',
 			dataIndex: 'incident_type.name',
 			key: 'incident_type',
 			align: 'right',
-
-			render: (incidentType, _) => {
-				return (
-					<>
-						<p>{_.incident_type?.name}</p>
-					</>
-				)
-			},
 		},
 		{
 			title: 'تفاصيل المتصل',
 			dataIndex: 'informer.name',
 			key: 'informer_name',
 			align: 'right',
-
-			render: (informerName, _) => {
-				return (
-					<>
-						<p>{_.informer?.name}</p>
-					</>
-				)
-			},
 		},
 	]
 	const renderSkeleton1 = () => {
@@ -541,13 +534,13 @@ export default function IncidentList({}) {
 									<Skeleton.Button
 										active
 										size="small"
-										style={{ width: '40px', borderRadius: '4px' }}
+										style={{ width: '20px', borderRadius: '4px' }}
 										className="mt-4"
 									/>
 									<Skeleton.Button
 										active
 										size="small"
-										style={{ width: '40px', borderRadius: '4px' }}
+										style={{ width: '20px', borderRadius: '4px' }}
 										className="mt-4"
 									/>
 								</div>
@@ -570,39 +563,6 @@ export default function IncidentList({}) {
 			</tr>
 		))
 	}
-
-	const MyTable = ({ activeIncidents }) => {
-		console.log('Active incidents', activeIncidents) // Console activeIncidents here
-		const [loading, setLoading] = useState(false) // Add loading state
-
-		const renderSkeleton = () => {
-			return columns.map((column) => (
-				<Skeleton.Input
-					key={column.key}
-					active
-					size="small"
-					className="mt-4 mr-1"
-					style={{ width: '100%', borderRadius: '4px', display: 'flex', justifyContent: 'space-around', gap: 20 }}
-				/>
-			))
-		}
-
-		return (
-			<>
-				<Table
-					columns={columns}
-					dataSource={activeIncidents?.data}
-					rowKey={(record) => record.id}
-					className="mt-4 mr-1"
-					pagination={false}
-					loading={isLoading}
-				/>
-			</>
-		)
-	}
-
-	// Usage
-
 	return (
 		<>
 			<div
@@ -645,13 +605,110 @@ export default function IncidentList({}) {
 						</div>
 					</div>
 					<div>
-						{activeTab === 'active' ? (
+						{isLoading ? (
+							renderSkeleton1()
+						) : activeTab === 'active' ? (
 							<>
 								{activeIncidents?.data?.length > 0 ? (
 									<>
-										{/* <Skeleton loading={isLoading} active> */}
-										<MyTable activeIncidents={activeIncidents} />
-										{/* </Skeleton> */}
+										<table className="min-w-full divide-y divide-gray-300 text-right mt-4 mr-1">
+											<thead>
+												<tr>
+													{/* <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+  <span className="sr-only">Edit</span>
+</th> */}
+													<th scope="col" className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500">
+														{/* Actions */}
+													</th>
+													{/* <th
+                        scope="col"
+                        className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500"
+                      >
+                        Status
+                      </th> */}
+													<th scope="col" className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500">
+														رقم الاتصال
+													</th>
+													<th scope="col" className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500">
+														انشأ من قبل
+													</th>
+													<th scope="col" className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500">
+														نوع الطوارئ
+													</th>
+													<th scope="col" className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500">
+														نوع الحادث
+													</th>
+													<th scope="col" className="px-3 py-3 text-xs font-medium  tracking-wide text-gray-500">
+														تفاصيل المتصل{' '}
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												{activeIncidents?.data?.map((incident) => (
+													<tr key={incident?.id} className="hover:bg-gray-100">
+														<td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+															<span className="flex items-center justify-center gap-5">
+																{/* <button
+                              onClick={() => {
+                                handleDeleteClick(incident);
+                              }}
+                              className="text-red-500 hover:text-indigo-900 border-2 rounded-lg border-red-500 py-1 px-2"
+                            >
+                              <BiMessageAltX />
+                            </button> */}
+																<button
+																	onClick={() => {
+																		handleEditClick(incident)
+																		sethealthCare(false)
+																		setSelectedHealthCareOpetion({})
+																	}}
+																	className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+																>
+																	<BiEdit />
+																</button>
+																<button
+																	onClick={() => {
+																		getIncidentDetail(incident?.id)
+																		sethealthCare(false)
+																		setSelectedHealthCareOpetion({})
+																	}}
+																	className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+																>
+																	<BsEye />
+																</button>
+															</span>
+														</td>
+														{/* <td className="whitespace-nowrap px-3 py-4 text-xs">
+                          <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                            {incident.status}
+                          </span>
+                        </td> */}
+														<td className="whitespace-nowrap px-3 py-4 text-xs">
+															{incident?.informer?.phone_numbers?.map((phone) => (
+																<div key={phone.id}>{phone.number}</div>
+															))}
+														</td>
+														<td className="whitespace-nowrap px-3 py-4 text-xs">
+															{incident?.created_by?.first_name + ' ' + incident?.created_by?.last_name}
+															<p>{formatDateTime(incident?.created_at)}</p>
+														</td>
+														<td
+															className={`whitespace-nowrap px-3 py-4 text-xs ${
+																incident?.emergency_type?.name === 'Critical'
+																	? 'text-red-500'
+																	: incident?.emergency_type?.name === 'Moderate'
+																	? 'text-yellow-500'
+																	: 'text-green-500'
+															}`}
+														>
+															{incident?.emergency_type?.name}
+														</td>
+														<td className="whitespace-nowrap px-3 py-4 text-xs">{incident?.incident_type?.name}</td>
+														<td className="whitespace-nowrap px-3 py-4 text-xs">{incident?.informer?.name}</td>
+													</tr>
+												))}
+											</tbody>
+										</table>
 										<div className="flex justify-end mt-5 ">
 											<Pagination
 												style={{ fontFamily: 'Cairo' }}
@@ -666,7 +723,9 @@ export default function IncidentList({}) {
 										</div>
 									</>
 								) : (
-									renderSkeleton1()
+									<div className="flex justify-center">
+										<img src={noData} />
+									</div>
 								)}
 							</>
 						) : (
@@ -774,7 +833,9 @@ export default function IncidentList({}) {
 										</div>
 									</>
 								) : (
-									renderSkeleton1()
+									<div className="flex justify-center">
+										<img src={noData} />
+									</div>
 								)}
 							</>
 						)}
