@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Select } from "antd";
+import { Modal, Select, Skeleton } from "antd";
 // import 'antd/dist/antd.css' // Import the Ant Design styles
 
 import axios from "axios";
@@ -206,6 +206,39 @@ export default function Mapping() {
     );
   };
 
+  const columns = [
+    {
+      title: "Actions",
+      dataIndex: "",
+      key: "actions",
+      align: "right",
+    },
+    {
+      title: "رقم الاتصال",
+      dataIndex: "informer.phone_numbers",
+      key: "phone_numbers",
+      align: "right",
+    },
+  ];
+  const renderSkeleton1 = () => {
+    return columns.map((column) => (
+      <tr className="flex items-end justify-end gap-40 my-3 px-4 pb-4">
+        {columns.map((column, index) => {
+          // Render skeleton inputs for other columns
+          return (
+            <td key={column.key}>
+              <Skeleton.Input
+                active
+                size="large"
+                className="mt-4 mr-1"
+                style={{ width: "100%", borderRadius: "4px" }}
+              />
+            </td>
+          );
+        })}
+      </tr>
+    ));
+  };
   return (
     <>
       <Toaster richColors />
@@ -436,9 +469,7 @@ export default function Mapping() {
                   </>
                   <div className="bg-white p-2 rounded-lg shadow my-2">
                     {loading ? (
-                      <p className="text-gray-700 text-center">
-                        <Spin size="large" />{" "}
-                      </p>
+                      renderSkeleton1()
                     ) : (
                       <table className="w-full">
                         <thead>

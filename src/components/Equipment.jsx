@@ -5,7 +5,7 @@ import { Vars, getAllEquipment, getToken } from "../helpers/helpers";
 import { BsArrowRightCircle } from "react-icons/bs";
 import axios from "axios";
 import { BiMessageAltX, BiEdit } from "react-icons/bi";
-import { Spin } from "antd";
+import { Spin, Skeleton } from "antd";
 import { Toaster, toast } from "sonner";
 import { useFormik } from "formik";
 export default function Equipment() {
@@ -161,7 +161,68 @@ export default function Equipment() {
 
     return !name;
   };
+  const columns = [
+    {
+      title: "Actions",
+      dataIndex: "",
+      key: "actions",
+      align: "right",
+    },
+    {
+      title: "رقم الاتصال",
+      dataIndex: "informer.phone_numbers",
+      key: "phone_numbers",
+      align: "right",
+    },
 
+    {
+      title: "انشأ من قبل",
+      dataIndex: ["created_by", "first_name", "created_at"],
+      key: "created_by",
+      align: "right",
+    },
+  ];
+  const renderSkeleton1 = () => {
+    return columns.map((column) => (
+      <tr className="flex justify-between my-3 px-4 pb-4">
+        {columns.map((column, index) => {
+          if (index === columns.length - 3) {
+            // Render buttons for the last column
+            return (
+              <td key={column.key}>
+                <div className="flex justify-around gap-4">
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                </div>
+              </td>
+            );
+          } else {
+            // Render skeleton inputs for other columns
+            return (
+              <td key={column.key}>
+                <Skeleton.Input
+                  active
+                  size="small"
+                  className="mt-4 mr-1"
+                  style={{ width: "100%", borderRadius: "4px" }}
+                />
+              </td>
+            );
+          }
+        })}
+      </tr>
+    ));
+  };
   return (
     <>
       <div
@@ -287,9 +348,7 @@ export default function Equipment() {
           </div>
           <div className="bg-white p-2 rounded-lg shadow my-2">
             {loading ? (
-              <p className="text-center justify-center flex m-auto p-32">
-                <Spin size="large" />
-              </p>
+              renderSkeleton1()
             ) : equipment.length == 0 ? (
               <p className="text-center  text-primary-100">No data available</p>
             ) : (
@@ -396,7 +455,7 @@ export default function Equipment() {
                       className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       onClick={() => setDelete(false)}
                     >
-                      <span className="sr-only">أغلق</span>
+                      <span className="sr-only">Close</span>
                       <BsArrowRightCircle
                         className="h-6 w-6"
                         aria-hidden="true"

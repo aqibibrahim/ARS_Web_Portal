@@ -7,7 +7,7 @@ import ModalComponent from "./Common/ModalComponent";
 import { BsEye } from "react-icons/bs";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { BsArrowRightCircle, BsSearch } from "react-icons/bs";
-import { Select } from "antd";
+import { Select, Skeleton } from "antd";
 
 export default function VehicleModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +28,7 @@ export default function VehicleModal() {
     vehicleModel: "",
     editVehicleModel: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [state, setState] = useState({
     vehicleModel: "",
     editVehicleModel: "",
@@ -84,6 +84,7 @@ export default function VehicleModal() {
           headers,
         });
         if (response.status === 200 || response.status === 201) {
+          setIsLoading(false);
           setAllMakes(response?.data?.data);
           setMyData(
             response.data?.data?.map((variant) => ({
@@ -248,8 +249,66 @@ export default function VehicleModal() {
     }
     setIsLoading(false);
   };
-  const isSubmitDisabled = () => {
-    return !state?.vehicleModel || !selectedOption > 0;
+  const columns = [
+    {
+      title: "Actions",
+      dataIndex: "",
+      key: "actions",
+      align: "right",
+    },
+    {
+      title: "رقم الاتصال",
+      dataIndex: "informer.phone_numbers",
+      key: "phone_numbers",
+      align: "right",
+    },
+    {
+      title: "رقم الاتصال",
+      dataIndex: "informer.phone_numbers",
+      key: "phone_numbers",
+      align: "right",
+    },
+  ];
+  const renderSkeleton1 = () => {
+    return columns.map((column) => (
+      <tr className="flex justify-between my-3 px-4 pb-4">
+        {columns.map((column, index) => {
+          if (index === columns.length - 3) {
+            // Render buttons for the last column
+            return (
+              <td key={column.key}>
+                <div className="flex justify-around gap-4">
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                </div>
+              </td>
+            );
+          } else {
+            // Render skeleton inputs for other columns
+            return (
+              <td key={column.key}>
+                <Skeleton.Input
+                  active
+                  size="small"
+                  className="mt-4 mr-1"
+                  style={{ width: "100%", borderRadius: "4px" }}
+                />
+              </td>
+            );
+          }
+        })}
+      </tr>
+    ));
   };
 
   return (
@@ -520,67 +579,71 @@ export default function VehicleModal() {
               </button>
             </div>
           </div>
-          <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-white-100">
-            <thead>
-              <tr>
-                <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
-                  <span className="sr-only">Edit</span>
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                >
-                  {/* Status */}
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                >
-                  {/* PIN */}
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                >
-                  {/* Driver Last Name */}
-                </th>{" "}
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                >
-                  نوع السيارة
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
-                >
-                  موديل السيارة{" "}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {allModels?.map((data, index) => (
-                <tr key={index} className="hover:bg-white">
-                  <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                    <span className="flex gap-5">
-                      <span
-                        className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
-                        onClick={() => {
-                          setDeleteIncidentID(data?.id);
-                          setDeleteModal(true);
-                        }}
-                      >
-                        <BiMessageAltX />
-                      </span>
-                      <button
-                        onClick={() => {
-                          handleEdit(data);
-                        }}
-                        className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
-                      >
-                        <BiEdit />
-                      </button>
-                      {/* <button
+
+          {isLoading ? (
+            renderSkeleton1()
+          ) : (
+            <table className="w-full justify-center rounded-xl divide-y divide-gray-300 text-right mt-5 bg-white-100">
+              <thead>
+                <tr>
+                  <th scope="col" className="relative py-3 pl-3 pr-4 sm:pr-0">
+                    <span className="sr-only">Edit</span>
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                  >
+                    {/* Status */}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                  >
+                    {/* PIN */}
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                  >
+                    {/* Driver Last Name */}
+                  </th>{" "}
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                  >
+                    نوع السيارة
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-medium uppercase tracking-wide text-gray-500"
+                  >
+                    موديل السيارة{" "}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {allModels?.map((data, index) => (
+                  <tr key={index} className="hover:bg-white">
+                    <td className=" whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                      <span className="flex gap-5">
+                        <span
+                          className=" text-red-600 hover:text-indigo-900 border-2 border-red-600 rounded-lg py-1 px-2"
+                          onClick={() => {
+                            setDeleteIncidentID(data?.id);
+                            setDeleteModal(true);
+                          }}
+                        >
+                          <BiMessageAltX />
+                        </span>
+                        <button
+                          onClick={() => {
+                            handleEdit(data);
+                          }}
+                          className="text-primary-100 hover:text-indigo-900 border-2 rounded-lg border-primary-100 py-1 px-2"
+                        >
+                          <BiEdit />
+                        </button>
+                        {/* <button
                         onClick={() => {
                           handleView(data);
                         }}
@@ -588,27 +651,28 @@ export default function VehicleModal() {
                       >
                         <BsEye />
                       </button> */}
-                    </span>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-md">
-                    {/* <span className="">{data?.reason}</span> */}
-                  </td>{" "}
-                  <td className="whitespace-nowrap px-3 py-4 text-md">
-                    <span className="">{/* {data?.status} */}</span>
-                  </td>{" "}
-                  <td className="whitespace-nowrap px-3 py-4 text-md">
-                    <span className="">{/* {data?.status} */}</span>
-                  </td>{" "}
-                  <td className="whitespace-nowrap px-3 py-4 text-md">
-                    {data?.make?.name}
-                  </td>{" "}
-                  <td className="whitespace-nowrap px-3 py-4 text-md">
-                    {data?.name}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                      {/* <span className="">{data?.reason}</span> */}
+                    </td>{" "}
+                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                      <span className="">{/* {data?.status} */}</span>
+                    </td>{" "}
+                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                      <span className="">{/* {data?.status} */}</span>
+                    </td>{" "}
+                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                      {data?.make?.name}
+                    </td>{" "}
+                    <td className="whitespace-nowrap px-3 py-4 text-md">
+                      {data?.name}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </>

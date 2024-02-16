@@ -20,9 +20,9 @@ import { Toaster, toast } from "sonner";
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
-// import Select from "react-tailwindcss-select";
+// import Select from 'react-tailwindcss-select'
 import InputMask from "react-input-mask";
-import { Pagination, Spin, Select } from "antd";
+import { Pagination, Spin, Skeleton, Select } from "antd";
 import noData from "../../../assets/noData.png";
 const HealthCareFiles = () => {
   var token = localStorage.getItem("token");
@@ -43,7 +43,7 @@ const HealthCareFiles = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
   const [locationAddress, setLocationAddress] = useState({});
-  const [updateFocalPerson, setupdateFocalPerson] = useState([]);
+  const [updateFocalPerson, setupdateFocalPerson] = useState(null);
   const [updateFocalOpetion, setUpdateFocalOpetion] = useState([]);
   const [open, setOpen] = useState(false);
   const [formattedAddress, setFormattedAddress] = useState();
@@ -55,7 +55,7 @@ const HealthCareFiles = () => {
   const [isDelete, setDelete] = useState(false);
   const [options, setOptions] = useState([]);
   const [optionsFocalPerson, setOptionsFocalPerson] = useState(null);
-  const [cardFocalPersons, setCardFocalPersons] = useState(null);
+  const [cardFocalPersons, setCardFocalPersons] = useState([]);
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [selectedHealthCare, setSelectedHealthCare] = useState(null);
@@ -74,20 +74,7 @@ const HealthCareFiles = () => {
   };
   const handleOnChange = (value) => {
     setupdateFocalPerson(value);
-    // console.log("value:", value);
-    setupdateFocalPerson(
-      value?.map((item2) => {
-        const user = allUsers.find((item1) => item1.id === item2.value);
-        if (user) {
-          return {
-            ...item2,
-            user,
-          };
-        } else {
-          return item2;
-        }
-      })
-    );
+    console.log("value:", value);
   };
   const handleSearchKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -586,7 +573,98 @@ const HealthCareFiles = () => {
       !email
     );
   };
+  const columns = [
+    {
+      title: "Actions",
+      dataIndex: "",
+      key: "actions",
+      align: "right",
+    },
+    {
+      title: "رقم الاتصال",
+      dataIndex: "informer.phone_numbers",
+      key: "phone_numbers",
+      align: "right",
+    },
 
+    {
+      title: "انشأ من قبل",
+      dataIndex: ["created_by", "first_name", "created_at"],
+      key: "created_by",
+      align: "right",
+    },
+    {
+      title: "نوع الطوارئ",
+      dataIndex: "emergency_type.name",
+      key: "emergency_type",
+      align: "right",
+    },
+    {
+      title: "نوع الحادث",
+      dataIndex: "incident_type.name",
+      key: "incident_type",
+      align: "right",
+    },
+    {
+      title: "تفاصيل المتصل",
+      dataIndex: "informer.name",
+      key: "informer_name",
+      align: "right",
+    },
+  ];
+  const renderSkeleton1 = () => {
+    return columns.map((column) => (
+      <tr className="flex justify-between my-3 px-4 pb-4">
+        {columns.map((column, index) => {
+          if (index === columns.length - 6) {
+            // Render buttons for the last column
+            return (
+              <td key={column.key}>
+                <div className="flex justify-around gap-4">
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                </div>
+              </td>
+            );
+          } else {
+            // Render skeleton inputs for other columns
+            return (
+              <td key={column.key}>
+                <Skeleton.Input
+                  active
+                  size="small"
+                  className="mt-4 mr-1"
+                  style={{ width: "100%", borderRadius: "4px" }}
+                />
+              </td>
+            );
+          }
+        })}
+      </tr>
+    ));
+  };
   return (
     <div
       className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
@@ -609,13 +687,7 @@ const HealthCareFiles = () => {
               onKeyPress={handleSearchKeyPress}
             />
           </div>
-          {/* <button
-              className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100"
-              type="button"
-              onClick={() => navigate("/departments")}
-            >
-              Department
-            </button> */}
+
           <button
             className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 text-sm"
             type="button"
@@ -627,9 +699,7 @@ const HealthCareFiles = () => {
 
         <div className="rtl">
           {isLoading ? (
-            <p className="text-center justify-center flex m-auto p-56">
-              <Spin size="large" />
-            </p>
+            renderSkeleton1()
           ) : (
             <>
               {ambulanceData?.data?.length > 0 ? (
@@ -737,30 +807,6 @@ const HealthCareFiles = () => {
                               </button>
                             </span>
                           </td>{" "}
-                          {/* <ReactTooltip
-                        id="my-tooltip-1"
-                        // place="bottom"
-                        variant="info"
-                        content="Delete"
-                      />{" "}
-                      <ReactTooltip
-                        id="my-tooltip-2"
-                        // place="bottom"
-                        variant="info"
-                        content="Edit"
-                      />{" "}
-                      <ReactTooltip
-                        id="my-tooltip-3"
-                        // place="bottom"
-                        variant="info"
-                        content="View"
-                      />{" "}
-                      <ReactTooltip
-                        id="my-tooltip-4"
-                        // place="bottom"
-                        variant="info"
-                        content="Add Department"
-                      /> */}
                           <td className="px-3 py-4 text-xs">
                             {healthcare?.address}
                           </td>
@@ -825,42 +871,9 @@ const HealthCareFiles = () => {
               <div className="flex flex-row justify-between gap-4 mb-4">
                 <div className="flex flex-col space-y-2 w-full">
                   <div>
-                    <label className="block text-sm font-medium leading-6 text-gray-900 text-right">
-                      Departments
-                    </label>
-                    <Select
-                      style={{ fontFamily: "Cairo", width: "100%" }}
-                      placeholder={
-                        <div
-                          className="flex justify-end ml-auto mr-5"
-                          style={{ fontFamily: "Cairo" }}
-                        >
-                          اختر القسم
-                        </div>
-                      }
-                      // value={selectedDepartment}
-                      onChange={(e) => handleDepartmentChange(e)}
-                      options={myData}
-                      mode="multiple"
-                      isClearable={true}
-                      dropdownStyle={{
-                        textAlign: "right",
-                        justifyContent: "flex-end",
-                        fontFamily: "Cairo",
-                      }}
-                      primaryColor={"blue"}
-                    />
-                  </div>{" "}
-                  <div>
-                    {/* <label
-                      htmlFor="focal_persons"
-                      className="block text-sm font-medium leading-6 text-gray-900 text-right"
-                    >
-                      Focal Persons
-                    </label> */}
                     <div className="relative mt-2  ">
-                      {/* <Select
-                        // value={selectedDepartment}
+                      <Select
+                        style={{ fontFamily: "Cairo", width: "100%" }}
                         placeholder={
                           <div
                             className="flex justify-end ml-auto"
@@ -871,17 +884,16 @@ const HealthCareFiles = () => {
                         }
                         dropdownStyle={{
                           textAlign: "right",
-                          display: "flex",
                           justifyContent: "flex-end",
+                          fontFamily: "Cairo",
                         }}
                         onChange={(e) => handleDepartmentChange(e)}
                         options={myData}
-                        isMultiple={true}
+                        mode="multiple"
                         isClearable={true}
                         primaryColor={"blue"}
                         isSearchable={true}
-                        className="peer w-full  border-0 bg-offWhiteCustom-100  text-gray-900 focus:ring-0 sm:text-sm sm:leading-6  z-50"
-                      /> */}
+                      />
                     </div>
                   </div>
                 </div>

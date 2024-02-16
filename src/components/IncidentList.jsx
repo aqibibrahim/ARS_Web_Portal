@@ -18,7 +18,7 @@ import { Vars } from "../helpers/helpers";
 import { BsArrowRightCircle, BsEye, BsSearch } from "react-icons/bs";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import EditHealthCare from "./EditHealthCareForm";
-import { Spin } from "antd";
+import { Spin, Skeleton } from "antd";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import IncidentVIewModal from "./IncidentVIewModal";
 import { useAmbulanceContext } from "./AmbulanceContext";
@@ -537,7 +537,86 @@ export default function IncidentList({}) {
   };
 
   // Usage
+  const columns = [
+    {
+      title: "Actions",
+      dataIndex: "",
+      key: "actions",
+      align: "right",
+    },
+    {
+      title: "رقم الاتصال",
+      dataIndex: "informer.phone_numbers",
+      key: "phone_numbers",
+      align: "right",
+    },
 
+    {
+      title: "انشأ من قبل",
+      dataIndex: ["created_by", "first_name", "created_at"],
+      key: "created_by",
+      align: "right",
+    },
+    {
+      title: "نوع الطوارئ",
+      dataIndex: "emergency_type.name",
+      key: "emergency_type",
+      align: "right",
+    },
+    {
+      title: "نوع الحادث",
+      dataIndex: "incident_type.name",
+      key: "incident_type",
+      align: "right",
+    },
+    {
+      title: "تفاصيل المتصل",
+      dataIndex: "informer.name",
+      key: "informer_name",
+      align: "right",
+    },
+  ];
+  const renderSkeleton1 = () => {
+    return columns.map((column) => (
+      <tr className="flex justify-between my-3 px-4 pb-4">
+        {columns.map((column, index) => {
+          if (index === columns.length - 6) {
+            // Render buttons for the last column
+            return (
+              <td key={column.key}>
+                <div className="flex justify-around gap-4">
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                </div>
+              </td>
+            );
+          } else {
+            // Render skeleton inputs for other columns
+            return (
+              <td key={column.key}>
+                <Skeleton.Input
+                  active
+                  size="small"
+                  className="mt-4 mr-1"
+                  style={{ width: "100%", borderRadius: "4px" }}
+                />
+              </td>
+            );
+          }
+        })}
+      </tr>
+    ));
+  };
   return (
     <>
       <div
@@ -589,9 +668,7 @@ export default function IncidentList({}) {
           </div>
           <div>
             {isLoading ? (
-              <p className="text-center justify-center flex m-auto p-56">
-                <Spin size="large" />
-              </p>
+              renderSkeleton1()
             ) : activeTab === "active" ? (
               <>
                 {activeIncidents?.data?.length > 0 ? (

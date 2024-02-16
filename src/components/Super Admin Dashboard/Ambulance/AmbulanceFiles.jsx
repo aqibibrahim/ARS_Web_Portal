@@ -21,7 +21,7 @@ import { Toaster, toast } from "sonner";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { BiEdit, BiMessageAltX } from "react-icons/bi";
 import { Select } from "antd";
-import { Spin } from "antd";
+import { Spin, Skeleton } from "antd";
 import AmbulanceViewModal from "../../AmbulanceViewModal";
 import { Modal } from "antd";
 import { Vars } from "../../../helpers/helpers";
@@ -577,6 +577,7 @@ const AmbulanceFiles = () => {
     console.log(selectedOptions);
   };
   const handleModelSelect = (selectedOptions) => {
+    debugger;
     console.log("Selected Model", selectedOptions);
     setSelectedModelOption(selectedOptions);
     console.log(selectedOptions);
@@ -649,6 +650,98 @@ const AmbulanceFiles = () => {
     setPinModal(false);
     setupdatePinState({ newPin: "" });
   };
+  const columns = [
+    {
+      title: "Actions",
+      dataIndex: "",
+      key: "actions",
+      align: "right",
+    },
+    {
+      title: "رقم الاتصال",
+      dataIndex: "informer.phone_numbers",
+      key: "phone_numbers",
+      align: "right",
+    },
+
+    {
+      title: "انشأ من قبل",
+      dataIndex: ["created_by", "first_name", "created_at"],
+      key: "created_by",
+      align: "right",
+    },
+    {
+      title: "نوع الطوارئ",
+      dataIndex: "emergency_type.name",
+      key: "emergency_type",
+      align: "right",
+    },
+    {
+      title: "نوع الحادث",
+      dataIndex: "incident_type.name",
+      key: "incident_type",
+      align: "right",
+    },
+    {
+      title: "تفاصيل المتصل",
+      dataIndex: "informer.name",
+      key: "informer_name",
+      align: "right",
+    },
+  ];
+  const renderSkeleton1 = () => {
+    return columns.map((column) => (
+      <tr className="flex justify-between my-3 px-4 pb-4">
+        {columns.map((column, index) => {
+          if (index === columns.length - 6) {
+            // Render buttons for the last column
+            return (
+              <td key={column.key}>
+                <div className="flex justify-around gap-4">
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                  <Skeleton.Button
+                    active
+                    size="small"
+                    style={{ width: "20px", borderRadius: "4px" }}
+                    className="mt-4"
+                  />
+                </div>
+              </td>
+            );
+          } else {
+            // Render skeleton inputs for other columns
+            return (
+              <td key={column.key}>
+                <Skeleton.Input
+                  active
+                  size="small"
+                  className="mt-4 mr-1"
+                  style={{ width: "100%", borderRadius: "4px" }}
+                />
+              </td>
+            );
+          }
+        })}
+      </tr>
+    ));
+  };
   return (
     <div
       className={`w-11/12 bg-grayBg-100 transition-all duration-300 z-[10] rounded-lg overflow-y-scroll no-scrollbar p-2 h-screen`}
@@ -682,9 +775,7 @@ const AmbulanceFiles = () => {
         </div>
         <div className="rtl">
           {isLoading ? (
-            <p className="text-center justify-center flex m-auto p-56">
-              <Spin size="large" />
-            </p>
+            renderSkeleton1()
           ) : (
             <>
               {ambulanceData?.data?.length > 0 ? (
@@ -1271,7 +1362,7 @@ const AmbulanceFiles = () => {
                       ماركة وموديل
                     </label>
                     <div className=" mt-2">
-                      <Select
+                      {/* <Select
                         dropdownStyle={{
                           textAlign: "right",
                           display: "flex",
@@ -1292,6 +1383,34 @@ const AmbulanceFiles = () => {
                         showSearch
                         optionFilterProp="label"
                         className="w-full mt-2 text-right ml-auto"
+                        onKeyDown={(e) => {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            document.querySelector('[tabIndex="3"]').focus();
+                          }
+                        }}
+                      /> */}
+                      <Select
+                        tabIndex={2}
+                        value={selectedModelOption}
+                        placeholder={
+                          <span
+                            className="flex justify-end"
+                            style={{ fontFamily: "Cairo" }}
+                          >
+                            حدد طراز السيارة
+                          </span>
+                        }
+                        onChange={handleModelSelect}
+                        options={myModelData}
+                        showSearch
+                        optionFilterProp="label"
+                        className="w-full mt-2 text-right"
+                        dropdownStyle={{
+                          textAlign: "right",
+                          fontFamily: "Cairo",
+                        }}
+                        style={{ fontFamily: "Cairo" }}
                         onKeyDown={(e) => {
                           if (e.key === "Tab") {
                             e.preventDefault();
@@ -1516,11 +1635,11 @@ const AmbulanceFiles = () => {
                         required
                         className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         type="text"
-                        placeholder="أدخل الموقع"
+                        placeholder="Enter a location"
                         onChange={handlePlaceChange}
                       />
                       <div style={{ marginTop: "10px" }}>
-                        <strong> عنوان : </strong> {address}
+                        <strong>Address:</strong> {address}
                       </div>
                       <button
                         onClick={() => setOpen(false)}
