@@ -89,17 +89,19 @@ function TopBar({}) {
 		// Establish websocket connection
 		const clientId = parseInt(localStorage.getItem('user_id'))
 		let clientToken = localStorage.getItem('token')
-		console.log('User id', clientId, 'User Token', clientToken)
+		let clientRole = localStorage.getItem('role')
+
+		console.log('User id', clientId, 'User Token', typeof clientToken, 'User Role', typeof clientRole)
 		// Establish websocket connection with headers
 
-		const endpoint = `wss://ars-websockets.disruptwave.com/ws/subscribe?client_id=${clientId}&client_token=${clientToken}`
+		const endpoint = `wss://ars-websockets.disruptwave.com/ws/subscribe?client_id=${clientId}&client_type=${clientRole}&client_token=${clientToken}`
 		const socket = new WebSocket(endpoint)
 		socket.onopen = () => {
 			console.log('WebSocket connection established.')
 		}
 
 		socket.onerror = (error) => {
-			console.error('WebSocket error:', error)
+			console.error('WebSocket error:', error.type)
 		}
 		// Listen for messages from the server
 		socket.addEventListener('message', (event) => {
@@ -118,6 +120,9 @@ function TopBar({}) {
 					const message = Payload.message
 
 					if (type === 'AMBULANCE_ACTIVE') {
+						setNotificationsData((prevNotifications) => [...prevNotifications, Payload])
+						setNotificationCount((prevCount) => prevCount + 1)
+					} else if (type === 'AMBULANCE_AVAILABLE') {
 						setNotificationsData((prevNotifications) => [...prevNotifications, Payload])
 						setNotificationCount((prevCount) => prevCount + 1)
 					}
@@ -156,7 +161,7 @@ function TopBar({}) {
 						{activeDropdown === 'notifications' && (
 							<Dropdown onClose={() => setActiveDropdown(null)} title="Notifications">
 								<button onClick={clearNotifications}>Clear Notifications</button>
-								<Notifications notificationsData={notificationsData} />
+								<Notifications notificationsData={notificationsData} onCloseDropdown={() => setActiveDropdown(null)} />
 							</Dropdown>
 						)}
 					</TopBarItem>
