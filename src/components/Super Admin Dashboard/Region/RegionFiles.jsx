@@ -122,7 +122,12 @@ const RegionFiles = () => {
     } else {
       setOptions(
         region?.ambulances?.map((variant) => ({
-          label: variant?.model?.make?.name + " " + variant?.model?.name,
+          label:
+            variant?.model?.make?.name +
+            " " +
+            variant?.model?.name +
+            " " +
+            variant?.plate_no,
           value: variant?.id,
         }))
       );
@@ -192,7 +197,9 @@ const RegionFiles = () => {
               console.log(res);
               setSubmitDone(!submitDone);
               setLoadingMessage(false);
-              toast.success("Created Successfuly");
+              toast.success("المنطقة تم التسجيل بنجاح", {
+                className: "toast-align-right",
+              });
               setIsModalOpen(false);
               CreateRegion.resetForm();
             });
@@ -224,7 +231,13 @@ const RegionFiles = () => {
     onSubmit: (values) => {
       setLoadingMessage(true);
       const JSON = {
-        ambulances: options?.map((item) => item.value),
+        ambulances: options.map((item) => {
+          if (typeof item === "object" && item.hasOwnProperty("value")) {
+            return item.value; // If value is nested within an object
+          } else {
+            return item; // If value is directly the ID
+          }
+        }),
         name: values.name,
         address: locationAddress?.address,
         latitude: locationAddress.latitude,
@@ -244,7 +257,9 @@ const RegionFiles = () => {
               console.log(res);
               setSubmitDone(!submitDone);
               setLoadingMessage(false);
-              toast.success("Updated Successfuly");
+              toast.success("تم تحديث المنطقة بنجاح", {
+                className: "toast-align-right",
+              });
               setUpdateFormOpen(close);
             });
         } catch (e) {
@@ -403,11 +418,15 @@ const RegionFiles = () => {
           `${window.$BackEndUrl}/regions/${isDeleteID}`,
           config
         );
-        toast.success("Deleted successfully");
+        toast.success("حذف بنجاح", {
+          className: "toast-align-right",
+        });
         setSubmitDone(!submitDone);
       } catch (e) {
         console.error(e);
-        toast.error("Failed to delete");
+        toast.error("فشل الحذف", {
+          className: "toast-align-right",
+        });
       }
     },
     enableReinitialize: true,
@@ -1020,7 +1039,7 @@ const RegionFiles = () => {
                     type="button"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                   >
-                    تحميل...
+                    تحديث...
                   </button>
                 ) : (
                   <button

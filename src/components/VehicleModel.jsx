@@ -163,7 +163,9 @@ export default function VehicleModal() {
         headers,
       });
       if (response.status === 200 || response.status === 201) {
-        toast.success("Vehicle Model Added Successfully");
+        toast.success("تم تسجيل  موديل السيارة بنجاح", {
+          className: "toast-align-right",
+        });
         setIsLoading(false);
         setState({ vehicleModal: "" });
         setIsModalOpen(false);
@@ -207,7 +209,9 @@ export default function VehicleModal() {
         }
       );
       if (response.status === 200 || response.status === 201) {
-        toast.success("Vehicle Model Updated Successfully");
+        toast.success("تم تحديث موديل السيارة بنجاح", {
+          className: "toast-align-right",
+        });
         setIsLoading(false);
         setEditIncidentID("");
         setEditOpen(false);
@@ -238,7 +242,9 @@ export default function VehicleModal() {
         }
       );
       if (response.status === 204 || response.status === 201) {
-        toast.success("Vehicle Model Deleted Successfuly");
+        toast.success("تم حذف موديل السيارة بنجاح", {
+          className: "toast-align-right",
+        });
         setIsLoading(false);
         setDeleteIncidentID("");
         setDeleteModal(false);

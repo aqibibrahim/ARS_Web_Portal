@@ -102,7 +102,9 @@ const DepartmentsFiles = () => {
 
           if (res.status === 200 || res.status === 201) {
             console.log(res);
-            toast.success("Equipment added successfully!");
+            toast.success(" قسم اضيف بنجاح", {
+              className: "toast-align-right",
+            });
             setIsModalOpen(false);
             setLoadingMessage(false);
             setSubmitDone(!submitDone);
@@ -142,7 +144,9 @@ const DepartmentsFiles = () => {
               config
             )
             .then((res) => {
-              toast.success("Equipment Updated successfully!");
+              toast.success("قسم تم التحديث بنجاح", {
+                className: "toast-align-right",
+              });
               setIsUpdateModalOpen(false);
               setLoadingMessage(false);
               setSubmitDone(!submitDone);
@@ -184,7 +188,9 @@ const DepartmentsFiles = () => {
           `${window.$BackEndUrl}/departments/${isDeleteID}`,
           config
         );
-        toast.success("Deleted successfully");
+        toast.success("حذف بنجاح ", {
+          className: "toast-align-right",
+        });
         setSubmitDone(!submitDone);
       } catch (e) {
         console.error(e);

@@ -46,4 +46,7 @@ overflow: hidden !important;
 
 .gm-style .gm-style-iw-c{
   padding: 0px !important;
+}.toast-align-right {
+  display: flex;
+  justify-content: flex-end;
 }

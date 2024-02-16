@@ -287,7 +287,9 @@ const HealthCareFiles = () => {
             .post(`${window.$BackEndUrl}/facilities`, JSON, config)
             .then((res) => {
               console.log(res);
-              toast.success("Healthcare Created Successfuly");
+              toast.success("تم تسجيل الرعاية الصحية بنجاح", {
+                className: "toast-align-right",
+              });
               CreateHealtCare.resetForm();
               setCardFocalPersons([]);
               setLoadingMessage(false);
@@ -343,7 +345,9 @@ const HealthCareFiles = () => {
 
           if (res.status === 200 || res.status === 201) {
             console.log(res);
-            toast.success("Updated Successfully");
+            toast.success("تم تحديث الرعاية الصحية بنجاح", {
+              className: "toast-align-right",
+            });
             setLoadingMessage(false);
             setSubmitDone(!submitDone);
             setIsModalOpen(false);
@@ -448,7 +452,9 @@ const HealthCareFiles = () => {
           // Check if the status code is 200 or 201
           if (response.status === 200 || response.status === 201) {
             console.log(response);
-            toast.success("Department added successfully!");
+            toast.success("تمت إضافة القسم بنجاح", {
+              className: "toast-align-right",
+            });
             setIsModalOpen(false);
             setLoadingMessage(false);
             setSubmitDone(!submitDone);
@@ -544,7 +550,9 @@ const HealthCareFiles = () => {
           `${window.$BackEndUrl}/facilities/${isDeleteID}`,
           config
         );
-        toast.success("Deleted successfully");
+        toast.success("حذف بنجاح", {
+          className: "toast-align-right",
+        });
         setSubmitDone(!submitDone);
       } catch (e) {
         console.error(e);

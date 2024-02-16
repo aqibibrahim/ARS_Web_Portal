@@ -63,7 +63,9 @@ export default function Equipment() {
             .post(`${Vars.domain}/equipments`, JSON, config)
             .then((res) => {
               console.log(res);
-              toast.success("Equipment added successfully!");
+              toast.success("تمت إضافة المعدات بنجاح", {
+                className: "toast-align-right",
+              });
               setIsModalOpen(false);
               setLoadingMessage(false);
               setSubmitDone(!submitDone);
@@ -106,7 +108,9 @@ export default function Equipment() {
               config
             )
             .then((res) => {
-              toast.success("Equipment added successfully!");
+              toast.success("تم تحديث المعدات بنجاح", {
+                className: "toast-align-right",
+              });
               setIsUpdateModalOpen(false);
               setLoadingMessage(false);
               setSubmitDone(!submitDone);
@@ -147,7 +151,9 @@ export default function Equipment() {
           `${Vars.domain}/equipments/${isDeleteID}`,
           config
         );
-        toast.success("Deleted successfully");
+        toast.success("حذف بنجاح", {
+          className: "toast-align-right",
+        });
         setSubmitDone(!submitDone);
       } catch (e) {
         console.error(e);

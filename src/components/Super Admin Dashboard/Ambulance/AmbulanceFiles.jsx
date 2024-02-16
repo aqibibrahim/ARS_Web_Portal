@@ -251,7 +251,7 @@ const AmbulanceFiles = () => {
 
           if (response.status === 200 || response.status === 201) {
             console.log(response);
-            toast.success("Ambulance Created Successfully");
+            toast.success("تم تسجيل سيارة الإسعاف بنجاح");
             setSubmitDone(!submitDone);
             setLoadingMessage(false);
             CreateAmbulance.resetForm();
@@ -261,7 +261,7 @@ const AmbulanceFiles = () => {
             setSelectedMakeOption("");
             setSelectedModelOption("");
           } else {
-            toast.error("Failed to create ambulance");
+            toast.error("فشل في تسجيل سيارة الإسعاف");
             setLoadingMessage(false);
             setIsModalOpen(false);
           }
@@ -318,7 +318,10 @@ const AmbulanceFiles = () => {
             )
             .then((res) => {
               console.log(res);
-              toast.success("Updated Successfuly");
+              toast.success("تم تحديث سيارة الإسعاف بنجاح", {
+                className: "toast-align-right", // Apply the class name here
+                // Other options...
+              });
               setUpdateFormOpen(false);
               setSubmitDone(!submitDone);
               setLoadingMessage(false);
@@ -534,7 +537,7 @@ const AmbulanceFiles = () => {
         if (result.status === 200 || result.status === 204) {
           setDelete(false);
 
-          toast.success("Deleted successfully");
+          toast.success("حذف بنجاح");
           setSubmitDone(!submitDone);
         } else {
           // Handle other status codes if needed
@@ -577,7 +580,6 @@ const AmbulanceFiles = () => {
     console.log(selectedOptions);
   };
   const handleModelSelect = (selectedOptions) => {
-    debugger;
     console.log("Selected Model", selectedOptions);
     setSelectedModelOption(selectedOptions);
     console.log(selectedOptions);
@@ -623,7 +625,7 @@ const AmbulanceFiles = () => {
 
       console.log(response, "res");
       if (response.status === 200 || response.status === 201) {
-        toast.success("Ambulance Password Updated Successfully");
+        toast.success("تم تحديث كلمة مرور سيارة الإسعاف بنجاح");
         resetPinState();
         setUpdatePINId("");
         setupdatePinState({ newPin: "" });

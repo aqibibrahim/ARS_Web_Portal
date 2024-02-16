@@ -17,61 +17,61 @@ const ModalComponent = (props) => {
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [phoneNumbers, setPhoneNumbers] = useState([]);
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
-  const [validationErrors, setValidationErrors] = useState({
-    name: "",
-    email: "",
-    pin: "",
-    phoneNumbers: "",
-  });
-  const resetValidationErrors = () => {
-    setValidationErrors({
-      name: "",
-      email: "",
-      pin: "",
-      phoneNumbers: "",
-    });
-  };
-  const validateForm = () => {
-    const errors = {};
-    let isValid = true;
+  // const [validationErrors, setValidationErrors] = useState({
+  //   name: "",
+  //   email: "",
+  //   pin: "",
+  //   phoneNumbers: "",
+  // });
+  // const resetValidationErrors = () => {
+  //   setValidationErrors({
+  //     name: "",
+  //     email: "",
+  //     pin: "",
+  //     phoneNumbers: "",
+  //   });
+  // };
+  // const validateForm = () => {
+  //   const errors = {};
+  //   let isValid = true;
 
-    // Validate name
-    if (!state?.name?.trim()) {
-      errors.name = "Name is required";
-      isValid = false;
-    }
+  //   // Validate name
+  //   if (!state?.name?.trim()) {
+  //     errors.name = "Name is required";
+  //     isValid = false;
+  //   }
 
-    // Validate email
-    if (!state?.email?.trim()) {
-      errors.email = "Email is required";
-      isValid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
-      errors.email = "Invalid email format";
-      isValid = false;
-    }
+  //   // Validate email
+  //   if (!state?.email?.trim()) {
+  //     errors.email = "Email is required";
+  //     isValid = false;
+  //   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
+  //     errors.email = "Invalid email format";
+  //     isValid = false;
+  //   }
 
-    // Validate PIN
-    if (!editBit) {
-      // Perform validation only if editbit is false
-      if (!state?.pin?.trim()) {
-        errors.pin = "PIN is required";
-        isValid = false;
-      } else if (state.pin.length !== 6 || !/^\d+$/.test(state.pin)) {
-        errors.pin = "PIN must be a 6-digit number";
-        isValid = false;
-      }
-    }
+  //   // Validate PIN
+  //   if (!editBit) {
+  //     // Perform validation only if editbit is false
+  //     if (!state?.pin?.trim()) {
+  //       errors.pin = "PIN is required";
+  //       isValid = false;
+  //     } else if (state.pin.length !== 6 || !/^\d+$/.test(state.pin)) {
+  //       errors.pin = "PIN must be a 6-digit number";
+  //       isValid = false;
+  //     }
+  //   }
 
-    // Validate phone numbers
-    if (phoneNumbers?.length === 0) {
-      errors.phoneNumbers = "At least one phone number is required";
-      isValid = false;
-    }
+  //   // Validate phone numbers
+  //   if (phoneNumbers?.length === 0) {
+  //     errors.phoneNumbers = "At least one phone number is required";
+  //     isValid = false;
+  //   }
 
-    setValidationErrors(errors);
+  //   setValidationErrors(errors);
 
-    return isValid;
-  };
+  //   return isValid;
+  // };
 
   const handleAddPhoneNumber = () => {
     if (newPhoneNumber.trim() !== "") {
@@ -100,79 +100,83 @@ const ModalComponent = (props) => {
 
   const createNewDriver = async () => {
     try {
-      if (validateForm()) {
-        var token = localStorage.getItem("token");
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        };
+      // if (validateForm()) {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
 
-        const data = {
-          first_name: state.name,
-          email: state.email,
-          pin: state.pin,
-          phone_numbers: phoneNumbers,
-        };
+      const data = {
+        first_name: state.name,
+        email: state.email,
+        pin: state.pin,
+        phone_numbers: phoneNumbers,
+      };
 
-        const response = await axios.post(`${Vars.domain}/drivers`, data, {
-          headers,
+      const response = await axios.post(`${Vars.domain}/drivers`, data, {
+        headers,
+      });
+
+      console.log(response, "res");
+      if (response.status === 200 || response.status === 201) {
+        toast.success("تم تسجيل السائق بنجاح", {
+          className: "toast-align-right",
         });
-
-        console.log(response, "res");
-        if (response.status === 200 || response.status === 201) {
-          toast.success("Driver Created Successfully");
-          setState({
-            name: "",
-            email: "",
-            pin: "",
-          });
-          setPhoneNumbers([]);
-          setNewPhoneNumber("");
-          handle(false);
-        }
-        console.log("Role created successfully:", response.data);
+        setState({
+          name: "",
+          email: "",
+          pin: "",
+        });
+        setPhoneNumbers([]);
+        setNewPhoneNumber("");
+        handle(false);
       }
+      console.log("Role created successfully:", response.data);
+      // }
     } catch (error) {
       console.error("Error creating role:", error);
-      toast.error(error?.response?.data?.data?.pin);
+      toastErrorMessages(error.response.data.data);
     }
   };
   const UpdateDriver = async () => {
     try {
-      if (validateForm()) {
-        var token = localStorage.getItem("token");
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        };
+      // if (validateForm()) {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
 
-        const data = {
-          first_name: state.name,
-          email: state.email,
-          pin: state.pin,
-          phone_numbers: phoneNumbers,
-        };
+      const data = {
+        first_name: state.name,
+        email: state.email,
+        pin: state.pin,
+        phone_numbers: phoneNumbers,
+      };
 
-        const response = await axios.patch(
-          `${Vars.domain}/drivers/${state?.id}`,
-          data,
-          {
-            headers,
-          }
-        );
-
-        console.log(response, "res");
-        if (response.status === 200 || response.status === 201) {
-          toast.success("Driver Updated Successfully");
-          setState({
-            name: "",
-            email: "",
-            pin: "",
-          });
-          setPhoneNumbers([]);
-          setNewPhoneNumber("");
-          handle(false);
+      const response = await axios.patch(
+        `${Vars.domain}/drivers/${state?.id}`,
+        data,
+        {
+          headers,
         }
+      );
+
+      console.log(response, "res");
+      if (response.status === 200 || response.status === 201) {
+        toast.success("تم تحديث برنامج التشغيل بنجاح", {
+          className: "toast-align-right",
+        });
+        setState({
+          name: "",
+          email: "",
+          pin: "",
+        });
+        setPhoneNumbers([]);
+        setNewPhoneNumber("");
+        handle(false);
+        // }
       }
     } catch (error) {
       console.error("Error updating driver:", error);
@@ -188,7 +192,14 @@ const ModalComponent = (props) => {
     }
     setState({ ...state, [event.target.name]: event.target.value });
   };
-
+  const toastErrorMessages = (errors) => {
+    Object.keys(errors).forEach((field) => {
+      const messages = errors[field];
+      messages.forEach((message) => {
+        toast.error(`${field}: ${message}`);
+      });
+    });
+  };
   return (
     <>
       <Toaster position="bottom-right" richColors />
@@ -205,7 +216,7 @@ const ModalComponent = (props) => {
                     setNewPhoneNumber("");
                     setPhoneNumbers([]);
                     handle(false);
-                    resetValidationErrors();
+                    // resetValidationErrors();
                     setState("");
                   }}
                 />
@@ -253,13 +264,13 @@ const ModalComponent = (props) => {
                             aria-hidden="true"
                           />
                         </div>
-                        {editBit
+                        {/* {editBit
                           ? ""
                           : validationErrors.pin && (
-                            <p className="text-red-500 text-sm">
-                              {validationErrors.pin}
-                            </p>
-                          )}
+                              <p className="text-red-500 text-sm">
+                                {validationErrors.pin}
+                              </p>
+                            )} */}
                       </div>
                     )}
 
@@ -319,11 +330,11 @@ const ModalComponent = (props) => {
                             />
                           </div>
                         </div>
-                        {validationErrors.phoneNumbers && (
+                        {/* {validationErrors.phoneNumbers && (
                           <p className="text-red-500 text-sm">
                             {validationErrors.phoneNumbers}
                           </p>
-                        )}
+                        )} */}
                       </div>
                     </div>
                   </div>
@@ -359,11 +370,11 @@ const ModalComponent = (props) => {
                           aria-hidden="true"
                         />
                       </div>
-                      {validationErrors.name && (
+                      {/* {validationErrors.name && (
                         <p className="text-red-500 text-sm">
                           {validationErrors.name}
                         </p>
-                      )}
+                      )} */}
                     </div>
                     <div>
                       <label
@@ -393,11 +404,11 @@ const ModalComponent = (props) => {
                           aria-hidden="true"
                         />
                       </div>
-                      {validationErrors.email && (
+                      {/* {validationErrors.email && (
                         <p className="text-red-500 text-sm">
                           {validationErrors.email}
                         </p>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </div>

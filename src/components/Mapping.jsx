@@ -65,7 +65,9 @@ export default function Mapping() {
         }
       );
       if (response.status === 200) {
-        toast.success("Mapping added Successfuly");
+        toast.success("الربط اضيف بنجاح ", {
+          className: "toast-align-right",
+        });
         setDepartmentMapping(false);
         setSelectedDepartment("");
         setSelectedEquipment("");
@@ -97,7 +99,9 @@ export default function Mapping() {
         }
       );
       if (response.status === 200) {
-        toast.success("Mapping added Successfuly");
+        toast.success("الربط اضيف بنجاح ", {
+          className: "toast-align-right",
+        });
         setIncidentTypeMapping(false);
         setSelectedDepartment("");
         setSelectedEquipment("");
