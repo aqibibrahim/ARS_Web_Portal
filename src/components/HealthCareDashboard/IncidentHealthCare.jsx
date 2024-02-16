@@ -20,7 +20,7 @@ import { Toaster, toast } from "sonner";
 import Select from "react-tailwindcss-select";
 import { Vars } from "../../helpers/helpers";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
-
+import smallAmb from "../../assets/smallAmb.svg";
 const Tab = ({ selected, title, onClick }) => {
   return (
     <button
@@ -38,6 +38,7 @@ const Tab = ({ selected, title, onClick }) => {
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+
 export default function IncidentHealthCare({}) {
   var token = localStorage.getItem("token");
   const headers = {
@@ -588,27 +589,18 @@ export default function IncidentHealthCare({}) {
                                   )
                                 )} */}
                               </div>
-                              <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                              {/* <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
                                 {incident?.ambulances?.map(
                                   (ambulance, index) => (
                                     <>
                                       {" "}
                                       <p
                                         key={index}
-                                        className="m-1"
+                                        className="m-1 font-bold"
                                         style={{ fontFamily: "Cairo" }}
                                       >
-                                        <span
-                                          className={`grow shrink basis-0 ml-2 text-right  ${getStatusStyle(
-                                            ambulance?.driver?.status
-                                          )} text-xs font-normal font-['Inter']`}
-                                        >
-                                          {" "}
-                                          {ambulance?.driver?.status}
-                                        </span>{" "}
                                         {ambulance?.driver?.first_name}{" "}
                                       </p>
-                                      <div className="flex w-full border mt-2 mb-1              border-gray-200"></div>
                                       <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
                                         <span
                                           style={{ fontFamily: "Cairo" }}
@@ -621,9 +613,10 @@ export default function IncidentHealthCare({}) {
                                         </span>{" "}
                                         <p
                                           key={index}
-                                          className="  w-auto text-right mb-2 "
+                                          className="  w-auto text-right mb-2 flex "
                                           style={{ fontFamily: "Cairo" }}
                                         >
+                                          {" "}
                                           <span className=" px-2">
                                             {ambulance?.plate_no +
                                               " " +
@@ -631,10 +624,101 @@ export default function IncidentHealthCare({}) {
                                               " " +
                                               ambulance?.model?.make?.name}
                                           </span>
+                                          <span className="flex justify-end">
+                                            {" "}
+                                            <img src={smallAmb} />
+                                          </span>
                                         </p>
                                       </div>
+                                      <div className="flex w-full border mt-2 mb-1              border-gray-200"></div>
                                     </>
                                   )
+                                )}
+                              </div> */}
+                              <div className="self-stretch text-right text-black text-opacity-90 text-xs font-normal font-['Inter']">
+                                {incident?.ambulances &&
+                                incident.ambulances.length > 0 ? (
+                                  incident.ambulances.map(
+                                    (ambulance, index) => (
+                                      <>
+                                        <p
+                                          key={index}
+                                          className="m-1 font-bold"
+                                          style={{ fontFamily: "Cairo" }}
+                                        >
+                                          {ambulance?.driver?.first_name}{" "}
+                                        </p>
+                                        <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
+                                          <span
+                                            style={{ fontFamily: "Cairo" }}
+                                            className={`grow shrink basis-0 ml-2 text-right  ${getStatusStyle(
+                                              ambulance?.status
+                                            )} text-xs font-normal font-['Inter']`}
+                                          >
+                                            {" "}
+                                            {ambulance?.status}
+                                          </span>{" "}
+                                          <p
+                                            key={index}
+                                            className="  w-auto text-right mb-2 flex "
+                                            style={{ fontFamily: "Cairo" }}
+                                          >
+                                            {" "}
+                                            <span className=" px-2">
+                                              {ambulance?.plate_no +
+                                                " " +
+                                                ambulance?.model?.name +
+                                                " " +
+                                                ambulance?.model?.make?.name}
+                                            </span>
+                                            <span className="flex justify-end">
+                                              {" "}
+                                              <img src={smallAmb} />
+                                            </span>
+                                          </p>
+                                        </div>
+                                        <div className="flex w-full border mt-2 mb-1 border-gray-200"></div>
+                                      </>
+                                    )
+                                  )
+                                ) : (
+                                  <>
+                                    <p
+                                      className="m-1 font-bold"
+                                      style={{ fontFamily: "Cairo" }}
+                                    >
+                                      {incident?.ambulance?.driver?.first_name}{" "}
+                                    </p>
+                                    <div className="self-stretch justify-end items-center gap-[5px] inline-flex">
+                                      <span
+                                        style={{ fontFamily: "Cairo" }}
+                                        className={`grow shrink basis-0 ml-2 text-right  ${getStatusStyle(
+                                          incident?.ambulance?.status
+                                        )} text-xs font-normal font-['Inter']`}
+                                      >
+                                        {" "}
+                                        {incident?.ambulance?.status}
+                                      </span>{" "}
+                                      <p
+                                        className="  w-auto text-right mb-2 flex "
+                                        style={{ fontFamily: "Cairo" }}
+                                      >
+                                        {" "}
+                                        <span className=" px-2">
+                                          {incident?.ambulance?.plate_no +
+                                            " " +
+                                            incident?.ambulance?.model?.name +
+                                            " " +
+                                            incident?.ambulance?.model?.make
+                                              ?.name}
+                                        </span>
+                                        <span className="flex justify-end">
+                                          {" "}
+                                          <img src={smallAmb} />
+                                        </span>
+                                      </p>
+                                    </div>
+                                  </>
                                 )}
                               </div>
 
