@@ -182,8 +182,9 @@ const CreateIncidentSidebar = ({ onClose, data, selectmap }) => {
           />
         )}
         <div
-          className={`h-full bg-grayBg-100 transition-all duration-300 ${isAssignedAmbulancesVisible ? "" : "rounded-l-lg"
-            } 
+          className={`h-full bg-grayBg-100 transition-all duration-300 ${
+            isAssignedAmbulancesVisible ? "" : "rounded-l-lg"
+          } 
            overflow-y-scroll no-scrollbar`}
         >
           <div className="flex flex-col px-2 py-1  rounded-[12px] bg-white w-[450px] h-screen overflow-hidden">
@@ -392,7 +393,7 @@ const Header = ({
               } else {
                 toast.error(
                   "Failed to create incident. Unexpected status code: " +
-                  res.status
+                    res.status
                 );
                 console.log("Unexpected status code:", res.status);
               }
@@ -401,14 +402,14 @@ const Header = ({
           setLoadingMessage(false);
           {
             e?.response?.data?.data?.informer_name &&
-              e.response.data.data.informer_name.length > 0
+            e.response.data.data.informer_name.length > 0
               ? toast.error(e.response.data.data.informer_name[0])
               : null;
           }
 
           {
             e?.response?.data?.data?.description &&
-              e.response.data.data.description.length > 0
+            e.response.data.data.description.length > 0
               ? toast.error(e.response.data.data.description[0])
               : null;
           }
@@ -430,7 +431,7 @@ const Header = ({
     lng: 17.761961078429668,
   });
   const [uncontrolledAddress, setUncontrolledAddress] = useState("");
-  const [address, setAddress] = useState("No address Selected");
+  const [address, setAddress] = useState("لم يتم تحديد عنوان");
   const geocoder = new Geocoder();
   const handleMarkerDragEnd = (t, map, coord) => {
     const newPosition = {
@@ -1416,23 +1417,23 @@ const Header = ({
                           required
                           className="peer block w-[30rem] rounded-md px-2 border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                           type="text"
-                          placeholder="Enter a location"
+                          placeholder="أدخل الموقع"
                           onChange={handlePlaceChange}
-                        // value={createIncident.values.informer_address}
+                          // value={createIncident.values.informer_address}
                         />
                         <div style={{ marginTop: "10px" }}>
-                          <strong>Address:</strong> {address}
+                          <strong> عنوان : </strong> {address}
                         </div>
                         <button
                           onClick={() => setOpen(false)}
                           className="bg-blue-400 rounded-xl px-3 text-white mt-1 font-semibold"
                         >
-                          Close
+                          أغلق
                         </button>
                       </div>
                       <div
                         id="map"
-                      // style={{ height: "0px", width: "0px" }}
+                        // style={{ height: "0px", width: "0px" }}
                       ></div>
                       <Map
                         google={google}
