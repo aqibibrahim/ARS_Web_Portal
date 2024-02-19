@@ -200,13 +200,27 @@ const ModalComponent = (props) => {
       });
     });
   };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // Perform any additional validation if needed
+
+    // Call the appropriate function based on editBit value
+    if (!editBit) {
+      createNewDriver();
+    } else {
+      UpdateDriver();
+    }
+  };
   return (
     <>
       <Toaster position="bottom-right" richColors />
-
       {editVisible ||
         (visible && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full m-auto">
+          <form
+            onSubmit={handleSubmit}
+            className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full m-auto"
+          >
             <div className="  -left-[14.5rem] p-0 border w-2/4 shadow-lg rounded-md bg-white  h-auto mb-5 m-auto mt-10">
               <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
                 <BsArrowRightCircle
@@ -216,7 +230,6 @@ const ModalComponent = (props) => {
                     setNewPhoneNumber("");
                     setPhoneNumbers([]);
                     handle(false);
-                    // resetValidationErrors();
                     setState("");
                   }}
                 />
@@ -234,7 +247,7 @@ const ModalComponent = (props) => {
                     ) : (
                       <div>
                         <label
-                          htmlFor="email"
+                          htmlFor="pin"
                           className="block text-sm font-medium leading-6  text-gray-900 text-right"
                         >
                           PIN
@@ -264,13 +277,6 @@ const ModalComponent = (props) => {
                             aria-hidden="true"
                           />
                         </div>
-                        {/* {editBit
-                          ? ""
-                          : validationErrors.pin && (
-                              <p className="text-red-500 text-sm">
-                                {validationErrors.pin}
-                              </p>
-                            )} */}
                       </div>
                     )}
 
@@ -370,11 +376,6 @@ const ModalComponent = (props) => {
                           aria-hidden="true"
                         />
                       </div>
-                      {/* {validationErrors.name && (
-                        <p className="text-red-500 text-sm">
-                          {validationErrors.name}
-                        </p>
-                      )} */}
                     </div>
                     <div>
                       <label
@@ -404,11 +405,6 @@ const ModalComponent = (props) => {
                           aria-hidden="true"
                         />
                       </div>
-                      {/* {validationErrors.email && (
-                        <p className="text-red-500 text-sm">
-                          {validationErrors.email}
-                        </p>
-                      )} */}
                     </div>
                   </div>
                 </div>
@@ -441,14 +437,14 @@ const ModalComponent = (props) => {
                     </button>
                   ) : !editBit ? (
                     <button
-                      onClick={createNewDriver}
+                      type="submit"
                       className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                     >
                       تسجيل
                     </button>
                   ) : (
                     <button
-                      onClick={UpdateDriver}
+                      type="submit"
                       className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100  `}
                     >
                       تحديث
@@ -457,7 +453,7 @@ const ModalComponent = (props) => {
                 </div>
               </div>
             </div>
-          </div>
+          </form>
         ))}
     </>
   );

@@ -95,10 +95,8 @@ export default function EmergencyType() {
     });
     setEditIncidentID(data?.id);
   };
-  const createNewGender = async () => {
-    // if (!validateForm()) {
-    //   return;
-    // }
+  const createNewGender = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
 
     setIsLoading(true);
 
@@ -109,18 +107,15 @@ export default function EmergencyType() {
         Authorization: `Bearer ${token}`,
       };
       const data = {
-        name: state?.EmergencyType,
+        EmergencyType: state?.EmergencyType,
       };
 
-      const response = await axios.post(
-        `${Vars.domain}/emergency-types`,
-        data,
-        {
-          headers,
-        }
-      );
+      const response = await axios.post(`${Vars.domain}/your_endpoint`, data, {
+        headers,
+      });
+
       if (response.status === 200 || response.status === 201) {
-        toast.success("تم تسجيل نوع الطوارئ بنجاح", {
+        toast.success("تم إضافة نوع الحالة بنجاح", {
           className: "toast-align-right",
         });
         setIsLoading(false);
@@ -128,7 +123,7 @@ export default function EmergencyType() {
         setIsModalOpen(false);
       }
     } catch (error) {
-      console.error("Error creating role:", error);
+      console.error("Error creating gender:", error);
       toast.error(error?.response?.data?.message);
     }
 
@@ -260,7 +255,10 @@ export default function EmergencyType() {
     <>
       <Toaster position="bottom-right" richColors />
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <form
+          onSubmit={createNewGender}
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+        >
           <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
@@ -309,7 +307,7 @@ export default function EmergencyType() {
                   </button>
                 ) : (
                   <button
-                    onClick={createNewGender}
+                    type="submit"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300  `}
                   >
                     إضافة
@@ -318,7 +316,7 @@ export default function EmergencyType() {
               </div>
             </div>
           </div>
-        </div>
+        </form>
       )}{" "}
       {viewOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">

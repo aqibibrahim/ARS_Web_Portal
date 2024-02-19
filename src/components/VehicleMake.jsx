@@ -86,7 +86,9 @@ export default function VehicleMake() {
     });
     setEditIncidentID(data?.id);
   };
-  const createNewVehicleMake = async () => {
+  const createNewVehicleMake = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+
     // if (!validateForm()) {
     //     return;
     // }
@@ -250,7 +252,10 @@ export default function VehicleMake() {
     <>
       <Toaster position="bottom-right" richColors />
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <form
+          onSubmit={createNewVehicleMake}
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+        >
           <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
@@ -300,7 +305,7 @@ export default function VehicleMake() {
                   </button>
                 ) : (
                   <button
-                    onClick={createNewVehicleMake}
+                    type="submit"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300 
                       `}
                   >
@@ -310,7 +315,7 @@ export default function VehicleMake() {
               </div>
             </div>
           </div>
-        </div>
+        </form>
       )}{" "}
       {editOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">

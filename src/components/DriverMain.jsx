@@ -220,39 +220,36 @@ export default function DriverMain() {
     DeleteDriver();
   };
   const handleNewPin = async () => {
-    const { isValid } = validatePinForm();
-    if (isValid) {
-      try {
-        var token = localStorage.getItem("token");
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        };
+    try {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
 
-        const data = {
-          new_pin: updatePinState.newPin,
-        };
+      const data = {
+        new_pin: updatePinState.newPin,
+      };
 
-        const response = await axios.patch(
-          `${Vars.domain}/drivers/update-pin/${updatePINId}`,
-          data,
-          {
-            headers,
-          }
-        );
-
-        console.log(response, "res");
-        if (response.status === 200 || response.status === 201) {
-          toast.success("تم تحديث دبوس برنامج التشغيل بنجاح", {
-            className: "toast-align-right",
-          });
-          resetPinState();
-          setPinModal(false);
-          setUpdatePINId("");
+      const response = await axios.patch(
+        `${Vars.domain}/drivers/update-pin/${updatePINId}`,
+        data,
+        {
+          headers,
         }
-      } catch (error) {
-        toast.error(error?.response?.data?.message);
+      );
+
+      console.log(response, "res");
+      if (response.status === 200 || response.status === 201) {
+        toast.success("تم تحديث دبوس برنامج التشغيل بنجاح", {
+          className: "toast-align-right",
+        });
+        resetPinState();
+        setPinModal(false);
+        setUpdatePINId("");
       }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
     }
   };
   const handleEditClick = (data) => {
@@ -566,52 +563,35 @@ export default function DriverMain() {
           </span>
         }
         open={pinModal}
-        onOk={handleNewPin}
         onCancel={handleCancel}
         closable={false}
         okButtonProps={{
           style: { backgroundColor: "green", fontFamily: "Cairo", margin: 10 },
+          // Remove type="submit" from the OK button
         }}
         cancelButtonProps={{
           style: { fontFamily: "Cairo" },
         }}
         cancelText="أغلق"
         okText="تحديث "
+        onOk={() => {
+          // Validate form fields manually
+          if (
+            !updatePinState.newPin ||
+            !/^\d{6}$/.test(updatePinState.newPin)
+          ) {
+            toast.error("Please enter a six-digit PIN.");
+            return;
+          }
+
+          // If all validations pass, proceed with form submission
+          handleNewPin();
+        }}
       >
         <div className="flex flex-col space-y-2 w-full">
-          {/* <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium leading-6  text-gray-900 text-right"
-            >
-              Old PIN
-            </label>
-            <div className="relative mt-2">
-              <input
-                onChange={handlePinChange}
-                name="oldPin"
-                value={updatePinState.oldPin}
-                type="number"
-                placeholder="Enter Old PIN"
-                className={`peer block px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right ${
-                  validationErrors.oldPin ? "border-red-500" : ""
-                }`}
-                required
-              />
-              {validationErrors.oldPin && (
-                <span className="text-red-500 text-xs mt-1">
-                  {validationErrors.oldPin}
-                </span>
-              )}
-              <div
-                className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-primary-100"
-                aria-hidden="true"
-              />
-            </div>
-          </div> */}
           <div style={{ fontFamily: "Cairo", padding: 10 }}>
             <label
-              htmlFor="email"
+              htmlFor="newPin"
               className="block text-sm font-medium leading-6  text-gray-900 text-right"
             >
               دبوس جديد

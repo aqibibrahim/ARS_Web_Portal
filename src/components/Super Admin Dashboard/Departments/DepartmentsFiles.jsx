@@ -330,7 +330,7 @@ const DepartmentsFiles = () => {
                         </label>
 
                         <AntSelect
-                          value={options}
+                          // value={options}
                           placeholder={<span className="mr-4">نوع الحادث</span>}
                           onChange={(value) => handleChange(value)}
                           mode="multiple"

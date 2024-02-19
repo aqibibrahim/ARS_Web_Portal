@@ -84,11 +84,12 @@ export default function Reasons() {
     });
     setEditIncidentID(data?.id);
   };
-  const createNewReason = async () => {
+  const createNewReason = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+
     // if (!validateForm()) {
     //   return;
     // }
-
     setIsLoading(true);
 
     try {
@@ -253,7 +254,10 @@ export default function Reasons() {
     <>
       <Toaster position="bottom-right" richColors />
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <form
+          onSubmit={createNewReason}
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+        >
           <div className="mt-5 mx-auto p-0 border w-[600px] shadow-lg rounded-md bg-white overflow-hidden h-auto mb-5">
             <div className="flex flex-row justify-between items-center mb-4 bg-grayBg-300 w-full  p-5 overflow-hidden">
               <BsArrowRightCircle
@@ -264,7 +268,7 @@ export default function Reasons() {
                   resetValidationErrors();
                 }}
               />
-              <h3 className="text-xl font-semibold">Create New Reason</h3>
+              <h3 className="text-xl font-semibold">سبب الرفض</h3>
             </div>
             <div className="p-5">
               <div className="flex flex-row justify-between gap-4 mb-4">
@@ -282,7 +286,7 @@ export default function Reasons() {
                         name="reason"
                         onChange={handleChange}
                         value={state?.reason}
-                        placeholder="Name of Reason"
+                        placeholder="اسم سبب الرفض"
                         className="peer block  px-2 w-full border-0 bg-offWhiteCustom-100 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 text-right"
                         required
                       />
@@ -302,17 +306,17 @@ export default function Reasons() {
                   </button>
                 ) : (
                   <button
-                    onClick={createNewReason}
+                    type="submit"
                     className={`text-white bg-primary-100 rounded-xl border-2 border-primary-100  py-2 px-5 transition-all duration-300 
                       `}
                   >
-                    Create
+                    إضافة
                   </button>
                 )}
               </div>
             </div>
           </div>
-        </div>
+        </form>
       )}{" "}
       {viewOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
