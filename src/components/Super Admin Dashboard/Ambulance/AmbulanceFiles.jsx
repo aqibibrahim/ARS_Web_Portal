@@ -632,8 +632,9 @@ const AmbulanceFiles = () => {
         setPinModal(false);
       }
     } catch (error) {
-      setPinModal(false);
-      // toast.error(error?.response?.data?.message);
+      // setPinModal(false);
+
+      toast.error(error?.response?.data?.data?.newPassword[0]);
     }
   };
   const handlePinChange = (event) => {

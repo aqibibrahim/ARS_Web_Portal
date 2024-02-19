@@ -471,7 +471,7 @@ const HealthCareFiles = () => {
           console.error("Post request error:", error);
           setLoadingMessage(false);
 
-          toast.error(error?.response?.data?.message);
+          toast.error(error?.response?.data?.data?.departments);
         }
       };
 
