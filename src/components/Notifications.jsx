@@ -8,8 +8,7 @@ export default function Notifications({ onCloseDropdown }) {
 	const [notificationsData, setNotificationsData] = useState([])
 	const [selectedNotification, setSelectedNotification] = useState(null)
 	const [viewOpen, setViewOpen] = useState(false)
-	const [visibleNotifications, setVisibleNotifications] = useState(9) // Number of notifications to initially display
-	const [loadMoreCount, setLoadMoreCount] = useState(5) // Number of notifications to load when "Load More" is clicked
+	const [page, setPage] = useState(1) // Current page number
 
 	useEffect(() => {
 		fetchNotifications()
@@ -17,7 +16,6 @@ export default function Notifications({ onCloseDropdown }) {
 			setViewOpen(true) // Open the modal once selectedNotification is not null
 		}
 	}, [selectedNotification])
-
 	const AmbulanceIcon = () => (
 		<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
 			<path
@@ -36,14 +34,14 @@ export default function Notifications({ onCloseDropdown }) {
 		}
 
 		try {
-			const response = await axios.get(`https://ars.disruptwave.com/api/notifications/get-all`, {
+			const response = await axios.get(`https://ars.disruptwave.com/api/notifications/get-all?page=${page}`, {
 				headers,
 			})
 
 			if (response.status === 200 || response.status === 201) {
 				const data = await response?.data
 				console.log('Data', data)
-				setNotificationsData(data.data)
+				setNotificationsData((prevNotifications) => [...prevNotifications, ...data.data.data]) // Append new notifications to existing ones
 			} else {
 				console.error('Failed to fetch notifications')
 			}
@@ -53,8 +51,8 @@ export default function Notifications({ onCloseDropdown }) {
 	}
 
 	const handleViewClick = async (notification) => {
-		console.log('Notitification', JSON.parse(notification.payload))
-		const ConvertedNotitifications = JSON.parse(notification.payload)
+		console.log('Notification', JSON.parse(notification.payload))
+		const ConvertedNotifications = JSON.parse(notification.payload)
 		var token = localStorage.getItem('token')
 		const headers = {
 			'Content-Type': 'application/json',
@@ -62,23 +60,28 @@ export default function Notifications({ onCloseDropdown }) {
 		}
 
 		try {
-			setSelectedNotification(ConvertedNotitifications.payload)
+			setSelectedNotification(ConvertedNotifications.payload)
 			navigate('/ambulances_files')
-			await axios.patch(`https://ars.disruptwave.com/api/notifications/update/${notification.id}`, {
-				headers,
-			})
+			await axios.patch(
+				`https://ars.disruptwave.com/api/notifications/update/${notification.id}`,
+				{},
+				{
+					headers,
+				}
+			)
 		} catch (error) {
 			console.error('Error updating notification:', error)
 		}
 	}
 
 	const loadMoreNotifications = () => {
-		setVisibleNotifications(visibleNotifications + loadMoreCount)
+		setPage(page + 1) // Increment page number
+		fetchNotifications() // Fetch next page of notifications
 	}
 
 	return (
 		<div>
-			{notificationsData.slice(0, visibleNotifications).map((data) => (
+			{notificationsData.map((data) => (
 				<div className="bg-white w-full px-2 mb-4" key={data.id}>
 					<p className="text-base font-bold text-right">{data.message}</p>
 					<div className="flex justify-end mt-2">
@@ -104,7 +107,7 @@ export default function Notifications({ onCloseDropdown }) {
 					</div>
 				</div>
 			))}
-			{notificationsData.length > visibleNotifications && (
+			{notificationsData.length > 0 && (
 				<button className="bg-blue-500 text-white px-4 py-2 rounded mt-4" onClick={loadMoreNotifications}>
 					Load More
 				</button>
