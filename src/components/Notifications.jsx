@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import AmbulanceViewModal from './AmbulanceViewModal'
-export default function Notifications({ notificationsData, onCloseDropdown }) {
+import axios from 'axios'
+
+export default function Notifications({ onCloseDropdown }) {
 	const navigate = useNavigate()
+	const [notificationsData, setNotificationsData] = useState([])
 	const [selectedNotification, setSelectedNotification] = useState(null)
 	const [viewOpen, setViewOpen] = useState(false)
+	const [visibleNotifications, setVisibleNotifications] = useState(9) // Number of notifications to initially display
+	const [loadMoreCount, setLoadMoreCount] = useState(5) // Number of notifications to load when "Load More" is clicked
+
 	useEffect(() => {
+		fetchNotifications()
 		if (selectedNotification !== null) {
 			setViewOpen(true) // Open the modal once selectedNotification is not null
 		}
 	}, [selectedNotification])
+
 	const AmbulanceIcon = () => (
 		<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
 			<path
@@ -19,58 +27,89 @@ export default function Notifications({ notificationsData, onCloseDropdown }) {
 			/>
 		</svg>
 	)
-	const handleViewClick = (notification) => {
-		console.log('Notitifcation data ambulance', notification.payload)
-		setSelectedNotification(notification.payload)
-		navigate('/ambulances_files')
-		// setViewOpen(true) // Open the modal
-	}
-	console.log('Notification data:', notificationsData)
-	console.log('Selected notification:', selectedNotification)
 
-	const closeNotification = () => {
-		onCloseDropdown() // Navigate to ambulance page
+	const fetchNotifications = async () => {
+		var token = localStorage.getItem('token')
+		const headers = {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`,
+		}
+
+		try {
+			const response = await axios.get(`https://ars.disruptwave.com/api/notifications/get-all`, {
+				headers,
+			})
+
+			if (response.status === 200 || response.status === 201) {
+				const data = await response?.data
+				console.log('Data', data)
+				setNotificationsData(data.data)
+			} else {
+				console.error('Failed to fetch notifications')
+			}
+		} catch (error) {
+			console.error('Error fetching notifications:', error)
+		}
 	}
+
+	const handleViewClick = async (notification) => {
+		console.log('Notitification', JSON.parse(notification.payload))
+		const ConvertedNotitifications = JSON.parse(notification.payload)
+		var token = localStorage.getItem('token')
+		const headers = {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`,
+		}
+
+		try {
+			setSelectedNotification(ConvertedNotitifications.payload)
+			navigate('/ambulances_files')
+			await axios.patch(`https://ars.disruptwave.com/api/notifications/update/${notification.id}`, {
+				headers,
+			})
+		} catch (error) {
+			console.error('Error updating notification:', error)
+		}
+	}
+
+	const loadMoreNotifications = () => {
+		setVisibleNotifications(visibleNotifications + loadMoreCount)
+	}
+
 	return (
 		<div>
-			{notificationsData ? (
-				notificationsData.map((data) => (
-					<>
-						<div className="bg-white w-full px-2 mb-4">
-							<div key={data.payload.id}>
-								<p className="text-base font-bold text-right">{data.message}</p>
-								{/* <p className="text-md text-right">{data.description}</p> */}
-							</div>
-							<div className="flex justify-end mt-2">
-								{data.type.includes('AMBULANCE_AVAILABLE') ? (
-									<>
-										<button
-											className="flex flex-row text-primary-100 bg-white rounded-md border-2 border-primary-100 my-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
-											onClick={() => {
-												handleViewClick(data)
-												if (selectedNotification) {
-													closeNotification()
-												}
-											}}
-										>
-											<AmbulanceIcon /> View
-										</button>
-									</>
-								) : (
-									<button
-										className="text-primary-100 bg-white rounded-md border-2 border-primary-100 my-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
-										onClick={() => handleViewClick(data)}
-									>
-										View
-									</button>
-								)}
-							</div>
-						</div>
-					</>
-				))
-			) : (
-				<p className="bg-white w-full p-4 mb-4 text-right">No Notifications Yet...</p>
+			{notificationsData.slice(0, visibleNotifications).map((data) => (
+				<div className="bg-white w-full px-2 mb-4" key={data.id}>
+					<p className="text-base font-bold text-right">{data.message}</p>
+					<div className="flex justify-end mt-2">
+						{data.type.includes('AMBULANCE') ? (
+							<>
+								<button
+									className="flex flex-row text-primary-100 bg-white rounded-md border-2 border-primary-100 my-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
+									onClick={() => {
+										handleViewClick(data)
+									}}
+								>
+									<AmbulanceIcon /> View
+								</button>
+							</>
+						) : (
+							<button
+								className="text-primary-100 bg-white rounded-md border-2 border-primary-100 my-2 py-2 px-5 transition-all duration-300 hover:bg-primary-100 hover:text-white"
+								onClick={() => handleViewClick(data)}
+							>
+								View
+							</button>
+						)}
+					</div>
+				</div>
+			))}
+			{notificationsData.length > visibleNotifications && (
+				<button className="bg-blue-500 text-white px-4 py-2 rounded mt-4" onClick={loadMoreNotifications}>
+					Load More
+				</button>
 			)}
+			{notificationsData.length === 0 && <p className="bg-white w-full p-4 mb-4 text-right">No Notifications Yet...</p>}
 			<AmbulanceViewModal viewOpen={viewOpen} setViewOpen={setViewOpen} selectedAmbulance={selectedNotification} />
 		</div>
 	)
