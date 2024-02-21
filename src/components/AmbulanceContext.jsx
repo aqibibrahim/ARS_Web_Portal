@@ -7,7 +7,9 @@ export const AmbulanceProvider = ({ children }) => {
   const [selectedAmbulanceId, setSelectedAmbulanceId] = useState(null);
   const [selectedIncidentId, setSelectedIncidentId] = useState(false);
   const [selectedFacilityId, setSelectedFacilityId] = useState();
-
+  const [notificationDropdown, setNotificationDropdown] = useState(null);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [notificationDropdownData, setNotificationDropdownData] = useState([]);
   const setAmbulanceId = (id) => {
     setSelectedAmbulanceId(id);
   };
@@ -22,9 +24,18 @@ export const AmbulanceProvider = ({ children }) => {
     // Reset state to initial values
     setSelectedIncidentId(false);
   };
+  const resetNotificationDropdown = () => {
+    // Reset state to initial values
+    setNotificationDropdownData(null);
+    setNotificationDropdown(null);
+  };
   return (
     <AmbulanceContext.Provider
       value={{
+        viewModalOpen,
+        setViewModalOpen,
+        notificationDropdownData,
+        setNotificationDropdownData,
         selectedAmbulanceId,
         setAmbulanceId,
         resetState,
@@ -33,6 +44,9 @@ export const AmbulanceProvider = ({ children }) => {
         resetIncidentState,
         setSelectedFacilityId,
         selectedFacilityId,
+        setNotificationDropdown,
+        notificationDropdown,
+        resetNotificationDropdown,
       }}
     >
       {children}

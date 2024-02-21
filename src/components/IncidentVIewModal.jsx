@@ -8,6 +8,8 @@ import {
   BsPeople,
 } from "react-icons/bs";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
+import { useAmbulanceContext } from "./AmbulanceContext";
+import { useEffect } from "react";
 const formatDateTime = (dateString) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -20,7 +22,15 @@ const formatDateTime = (dateString) => {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 export default function IncidentVIewModal(props) {
+  const {
+    resetState,
+    resetNotificationDropdown,
+    notificationDropdown,
+    setNotificationDropdown,
+  } = useAmbulanceContext();
+
   const { showData, setViewOpen, viewOpen, setShowData } = props;
+
   console.log(showData, "view");
   const getEmergencyTypeColor = (emergencyType) => {
     switch (emergencyType) {
