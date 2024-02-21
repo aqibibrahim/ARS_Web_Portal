@@ -8,6 +8,7 @@ import { useAmbulanceContext } from "./AmbulanceContext";
 export default function Notifications({ onCloseDropdown }) {
   const navigate = useNavigate();
   const [notificationsData, setNotificationsData] = useState([]);
+  const [lastPage, setLastPage] = useState();
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [viewOpen, setViewOpen] = useState(false);
   const [page, setPage] = useState(1); // Current page number
@@ -53,7 +54,7 @@ export default function Notifications({ onCloseDropdown }) {
 
     try {
       const response = await axios.get(
-        `https://ars.disruptwave.com/api/notifications/get-all?page=38
+        `https://ars.disruptwave.com/api/notifications/get-all?page=${page}
         `,
         {
           headers,
@@ -62,6 +63,7 @@ export default function Notifications({ onCloseDropdown }) {
 
       if (response.status === 200 || response.status === 201) {
         const data = await response?.data;
+        setLastPage(data?.data?.last_page);
         console.log("Data", data);
         {
           page === 1
@@ -175,7 +177,7 @@ export default function Notifications({ onCloseDropdown }) {
           </div>
         </div>
       ))}
-      {notificationsData.length > 0 && (
+      {notificationsData.length > 0 && lastPage !== page && (
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
           onClick={loadMoreNotifications}
