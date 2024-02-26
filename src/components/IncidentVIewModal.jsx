@@ -10,6 +10,8 @@ import {
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { useAmbulanceContext } from "./AmbulanceContext";
 import { useEffect } from "react";
+import axios from "axios";
+
 const formatDateTime = (dateString) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -27,10 +29,35 @@ export default function IncidentVIewModal(props) {
     resetNotificationDropdown,
     notificationDropdown,
     setNotificationDropdown,
+    IncidentID,
+    setIncidentID,
+    viewIncidentModalOpen,
+    setViewIncidentModalOpen,
   } = useAmbulanceContext();
 
   const { showData, setViewOpen, viewOpen, setShowData } = props;
+  useEffect(() => {
+    const fetchData = async () => {
+      var token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      try {
+        const response = await axios.get(
+          `https://ars.disruptwave.com/api/incidents/${IncidentID}`,
+          {
+            headers,
+          }
+        );
+        setShowData(response?.data?.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
+    fetchData(); // Call the inner async function
+  }, [IncidentID]);
   console.log(showData, "view");
   const getEmergencyTypeColor = (emergencyType) => {
     switch (emergencyType) {
@@ -71,12 +98,14 @@ export default function IncidentVIewModal(props) {
 
     return `inline-flex items-center rounded-full ${backgroundColor} px-2 py-1 text-lg font-medium ${textColor}`;
   };
+
   return (
     <Modal
-      open={viewOpen}
+      open={viewOpen ? viewOpen : viewIncidentModalOpen}
       onCancel={() => {
-        setShowData;
+        setShowData([]);
         setViewOpen(false);
+        setViewIncidentModalOpen(false);
       }}
       footer={null}
       width={1200}
@@ -87,7 +116,11 @@ export default function IncidentVIewModal(props) {
           <BsArrowRightCircle
             width={20} // Adjust the icon size as needed
             className="text-black cursor-pointer hover:scale-150 transition-all duration-300"
-            onClick={() => setViewOpen(false)}
+            onClick={() => {
+              setViewOpen(false);
+              setViewIncidentModalOpen(false);
+              setShowData([]);
+            }}
           />
           <div className="flex  justify-center w-full">
             <h3 className="text-2xl font-semibold text-center flex  ">

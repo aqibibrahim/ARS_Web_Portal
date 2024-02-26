@@ -137,13 +137,13 @@ function TopBar({}) {
           const type = Payload.type;
           const message = Payload.message;
 
-          if (type.includes("INCIDENT")) {
+          if (type.includes("AMBULANCE")) {
             setNotificationsData((prevNotifications) => [
               ...prevNotifications,
               Payload,
             ]);
             setNotificationCount((prevCount) => prevCount + 1);
-          } else if (typeincludes("AMBULANCE")) {
+          } else if (type.includes("INCIDENT")) {
             setNotificationsData((prevNotifications) => [
               ...prevNotifications,
               Payload,

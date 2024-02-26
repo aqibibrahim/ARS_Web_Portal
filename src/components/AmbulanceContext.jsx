@@ -9,6 +9,9 @@ export const AmbulanceProvider = ({ children }) => {
   const [selectedFacilityId, setSelectedFacilityId] = useState();
   const [notificationDropdown, setNotificationDropdown] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [viewIncidentModalOpen, setViewIncidentModalOpen] = useState(false);
+  const [IncidentID, setIncidentID] = useState();
+
   const [notificationDropdownData, setNotificationDropdownData] = useState([]);
   const setAmbulanceId = (id) => {
     setSelectedAmbulanceId(id);
@@ -32,6 +35,10 @@ export const AmbulanceProvider = ({ children }) => {
   return (
     <AmbulanceContext.Provider
       value={{
+        IncidentID,
+        setIncidentID,
+        viewIncidentModalOpen,
+        setViewIncidentModalOpen,
         viewModalOpen,
         setViewModalOpen,
         notificationDropdownData,

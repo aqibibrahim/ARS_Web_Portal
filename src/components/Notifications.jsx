@@ -14,6 +14,10 @@ export default function Notifications({ onCloseDropdown }) {
   const [page, setPage] = useState(1); // Current page number
   const [showData, setShowData] = useState([]);
   const {
+    IncidentID,
+    setIncidentID,
+    viewIncidentModalOpen,
+    setViewIncidentModalOpen,
     resetState,
     resetNotificationDropdown,
     notificationDropdown,
@@ -91,26 +95,26 @@ export default function Notifications({ onCloseDropdown }) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         };
-        alert("We are waiting for incident data");
         try {
-          setShowData(ConvertedNotifications?.payload);
-
+          setViewIncidentModalOpen(true);
+          // setShowData(ConvertedNotifications?.payload);
+          setIncidentID(ConvertedNotifications?.payload?.incidents[0]?.id);
+          setNotificationDropdown(null);
           navigate("/incidents");
-          //   <IncidentVIewModal
-          //     viewOpen={viewOpen}
-          //     setViewOpen={setViewOpen}
-          //     showData={showData}
-          //     setShowData={setShowData}
-          //   />;
-          await axios.patch(
-            `https://ars.disruptwave.com/api/notifications/update/${notification.id}`,
-            {},
-            {
-              headers,
-            }
-          );
-        } catch (error) {
-          console.error("Error updating notification:", error);
+        } finally {
+          try {
+            // Update notification status
+            await axios.patch(
+              `https://ars.disruptwave.com/api/notifications/update/${notification.id}`,
+              {},
+              {
+                headers,
+              }
+            );
+          } catch (error) {
+            // Handle error if needed
+            console.error("Error updating notification:", error);
+          }
         }
       } else {
         var token = localStorage.getItem("token");
@@ -126,13 +130,17 @@ export default function Notifications({ onCloseDropdown }) {
           setViewOpen(true);
           setNotificationDropdown(null);
           navigate("/ambulances_files");
-          await axios.patch(
-            `https://ars.disruptwave.com/api/notifications/update/${notification.id}`,
-            {},
-            {
-              headers,
-            }
-          );
+          await axios
+            .patch(
+              `https://ars.disruptwave.com/api/notifications/update/${notification.id}`,
+              {},
+              {
+                headers,
+              }
+            )
+            .then((response) => {
+              console.log(response, "mai hon");
+            });
         } catch (error) {
           console.error("Error updating notification:", error);
         }
@@ -194,6 +202,13 @@ export default function Notifications({ onCloseDropdown }) {
         viewModalOpen={viewModalOpen}
         setViewOpen={setViewOpen}
         selectedAmbulance={notificationDropdownData}
+      />
+      <IncidentVIewModal
+        viewIncidentModalOpen={viewIncidentModalOpen}
+        setViewOpen={setViewOpen}
+        // IncidentID={IncidentID}
+        setShowData={setShowData}
+        showData={showData}
       />
     </div>
   );
