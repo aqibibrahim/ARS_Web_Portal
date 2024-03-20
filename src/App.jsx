@@ -23,9 +23,6 @@ function App() {
 	const updateAuthenticationStatus = (status) => {
 		setIsAuthenticated(status)
 	}
-	//   useEffect(() => {
-	//     isAuthenticatedRef.current = isAuthenticated;
-	//   }, [isAuthenticated]);
 
 	const AuthRoute = ({ children }) => {
 		if (!isAuthenticated) {
@@ -39,8 +36,11 @@ function App() {
 			<AmbulanceProvider>
 				<Routes>
 					<Route path="/login" element={<Login updateAuthenticationStatus={updateAuthenticationStatus} />} />
-					<Route path="/HealthcareLogin" element={<HealthcareLogin updateAuthenticationStatus={updateAuthenticationStatus} />} />
-					
+					<Route
+						path="/HealthcareLogin"
+						element={<HealthcareLogin updateAuthenticationStatus={updateAuthenticationStatus} />}
+					/>
+
 					<Route
 						path="/*"
 						element={
