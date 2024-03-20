@@ -338,9 +338,10 @@ export default function HealthCareDepartments() {
 									type="button"
 									className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
 								>
-									تحميل...								</button>
+									تحميل...{' '}
+								</button>
 							) : (
-								<div className='flex justify-end'>
+								<div className="flex justify-end">
 									<button
 										type="submit"
 										className="text-white bg-primary-100 rounded-md border-2 border-primary-100 hover:border-primary-100 py-2 px-5 transition-all duration-300 hover:bg-white hover:text-primary-100 mt-2"
@@ -348,7 +349,6 @@ export default function HealthCareDepartments() {
 										تحديث
 									</button>
 								</div>
-
 							)}
 						</form>
 					</div>

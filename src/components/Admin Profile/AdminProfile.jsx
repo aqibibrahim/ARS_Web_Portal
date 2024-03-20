@@ -17,8 +17,9 @@ import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
 const Tab = ({ selected, title, onClick }) => {
 	return (
 		<button
-			className={`px-4 py-2 transition-colors duration-150 ${selected ? 'bg-white' : 'bg-transparent text-gray-700'
-				} focus:outline-none`}
+			className={`px-4 py-2 transition-colors duration-150 ${
+				selected ? 'bg-white' : 'bg-transparent text-gray-700'
+			} focus:outline-none`}
 			onClick={onClick}
 		>
 			{title}
@@ -28,7 +29,7 @@ const Tab = ({ selected, title, onClick }) => {
 function classNames(...classes) {
 	return classes.filter(Boolean).join(' ')
 }
-const AdminProfile = ({ }) => {
+const AdminProfile = ({}) => {
 	var token = localStorage.getItem('token')
 	var user_id = localStorage.getItem('user_id')
 	const headers = {
@@ -69,16 +70,17 @@ const AdminProfile = ({ }) => {
 			<div className="bg-lightGray-100 w-full h-auto rounded-lg p-2">
 				<div className=" px-4">
 					<div className="px-4 flex justify-center  sm:px-0 text-end">
-
 						<div>
-							<h3 className="text-base font-semibold leading-7 text-gray-900 text-center flex justify-center">تفاصيل الحساب </h3>
+							<h3 className="text-base font-semibold leading-7 text-gray-900 text-center flex justify-center">
+								تفاصيل الحساب{' '}
+							</h3>
 							<p className="mt-1  text-sm text-end leading-6 text-gray-500">تفاصيل شخصية </p>
 						</div>
 					</div>
 					<div className="mt-6">
 						<dl className="grid grid-cols-1  sm:grid-cols-2">
 							<div className="border-t border-gray-100 px-3 py-3 text-end sm:col-span-1 sm:px-0">
-								<dt className="text-sm  font-bold leading-6 text-gray-900">بريد إلكتروني	</dt>
+								<dt className="text-sm  font-bold leading-6 text-gray-900">بريد إلكتروني </dt>
 								<dd className="mt-0.5 text-sm leading-6 text-gray-700 sm:mt-.5">{adminProfile?.email}</dd>
 							</div>
 							<div className="border-t border-gray-100 px-3 text-end py-3 sm:col-span-1 sm:px-0 ">
